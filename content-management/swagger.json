@@ -1,0 +1,264 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Content Management API",
+        "version": "2.0.0",
+        "description": "Content Management API offers alows access to repositories of unstructured content such as documents, templates and images organized into folder structure. API exposes operations to upload and download content and manipulate its metadata. Document binary content is streamed as appropriate MIME media type. \n\n![Folders](http://www.easysitecms.net/_resources/assets/inline/custom/23/875.png)\n\n#### Concepts in content management\n\n resource | description\n----------- |-----------\n*repository*  | Represents a top level container for content. Behind API repository is always hosted on a single system such as full blown DMS or simplified DMS using file system and database store. Different repositories are often used to separate official correspondence such as contracts and legal documents from web content such as images and banners.\n*folder*      | Serves as the anchor for a collection of documents and child folders. The folder has an implicit hierarchical relationship with each document or other folder in its collection. A folder object does not have its own *content stream* and is not versionable. Folder structure and folder metadata attributes are used according to conventions expected by consuming applications.\n*document*    | Represents elementary information entitiy managed by the repository like contract, image or template. Depending on its kind, a document object may be discoverable by search query operations. Documents contain binary *content stream* and metadata attributes that follow application conventions. Documents can be versioned.\n*content stream* | A blob containing a binary stream of content. Each content stream has a MIME Media Type, as deﬁned by RFC2045 and RFC2046. A content stream’s attributes are represented as properties of the content stream’s containing document. There is no MIME type speciﬁc attribute or name directly associated with the content stream outside of the document object.\n\n#### Events\n\nevent                       | description\n----------------------------|----------------------------------------------------------------------------------------------\ncusomter-registered         | customer has registered \n                            |\n"
+    },
+    "host": "api.asse.co",
+    "basePath": "/content",
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/": {
+            "get": {
+                "operationId": "GetRepositories",
+                "tags": [
+                    "Repositories"
+                ],
+                "description": "List available content repositories.",
+                "responses": {
+                    "200": {
+                        "description": "List of available content repositories.",
+                        "schema": {
+                            "$ref": "#/definitions/repositories"
+                        },
+                        "examples": {
+                            "$ref": "#/definitions/examples/repository/application/json"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "examples": {
+                            "application/json": {
+                                "name": "Puma",
+                                "type": "Dog",
+                                "color": "Black",
+                                "gender": "Female",
+                                "breed": "Mixed"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/{repository-name}": {
+            "get": {
+                "operationId": "GetRepositryInfo",
+                "tags": [
+                    "Repositories"
+                ],
+                "description": "Get information about the specific repository",
+                "parameters": [
+                    {
+                        "name": "repository-name",
+                        "in": "path",
+                        "description": "Name of the repository eg. \"emc-dms\" or \"web-cms\"",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/definitions/parameters/page-size"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of available content repositories.",
+                        "schema": {
+                            "$ref": "#/definitions/repositories"
+                        }
+                    },
+                    "404": {
+                        "description": "Repository with such name not found. Make sure you are inquiring about one of the repositories listed at the root."
+                    },
+                    "416": {
+                        "schema": {
+                            "$ref": "#/definitions/Dog"
+                        },
+                        "description": {
+                            "$ref": "#/definitions/reason-codes/description"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "examples": {
+            "animal": {
+                "application/json": {
+                    "name": "Puma",
+                    "type": "Dog",
+                    "color": "Black",
+                    "gender": "Female",
+                    "breed": "Mixed"
+                }
+            }
+        },
+        "event-header": {
+            "type": "object",
+            "required": [
+                "event-id",
+                "event-kind",
+                "aggregate-id",
+                "aggregate-kind"
+            ],
+            "properties": {
+                "event-id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "event-kind": {
+                    "type": "string"
+                },
+                "aggregate-id": {
+                    "type": "string"
+                },
+                "aggregate-kind": {
+                    "type": "string"
+                },
+                "example": {
+                    "$ref": "#/definitions/examples/animal"
+                }
+            }
+        },
+        "document-uploaded": {
+            "description": "Tells you that a document has been uploaded to repository",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/event-header"
+                },
+                {
+                    "type": "object",
+                    "required": [
+                        "file-name"
+                    ],
+                    "properties": {
+                        "file-name": {
+                            "type": "string"
+                        }
+                    }
+                }
+            ]
+        },
+        "parameters": {
+            "page-size": {
+                "name": "page-size",
+                "in": "path",
+                "description": "Name of the repository eg. \"emc-dms\" or \"web-cms\"",
+                "required": true,
+                "type": "string"
+            }
+        },
+        "repositories": {
+            "description": "List of repositories",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "repository": {
+            "description": "Respository metadata",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "reason-codes": {
+            "description": "Your request was well formed but could not completed due to one of the following reasons:\n\nreason | description\n----------- |-----------\n`repository-moved`  | Repository with that name does not exist. Check if you have misspelled repository name. \n`folder-does-not-exist`     | Serves as the anchor for a collection of documents and child folders. The folder has an implicit hierarchical relationship with each document or other \n"
+        },
+        "problem": {
+            "description": "More information on why request could not be processed.",
+            "properties": {
+                "reason-code": {
+                    "type": "string",
+                    "description": "A literal code that uniquely identifies kind of the problem",
+                    "enum": "repository-moved, folder-does-not-exist"
+                },
+                "message": {
+                    "type": "string",
+                    "description": "Textual message explaining this kind of problem and situation to consuming developer. Localization and adaptation of this message to end user language is the responsibility of consuming application."
+                },
+                "details": {
+                    "type": "string",
+                    "description": "Additional information that can help consuming developer troubleshoot this specific instance problem."
+                }
+            }
+        },
+        "Pet": {
+            "type": "object",
+            "discriminator": "petType",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "petType": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "petType"
+            ]
+        },
+        "Cat": {
+            "description": "A representation of a cat",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Pet"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "huntingSkill": {
+                            "type": "string",
+                            "description": "The measured skill for hunting",
+                            "default": "lazy",
+                            "enum": [
+                                "clueless",
+                                "lazy",
+                                "adventurous",
+                                "aggressive"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "huntingSkill"
+                    ]
+                }
+            ]
+        },
+        "Dog": {
+            "description": "A representation of a dog",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Pet"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "packSize": {
+                            "type": "integer",
+                            "format": "int32",
+                            "description": "the size of the pack the dog is from",
+                            "default": 0,
+                            "minimum": 0
+                        }
+                    },
+                    "required": [
+                        "packSize"
+                    ]
+                }
+            ]
+        }
+    }
+}
