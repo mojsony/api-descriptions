@@ -1,7 +1,6 @@
 Content Management API 
 ======================
-Content Management API provides access to documents stored in content management repositories. Any form of unstructured content (files) such as documents, templates and images can be organized into a folder structure that follows conventions understood by applications. API exposes operations to upload and download content and manipulate its metadata.     
-   ![Folders](http://www.easysitecms.net/_resources/assets/inline/custom/23/875.png)
+Content Management API provides access to documents stored in content management repositories. Any form of unstructured content (files) such as documents, templates and images can be organized into a folder structure that follows conventions understood by applications. API exposes operations to upload and download content and manipulate its metadata.
    
 Key Resources
 -------------
@@ -63,28 +62,30 @@ To create folder you need to post `folder` metadata representation as json to fo
 ```
 POST /dms/folders
 ```
+
 ```json
 {
   "kind": "folder" 
-  "name": "jabon0007", //convention
-  "path": "customers", //create under this path
-  "folder-purpose": "customer-profile", //convention
+  "name": "jabon0007",
+  "path": "customers", 
+  "folder-purpose": "customer-profile",
 }
 ```
 You will get back `201 Created` status code and json representation with a created folder. Location header will contain URL for newly created folder.
 ```
 Location: http://api.asse.co/content/dms/folders/ee48b17534c9
 ```
+
 ```json
 {
   "kind": "folder"
   "name": "jabon0007",
   "path": "customers",
   "folder-purpose": "customer-profile"
-  "id": "ee48b17534c9", //server assigned
-  "created-on": "2015-11-23T07:08:30.000Z", //server assigned
-  "created-by": "jabon007", //server assigned
-  "changed-on": "2015-11-23T07:08:30.000Z", //server assigned  
+  "id": "ee48b17534c9",
+  "created-on": "2015-11-23T07:08:30.000Z", 
+  "created-by": "jabon007", 
+  "changed-on": "2015-11-23T07:08:30.000Z"
 }
 ```
 To store documents you will need folder id or path.
@@ -137,11 +138,11 @@ You will get back `200 OK` status code and json representation with a list of re
       "created-by": "jabon0007"
     }
   ]
-  "total-count": 1, //endpoint supports paging
+  "total-count": 1, 
   "page-size": 10,
   "page": 1,
   "total-pages": 1,
-  "sort-order": "asc", //endpoint supports sorting
+  "sort-order": "asc", 
   "sort-by": "created-on",  
 }
 ```
