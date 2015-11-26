@@ -1,0 +1,985 @@
+swagger: "2.0"
+info:
+  version: "beta"
+  title: Content Management API
+  description: |
+    Content Management API offers alows access to repositories of unstructured content such as documents, templates and images organized into folder structure. API exposes operations to upload and download content and manipulate its metadata. Document binary content is streamed as appropriate MIME media type. 
+host: playground.apistudio.io
+basePath: /try/1ceeb1fe-5739-47c1-9600-1442b8c7eecb
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+tags:
+  -
+    name: Documents
+    description: Working with documents
+  -
+    name: Folders
+    description: Working with folders
+  -
+    name: Repositories
+    description: Working with repositories
+    
+paths:
+  /repositories:
+    get:
+      summary: List available content repositories
+      tags:
+        - Repositories
+      operationId: Repositories_GetList
+      parameters:
+        - $ref: "#/parameters/page-param"
+        - $ref: "#/parameters/page-size-param"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/repository-list'
+        default:
+          $ref: '#/responses/default-error-response'
+  /repositories/{repo}:
+    get:
+      summary: Get information about the specific repository
+      tags: 
+        - Repositories
+      operationId: Repositories_Get
+      parameters:
+        - $ref: "#/parameters/repository-name"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/repository'          
+        default:
+          $ref: '#/responses/default-error-response'      
+
+  /{repo}/{path}:
+    get:
+      summary: List folder contents by path
+      tags: 
+        - Folders
+      x-asee-tags:
+        - Shapeable
+        - Sortable
+        - Pageable
+      operationId: Folders_GetContentsByPath
+      parameters:
+        - $ref: "#/parameters/repository-name"
+        - $ref: "#/parameters/path"
+        - $ref: "#/parameters/kind-param" 
+        - $ref: "#/parameters/subfolders-param"
+        - $ref: "#/parameters/page-param"
+        - $ref: "#/parameters/page-size-param"
+        - $ref: "#/parameters/sort-by-param"
+        - $ref: "#/parameters/sort-order-param"
+        - $ref: "#/parameters/include-param" 
+        - $ref: "#/parameters/trim-param"              
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/content-item-list'          
+        default:
+          $ref: '#/responses/default-error-response'  
+  /{repo}/{path}/search:
+    get:
+      summary: Search folder contents by path
+      tags: 
+        - Folders
+      x-asee-tags:
+        - Pageable
+        - Searchable
+      operationId: Folders_SearchContentsByPath
+      parameters:
+        - $ref: "#/parameters/repository-name"
+        - $ref: "#/parameters/path"
+        - $ref: "#/parameters/search-query-param"
+        - $ref: "#/parameters/search-mode-param"
+        - $ref: "#/parameters/search-fields-param"
+        - $ref: "#/parameters/search-content-param"
+        - $ref: "#/parameters/kind-param" 
+        - $ref: "#/parameters/subfolders-param" 
+        - $ref: "#/parameters/page-param"
+        - $ref: "#/parameters/page-size-param"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/content-item-list'          
+        default:
+          $ref: '#/responses/default-error-response'   
+  /{repo}/folders/{id}/search:
+    get:
+      summary: Search folder contents
+      tags: 
+        - Folders
+      x-asee-tags:
+        - Pageable
+        - Searchable
+      operationId: Folders_SearchContents
+      parameters:
+        - $ref: "#/parameters/repository-name"
+        - $ref: "#/parameters/folder-id-param"
+        - $ref: "#/parameters/search-query-param"
+        - $ref: "#/parameters/search-mode-param"
+        - $ref: "#/parameters/search-fields-param"
+        - $ref: "#/parameters/search-content-param"
+        - $ref: "#/parameters/kind-param" 
+        - $ref: "#/parameters/subfolders-param" 
+        - $ref: "#/parameters/page-param"
+        - $ref: "#/parameters/page-size-param"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/content-item-list'          
+        default:
+          $ref: '#/responses/default-error-response'            
+  /{repo}/{path}/metadata:
+    get:
+      summary: Get folder metadata by path
+      tags: 
+        - Folders
+      operationId: Folders_GetMetadataByPath
+      parameters:
+        - $ref: "#/parameters/repository-name"
+        - $ref: "#/parameters/path"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/folder'          
+        default:
+          $ref: '#/responses/default-error-response'                    
+
+  /{repo}/folders/{id}/metadata:
+    get:
+      summary: Get folder metadata by id
+      tags: 
+        - Folders
+      operationId: Folders_GetMetadata
+      parameters:
+        - $ref: "#/parameters/repository-name"
+        - $ref: "#/parameters/folder-id-param"
+        
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/folder'          
+        default:
+          $ref: '#/responses/default-error-response'                              
+    put:
+      summary: Update folder properties
+      tags: 
+        - Folders
+      operationId: Folders_UpdateMetadata
+      parameters:
+        - $ref: "#/parameters/repository-name"
+        - $ref: "#/parameters/folder-id-param"
+        -
+          name: payload
+          in: body
+          description: Metadata to update
+          required: true
+          schema:
+            $ref: '#/definitions/folder'
+      responses:
+        '200':
+          description: Folder matadata updated
+          schema: 
+            $ref: '#/definitions/folder'          
+        '400':
+          $ref: "#/responses/validation-problem-response"
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+            - [folder-locked]()
+            - [folder-archived]()
+          schema:
+            $ref: '#/definitions/business-problem'          
+        default:
+          $ref: '#/responses/default-error-response'               
+
+  /{repo}/folders/{id}/upload-multiple:
+    post:
+      summary: Upload multiple documents to folder in one request
+      description: Multiple documents are uploaded within single request as base64 encoded byre array with surrounding json. Once server receives complete request it stores it one by one in a backing repository. Storing files into backing repository is not transactional operation. Content stream size must not exceed `50 MB`. Maximum nuber of documents is `5`. Metadata will be matched with content streams in order they are submitted.
+      tags: 
+        - Documents
+      operationId: Documents_UploadMultiple
+      consumes:
+      - multipart/form-data
+      parameters:
+        - $ref: "#/parameters/repository-name"
+        - $ref: "#/parameters/folder-id-param"      
+        -
+          name: content-stream-1
+          in: formData
+          description: Document content uploaded as file 1
+          type: file
+          required: true
+        -
+          name: content-stream-2
+          in: formData
+          description: Document content uploaded as file 2
+          type: file
+          required: true
+        -
+          name: content-stream-3
+          in: formData
+          description: Document content uploaded as file 3
+          type: file
+          required: true
+        -
+          name: content-stream-4
+          in: formData
+          description: Document content uploaded as file 4
+          type: file
+          required: true 
+        -
+          name: content-stream-5
+          in: formData
+          description: Document content uploaded as file 5
+          type: file
+          required: true              
+        -
+          name: names
+          in: formData
+          description: Comma separated list of file names
+          required: true
+          type: array
+          items:
+            type: string
+        -
+          name: media-types
+          in: formData
+          description: Comma separated list of MIME Media Types that describes format of the docuements content streams as deﬁned by RFC2045 and RFC2046. Commonly used media type examples are image/png, image/jpg, application/pdf and application/msword
+          required: true
+          type: array
+          items:
+            type: string
+        -
+          name: filing-purposes
+          in: formData
+          description: Comma sepparated list of classification values explaining intended use of the uploaded documents within business. Commonly used filing purposes are arrangement-document, mandate-document and profile-photo. For a complete list of possible values see [filing-purpose]() classification.
+          required: true
+          type: array
+          items:
+            type: string
+        -
+          name: filing-case-numbers
+          in: formData
+          description: Comma separated list of identifies of the cases related to uploaded documents such as arrangment-number and workitem-number.
+          required: true
+          type: array
+          items:
+            type: string
+      responses:
+        '201':
+          description: Documents uploaded
+          schema: 
+            $ref: "#/definitions/document-list"
+        '400':
+          $ref: "#/responses/validation-problem-response"
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+            - [folder-locked]()
+            - [folder-archived]()
+            - [max-upload-size-exceeded]()
+          schema:
+            $ref: '#/definitions/business-problem'          
+        default:
+          $ref: '#/responses/default-error-response'            
+  /{repo}/folders/{id}:
+    delete:
+      summary: Delete folder. 
+      description: 'WARNING: This operation deletes folder with all contents and subdirectories'
+      tags: 
+        - Folders
+      operationId: Folders_Delete
+      parameters:
+        - $ref: "#/parameters/repository-name"
+        - $ref: "#/parameters/folder-id-param"
+      responses:
+        '200':
+          description: Success
+        '440':
+          description: |
+            Your request was refused due to business policy. Consider the following possible problems and look into response for more details:
+            - [folder-locked]()
+            - [folder-archived]()
+          schema:
+            $ref: '#/definitions/business-problem'          
+        default:
+          $ref: '#/responses/default-error-response'     
+    post:
+      summary: Upload document to folder
+      description: Content stream size must not exceed 50 MB.
+      tags: 
+        - Documents
+      operationId: Documents_Upload
+      consumes:
+      - multipart/form-data
+      parameters:
+        - $ref: "#/parameters/repository-name"
+        - $ref: "#/parameters/folder-id-param"      
+        -
+          name: content-stream
+          in: formData
+          description: Document content uploaded as file
+          type: file
+          required: true
+        -
+          name: name
+          in: formData
+          description: Name of the file with extension
+          required: true
+          type: string
+        -
+          name: media-type
+          in: formData
+          description: MIME Media Type that describes format of the docuements content stream as deﬁned by RFC2045 and RFC2046. Commonly used media type examples are image/png, image/jpg, application/pdf and application/msword
+          required: true
+          type: string
+        -
+          name: filing-purpose
+          in: formData
+          description: Classification explaining what intended use of the document within business. Commonly used filing purposes are arrangement-document, mandate-document and profile-photo. For a complete list of possible values see [filing-purpose]() classification.
+          required: true
+          type: string
+        -
+          name: filing-case-number
+          in: formData
+          description: Identifies the case related to the document such as arrangment, loan application or complaint. Having this file enables flat folder structure where documents in one folder can belong to different cases.
+          required: true
+          type: string
+      responses:
+        '201':
+          description: Document uploaded
+          schema: 
+            $ref: '#/definitions/document'
+          headers:
+            Location:
+              description: URI where document content can be downloaded
+              type: string
+              format: uri
+        '400':
+          $ref: "#/responses/validation-problem-response"
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+            - [folder-locked]()
+            - [folder-archived]()
+            - [max-upload-size-exceeded]()
+          schema:
+            $ref: '#/definitions/business-problem'          
+        default:
+          $ref: '#/responses/default-error-response'          
+  /{repo}/folders:
+    post:
+      summary: Create new folder in repository
+      tags:
+        - Folders
+      operationId: Folders_Create
+      parameters:
+        - $ref: "#/parameters/repository-name"
+        -
+          name: new-folder
+          in: body
+          description: Folder to be created
+          required: true
+          schema:
+            $ref: '#/definitions/folder'        
+      responses:
+        '201': 
+          $ref: '#/responses/resource-created-response'
+          description: Folder created
+        '400':
+          $ref: "#/responses/validation-problem-response"          
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+            - [folder-locked]()
+            - [folder-archived]()
+          schema:
+            $ref: '#/definitions/business-problem'          
+        default:
+          $ref: '#/responses/default-error-response'
+          
+  /{repo}/{path}/{file-name}/metadata:
+    get:
+      summary: Get document metadata by path and file name
+      tags: 
+        - Documents
+      operationId: Documents_GetMetadataByPathAndFilename
+      parameters:
+        - $ref: "#/parameters/repository-name"
+        - $ref: "#/parameters/path"
+        - $ref: "#/parameters/file-name"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/document'          
+        default:
+          $ref: '#/responses/default-error-response'              
+  /{repo}/{path}/{file-name}:
+    get:
+      summary: Dowlnoad document content by path
+      produces:
+      - image/jpg
+      - image/png
+      - application/pdf
+      - application/octet-stream
+      tags: 
+        - Documents
+      operationId: Documents_DownloadByPathAndFileName
+      parameters:
+        - $ref: "#/parameters/repository-name"
+        - $ref: "#/parameters/path"
+        - $ref: "#/parameters/file-name"
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: file         
+        default:
+          $ref: '#/responses/default-error-response'
+  /{repo}/documents/{id}:
+    get:
+      summary: Dowlnoad document content
+      produces:
+      - image/jpg
+      - image/png
+      - application/pdf
+      - application/octet-stream
+      tags: 
+        - Documents
+      operationId: Documents_Download
+      parameters:
+        - $ref: "#/parameters/repository-name"
+        - $ref: "#/parameters/file-id-param"
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: file         
+        default:
+          $ref: '#/responses/default-error-response'            
+  /{repo}/documents/{id}/metadata:
+    get:
+      summary: Get document metadata by id
+      tags: 
+        - Documents
+      operationId: Documents_GetMetadata
+      parameters:
+        - $ref: "#/parameters/repository-name"
+        - 
+          name: id
+          type: string
+          in: path
+          description: asda
+          required: true
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/document'          
+        default:
+          $ref: '#/responses/default-error-response'              
+    put:
+      summary: Update document metadata
+      tags: 
+        - Documents
+      operationId: Document_UpdateMetadata
+      parameters:
+        - $ref: "#/parameters/repository-name"
+        - $ref: "#/parameters/document-id-param"
+        -
+          name: payload
+          in: body
+          description: Metadata to be updated
+          required: true
+          schema:
+            $ref: '#/definitions/document'
+      responses:
+        '200':
+          description: Document metadata updated
+          schema: 
+            $ref: '#/definitions/document'          
+        '400':
+          $ref: "#/responses/validation-problem-response"
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+            - [document-locked]()
+            - [document-archived]()
+          schema:
+            $ref: '#/definitions/business-problem'          
+        default:
+          $ref: '#/responses/default-error-response'   
+  /{repo}/documents/{id}:
+    get:
+      summary: Dowlnoad document content
+      produces:
+      - image/jpg
+      - image/png
+      - application/pdf
+      - application/octet-stream
+      tags: 
+        - Documents
+      operationId: Documents_Download
+      parameters:
+        - $ref: "#/parameters/repository-name"
+        - $ref: "#/parameters/document-id-param"
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: file         
+        default:
+          $ref: '#/responses/default-error-response'                          
+    delete:
+      summary: Delete document 
+      description: 'WARNING: This operation deletes both metadata and content stream'
+      tags: 
+        - Documents
+      operationId: Documents_Delete
+      parameters:
+        - $ref: "#/parameters/repository-name"
+        - $ref: "#/parameters/document-id-param"
+      responses:
+        '200':
+          description: Document was deleted
+        '440':
+          description: |
+            Your request was refused due to business policy. Consider the following possible problems and look into response for more details:
+            - [document-locked]()
+            - [document-archived]()
+          schema:
+            $ref: '#/definitions/business-problem'          
+        default:
+          $ref: '#/responses/default-error-response'  
+
+            
+responses:
+  resource-created-response:
+    description: Resource was created successfuly.
+    schema:
+      $ref: "#/definitions/command-result"
+  validation-problem-response:
+    description: Your request was not constructed properly. Response contains the list of validation errors for each invalid element of your request. For complete list of possible validation errors see [validation errors]() classification.
+    schema: 
+      $ref: '#/definitions/validation-problem'
+  default-error-response:
+    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
+    
+parameters:
+  page-param:
+    name: page
+    in: query
+    description: Page index. For more information see general guidance on [paging and sorting]()
+    type: integer
+    default: 1
+    x-asee-common: true
+  page-size-param:
+    name: page-size
+    in: query
+    description: Number of items on a page. For more information see general guidance on [paging and sorting]()
+    required: false
+    type: integer
+    default: 10
+    x-asee-common: true    
+  sort-order-param:
+    description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]()
+    in: query
+    name: sort-order
+    type: string
+    default: asc
+    enum:
+    - asc
+    - desc
+    x-asee-common: true  
+  sort-by-param:  
+    description: Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]()
+    in: query
+    name: sort-by
+    type: string
+    x-asee-common: true      
+  include-param:
+    description: List of fields to include in response. For more information see general guidance on [response shaping]()
+    in: query
+    name: include
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+    x-asee-common: true      
+  trim-param:
+    description: List of fields to trim from response. For more information see general guidance on [response shaping]()
+    in: query
+    name: trim
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+    x-asee-common: true
+  search-query-param:
+    name: q
+    in: query
+    description: The text to search for. All searchable fields are searched by default unless search-fields is specified. When searching searchable fields, the search text itself is tokenized, so multiple terms can be separated by white space (e.g. `q=hello world`). 
+    required: true
+    type: string     
+  search-fields-param:
+    description: The list of comma-separated field names to search for the specified text. Target fields must be marked as searchable
+    in: query
+    name: search-fields
+    type: array
+    items:
+      type: string
+    collectionFormat: csv  
+  search-mode-param:
+    name: search-mode
+    in: query
+    description: Specifies whether any or all of the search terms must be matched in order to count the document as a match.
+    type: string   
+    enum:
+    - any
+    - all
+    required: false
+  search-content-param:
+    name: search-content
+    in: query
+    allowEmptyValue: true          
+    description: Specifies wheather to search in document content
+    required: false
+    type: boolean
+    default: false  
+
+  repository-name:    
+    name: repo
+    in: path
+    description: Name of the repository such as `mchub` or `dms`
+    required: true
+    type: string
+    default: dms
+  folder-id-param:    
+    name: id
+    in: path
+    description: Unique identifier of folder in repository
+    required: true
+    type: string
+  document-id-param:    
+    name: id
+    in: path
+    description: Unique identifier of folder in repository
+    required: true
+    type: string    
+  path:    
+    name: path
+    in: path
+    description: Path of the folder. Hiararchy of folders separated with forward slash eg. `folder1/folder2/folder3`. Leading and trailing slashes will be trimmed.
+    required: true
+    type: string
+    format: folder-path
+  file-name:    
+    name: file-name
+    in: path
+    description: Name of the file with extension such as `image.jpg`
+    required: true
+    type: string
+    format: file-name    
+  kind-param:
+    name: kind
+    in: query
+    description: Kind of content item to include in response. Default is `any`
+    required: false
+    type: string
+    enum:
+    - folder
+    - document
+    - any
+    default: any
+  subfolders-param:
+    name: subfolders
+    in: query
+    allowEmptyValue: true          
+    description: Include contents of subfolders
+    required: false
+    type: boolean
+    default: false    
+definitions:
+  command-result:
+    properties:
+      id:
+        type: string
+        readOnly: true
+      resource-status:
+        type: string
+        readOnly: true
+    example:
+      id: FS123212121
+      resource-status: created
+  validation-problem:
+    type: array
+    items:
+      type: object
+      properties:
+        field:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              error:
+                type: string
+              message:
+                type: string
+    example:
+      -  
+        field: phone-number
+        errors:
+          -
+            error: invalid-format
+            message: Format for this field is invalid
+          -
+            error: max-length
+            message: Content exceeds maximum alowed length 
+      - 
+        field: account-number
+        errors:
+          -
+            error: check-digit-invalid
+            message: Check digit is invalid for this field
+  business-problem:
+    properties:
+      problem:
+        type: string
+      message:
+        type: string
+      details:
+        type: string
+    example:
+      problem: document-locked
+      message: Document you are trying to a is locked by another user.
+      details: User john.doe has locked the document.
+  paged-list:
+    description: List with support for paging
+    properties:  
+      total-count:
+        description: Total number of items in collection
+        type: integer
+      page-size:
+        description: Size of the page
+        type: integer
+      page:
+        description: Index of current page
+        type: integer
+      total-pages:
+        description: Total number of pages of set size
+        type: integer
+      sort-order:
+        description: Sort order (`asc` or `desc`). Default is asc
+        type: string
+        enum:
+        - asc
+        - desc
+      sort-by:  
+        description: Attribute of the collection item to sort by
+        type: string
+         
+  repository-list:
+    description: List of repositories
+    properties:
+      repositories:
+        type: array
+        items: 
+          $ref: '#/definitions/repository'
+    example:
+      - 
+        repository-id: 1
+        repository-name: mchub
+      - 
+        repository-id: 2
+        repository-name: dms
+  repository:
+    description: Repository information
+    properties:
+      repository-id:
+        type: string
+      repository-name:
+        type: string
+    example:
+      repository-id: 1
+      repository-name: dms
+  content-item:
+    description: Base content management object that contains fields shared between folders and documents
+    type: object
+    discriminator: kind
+    required: 
+    - kind
+    properties:
+      id:
+        type: string
+        description: Unique identifier of folder or document within repository. Each repository may have different format of identifiers
+        readOnly: true
+      changed-on:
+        type: string
+        format: date-time
+        description: Time and date when document or folder was last changed
+        readOnly: true
+      created-on:
+        type: string        
+        format: date-time
+        description: Time and date when document or folder was created
+        readOnly: true
+      created-by:
+        type:
+          string
+        description: Identifier of the party (customer or agent) that created document or folder. Can be `system` when object was created by non-interractive backend process
+        readOnly: true
+      name:
+        type: string
+        description: Name of the file or folder. File names may include extension
+      path:
+        type: string
+        readOnly: true
+      kind:
+        type: string
+        enum:
+          - folder
+          - document
+      extended:
+        additionalProperties:
+          type: object
+    example:
+      id: ee48b17534c9
+      changed-on: 2015-10-20T23:22:10
+      created-on: 2015-11-23T07:08:30
+      created-by: JABON0007
+      name: headshot.png
+      path: JABON0007/images
+      kind: document               
+  content-item-list:
+    description: List of content items
+    allOf: 
+    - $ref: '#/definitions/paged-list'      
+    - type: object
+      properties:
+        items:
+          type: array
+          items: 
+            $ref: '#/definitions/content-item'
+      example:
+        total-count: 2
+        page-size: 10
+        page: 1
+        total-pages: 1
+        sort-order: desc
+        sort-by: created-on
+        items:
+        - 
+          id: ee48b17534c9
+          changed-on: 2015-10-20T23:22:10
+          created-on: 2015-11-23T07:08:30
+          created-by: JABON0007
+          name: headshot.png
+          path: JABON0007/images
+          kind: document 
+        - 
+          id: ee48b17534c9
+          changed-on: 2015-10-20T23:22:10
+          created-on: 2015-11-23T07:08:30
+          created-by: JABON0007
+          name: headshot.png
+          path: JABON0007/images/archived
+          kind: folder  
+  document-list:
+    description: List of documents
+    properties:
+      documents:
+        type: array
+        items: 
+          $ref: '#/definitions/document'    
+    example:
+      total-count: 2
+      page-size: 10
+      page: 1
+      total-pages: 1
+      sort-order: desc
+      sort-by: created-on
+      items:
+      - 
+        id: ee48b17534c9
+        changed-on: 2015-10-20T23:22:10
+        created-on: 2015-11-23T07:08:30
+        created-by: JABON0007
+        name: headshot.png
+        path: JABON0007/images
+        kind: document 
+      - 
+        id: ee48b17534c9
+        changed-on: 2015-10-20T23:22:10
+        created-on: 2015-11-23T07:08:30
+        created-by: JABON0007
+        name: headshot.png
+        path: JABON0007/images/archived
+        kind: folder           
+  folder:
+    type: object
+    description: A container for documents and child folders. 
+    allOf: 
+    - $ref: '#/definitions/content-item'      
+    - type: object
+      properties:
+        folder-purpose:
+          type: string
+          description: Classification explaining intended use of folder in business context. Commonly used values include generic-folder, client-folder, arrangement-folder, case-folder, order-folder. For a complete list of possible values see [folder-purpose]() classification
+      example:
+        id: ee48b17534c9
+        changed-on: 2015-10-20T23:22:10
+        created-on: 2015-11-23T07:08:30
+        created-by: JABON0007
+        name: images
+        path: JABON0007/images
+        kind: folder      
+        folder-purpose: generic-folder
+  document:
+    type: object
+    description: Represents elementary information entity managed by the repository
+    allOf: 
+    - $ref: '#/definitions/content-item'      
+    - type: object
+      properties:
+        media-type:
+          type: string
+          description: MIME Media Type that describes format of the docuements content stream as deﬁned by RFC2045 and RFC2046. Commonly used media type examples are image/png, image/jpg, application/pdf and application/msword
+        filing-purpose:
+          type: string
+          description: Classification explaining what intended use of the document within business. Commonly used filing purposes are arrangement-document, mandate-document and profile-photo. For a complete list of possible values see [filing-purpose]() classification.
+        filing-case-number:
+          type:
+            string
+          description: Identifies the case related to the document such as arrangment, loan application or complaint. Having this file enables flat folder structure where documents in one folder can belong to different cases.
+        size:
+          type: integer
+          description: Size of the document in bytes
+          readOnly: true
+      example:
+        id: ee48b17534c9
+        changed-on: 2015-10-20T23:22:10
+        created-on: 2015-11-23T07:08:30
+        created-by: JABON0007
+        name: headshot.png
+        path: JABON0007/images
+        kind: document      
+        media-type: image/png
+        filing-purpose: profile-photo
+        filing-case-number: JABON0007
+        size: 21231 

@@ -1,0 +1,457 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "beta",
+        "title": "Content Management Events",
+        "description": "Events described here tell you what happens to **documents** and **folders** in content respository. To learn more about general approach to event processing see [How to work with events]()."
+    },
+    "host": "playground.apistudio.io",
+    "basePath": "/try/86501cfa-c99e-4d69-8236-d9fcf41bba7d",
+    "schemes": [
+        "http"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/document-filed": {
+            "get": {
+                "summary": "A new document has been filed to repository",
+                "tags": [
+                    "Documents"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Event payload",
+                        "schema": {
+                            "$ref": "#/definitions/document-filed"
+                        }
+                    }
+                }
+            }
+        },
+        "/document-moved": {
+            "get": {
+                "summary": "A document was moved to different folder",
+                "tags": [
+                    "Documents"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Event payload",
+                        "schema": {
+                            "$ref": "#/definitions/document-moved"
+                        }
+                    }
+                }
+            }
+        },
+        "/document-updated": {
+            "get": {
+                "summary": "Document properties were updated",
+                "tags": [
+                    "Documents"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Event payload",
+                        "schema": {
+                            "$ref": "#/definitions/document-updated"
+                        }
+                    }
+                }
+            }
+        },
+        "/document-deleted": {
+            "get": {
+                "summary": "A document was deleted",
+                "tags": [
+                    "Documents"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Event payload",
+                        "schema": {
+                            "$ref": "#/definitions/document-deleted"
+                        }
+                    }
+                }
+            }
+        },
+        "/folder-created": {
+            "get": {
+                "summary": "A new folder was created",
+                "tags": [
+                    "Folders"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Event payload",
+                        "schema": {
+                            "$ref": "#/definitions/folder-created"
+                        }
+                    }
+                }
+            }
+        },
+        "/folder-moved": {
+            "get": {
+                "summary": "A folder was moved to different parent folder",
+                "tags": [
+                    "Folders"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Event payload",
+                        "schema": {
+                            "$ref": "#/definitions/folder-moved"
+                        }
+                    }
+                }
+            }
+        },
+        "/folder-updated": {
+            "get": {
+                "summary": "Folder properties were updated",
+                "tags": [
+                    "Folders"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Event payload",
+                        "schema": {
+                            "$ref": "#/definitions/folder-updated"
+                        }
+                    }
+                }
+            }
+        },
+        "/folder-deleted": {
+            "get": {
+                "summary": "A folder was deleted",
+                "tags": [
+                    "Folders"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Event payload",
+                        "schema": {
+                            "$ref": "#/definitions/folder-deleted"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "event": {
+            "x-asse-comment": "Event is redefined within each API to provide more specific examples and documentation",
+            "type": "object",
+            "discriminator": "kind",
+            "required": [
+                "kind"
+            ],
+            "properties": {
+                "kind": {
+                    "type": "string",
+                    "description": "Unique kind of event",
+                    "enum": [
+                        "document-filed",
+                        "document-moved",
+                        "document-deleted",
+                        "folder-created",
+                        "dolder-moved",
+                        "folder-deleted"
+                    ]
+                },
+                "occurred-on": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Time when an event occurred"
+                },
+                "id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "Unique identifier of event instance in UUID format"
+                },
+                "aggregate-id": {
+                    "type": "string",
+                    "description": "Unique identifier of `document` or `folder` that published the event"
+                },
+                "aggregate-kind": {
+                    "type": "string",
+                    "description": "Kind of resource (aggregate) that this event describes. In content management this can be `document` or `folder`",
+                    "enum": [
+                        "document",
+                        "folder"
+                    ]
+                }
+            }
+        },
+        "document-filed": {
+            "type": "object",
+            "description": "A new document has been filed to repository",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/event"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "file-name": {
+                            "type": "string"
+                        }
+                    }
+                }
+            ],
+            "example": {
+                "kind": "document-filed",
+                "occurred-on": "2015-11-19T13:21:01.000Z",
+                "id": "736a07bd-809e-43bd-9ac1-20991a78f390",
+                "aggregate-id": "3e0f7ce312e5",
+                "aggregate-kind": "document",
+                "file-name": "photo.jpg"
+            }
+        },
+        "document-moved": {
+            "type": "object",
+            "description": "A document has been moved to different folder",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/event"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "file-name": {
+                            "type": "string"
+                        },
+                        "old-path": {
+                            "type": "string"
+                        },
+                        "new-path": {
+                            "type": "string"
+                        }
+                    }
+                }
+            ],
+            "example": {
+                "kind": "document-moved",
+                "id": "736a07bd-809e-43bd-9ac1-20991a78f390",
+                "aggregate-id": "3e0f7ce312e5",
+                "aggregate-kind": "document",
+                "file-name": "photo.jpg",
+                "old-path": "web/jabon0007/images/",
+                "new-path": "web/jabon0007/archive/images/"
+            }
+        },
+        "document-updated": {
+            "type": "object",
+            "description": "Folder properties were updated",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/event"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "type": "string"
+                        },
+                        "file-name": {
+                            "type": "string"
+                        },
+                        "updates": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "old": {
+                                        "type": "string"
+                                    },
+                                    "new": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            ],
+            "example": {
+                "kind": "document-properties-updated",
+                "id": "736a07bd-809e-43bd-9ac1-20991a78f390",
+                "aggregate-id": "3e0f7ce312e5",
+                "aggregate-kind": "document",
+                "path": "web/jabon0007/applications/wi738811/scans",
+                "file-name": "photo.jpg",
+                "updates": [
+                    {
+                        "name": "ou",
+                        "old": 2301,
+                        "new": 1000
+                    },
+                    {
+                        "name": "thumbnail",
+                        "old": "no",
+                        "new": "yes"
+                    }
+                ]
+            }
+        },
+        "document-deleted": {
+            "type": "object",
+            "description": "A folder was deleted",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/event"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "type": "string"
+                        }
+                    }
+                }
+            ],
+            "example": {
+                "kind": "folder-deleted",
+                "id": "736a07bd-809e-43bd-9ac1-20991a78f390",
+                "aggregate-id": "3e0f7ce312e5",
+                "aggregate-kind": "folder",
+                "path": "web/jabon0007/",
+                "file-name": "photo.jpg"
+            }
+        },
+        "folder-created": {
+            "type": "object",
+            "description": "A new folder was created",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/event"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "type": "string"
+                        }
+                    }
+                }
+            ],
+            "example": {
+                "kind": "folder-created",
+                "id": "736a07bd-809e-43bd-9ac1-20991a78f390",
+                "aggregate-id": "3e0f7ce312e5",
+                "aggregate-kind": "folder",
+                "path": "web/jabon0007/"
+            }
+        },
+        "folder-moved": {
+            "type": "object",
+            "description": "A folder was moved to different parent folder",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/event"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "type": "string"
+                        }
+                    }
+                }
+            ],
+            "example": {
+                "kind": "folder-moved",
+                "id": "736a07bd-809e-43bd-9ac1-20991a78f390",
+                "aggregate-id": "3e0f7ce312e5",
+                "aggregate-kind": "folder",
+                "old-path": "web/jabon0007/applications/wi738811/scans",
+                "new-path": "web/jabon0007/arrangements/0019212391911/scans"
+            }
+        },
+        "folder-updated": {
+            "type": "object",
+            "description": "Folder properties were updated",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/event"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "type": "string"
+                        },
+                        "updates": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "old": {
+                                        "type": "string"
+                                    },
+                                    "new": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            ],
+            "example": {
+                "kind": "folder-updated",
+                "id": "736a07bd-809e-43bd-9ac1-20991a78f390",
+                "aggregate-id": "3e0f7ce312e5",
+                "aggregate-kind": "folder",
+                "path": "web/jabon0007/applications/wi738811/scans",
+                "updates": [
+                    {
+                        "name": "ou",
+                        "old": 2301,
+                        "new": 1000
+                    },
+                    {
+                        "name": "thumbnail",
+                        "old": "no",
+                        "new": "yes"
+                    }
+                ]
+            }
+        },
+        "folder-deleted": {
+            "type": "object",
+            "description": "A folder was deleted",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/event"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "type": "string"
+                        }
+                    }
+                }
+            ],
+            "example": {
+                "kind": "folder-deleted",
+                "id": "736a07bd-809e-43bd-9ac1-20991a78f390",
+                "aggregate-id": "3e0f7ce312e5",
+                "aggregate-kind": "folder",
+                "path": "web/jabon0007/"
+            }
+        }
+    }
+}
