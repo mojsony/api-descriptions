@@ -65,7 +65,7 @@ POST /dms/folders
 
 ```json
 {
-  "kind": "folder" 
+  "kind": "folder", 
   "name": "jabon0007",
   "path": "customers", 
   "folder-purpose": "customer-profile",
@@ -78,7 +78,7 @@ Location: http://api.asse.co/content/dms/folders/ee48b17534c9
 
 ```json
 {
-  "kind": "folder"
+  "kind": "folder",
   "name": "jabon0007",
   "path": "customers",
   "folder-purpose": "customer-profile"
@@ -108,7 +108,7 @@ Location: http://api.asse.co/content/dms/documents/mj20b12534r4
 ```
 ```json
 {
-  "kind": "document"
+  "kind": "document",
   "name": "headshot.png",
   "path": "customers/jabon0007",
   "filing-purpose": "customer-picture",   
@@ -129,7 +129,7 @@ You will get back `200 OK` status code and json representation with a list of re
 {
   "items": [
     {
-      "kind": "document"
+      "kind": "document",
       "name": "headshot.png",
       "path": "customers/jabon0007",  
       "id": "mj20b12534r4",
