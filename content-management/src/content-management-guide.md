@@ -68,7 +68,7 @@ POST /dms/folders
   "kind": "folder", 
   "name": "jabon0007",
   "path": "customers", 
-  "folder-purpose": "customer-profile",
+  "folder-purpose": "customer-profile"
 }
 ```
 You will get back `201 Created` status code and json representation with a created folder. Location header will contain URL for newly created folder.
@@ -115,7 +115,7 @@ Location: http://api.asse.co/content/dms/documents/mj20b12534r4
   "id": "mj20b12534r4",
   "changed-on": "2015-10-20T23:22:10.000Z",
   "created-on": "2015-11-23T07:08:30.000Z",
-  "created-by": "jabon0007",
+  "created-by": "jabon0007"
 }
 ```
 ###5. List folder contents
@@ -137,13 +137,13 @@ You will get back `200 OK` status code and json representation with a list of re
       "created-on": "2015-11-23T07:08:30.000Z",
       "created-by": "jabon0007"
     }
-  ]
+  ],
   "total-count": 1, 
   "page-size": 10,
   "page": 1,
   "total-pages": 1,
   "sort-order": "asc", 
-  "sort-by": "created-on",  
+  "sort-by": "created-on"  
 }
 ```
 ###6. Download the document
