@@ -81,7 +81,7 @@ Location: http://api.asse.co/content/dms/folders/ee48b17534c9
   "kind": "folder",
   "name": "jabon0007",
   "path": "customers",
-  "folder-purpose": "customer-profile"
+  "folder-purpose": "customer-profile",
   "id": "ee48b17534c9",
   "created-on": "2015-11-23T07:08:30.000Z", 
   "created-by": "jabon007", 
