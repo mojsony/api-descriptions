@@ -1,6 +1,7 @@
-Content Management API 
-======================
-Content Management API provides access to documents stored in content management repositories. Any form of unstructured content (files) such as documents, templates and images can be organized into a folder structure that follows conventions understood by applications. API exposes operations to upload and download content and manipulate its metadata.
+![Folders](http://cdn.flaticon.com/png/64/98/98193.png)
+Content Management API v2
+=========================
+Content Management API v2 provides access to documents stored in content management repositories. Any form of unstructured content (files) such as documents, templates and images can be organized into a folder structure that follows conventions understood by applications. API exposes operations to upload and download content and manipulate its metadata.
    
 Key Resources
 -------------
