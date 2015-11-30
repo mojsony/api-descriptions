@@ -1,6 +1,10 @@
 ![API](http://www.onedesk.com/wordpress/wp-content/uploads/2012/10/API-128x128.png) 
-Documentation and descriptions for REST and event based APIs
-============
+Documentation for ASEE public APIs
+==================================
+
+Guidelines
+----------
+Be sure to check the [guidelines](guidelines.md) before you start writing.
 
 Tools
 -----
@@ -10,6 +14,11 @@ These tools that will make it easier to write swagger and markdown text files.
 - [Visual Studio Code](https://code.visualstudio.com) `desktop` `markdown` `yaml`
 > These tools are just suggestions, you are free to pick other tools or work in notepad if you prefer.
 
-Guidelines
-----------
-Be sure to check the [guidelines](guidelines.md) before you start writing.
+Organization of source files 
+-----------------------------
+See how we [organize](organization.md) documentation source files.
+
+
+Build process
+-------------
+1. 
