@@ -312,10 +312,6 @@ paths:
       parameters:
         - $ref: "#/parameters/repository-name"
         - $ref: "#/parameters/folder-id-param"
-        - 
-          name: api-version
-          in: header
-          
       responses:
         '200':
           description: Success
