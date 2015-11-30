@@ -59,6 +59,14 @@ paths:
   /{repo}/{path}:
     get:
       summary: List folder contents by path
+      description: |
+        Supports`paging` `shaping` `sorting` `filtering`
+        > **Changes since v2.0**
+        
+        > 2.2 Added support for sorting
+        
+        > 2.1 Added support for `extended` fields in resource model
+        
       tags: 
         - Folders
       x-asee-tags:
@@ -299,12 +307,7 @@ paths:
     delete:
       summary: Delete folder. 
       description: |
-       'WARNING: This operation deletes folder with all contents and subdirectories'.
-       ###Change from previous versions
-       
-       version  | changes
-       ---------------------
-       v2.3     | New query parameters 
+       **WARNING**: This operation deletes folder with all contents and subdirectories'.
        
       tags: 
         - Folders
