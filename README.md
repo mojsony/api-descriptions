@@ -1,5 +1,4 @@
-![API](http://www.onedesk.com/wordpress/wp-content/uploads/2012/10/API-128x128.png)
-API Descriptions
+![API](http://www.onedesk.com/wordpress/wp-content/uploads/2012/10/API-128x128.png) Descriptions
 ================
 Descriptions and specifications of ASEE APIs.
 
