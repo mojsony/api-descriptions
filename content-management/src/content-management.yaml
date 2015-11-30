@@ -298,13 +298,24 @@ paths:
   /{repo}/folders/{id}:
     delete:
       summary: Delete folder. 
-      description: 'WARNING: This operation deletes folder with all contents and subdirectories'
+      description: |
+       'WARNING: This operation deletes folder with all contents and subdirectories'.
+       ###Change from previous versions
+       
+       version  | changes
+       ---------------------
+       v2.3     | New query parameters 
+       
       tags: 
         - Folders
       operationId: Folders_Delete
       parameters:
         - $ref: "#/parameters/repository-name"
         - $ref: "#/parameters/folder-id-param"
+        - 
+          name: api-version
+          in: header
+          
       responses:
         '200':
           description: Success
@@ -350,13 +361,11 @@ paths:
           name: filing-purpose
           in: formData
           description: Classification explaining what intended use of the document within business. Commonly used filing purposes are arrangement-document, mandate-document and profile-photo. For a complete list of possible values see [filing-purpose]() classification.
-          required: true
           type: string
         -
           name: filing-case-number
           in: formData
           description: Identifies the case related to the document such as arrangment, loan application or complaint. Having this file enables flat folder structure where documents in one folder can belong to different cases.
-          required: true
           type: string
       responses:
         '201':
