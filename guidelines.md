@@ -15,9 +15,8 @@ API specific problem codes
 - Reserve a range of 500 codes above 50000 and below
 
 >####DONT
-- asa
+- Pass internal eror codes and messages without mapping to public literals
 
 >####CONSIDER
 - Abbreviated workds in literal eg. max-upload-size vs maximum-upload-size-reached
 
-###Validations
