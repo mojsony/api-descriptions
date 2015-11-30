@@ -3,20 +3,33 @@ Guidelines
 ==========
 Here are some guidelines to keep in mind when writing documentation and descriptions. 
 
-API specific problem codes
-------
+Problems
+--------
+Problem codes help in situations when request is formally valid and none of the standard HTTP status codes explaines the problem well. Each problem is uniquely identified by its literal. Each literal is paired with numeric code that is easier to map in backend system. 
+
 > ####DO
-- Return 440 HTTP status code
-- Specify problem literals and their codes for sitations that go beyond request field validations
+- Return HTTP status code 440 for API specific problems
 - Keep your literals as short as possible
-- Name literals with lowercase dash convention for multiple words eg. account-limit-reached
-- When naming literals use passive voice and verbs in past tense document-locked
-- Make codes more generic and supply details in text message
-- Reserve a range of 500 codes above 50000 and below
+- Name literals with lowercase dash convention for multiple words eg. `account-limit-reached`
+- Name literals using passive voice and verbs in past tense eg. `document-locked`
+- Make literals more generic and then supply specific details in `details` field for problem instance
+- Reserve a range of 500 codes between 50000 and 80000
 
->####DONT
-- Pass internal eror codes and messages without mapping to public literals
+> ####DONT
+- Pass internal implementation eror codes and messages without mapping to public literals
 
->####CONSIDER
-- Abbreviated workds in literal eg. max-upload-size vs maximum-upload-size-reached
+> ####CONSIDER
+- Naming literals with abbreviated words eg. `max-upload-size-reached` vs `maximum-upload-size-reached`
 
+Request validation
+------------------
+When request fails serverv validation, response should contain list of validation errors for each invalid field. Validation error is uniquely identified by its literal.
+
+> ####DO
+- Return HTTP status code 400 for request validation problem
+- Keep validation error literals as short as possible
+- Name literals with lowercase dash convention for multiple words eg. `out-of-range`
+- Make literals more generic and then supply specific details in `details` field for problem instance
+
+> ####DONT
+- Pass internal implementation eror codes and messages without mapping to public literals
