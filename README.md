@@ -17,8 +17,7 @@ These tools that will make it easier to write swagger and markdown text files.
 
 Client library generator
 ------------------------
-Use Autorest to generate client library in C# and verify that generated code compiles properly.
-- [Autorest](https://www.nuget.org/packages/autorest/) 
+Use [Autorest](https://www.nuget.org/packages/autorest/) to generate client library in C# and verify that generated code compiles properly.
 
 Organization of source files 
 ----------------------------
