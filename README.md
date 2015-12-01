@@ -6,6 +6,11 @@ Guidelines
 ----------
 Be sure to check the [guidelines](guidelines.md) before you start writing.
 
+Writing Style
+-------------
+For general software documentation writing style and terminology, see the [Microsoft Manual of Style](https://eucalyptus.atlassian.net/wiki/download/attachments/76611622/microsoft_manual_of_style_fourth_edition.pdf?version=2&modificationDate=1424379604164&api=v2).
+
+
 Writing Tools
 -------------
 These tools that will make it easier to write swagger and markdown text files.
