@@ -31,20 +31,7 @@ Organization of source files
     │   responses.yaml
     │   models.yaml
     │   parameters.yaml
-    |   overview.md
-    │   authentication.md
-    │   versioning.md	
-    │   error-handling.md	
-    │   response-shaping.md	
-    │   paging.md	
-    │   sorting.md	
-    │   filtering.md	
-    │   searching.md	
-    │   hypermedia.md	
-    │   content-negotiation.md	
-    │   async-requests.md	
-    │   events.md	
-    │   classifications-and-enums.md	
+    |   general-guide.md
     │   common-validations.md
     │   
     └───/swagger
