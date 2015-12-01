@@ -1,6 +1,7 @@
 ![API](http://www.onedesk.com/wordpress/wp-content/uploads/2012/10/API-128x128.png) 
 Documentation for ASEE public APIs
 ==================================
+> Both documentation and guidelines are livinig documents open for contribution. Please ask any questions, dillemas, suggestions as github issues on this repository so others can benefit from recorded answers and discussion.
 
 API Design and Writing Guidelines
 ---------------------------------
