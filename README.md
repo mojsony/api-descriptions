@@ -2,8 +2,8 @@
 Documentation for ASEE public APIs
 ==================================
 
-Guidelines
-----------
+API Design and Writing Guidelines
+---------------------------------
 Be sure to check the [guidelines](guidelines.md) before you start writing.
 
 Writing Style
@@ -13,12 +13,12 @@ For general software documentation writing style and terminology, see the [Micro
 
 Writing Tools
 -------------
-These tools that will make it easier to write swagger and markdown text files.
+Following tools can help you write swagger and markdown text files:
 - [Api Studio](http://playground.apistudio.io/) `web based` `yaml+swagger` `json+swagger`
 - [Stack Edit](https://stackedit.io) `web based` `markdown`
 - [Visual Studio Code](https://code.visualstudio.com) `desktop` `markdown` `yaml`
 
-> These tools are just suggestions, you are free to pick other tools or work in notepad if you prefer
+> These are just suggestions, you are wellcome to use different tools or work in notepad if you prefer
 
 Client library generator
 ------------------------
@@ -28,9 +28,9 @@ Organization of source files
 ----------------------------
 See how we [organize](organization.md) documentation source files.
 
-
 Build process
 -------------
+This is how we produce documentation site from source files:
 1. Documentation writer checks-in yaml / markdown file
 2. Build script converts swagger files from yaml to json
 3. Build script generates static html from markdown using templates and pretzel tool
