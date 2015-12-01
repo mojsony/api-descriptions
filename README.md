@@ -31,6 +31,7 @@ See how we [organize](organization.md) documentation source files.
 Build process
 -------------
 This is how we produce documentation site from source files:
+
 1. Documentation writer checks-in yaml / markdown file
 2. Build script converts swagger files from yaml to json
 3. Build script generates static html from markdown using templates and pretzel tool
