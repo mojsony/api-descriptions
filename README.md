@@ -5,7 +5,7 @@ Documentation for ASEE public APIs
 
 API Design and Writing Guidelines
 ---------------------------------
-Be sure to check both [design guidelines](design-guidelines.md) and [documentation guidelines](documentatuion-guidelines.md) before you start writing specifications and documentation.
+Be sure to check both [design guidelines](design-guidelines.md) and [documentation guidelines](documentation-guidelines.md) before you start writing specifications and documentation.
 
 Writing Style
 -------------
