@@ -1,7 +1,7 @@
 
-API Design and Documentation Guidelines
+API Design Guidelines
 ===================================
-Here are some guidelines to keep in mind when writing documentation and descriptions.
+Here are some guidelines to keep in mind when writing API interface specifications.
 
 > This page is work in progress. The list of guidelines will be expanded very soon.
 
