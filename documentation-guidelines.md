@@ -34,8 +34,7 @@ When API request fails validation, response with HTTP status code 400 contains l
 - When describing the validation explain the failed assertion represented by literal in validations table as formatted message. For example, max-lenght validator with "Maximum {0} characters allowed"
 
 > ####DONT
-- Describe 400 response for your methods as they are described in general guidelines on error handling
-- Define specific literals where shared generic literals can be used. For example, instead of max-lenght-5 use max-length and as  5 in message template "Maximum {0} characters allowed".
+- Dont add 400 response for your methods in swagger as they are covered by `default` response as described in general guidelines on error handling
 
 Documenting API overview
 ------------------------
