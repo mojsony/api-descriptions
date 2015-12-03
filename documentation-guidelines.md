@@ -2,11 +2,11 @@
 API Documentation Guidelines
 ===================================
 Here are some guidelines to keep in mind when documenting APIs.
-- [Documenting API problems](documenting-api-problems)
-- [Documenting API validations](documenting-api-validations)
-- [Documenting API overview](documenting-api-overview)
-- [Documenting API methods](documenting-api-methods)
-- [Documenting API models](documenting-api-models)
+- [Documenting API problems](#documenting-api-problems)
+- [Documenting API validations](#documenting-api-validations)
+- [Documenting API overview](#documenting-api-overview)
+- [Documenting API methods](#documenting-api-methods)
+- [Documenting API models](#documenting-api-models)
 
 > This page is work in progress. The list of guidelines will be expanded very soon.
 
