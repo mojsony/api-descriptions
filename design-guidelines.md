@@ -25,13 +25,12 @@ Problem codes help in situations when request is formally valid and none of the 
 
 Request validation
 ------------------
-When request fails serverv validation, response should contain list of validation errors for each invalid field. Validation error is uniquely identified by its literal.
+When request fails server validation, response should contain list of validation errors for each invalid field. Validation error is uniquely identified by its literal.
 
 > ####DO
 - Return HTTP status code 400 for request validation problem
-- Keep validation error literals as short as possible
+- Keep validation literals as short as possible
 - Name literals with lowercase dash convention for multiple words eg. `out-of-range`
-- Make literals more generic and then supply specific details in `details` field for problem instance
 
 > ####DONT
-- Pass internal implementation eror codes and messages without mapping to public literals
+- Define specific literals where shared generic literals can be used. For example, instead of max-lenght-5 use max-length and as  5 in message template "Maximum {0} characters allowed".
