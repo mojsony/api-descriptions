@@ -5,7 +5,7 @@ Defining principle of BIAN service landscape is that blocks are normalized and t
 Maintaining clear boundaries and avoiding overlaps is what makes a difference between stable coherent set of APIs and random chaos in the long term.
 Tight project schedule for delivery of v1 APIs, structure of project teams and business units and lack of code reviews led to v1 API definitions that did not respect boundaries and responsibilities between APIs.
 
-- [Customer Account v2 Clarifications](customer-account-v2-clarifications)
+- [Customer Account v2 Clarifications](responsibility-clarification.md#customer-account-v2-clarifications)
 
 Responsibility problems in practice
 -----------------------------------
