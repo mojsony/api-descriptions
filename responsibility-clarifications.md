@@ -19,7 +19,7 @@ In practice problems happen when one API *hijacks* some responsibilities (logic 
 
 Customer Account v2 Clarifications
 ----------------------------------
-| v1 implementor | v2 api method |  issue | responsible api | v2 responsible method | removed elements |
-|----------------|---------------|--------|-----------------|-----------------------|------------------|
+| v1 implementor | v2 api method |  issue | responsible api | v2 responsible method | elements to remove |
+|----------------|---------------|--------|-----------------|-----------------------|--------------------|
 | PUB RT	| `GET /accounts/{id}` | `information-hijack` | `customer-arrangement` | `GET /arrangements/{id}` | 
 
