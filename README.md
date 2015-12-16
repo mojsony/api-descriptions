@@ -3,9 +3,9 @@ Documentation for ASEE public APIs
 ==================================
 > Both documentation and guidelines are livinig documents open for contribution. Please ask any questions, dillemas, suggestions as github issues on this repository so others can benefit from recorded answers and discussion.
 
-API Design and Writing Guidelines
+API Definition and Documentation Guidelines
 ---------------------------------
-Be sure to check both [design guidelines](design-guidelines.md) and [documentation guidelines](documentation-guidelines.md) before you start writing specifications and documentation.
+Be sure to check both [definition guidelines](definition-guidelines.md) and [documentation guidelines](documentation-guidelines.md) before you start writing specifications and documentation.
 
 Writing Style
 -------------
