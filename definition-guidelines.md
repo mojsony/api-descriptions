@@ -1,7 +1,7 @@
 
-API Design Guidelines
+API Definition Guidelines
 ===================================
-Here are some guidelines to keep in mind when writing API interface specifications.
+Here are some guidelines to keep in mind when definig an API interface.
 
 > This page is work in progress. The list of guidelines will be expanded very soon.
 
