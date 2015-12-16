@@ -5,17 +5,7 @@ Here are some guidelines to keep in mind when definig an API interface.
 
 > This page is work in progress. The list of guidelines will be expanded very soon.
 
-Paths
------
-Paths define endpoint address of a resource after a base path for an API. Base path contains name of the api in kebab-case convention.
-> ####DO
-- Define base path
-- Use kebab-case naming convention for path names
-
-> ####DON'T
-- Include version in path
-
-Swagger definition guidelines
+General definition guidelines
 -----------------------------
 > ####DO
 - Use swagger 2.0
@@ -35,6 +25,16 @@ Swagger definition guidelines
 - Define 440 response for GET request
 - Do not use `type` to represent primary class or category of a concept.
 Do not repeat the name of the thing being typed if it is clear from the context. Instead of `/accounts?account-kinds` use `/accounts?kinds`
+
+Paths
+-----
+Paths define endpoint address of a resource after a base path for an API. Base path contains name of the api in kebab-case convention.
+> ####DO
+- Define base path
+- Use kebab-case naming convention for path names
+
+> ####DON'T
+- Include version in path
 
 Operations
 ----------
