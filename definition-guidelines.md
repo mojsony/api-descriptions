@@ -2,11 +2,16 @@
 API Definition Guidelines
 ===================================
 Here are some guidelines to keep in mind when definig an API interface.
+- [General guidelines](#general-guidelines)
+- [Paths](#paths)
+- [Operations](#operations)
+- [Models](#models)
+- [Errors](#errors)
 
 > This page is work in progress. The list of guidelines will be expanded very soon.
 
 General guidelines
------------------------------
+------------------
 > ####DO
 - Use swagger 2.0
 - Use markdown syntax in descriptions and summaries
@@ -48,8 +53,8 @@ Operations combine a http method (GET, POST, PUT, PATCH, DELETE) and a resource 
 - Repeat resource name in operation name. Repositories_GetList instead Repositories_GetReporitoryList
 - Use PUT method at collection resource
 
-Model definitions
------------------
+Models
+------
 In general we define 3 kinds of models as request/response payloads depending on the API style. CQRS style APIs have command models and read models. CRUD style APIs use same CRUD models for both read and write operations. To define event payloads that an API publishes we use event models.
 
 > ####DO
@@ -61,7 +66,8 @@ In general we define 3 kinds of models as request/response payloads depending on
 > ####DON'T
 - Name model definitions with prefixes such as API name. Instead of {api-name}.{model-name} use just {model-name}.
 
-
+Errors
+------
 ###Problems
 Problem codes help in situations when request is formally valid and none of the standard HTTP status codes explaines the problem well. Each problem is uniquely identified by its literal. Each literal is paired with numeric code that is easier to map in backend system. 
 
@@ -80,7 +86,7 @@ Problem codes help in situations when request is formally valid and none of the 
 > ####CONSIDER
 - Naming literals with abbreviated words eg. `max-upload-size-reached` vs `maximum-upload-size-reached`
 
-###Request validation
+###Validations
 
 When request fails server validation, response should contain list of validation errors for each invalid field. Validation error is uniquely identified by its literal.
 
