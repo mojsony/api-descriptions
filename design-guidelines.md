@@ -12,7 +12,7 @@ Paths define endpoint address of a resource after a base path for an API. Base p
 - Define base path
 - Use kebab-case naming convention for path names
 
-> ####DONT
+> ####DON'T
 - Include version in path
 
 Swagger definition guidelines
@@ -29,7 +29,7 @@ Swagger definition guidelines
 - Explain not only what request parameter represents but also how it affects processing of the request
 - Use `kinds` and `kind` as name of the parameter or the field in model that describes primary class of something.  
 
-> ####DONT
+> ####DON'T
 - Define 400 response for every operation. This is covered by general error handling guidelines.
 - Include default values of swagger in the file. Example: `deprecated: false`
 - Define 440 response for GET request
@@ -44,7 +44,7 @@ Operations combine a http method (GET, POST, PUT, PATCH, DELETE) and a resource 
 - Keep operation names short
 - When resource has a subresource such as accounts/{id}/balances parent resource should enable including subresource in response to GET with response shaping. Default assumption should be that subresources are not included
 
-> ####DONT
+> ####DON'T
 - Repeat resource name in operation name. Repositories_GetList instead Repositories_GetReporitoryList
 - Use PUT method at collection resource
 
@@ -58,7 +58,7 @@ In general we define 3 kinds of models as request/response payloads depending on
 - Use same verbs and nouns for both command and resulting event
 - Inherit common paged-list model for read models that support paging.
 
-> ####DONT
+> ####DON'T
 - Name model definitions with prefixes such as API name. Instead of {api-name}.{model-name} use just {model-name}.
 
 
@@ -73,7 +73,7 @@ Problem codes help in situations when request is formally valid and none of the 
 - Make literals more generic and then supply specific details in `details` field for problem instance
 - Reserve a range of 200 codes between 50000 and 60000
 
-> ####DONT
+> ####DON'T
 - Pass internal implementation eror codes and messages without mapping to public literals
 - Use http status codes other than 440 for problems
 
@@ -89,5 +89,5 @@ When request fails server validation, response should contain list of validation
 - Keep validation literals as short as possible
 - Name literals with lowercase dash convention for multiple words eg. `out-of-range`
 
-> ####DONT
+> ####DON'T
 - Define specific literals where shared generic literals can be used. For example, instead of max-lenght-5 use max-length and as  5 in message template "Maximum {0} characters allowed".
