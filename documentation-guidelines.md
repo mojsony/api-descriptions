@@ -20,7 +20,7 @@ For problems we use custom HTTP status code 440 as none of the standard HTTP sta
 - When describing the problem explain the situation represented by literal in problems table and suggest resolution
 - For each method that returns HTTP status code 440, list possible problems as bullets in description of 440 response. Format each bullet as hyperlink to `{api-name}-problems.md` markdown document that explains all possible problems for API. 
 
-> ####DONT
+> ####DON'T
  - Document internal implementation errors from system behind API interface
 
 
@@ -33,7 +33,7 @@ When API request fails validation, response with HTTP status code 400 contains l
 - Document all validations specific for an API in a table with literal and description in `{api-name}-validations.md` markdown document
 - When describing the validation explain the failed assertion represented by literal in validations table as formatted message. For example, max-lenght validator with "Maximum {0} characters allowed"
 
-> ####DONT
+> ####DON'T
 - Dont add 400 response for your methods in swagger as they are covered by `default` response as described in general guidelines on error handling
 
 Documenting API overview
