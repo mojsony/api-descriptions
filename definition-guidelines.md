@@ -5,7 +5,7 @@ Here are some guidelines to keep in mind when definig an API interface.
 
 > This page is work in progress. The list of guidelines will be expanded very soon.
 
-General definition guidelines
+General guidelines
 -----------------------------
 > ####DO
 - Use swagger 2.0
