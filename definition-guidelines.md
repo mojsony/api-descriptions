@@ -2,9 +2,11 @@ API Definition Guidelines
 ===================================
 Here are some guidelines to keep in mind when defining an API interface.
 - [General guidelines](#general-guidelines)
-- [Paths](#paths)
+- [Resources and paths](#resources-and-paths)
 - [Operations](#operations)
 - [Models](#models)
+- [Query parameters](#query-parameters)
+- [Enumerations and classifications](#enumerations-and-classifications)
 - [Errors](#errors)
 
 > This page is work in progress. The list of guidelines will be expanded very soon.
@@ -47,15 +49,6 @@ Resources are either collections or singletons. Collection resources typically h
 > ####DON'T
 - Don't include base path in path definition for specific resoruce
 - Don't use verbs in names of work item collection resources. Instead of `activate-card-requests` use `card-activations` noun phrase.
-
-Query parameters
-----------------
-> ####DO
-- Define all filter query parameters on a collection resource as optional. This applies for customer-id filter parameter as some applications do .
-- Define optional customer-id filter parameter for collection resources that expose customer specific resources. Authorization rules must decide if the caller (customer, employee or automated process) is allowed to access the resource. 
- 
-> ####DON'T
-- Don't use claims from bearer tokens such as customer-id for result filtering. Declare optional query parameter instead.
 
 Operations
 ----------
@@ -107,6 +100,14 @@ In general we define 3 kinds of models as request/response payloads depending on
 > ####DON'T
 - Don't include prefixes such as API name in model name. Instead of `content-management.folder` use just `folder`.
 
+Query parameters
+----------------
+> ####DO
+- Define all filter query parameters on a collection resource as optional. This applies for customer-id filter parameter as some applications do .
+- Define optional customer-id filter parameter for collection resources that expose customer specific resources. Authorization rules must decide if the caller (customer, employee or automated process) is allowed to access the resource. 
+ 
+> ####DON'T
+- Don't use claims from bearer tokens such as customer-id for result filtering. Declare optional query parameter instead.
 
 Enumerations and classifications
 -------------------------
