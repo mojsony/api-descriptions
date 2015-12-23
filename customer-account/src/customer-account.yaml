@@ -1,0 +1,2614 @@
+swagger: '2.0'
+host: 'localhost:80'
+basePath: /mc-api/customer-account/v2
+info:
+  description: "Customer Account API gives you access to accounting information for all accounts customer has with financial\r\n                institution such as balance, movements, limits, reservations and statements."
+  title: CustomerAccountV2
+  version: beta
+tags:
+  - description: Accounts
+    name: Accounts
+  - description: Cards
+    name: Cards
+  - description: Classifications
+    name: Classifications
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  '/accounts':
+    get:
+      deprecated: false
+      operationId: Accounts_GetAccountInfoList
+      parameters:
+        - $ref: '#/parameters/kind-param'
+        - $ref: '#/parameters/balances-param'
+        - $ref: '#/parameters/customer-id-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/accounts-v2'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: "Gets the list of accounts with basic details.\r\n                The list can be filtered to return only specific kind of accounts using the kind parameter\r\n                and also this list can include balances enumerated in the balances optional parameter."
+      tags:
+        - Accounts
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+  '/accounts/{account-id}':
+    get:
+      deprecated: false
+      operationId: Accounts_GetAccountDetails
+      parameters:
+        - $ref: '#/parameters/account-id-param'
+        - $ref: '#/parameters/balances-param'
+        - $ref: '#/parameters/currencies-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/account-v2'
+        '404':
+          description: NotFound
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: "Gets specific account details.\r\n                Operation returns account with details, related accounts, account balances,\r\n                links to arrangement terms and conditions, links to representation resources if they are available"
+      tags:
+        - Accounts
+      x-asee-tags:
+        - Shapeable
+  '/accounts/{account-id}/balances':
+    get:
+      deprecated: false
+      operationId: Accounts_GetAccountBalances
+      parameters:
+        - $ref: '#/parameters/account-id-param'
+        - $ref: '#/parameters/balances-param'
+        - $ref: '#/parameters/currencies-param'
+      responses:
+        '200':
+          description: OK
+          schema: {}
+        '404':
+          description: NotFound
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: "Gets account balances.\r\n                List of balances for a specific account.\r\n                List is filtered by balances and currencies optional parameters."
+      tags:
+        - Accounts
+      x-asee-tags: []
+  '/accounts/{account-id}/related-accounts':
+    get:
+      deprecated: false
+      operationId: Accounts_GetRelatedAccounts
+      parameters:
+        - $ref: '#/parameters/account-id-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/related-accounts-v2'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets the related accounts.
+      tags:
+        - Accounts
+      x-asee-tags:
+        - Pageable
+        - Sortable
+  '/accounts/{account-id}/limits':
+    get:
+      deprecated: false
+      operationId: Accounts_GetAccountLimits
+      parameters:
+        - $ref: '#/parameters/account-id-param'
+        - $ref: '#/parameters/limits-param'
+        - $ref: '#/parameters/currencies-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/limits-v2'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets the account limits.
+      tags:
+        - Accounts
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+  '/accounts/{account-id}/statements':
+    get:
+      deprecated: false
+      operationId: Accounts_GetStatementList
+      parameters:
+        - $ref: '#/parameters/account-id-param'
+        - $ref: '#/parameters/years-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/account-statements-v2'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets the statement list.
+      tags:
+        - Accounts
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+  '/accounts/{account-id}/statements/{statement-id}':
+    get:
+      deprecated: false
+      operationId: Accounts_GetStatementDetails
+      parameters:
+        - $ref: '#/parameters/account-id-param'
+        - $ref: '#/parameters/statement-id-param'
+        - $ref: '#/parameters/issued-date-param'
+        - $ref: '#/parameters/direction-param'
+        - $ref: '#/parameters/description-param'
+        - $ref: '#/parameters/types-param'
+        - $ref: '#/parameters/amount-from-param'
+        - $ref: '#/parameters/amount-to-param'
+        - $ref: '#/parameters/currencies-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/account-statement-v2'
+        '404':
+          description: NotFound
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets the statement details.
+      tags:
+        - Accounts
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+  '/accounts/{account-id}/reservations':
+    get:
+      deprecated: false
+      operationId: Accounts_GetReservationList
+      parameters:
+        - $ref: '#/parameters/account-id-param'
+        - $ref: '#/parameters/description-param'
+        - $ref: '#/parameters/types-param'
+        - $ref: '#/parameters/amount-from-param'
+        - $ref: '#/parameters/amount-to-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/account-reservations-v2'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets the reservation list.
+      tags:
+        - Accounts
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+  '/accounts/{account-id}/transactions':
+    get:
+      deprecated: false
+      operationId: Accounts_GetTransactionList
+      parameters:
+        - $ref: '#/parameters/account-id-param'
+        - $ref: '#/parameters/description-param'
+        - $ref: '#/parameters/types-param'
+        - $ref: '#/parameters/amount-from-param'
+        - $ref: '#/parameters/amount-to-param'
+        - $ref: '#/parameters/date-from-param'
+        - $ref: '#/parameters/date-to-param'
+        - $ref: '#/parameters/currency-param'
+        - $ref: '#/parameters/direction-param'
+        - $ref: '#/parameters/status-param'
+        - $ref: '#/parameters/beneficiary-param'
+        - $ref: '#/parameters/related-card-number-param'
+        - $ref: '#/parameters/latitude-param'
+        - $ref: '#/parameters/longitude-param'
+        - $ref: '#/parameters/radius-param'
+        - $ref: '#/parameters/standing-order-id-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/account-transactions-v2'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets the transaction list for account.
+      tags:
+        - Accounts
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+  '/accounts/{account-id}/transactions/{transaction-id}':
+    get:
+      deprecated: false
+      operationId: Accounts_GetTransactionDetails
+      parameters:
+        - $ref: '#/parameters/account-id-param'
+        - $ref: '#/parameters/transaction-id-param'
+        - $ref: '#/parameters/status-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/transaction-v2'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets the transaction details.
+      tags:
+        - Accounts
+      x-asee-tags:
+        - Shapeable
+  '/accounts/{account-id}/availability':
+    get:
+      deprecated: false
+      operationId: Accounts_CheckAccountNumberAvailability
+      parameters:
+        - description: Account number availability
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/account-number-availability-cmd-v2'
+        - $ref: '#/parameters/account-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        '404':
+          description: NotFound
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Check Account Number Availability
+      tags:
+        - Accounts
+      x-asee-tags: []
+  '/accounts/{account-id}/fcy-incomes':
+    get:
+      deprecated: false
+      operationId: Accounts_GetFCYIncomes
+      parameters:
+        - $ref: '#/parameters/account-id-param'
+        - $ref: '#/parameters/status-param'
+        - $ref: '#/parameters/date-from-param'
+        - $ref: '#/parameters/date-to-param'
+        - $ref: '#/parameters/debtor-name-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/fcy-incomes-v2'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets the list of fcy incomes with basic details.
+      tags:
+        - Accounts
+      x-asee-tags:
+        - Pageable
+        - Sortable
+  '/accounts/{account-id}/fcy-incomes/{income-id}':
+    get:
+      deprecated: false
+      operationId: Accounts_GetFCYIncomeDetails
+      parameters:
+        - $ref: '#/parameters/account-id-param'
+        - $ref: '#/parameters/income-id-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/fcy-income-v2'
+        '404':
+          description: NotFound
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets the fcy income details.
+      tags:
+        - Accounts
+      x-asee-tags:
+        - Shapeable
+  '/accounts/{account-id}/installment-plan':
+    get:
+      deprecated: false
+      operationId: Accounts_GetAccountInstallmentPlan
+      parameters:
+        - $ref: '#/parameters/account-id-param'
+        - $ref: '#/parameters/account-kind-param'
+        - $ref: '#/parameters/description-param'
+        - $ref: '#/parameters/date-from-param'
+        - $ref: '#/parameters/date-to-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/installment-plan-v2'
+        '404':
+          description: NotFound
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets the account installment plan.
+      tags:
+        - Accounts
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+  '/accounts/{account-id}/nickname':
+    put:
+      deprecated: false
+      operationId: Accounts_ChangeAccountNickName
+      parameters:
+        - description: The change account nick name command.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/account-nickname-change-v2'
+        - $ref: '#/parameters/account-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        '440':
+          description: "Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: \n [50032] ()\n [55656] ()"
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Change Account NickName
+      tags:
+        - Accounts
+      x-asee-tags: []
+  '/cards':
+    get:
+      deprecated: false
+      operationId: Cards_GetCards
+      parameters:
+        - $ref: '#/parameters/card-id-query-param'
+        - $ref: '#/parameters/customer-id-param'
+        - $ref: '#/parameters/kind-param'
+        - $ref: '#/parameters/type-param'
+        - $ref: '#/parameters/limits-param'
+        - $ref: '#/parameters/currencies-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/cards-v2'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets the list of cards with basic details
+      tags:
+        - Cards
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+  '/cards/{card-id}':
+    get:
+      deprecated: false
+      operationId: Cards_GetCardDetails
+      parameters:
+        - $ref: '#/parameters/card-id-param'
+        - $ref: '#/parameters/limits-param'
+        - $ref: '#/parameters/currencies-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/card-v2'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: "Gets the card with common details with related accounts, links to representation resources. Limits are optionally\r\n                included."
+      tags:
+        - Cards
+      x-asee-tags: []
+  '/cards/{card-id}/related-accounts':
+    get:
+      deprecated: false
+      operationId: Cards_GetCardRelatedAccounts
+      parameters:
+        - $ref: '#/parameters/card-id-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/related-accounts-v2'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets the list of related-accounts and their relationships to the specific card.
+      tags:
+        - Cards
+      x-asee-tags:
+        - Shapeable
+  '/cards/{card-id}/limits':
+    get:
+      deprecated: false
+      operationId: Cards_GetCardLimits
+      parameters:
+        - $ref: '#/parameters/card-id-param'
+        - $ref: '#/parameters/limits-param'
+        - $ref: '#/parameters/currencies-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/limits-v2'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets the list of applicable limits for a specific card.
+      tags:
+        - Cards
+      x-asee-tags:
+        - Shapeable
+    put:
+      deprecated: false
+      operationId: Cards_ChangeCardLimits
+      parameters:
+        - description: The change card limits command.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/card-limits-change-v2'
+        - $ref: '#/parameters/card-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Change card limits
+      tags:
+        - Cards
+      x-asee-tags: []
+  '/cards/{card-id}/transactions':
+    get:
+      deprecated: false
+      operationId: Cards_GetCardTransactions
+      parameters:
+        - $ref: '#/parameters/card-id-param'
+        - $ref: '#/parameters/direction-param'
+        - $ref: '#/parameters/types-param'
+        - $ref: '#/parameters/amount-from-param'
+        - $ref: '#/parameters/amount-to-param'
+        - $ref: '#/parameters/date-from-param'
+        - $ref: '#/parameters/date-to-param'
+        - $ref: '#/parameters/currencies-param'
+        - $ref: '#/parameters/description-param'
+        - $ref: '#/parameters/channel-param'
+        - $ref: '#/parameters/latitude-param'
+        - $ref: '#/parameters/longitude-param'
+        - $ref: '#/parameters/radius-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/card-transactions-v2'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets the card transactions with running totals and aggregate balances for the begining and end period
+      tags:
+        - Cards
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+  '/cards/{card-id}/reservations':
+    get:
+      deprecated: false
+      operationId: Cards_GetCardReservations
+      parameters:
+        - $ref: '#/parameters/card-id-param'
+        - $ref: '#/parameters/amount-from-param'
+        - $ref: '#/parameters/amount-to-param'
+        - $ref: '#/parameters/currencies-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/card-reservations-v2'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets the card reservations that are blocking funds on a card.
+      tags:
+        - Cards
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+  '/cards/{card-id}/nickname':
+    put:
+      deprecated: false
+      operationId: Cards_ChangeCardPreferences
+      parameters:
+        - description: Change card preferences command
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/card-nickname-change-v2'
+        - $ref: '#/parameters/card-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Changes card nickname.
+      tags:
+        - Cards
+      x-asee-tags: []
+  '/cards/{card-id}/pin':
+    put:
+      deprecated: false
+      operationId: Cards_InitiatePinChange
+      parameters:
+        - description: Initiate change pin command
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/initiate-pin-change-command'
+        - $ref: '#/parameters/card-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Change PIN
+      tags:
+        - Cards
+      x-asee-tags: []
+  '/classifications/{schema-id}':
+    get:
+      deprecated: false
+      operationId: Classifications_GetClassificationValues
+      parameters:
+        - $ref: '#/parameters/schema-param'
+        - $ref: '#/parameters/schema-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+          $ref: '#/definitions/classification-value'
+        '404':
+          description: NotFound
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets the classification values.
+      tags:
+        - Classifications
+      x-asee-tags: []
+parameters:
+  kind-param:
+    description: Kind of accounts. Only accounts with specific kind are returned.
+    in: query
+    name: kind
+    required: false
+    collectionFormat: csv
+    enum:
+      - transactional
+      - deposit
+      - deposit-term
+      - credit-card
+    items:
+      type: string
+    type: array
+  balances-param:
+    description: Balances by enumerated kind are included in the result
+    in: query
+    name: balances
+    required: false
+    collectionFormat: csv
+    enum:
+      - opening
+      - closing
+      - current
+      - available
+      - blocked
+    items:
+      type: string
+    type: array
+  customer-id-param:
+    description: Customer identifier.
+    in: query
+    name: customer-id
+    required: true
+    type: string
+  page-size-param:
+    description: 'Number of items on a page. For more information see general guidance on [paging and sorting]().'
+    in: query
+    name: page-size
+    required: false
+    format: int32
+    type: integer
+  page-param:
+    description: 'Page index. For more information see general guidance on [paging and sorting]().'
+    in: query
+    name: page
+    required: false
+    format: int32
+    type: integer
+  sort-order-param:
+    description: 'Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]()'
+    in: query
+    name: sort-order
+    required: false
+    enum:
+      - asc
+      - desc
+    type: string
+  sort-by-param:
+    description: 'Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]().'
+    in: query
+    name: sort-by
+    required: false
+    type: string
+  include-param:
+    description: 'List of fields to include in response. For more information see general guidance on [response shaping]()'
+    in: query
+    name: include
+    required: false
+    collectionFormat: csv
+    items:
+      type: string
+    type: array
+  trim-param:
+    description: 'List of fields to trim from response. For more information see general guidance on [response shaping]()'
+    in: query
+    name: trim
+    required: false
+    collectionFormat: csv
+    items:
+      type: string
+    type: array
+  account-id-param:
+    description: Account id
+    in: path
+    name: account-id
+    required: true
+    type: string
+  currencies-param:
+    description: Currencies by which balances are filtered. Currencies are represented by ISO 4217 aplha3 codes.
+    in: query
+    name: currencies
+    required: false
+    collectionFormat: csv
+    enum:
+      - rsd
+      - eur
+      - ...
+    items:
+      type: string
+    type: array
+  limits-param:
+    description: Limits.
+    in: query
+    name: limits
+    required: false
+    collectionFormat: csv
+    enum:
+      - overdraft
+      - direct-debit
+      - cache
+      - pos
+      - atm
+    items:
+      type: string
+    type: array
+  years-param:
+    description: "Years for which the statements are returned. By default current year is taken. \r\n            (Years are calendar: for example 2010)"
+    in: query
+    name: years
+    required: false
+    collectionFormat: csv
+    enum:
+      - '2014'
+      - '2013'
+      - '2012'
+      - '2011'
+      - '2010'
+    items:
+      type: string
+    type: array
+  statement-id-param:
+    description: Statement id
+    in: path
+    name: statement-id
+    required: true
+    type: string
+  issued-date-param:
+    description: Date and time when issued.
+    in: query
+    name: issued-date
+    required: false
+    format: date-time
+    type: string
+  direction-param:
+    description: Direction of transactions filter. transactions can be credit or debit . For example direcion=credit.
+    in: query
+    name: direction
+    required: false
+    type: string
+  description-param:
+    description: "Description part of transaction. Only transactions that contain the specified value are returned.\r\n            Example: description=salary."
+    in: query
+    name: description
+    required: false
+    type: string
+  types-param:
+    description: "Types of transactions to be returned. This is a list separated by commas.\r\n            Example: types=cache"
+    in: query
+    name: types
+    required: false
+    type: string
+  amount-from-param:
+    description: "Amount limit of transaction - bottom.\r\n            Example: amount-from=100"
+    in: query
+    name: amount-from
+    required: false
+    format: double
+    type: number
+  amount-to-param:
+    description: "Amount limit of transaction - top.\r\n            Example: amount-to=200"
+    in: query
+    name: amount-to
+    required: false
+    format: double
+    type: number
+  date-from-param:
+    description: Date and time of first transaction to be returned. By default T-30 calendar days.
+    in: query
+    name: date-from
+    required: false
+    format: date-time
+    type: string
+  date-to-param:
+    description: Date and time of last transaction. Default value is today.
+    in: query
+    name: date-to
+    required: false
+    format: date-time
+    type: string
+  currency-param:
+    description: "Currencies. When specified only transactions in specified currencies are returned. By default transactions\r\n            in all currencies are returned"
+    in: query
+    name: currency
+    required: false
+    collectionFormat: csv
+    enum:
+      - rsd
+      - eur
+      - usd
+    items:
+      type: string
+    type: array
+  status-param:
+    description: Status of transaction.
+    in: query
+    name: status
+    required: false
+    type: string
+  beneficiary-param:
+    description: Beneficiary name.
+    in: query
+    name: beneficiary
+    required: false
+    type: string
+  related-card-number-param:
+    description: Related card number.
+    in: query
+    name: related-card-number
+    required: false
+    type: string
+  latitude-param:
+    description: Latitude.
+    in: query
+    name: latitude
+    required: false
+    format: float
+    type: number
+  longitude-param:
+    description: Longitude.
+    in: query
+    name: longitude
+    required: false
+    format: float
+    type: number
+  radius-param:
+    description: Radius in km.
+    in: query
+    name: radius
+    required: false
+    format: int32
+    type: integer
+  standing-order-id-param:
+    description: Standing order identifier.
+    in: query
+    name: standing-order-id
+    required: false
+    type: string
+  transaction-id-param:
+    description: Transaction id
+    in: path
+    name: transaction-id
+    required: true
+    type: string
+  debtor-name-param:
+    description: Debtors name
+    in: query
+    name: debtor-name
+    required: false
+    type: string
+  income-id-param:
+    description: Income id
+    in: path
+    name: income-id
+    required: true
+    type: string
+  account-kind-param:
+    description: Account kind
+    in: query
+    name: account-kind
+    required: false
+    type: string
+  card-id-param:
+    description: Card unique identifier.
+    in: path
+    name: card-id
+    required: true
+    type: string
+  card-id-query-param:
+    description: Card unique identifier.
+    in: query
+    name: card-ids
+    required: false
+    type: string    
+  type-param:
+    description: Type of card.
+    in: query
+    name: type
+    required: false
+    enum:
+      - crdt
+      - dbit
+    type: string
+  channel-param:
+    description: Channel of transaction.
+    in: query
+    name: channel
+    required: false
+    type: string
+  schema-param:
+    description: The classification schema.
+    in: query
+    name: schema
+    required: true
+    type: string
+  schema-id-param:
+    description: Schema id
+    in: path
+    name: schema-id
+    required: true
+    type: string
+definitions:
+  accounts-v2:
+    description: "Accounts with details and balances.\r\n            The list can be filtered to return only specific kind of accounts using the kind parameter and also this list can\r\n            include balances enumerated in the balances optional parameter."
+    properties:
+      total-count:
+        description: Total count of accounts in the list.
+        format: int32
+        type: integer
+      page-size:
+        description: Page size is count of accounts contained in one page
+        format: int32
+        type: integer
+      page-number:
+        description: Page number of current page.
+        format: int32
+        type: integer
+      total-pages:
+        description: Total pages count calcuated based on count of accounts and page size.
+        format: int32
+        type: integer
+      accounts:
+        description: Items is list of accounts.
+        items:
+          $ref: '#/definitions/account-v2'
+        type: array
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  account-v2:
+    description: "A record of transactions in specific types of assets, maintained by a servicing party on behalf of one or more\r\n            owning parties.\r\n            A business relationship between an account servicer and one or more account owners."
+    properties:
+      account-id:
+        description: 'Account indetifier defined by the service provider, finacial institution.'
+        type: string
+      iban:
+        description: "International account indetifier accoriding to ISO 13616:2007.\r\n            If there is no asociated IBAN for the account this field is empty."
+        type: string
+      sub-account:
+        description: "Subdivision of an account used to segregate specific holdings.\r\n            If ther is no subdivioson this field is empty."
+        type: string
+      currency-code:
+        description: "Currency of the account (base currency).\r\n            If there is no subdivision this field is empty."
+        type: string
+      kind:
+        description: 'Kind of account. For example: deposit or credit-card ...'
+        enum:
+          - transactional
+          - deposit
+          - deposit-term
+          - credit-card
+        type: string
+      description:
+        description: "Description of the account type that is human readable as defined by the service provider.\r\n            This description is in local language."
+        type: string
+      status:
+        description: "Status specifies the current state of the account.\r\n            For example: inactive - account is openened but not yet acivated by the customer Usually this means that a certain event should\r\n            occure before the account is tranasfers in to the active state. For example account is activate on first credit\r\n            transaction.\r\n            Accounts in this state are not used for debit transactions"
+        enum:
+          - suspended
+          - active
+          - closed
+          - blocked
+        type: string
+      status-reason:
+        description: Status reason of the account.
+        type: string
+      opening-date:
+        description: Date and time on which the account is registered in the system.
+        format: date-time
+        type: string
+      live-date:
+        description: Date and time of the first movement on the account.
+        format: date-time
+        type: string
+      closing-date:
+        description: Date and time on which the account and related services cease effectively to be operational for the account owner.
+        format: date-time
+        type: string
+      first-salary-date:
+        description: Date and time on which  frst salary was deposited on account.
+        format: date-time
+        type: string
+      related-arrangement:
+        description: Related arrangement is contract for which a reference account is provided.
+        type: string
+      contract-delivery-method:
+        description: 'Contract delivery method, in which way the contract is deliverd to the customer.'
+        enum:
+          - postal-delivery
+          - personal
+        type: string
+      next-payment-date:
+        description: Date and time of next installment is due.
+        format: date-time
+        type: string
+      remaining-installments:
+        description: 'Remaining installments number, until loan is repayed.'
+        format: int32
+        type: integer
+      total-installments:
+        description: Total number of installments
+        format: int32
+        type: integer
+      delay-period:
+        description: Delay period in days that the client is behind with payment of due installments.
+        format: int32
+        type: integer
+      limits:
+        description: Limits for the account
+        $ref: '#/definitions/limits-v2'
+      balances:
+        description: Balances of the account
+        $ref: '#/definitions/balances-v2'
+      related-accounts:
+        description: Related accounts
+        $ref: '#/definitions/related-accounts-v2'
+      reservations:
+        description: Reservations on account. Reseverations contain list of holds of funds for any reason.
+        $ref: '#/definitions/account-reservations-v2'
+      interest-rate:
+        description: Interest rate
+        format: double
+        type: number
+      transaction-summaries:
+        items:
+          $ref: '#/definitions/transaction-summaries-v2'
+        type: array
+      blob:
+        description: BLOB.
+        type: string
+      maturity-date:
+        description: Maturity date and time.
+        format: date-time
+        type: string
+      term-period-unit:
+        description: 'Unit of term period  (month, year, day).'
+        type: string
+      term-period-quantity:
+        description: Period term quantity.
+        format: int32
+        type: integer
+      revolving-percent:
+        description: Revolving percent for credit limit.
+        format: double
+        type: number
+      next-repayment-date:
+        description: Date and time of next payment for credit limit.
+        format: date-time
+        type: string
+      is-skippable:
+        description: Is skippable indicate can the payment of current due obligations be postponed to next month.
+        type: boolean
+      estimated-value-next-repayment:
+        description: Estimated minimal mandatory montly payment and due installments and late obligations
+        format: double
+        type: number
+      currency-interest-rates:
+        description: Currency interest rates. Interest rates per currencies.
+        items:
+          $ref: '#/definitions/currency-interest-rate-v2'
+        type: array
+    type: object
+  link:
+    properties:
+      href:
+        description: Gets or sets the href.
+        type: string
+      rel:
+        description: Gets or sets the rel.
+        type: string
+    type: object
+  limits-v2:
+    description: List of account limits.
+    properties:
+      total-count:
+        description: Total count.
+        format: int32
+        type: integer
+      page-size:
+        description: Size of the page.
+        format: int32
+        type: integer
+      page-number:
+        description: Page number.
+        format: int32
+        type: integer
+      total-pages:
+        description: Total pages.
+        format: int32
+        type: integer
+      limits:
+        description: List of limits.
+        items:
+          $ref: '#/definitions/limit-v2'
+        type: array
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  balances-v2:
+    description: List of account limits.
+    properties:
+      items:
+        description: List of limits.
+        items:
+          $ref: '#/definitions/balance-v2'
+        type: array
+    type: object
+  related-accounts-v2:
+    description: Related accounts
+    properties:
+      total-count:
+        description: Total count.
+        format: int32
+        type: integer
+      page-size:
+        description: Page size.
+        format: int32
+        type: integer
+      page-number:
+        description: Page number.
+        format: int32
+        type: integer
+      total-pages:
+        description: Total pages.
+        format: int32
+        type: integer
+      related-accounts:
+        description: Items is the list of related accounts.
+        items:
+          $ref: '#/definitions/related-account-v2'
+        type: array
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  account-reservations-v2:
+    description: Account reservation list response
+    properties:
+      total-count:
+        description: Total count.
+        format: int32
+        type: integer
+      page-size:
+        description: Page size.
+        format: int32
+        type: integer
+      page-number:
+        description: Page number.
+        format: int32
+        type: integer
+      total-pages:
+        description: Total pages.
+        format: int32
+        type: integer
+      account-reservations:
+        description: Account reservations.
+        items:
+          $ref: '#/definitions/account-reservation-v2'
+        type: array
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  transaction-summaries-v2:
+    description: Number of pending transactions and summary of their amounts.
+    properties:
+      count:
+        description: Number of transactions.
+        format: int32
+        type: integer
+      amount:
+        description: Currency and total amount of transactions.
+        $ref: '#/definitions/currency'
+    type: object
+  currency-interest-rate-v2:
+    description: Currency inrerest rate. Interest rate per currency.
+    properties:
+      currency-code:
+        description: Currency code
+        type: string
+      interest-rate:
+        description: Interest rate.
+        format: double
+        type: number
+    type: object
+  limit-v2:
+    description: Account limit
+    properties:
+      periodicity-type:
+        description: "Specifies the periodicity linked to a limit for example the periodicity can indicate that the limit can be reached\r\n            daily or monthly."
+        enum:
+          - daily
+          - periodic
+        type: string
+      custom-limit-periodicity:
+        description: "Specifies the periodicity linked to a limit for example the periodicity can indicate that the limit can be reached\r\n            daily or monthly."
+        $ref: '#/definitions/limit-periodicity-v2'
+      kind:
+        description: Nature of the limit.
+        enum:
+          - pos
+          - cash-pos
+          - atm
+          - cash-in
+          - internet
+          - mobi
+          - webi
+          - pay_by_link
+          - p2p
+          - ivr
+        type: string
+      amount:
+        description: 'Amount of money of the limit, expressed in a currency.'
+        $ref: '#/definitions/currency'
+      used-amount:
+        description: 'Used amount of money of the limit, expressed in a currency.'
+        $ref: '#/definitions/currency'
+      count:
+        description: Limit expressed as number of items (transactions).
+        format: int32
+        type: integer
+      used-count:
+        description: Used amount expressed as number of items (transactions).
+        format: int32
+        type: integer
+      validity-period:
+        description: The validity period of the limit. Start and end date.
+        $ref: '#/definitions/validity-period-v2'
+      default-count:
+        description: Limit expressed as number of items (transactions).
+        format: int32
+        type: integer
+      max-count:
+        description: Limit expressed as number of items (transactions).
+        format: int32
+        type: integer
+      default-amount:
+        description: Limit expressed as number of items (transactions).
+        $ref: '#/definitions/currency'
+      max-amount:
+        description: Limit expressed as number of items (transactions).
+        $ref: '#/definitions/currency'
+    type: object
+  balance-v2:
+    description: Balance is numerical representation of the net increases and decreases in an account at a specific point in time.
+    properties:
+      kind:
+        description: Specifies the nature of the balance.
+        enum:
+          - opening
+          - closing
+          - current
+          - available
+          - blocked
+          - debit-on-hold
+          - amount-due
+        type: string
+      credit-debit:
+        description: Indicates whether the balance is a credit or a debit balance.
+        enum:
+          - credit
+          - debit
+        type: string
+      amount:
+        description: Currency and amount of the balance.
+        $ref: '#/definitions/currency'
+      value-date:
+        description: Date and time at which the balance is or will be available.
+        format: date-time
+        type: string
+      calculation-date:
+        description: Date and time at which the balance is calculated.
+        format: date-time
+        type: string
+    type: object
+  related-account-v2:
+    description: Related account short inforamtion.
+    properties:
+      account-id:
+        description: Account indentifier.
+        type: string
+      iban:
+        description: IBAN is International account indetifier.
+        type: string
+      sub-account:
+        description: Subdivision of an account used to segregate specific holdings.
+        type: string
+      currency-code:
+        description: Currency of the account in alpha3 ISO format (base currency of the account).
+        type: string
+      kind:
+        description: Kind specifies the type of account.
+        enum:
+          - checking
+          - savings
+          - credit-card
+          - investment
+        type: string
+      relation-kind:
+        description: "Relation kind specifies the nature of realition with the parent account. Debit, parent account is debited,\r\n            credit parent acount is credited and fee, parent account is used for fee charges."
+        enum:
+          - debit
+          - credit
+          - fee
+        type: string
+      Link:
+        $ref: '#/definitions/link'
+    type: object
+  account-reservation-v2:
+    description: Account reservation
+    properties:
+      amount:
+        description: Amount of the reservation.
+        $ref: '#/definitions/currency'
+      instructed-amount:
+        description: "Instructed amount identifies the amount of money to be moved between the debtor and creditor, before deduction of charges,\r\n            expressed in the currency as ordered by the initiating party and provides currency exchange information\r\n            in case the instructed amount and/or currency is/are different from the entry amount and/or currency."
+        $ref: '#/definitions/currency'
+      settlement-amount:
+        description: 'Settlement amount is result of the currency information applied to an instructed amount, before deduction of charges.'
+        $ref: '#/definitions/currency'
+      validity-period:
+        description: Validity period of the reservation.
+        $ref: '#/definitions/validity-period-v2'
+      kind:
+        description: Kind of transaction.
+        type: string
+      related-instruction:
+        description: Related instruction is underlaying insruction identifier on which reservation is based on.
+        type: string
+      related-card:
+        description: Related card is inoformation about the card that was used.
+        $ref: '#/definitions/related-card-v2'
+    type: object
+  currency:
+    description: Currency amount and code
+    properties:
+      code:
+        description: Gets or sets the code.
+        type: string
+      amount:
+        description: Gets or sets the amount.
+        format: double
+        type: number
+    type: object
+  limit-periodicity-v2:
+    description: Limit periodicity
+    properties:
+      period-type:
+        description: Limit expressed as number of items (transactions).
+        enum:
+          - daily
+          - monthly
+          - year
+        type: string
+      period-value:
+        description: Limit expressed as number of items (transactions).
+        format: int32
+        type: integer
+    type: object
+  validity-period-v2:
+    description: 'Time span defined by a start date and time, and an end date and time'
+    properties:
+      start-date:
+        description: Begining of the period.
+        format: date-time
+        type: string
+      end-date:
+        description: End of period.
+        format: date-time
+        type: string
+    type: object
+  related-card-v2:
+    description: 'Related card to tranascatin or reservation, short information.'
+    properties:
+      owner:
+        description: Owner of the card.
+        type: string
+      number:
+        description: Number of the card (full number).
+        type: string
+      short-number:
+        description: Short number of the card formated for diplay. Only first four and last for numbers are shown.
+        type: string
+      brand:
+        description: 'Brand of the card. For example: Visa, Master ...'
+        type: string
+      kind:
+        description: 'Kind of the card. For example: electron, standard, gold, platinum ...'
+        type: string
+      is-primary:
+        description: Is primary card. (true or false).
+        type: boolean
+      status:
+        description: Status of the card.
+        type: string
+    type: object
+  account-statements-v2:
+    description: Account statements
+    properties:
+      total-count:
+        description: Total count.
+        format: int32
+        type: integer
+      page-size:
+        description: Page size.
+        format: int32
+        type: integer
+      page-number:
+        description: Page number.
+        format: int32
+        type: integer
+      total-pages:
+        description: Total pages.
+        format: int32
+        type: integer
+      account-statements:
+        description: Items is list of account statements.
+        items:
+          $ref: '#/definitions/account-statement-v2'
+        type: array
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  account-statement-v2:
+    description: Account statement
+    properties:
+      statement-id:
+        description: Statement idetifier.
+        type: string
+      header-id:
+        description: Header id.
+        type: string
+      statement-period:
+        description: For period is period for which the statement is issued.
+        $ref: '#/definitions/validity-period-v2'
+      issue-date:
+        description: Created is date and time when the statement was issued.
+        format: date-time
+        type: string
+      account-id:
+        description: Account identifier for which the statement is issued.
+        type: string
+      balances:
+        description: Balances list for the statement.
+        items:
+          $ref: '#/definitions/balance-v2'
+        type: array
+      transactions:
+        description: "Transactions list on which the entries are based.\r\n            Depending on the statement and the account type this list can be empty."
+        $ref: '#/definitions/account-transaction-v2'
+      statement-order-number:
+        description: Statement order number
+        type: string
+    type: object
+  account-transaction-v2:
+    description: Transactions
+    properties:
+      total-count:
+        description: Total count of transactions
+        format: int32
+        type: integer
+      page-size:
+        description: Page size is number of transactions in one page.
+        format: int32
+        type: integer
+      page-number:
+        description: Page number of current page.
+        format: int32
+        type: integer
+      total-pages:
+        description: Total pages number.
+        format: int32
+        type: integer
+      transactions:
+        description: Transactions
+        items:
+          $ref: '#/definitions/transaction-v2'
+        type: array
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  transaction-v2:
+    description: Transaction contains set of elements providing information on it.
+    properties:
+      instruction-identification:
+        description: Instruction identification is unique identifier assigned by the initiating party.
+        type: string
+      transaction-identification:
+        description: Transaction identification is unique identifier assigned by the system.
+        type: string
+      mandate-identification:
+        description: Mandate identification is the reference of the direct debit mandate that has been signed between by the debtor and the creditor.
+        type: string
+      value-date:
+        description: Value date and time indicates when the amount of money will become available.
+        format: date-time
+        type: string
+      acceptance-date:
+        description: "Acceptance date and time when the order from the initiating party meets the processing conditions of the\r\n            account servicing agent (debtor's agent in case of a credit transfer, creditor's agent in case of a direct debit).\r\n            This means - amongst others - that the account servicing agent has received the payment order and has applied\r\n            checks."
+        format: date-time
+        type: string
+      creditor:
+        description: Creditor is party that owes an amount of money to the (ultimate) creditor.
+        $ref: '#/definitions/creditor-v2'
+      debtor:
+        description: Debtor is party to which an amount of money is due.
+        $ref: '#/definitions/debtor-v2'
+      creditor-account-id:
+        description: Creditor account id unambiguously identifies the account of the creditor.
+        type: string
+      debtor-account-id:
+        description: Debtor account id unambiguous identifies the account of the debtor.
+        type: string
+      purpose-description:
+        description: "Payment description is underlying reason for the payment transaction, eg, a charity payment, or a commercial agreement\r\n            between the creditor and the debtor. Usage: purpose is used by the end-customers, ie originating party,\r\n            initiating party, debtor, creditor, final party, to provide information concerning the nature of the payment\r\n            transaction.\r\n            Purpose is a content element, which is not used for processing by any of the agents involved in the payment"
+        type: string
+      purpose-code:
+        description: 'Purpose code specifies the underlying reason for the payment transaction, as published in an external purpose code list.'
+        type: string
+      priority:
+        description: Instrument priority is priority of the transaction set by the initiator.
+        type: string
+      transaction-code:
+        description: "Transaction code is set of elements to fully identify the type of underlying transaction resulting in an entry.\r\n            Specifies the domain, the family and the sub-family of the bank transaction code, in a structured and hierarchical\r\n            format.\r\n            Usage: If a specific family or subfamily code cannot be provided, the generic family code defined for the domain or\r\n            the generic subfamily code defined for the family should be provided.\r\n            Transaction code is concatenation of 3 classification values from 3 ISO classification schemes or bank specific\r\n            transaction code."
+        type: string
+      debtor-reference:
+        description: Debtor reference.
+        type: string
+      debtor-reference-model:
+        description: Debtor reference model.
+        type: string
+      creditor-reference-model:
+        description: Creditor reference model.
+        type: string
+      creditor-reference:
+        description: Creditor reference.
+        type: string
+      instructed-amount:
+        description: "Instructed amount identifies the amount of money to be moved between the debtor and creditor,\r\n            before deduction of charges, expressed in the currency as ordered by the initiating party\r\n            and provides currency exchange information in case the instructed amount and/or currency is/are\r\n            different from the entry amount and/or currency."
+        $ref: '#/definitions/currency'
+      settlement-amount:
+        description: 'Settlement amount is result of the currency information applied to an instructed amount, before deduction of charges.'
+        $ref: '#/definitions/currency'
+      amount:
+        description: Amount of the transaction used for booking.
+        $ref: '#/definitions/currency'
+      running-total:
+        description: Running total is balance on account after transaction.
+        $ref: '#/definitions/currency'
+      status:
+        description: Status of the transaction.
+        enum:
+          - executed
+          - not-executed
+          - canceled
+          - future-value-date
+          - pending-blocked
+          - pending
+          - in-process
+        type: string
+      channel:
+        description: Channel used by the initiator of the transaction.
+        type: string
+      related-card:
+        description: Related card is information abut the card used to initiate the transaction.
+        $ref: '#/definitions/related-card-v2'
+      entries:
+        description: Entries list of the statement.
+        $ref: '#/definitions/enrtries-v2'
+      direction:
+        description: Direction of transaction (credit/debit).
+        type: string
+      category:
+        description: Category of the transaction.
+        type: string
+      picture:
+        description: Picture of transaction.
+        type: string
+      has-picture:
+        description: Has picture (can be true or false).
+        type: boolean
+      geolocation:
+        description: Geolocation details.
+        $ref: '#/definitions/geolocation-v2'
+      beneficiary-picture:
+        description: Beneficiary picture.
+        type: string
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    required:
+      - creditor
+      - debtor
+      - creditor-account-id
+      - debtor-account-id
+      - purpose-description
+      - priority
+      - transaction-code
+      - debtor-reference
+      - creditor-reference
+      - amount
+    type: object
+  creditor-v2:
+    description: ''
+    properties:
+      name:
+        description: Name.
+        type: string
+      address:
+        description: Address.
+        $ref: '#/definitions/postal-address-v2'
+      agent:
+        description: Financial institution servicing an account.
+        $ref: '#/definitions/financial-institution-v2'
+    type: object
+  debtor-v2:
+    description: ''
+    properties:
+      name:
+        description: Name of the debtor.
+        type: string
+      address:
+        description: Adress of the debtor.
+        $ref: '#/definitions/postal-address-v2'
+      agent:
+        description: Financial institution servicing an account.
+        $ref: '#/definitions/financial-institution-v2'
+    type: object
+  enrtries-v2:
+    description: Entries
+    properties:
+      total-count:
+        format: int32
+        type: integer
+      page-size:
+        format: int32
+        type: integer
+      page-number:
+        format: int32
+        type: integer
+      total-pages:
+        format: int32
+        type: integer
+      entries:
+        items:
+          $ref: '#/definitions/entry-v2'
+        type: array
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  geolocation-v2:
+    description: 'Geolocation details - Latitude, Longitude, Mapped address'
+    properties:
+      lat:
+        description: Geolocation latitude.
+        type: string
+      lon:
+        description: Geolocation longitude.
+        type: string
+      mapped-address:
+        description: Mapped address from GPS coordinates.
+        type: string
+    type: object
+  postal-address-v2:
+    description: 'Information that locates and identifies a specific address, as defined by postal services.'
+    properties:
+      street-name:
+        description: Name of a street or thoroughfare.
+        type: string
+      number:
+        description: Number that identifies the position of a building on a street.
+        type: string
+      post-code:
+        description: "Identifier consisting of a group of letters and/or numbers that is added to a postal address to assist the sorting\r\n            of mail."
+        type: string
+      town:
+        description: 'Name of a built-up area, with defined boundaries, and a local government.'
+        type: string
+      country-code:
+        description: ISO 3166-alpha-3 code.
+        type: string
+    type: object
+  financial-institution-v2:
+    description: "Unique and unambiguous identifier of a financial institution,\r\n            as assigned under an internationally recognised or proprietary identification scheme."
+    properties:
+      bic:
+        description: "Code allocated to a financial institution by the ISO 9362 Registration Authority as described in ISO 9362 \"Banking\r\n            - Banking telecommunication messages - Business identifier code (BIC)\""
+        type: string
+      clearing-id:
+        description: Unique and unambiguous identifier of a clearing system member
+        type: string
+      name:
+        description: Name by which a party is known and which is usually used to identify that party.
+        type: string
+      postal-address:
+        description: Information about institutons postal adress
+        $ref: '#/definitions/postal-address-v2'
+    type: object
+  entry-v2:
+    description: Entry
+    properties:
+      entry-id:
+        type: string
+      booking-date:
+        format: date-time
+        type: string
+      value-date:
+        description: "Value date and time when assets become available to the account owner (in a credit entry), or cease to be available to the\r\n            account owner (in a debit entry)."
+        format: date-time
+        type: string
+      credit-debit:
+        type: string
+      amount:
+        $ref: '#/definitions/currency'
+      reversal:
+        type: boolean
+      commision-wavier:
+        type: boolean
+    type: object
+  account-transactions-v2:
+    description: Account transactions
+    properties:
+      account-id:
+        description: Account identifier.
+        type: string
+      total-summary:
+        description: Total summary for requested transactions.
+        items:
+          $ref: '#/definitions/total-summary-v2'
+        type: array
+      agregate-balances:
+        description: Balances for requested transactions (aggregate).
+        $ref: '#/definitions/balances-v2'
+      transactions:
+        description: Transaction list.
+        $ref: '#/definitions/account-transaction-v2'
+    type: object
+  total-summary-v2:
+    description: Total summary is set of elements providing summary information on entries.
+    properties:
+      currency-code:
+        description: Currency code represents curency for totals.
+        type: string
+      total-entries:
+        description: Total entries are count and net value of all entries.
+        $ref: '#/definitions/total-entry-v2'
+      total-credit-entries:
+        description: Total credit entries are conut and net value of credit entries.
+        $ref: '#/definitions/total-entry-v2'
+      total-debit-entries:
+        description: Total debit entries are conut and net value of debit entries.
+        $ref: '#/definitions/total-entry-v2'
+    type: object
+  total-entry-v2:
+    description: Total entry is set of element providing summary information on entries.
+    properties:
+      count:
+        description: Count of individual entries included in the report.
+        format: int32
+        type: integer
+      sum:
+        description: Sum of all individual entries included in the report.
+        format: double
+        type: number
+    type: object
+  account-number-availability-cmd-v2:
+    description: Account number availability command
+    properties:
+      account-id:
+        description: Account identifier.
+        type: string
+    required:
+      - account-id
+    type: object
+  command-result:
+    description: ''
+    properties:
+      id:
+        description: 'Gets or sets the id of created, updated or deleted entity.'
+        type: string
+      created-record-status:
+        description: 'Gets or sets the created, updated, deleted record status.'
+        type: string
+    type: object
+  fcy-incomes-v2:
+    description: FCY incomes are set of elements providing information on transaction.
+    properties:
+      total-count:
+        description: Total count of cards in the list.
+        format: int32
+        type: integer
+      page-size:
+        description: Page size.
+        format: int32
+        type: integer
+      page-number:
+        description: Page number (current page).
+        format: int32
+        type: integer
+      total-pages:
+        description: Total number of pages based on total count of cards and page size.
+        format: int32
+        type: integer
+      items:
+        description: Items is list of fcy incomes.
+        items:
+          $ref: '#/definitions/fcy-income-v2'
+        type: array
+    type: object
+  fcy-income-v2:
+    description: FCY income is set of elements providing information on transaction.
+    properties:
+      income-id:
+        description: Income identifier is unique identification assigned by the initiating party.
+        type: string
+      transaction-identification:
+        description: transaction unique identification assigned by the system
+        type: string
+      acceptance-date:
+        description: "Acceptance date is date and time when the order from the initiating party meets the processing conditions of the\r\n            account servicing agent (debtor's agent in case of a credit transfer, creditor's agent in case of a direct debit).\r\n            This means - amongst others - that the account servicing agent has received the payment order and has applied\r\n            checks."
+        format: date-time
+        type: string
+      debtor:
+        description: Debtor is party to which an amount of money is due.
+        $ref: '#/definitions/debtor-v2'
+      creditor-account-number:
+        description: Creditor account number is unambiguous identification of the account of the creditor.
+        type: string
+      debtor-account-number:
+        description: Debtor account number is unambiguous identification of the account of the debtor.
+        type: string
+      debtor-bank:
+        description: Debtor bank informations.
+        $ref: '#/definitions/bank-info-v2'
+      purpose-description:
+        description: "Payment description is underlying reason for the payment transaction, eg, a charity payment, or a commercial agreement\r\n            between the creditor and the debtor. Usage: purpose is used by the end-customers, ie originating party,\r\n            initiating party, debtor, creditor, final party, to provide information concerning the nature of the payment\r\n            transaction.\r\n            Purpose is a content element, which is not used for processing by any of the agents involved in the payment"
+        type: string
+      purpose-code:
+        description: 'Purpose code specifies the underlying reason for the payment transaction, as published in an external purpose code list.'
+        type: string
+      debtor-reference:
+        description: Debtor reference.
+        type: string
+      creditor-reference:
+        description: Creditor reference.
+        type: string
+      instructed-amount:
+        description: "Instructed amount identifies the amount of money to be moved between the debtor and creditor,\r\n            before deduction of charges, expressed in the currency as ordered by the initiating party\r\n            and provides currency exchange information in case the instructed amount and/or currency is/are\r\n            different from the entry amount and/or currency."
+        $ref: '#/definitions/currency'
+      amount:
+        description: Amount of the transaction used for booking.
+        $ref: '#/definitions/currency'
+      status:
+        description: Status of the transaction
+        enum:
+          - executed
+          - not-executed
+          - canceled
+          - future-value-date
+          - pending-blocked
+          - pending
+          - in-process
+        type: string
+      document-list:
+        description: Document list.
+        type: string
+      bank-comment:
+        description: Bank comment.
+        type: string
+      has-comment:
+        description: Has bank comment (true or false).
+        type: boolean
+    required:
+      - debtor
+      - creditor-account-number
+      - debtor-account-number
+      - debtor-bank
+      - purpose-description
+      - debtor-reference
+      - creditor-reference
+      - amount
+    type: object
+  bank-info-v2:
+    description: ''
+    properties:
+      bank-name:
+        description: Bank name.
+        type: string
+      swift-code:
+        description: Swift code.
+        type: string
+      address:
+        description: Address
+        $ref: '#/definitions/postal-address-v2'
+    type: object
+  installment-plan-v2:
+    description: Installment plan.
+    properties:
+      total-count:
+        description: Total count of cards in the list.
+        format: int32
+        type: integer
+      page-size:
+        description: Page size.
+        format: int32
+        type: integer
+      page-number:
+        description: Page number (current page).
+        format: int32
+        type: integer
+      total-pages:
+        description: Total pages count based on total count of cards and page size.
+        format: int32
+        type: integer
+      items:
+        description: Items is list of installment plan items.
+        items:
+          $ref: '#/definitions/installment-plan-item-v2'
+        type: array
+    type: object
+  installment-plan-item-v2:
+    description: Instalment plan item is set of elements providing information on transaction.
+    properties:
+      account-number:
+        description: Account number.
+        type: string
+      sequence-number:
+        description: Sequence number.
+        format: int32
+        type: integer
+      installment-date:
+        description: Installment date and time.
+        format: date-time
+        type: string
+      currency-code:
+        description: Currency code.
+        type: string
+      loan-amount:
+        description: Loan amount
+        format: double
+        type: number
+      installment-amount:
+        description: Installment amount.
+        format: double
+        type: number
+      principal-amount:
+        description: Principal amount
+        format: double
+        type: number
+      interest-amount:
+        description: Interest amount
+        format: double
+        type: number
+      fee-amount:
+        description: Fee amount
+        format: double
+        type: number
+      charged:
+        description: Charged (true or false).
+        type: boolean
+      description:
+        description: Description of transaction.
+        type: string
+      original-unikum:
+        description: Original unikum is unikum of original transaction.
+        type: string
+      is-skippable:
+        description: Is skippable for charging.
+        type: boolean
+      original-account:
+        description: Original account number.
+        type: string
+      beneficiary-holder-name:
+        description: Beneficiary holder name.
+        type: string
+      total-installment-count:
+        description: Total Installment count.
+        format: int32
+        type: integer
+    type: object
+  account-nickname-change-v2:
+    description: Change account Nickname command
+    properties:
+      account-id:
+        description: Account identifier.
+        type: string
+      nickName:
+        description: Account nickname.
+        type: string
+    required:
+      - account-id
+      - nickName
+    type: object
+  business-problem:
+    properties:
+      type:
+        type: string
+      title:
+        type: string
+      details:
+        type: string
+    type: object
+  cards-v2:
+    description: Cards paged list
+    properties:
+      total-count:
+        description: Total count of cards in the list.
+        format: int32
+        type: integer
+      page-size:
+        description: Page size.
+        format: int32
+        type: integer
+      page-number:
+        description: Page number (current page).
+        format: int32
+        type: integer
+      total-pages:
+        description: Total pages count based on total count of cards and page size
+        format: int32
+        type: integer
+      cards:
+        description: Items is list of cards
+        items:
+          $ref: '#/definitions/card-v2'
+        type: array
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  card-v2:
+    description: "Card is electronic money product that provides the cardholder with a portable and specialised computer device that\r\n            typically contains a microprocessor."
+    properties:
+      balances:
+        $ref: '#/definitions/balances-v2'
+      limits:
+        $ref: '#/definitions/limits-v2'
+      Card-id:
+        description: Card identifier used for adding limits and balances.
+        type: string
+      owner:
+        description: Owner name.
+        type: string
+      brand:
+        description: 'Brand of the card. Can be visa, master, ...'
+        enum:
+          - visa
+          - master
+        type: string
+      kind:
+        description: 'Kind of card. Can be electron, standard, gold ...'
+        enum:
+          - electron
+          - standard
+          - gold
+          - platinum
+        type: string
+      credit-debit:
+        description: Credit or debit type of card.
+        enum:
+          - crdt
+          - dbit
+        type: string
+      emboss-first-line:
+        description: Emboss first line.
+        type: string
+      emboss-second-line:
+        description: Emboss second line.
+        type: string
+      status:
+        description: Status of the card (current status).
+        enum:
+          - inactive
+          - active
+          - blocked
+          - expired
+          - stolen
+        type: string
+      issue-date:
+        description: Issue date of card (year and month).
+        format: date-time
+        type: string
+      activation-date:
+        description: Activation date represents year and month the card is available for use.
+        format: date-time
+        type: string
+      delivery-date:
+        description: 'Delivery date is Day, month, and year when the card is deliered or sent to the customer.'
+        format: date-time
+        type: string
+      expiry-date:
+        description: Expiry date is year and month the card expires.
+        format: date-time
+        type: string
+      number:
+        description: Number of the card (full number)
+        type: string
+      short-number:
+        description: Short number of the card. Only first four and last four numbers are shown.
+        type: string
+      is-primary:
+        description: Is primary value. Can be true or false.
+        type: boolean
+      related-account-number:
+        description: Related account number
+        type: string
+      related-accounts:
+        description: Related accounts linked to the card.
+        $ref: '#/definitions/related-accounts-v2'
+    type: object
+  card-limits-change-v2:
+    description: Change card limits command
+    properties:
+      card-id:
+        description: Account identifier.
+        type: string
+      limits:
+        description: Limits of the card.
+        enum:
+          - overdraft
+          - direct-debit
+          - cache
+          - pos
+          - atm
+        items:
+          type: string
+        type: array
+    required:
+      - card-id
+    type: object
+  card-transactions-v2:
+    description: Card transactions
+    properties:
+      total-count:
+        description: Total count of card transctions in the list.
+        format: int32
+        type: integer
+      page-size:
+        description: Page size represents the number of transactions in one page.
+        format: int32
+        type: integer
+      page-number:
+        description: Page number (current page).
+        format: int32
+        type: integer
+      total-pages:
+        description: Total pages count based on total transaction count and page size.
+        format: int32
+        type: integer
+      card-transactions:
+        description: Items is list of card transactions.
+        items:
+          $ref: '#/definitions/card-transaction-v2'
+        type: array
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  card-transaction-v2:
+    description: Card transaction
+    properties:
+      authorization-number:
+        description: Authorization number.
+        type: string
+      poi:
+        description: POI is point of sale identifier
+        type: string
+      instruction-identification:
+        description: Instruction identification is unique identifier assigned by the initiating party.
+        type: string
+      transaction-identification:
+        description: Transaction identification is unique identifier assigned by the system.
+        type: string
+      mandate-identification:
+        description: Mandate identification is the reference of the direct debit mandate that has been signed between by the debtor and the creditor.
+        type: string
+      value-date:
+        description: Value date and time indicates when the amount of money will become available.
+        format: date-time
+        type: string
+      acceptance-date:
+        description: "Acceptance date and time when the order from the initiating party meets the processing conditions of the\r\n            account servicing agent (debtor's agent in case of a credit transfer, creditor's agent in case of a direct debit).\r\n            This means - amongst others - that the account servicing agent has received the payment order and has applied\r\n            checks."
+        format: date-time
+        type: string
+      creditor:
+        description: Creditor is party that owes an amount of money to the (ultimate) creditor.
+        $ref: '#/definitions/creditor-v2'
+      debtor:
+        description: Debtor is party to which an amount of money is due.
+        $ref: '#/definitions/debtor-v2'
+      creditor-account-id:
+        description: Creditor account id unambiguously identifies the account of the creditor.
+        type: string
+      debtor-account-id:
+        description: Debtor account id unambiguous identifies the account of the debtor.
+        type: string
+      purpose-description:
+        description: "Payment description is underlying reason for the payment transaction, eg, a charity payment, or a commercial agreement\r\n            between the creditor and the debtor. Usage: purpose is used by the end-customers, ie originating party,\r\n            initiating party, debtor, creditor, final party, to provide information concerning the nature of the payment\r\n            transaction.\r\n            Purpose is a content element, which is not used for processing by any of the agents involved in the payment"
+        type: string
+      purpose-code:
+        description: 'Purpose code specifies the underlying reason for the payment transaction, as published in an external purpose code list.'
+        type: string
+      priority:
+        description: Instrument priority is priority of the transaction set by the initiator.
+        type: string
+      transaction-code:
+        description: "Transaction code is set of elements to fully identify the type of underlying transaction resulting in an entry.\r\n            Specifies the domain, the family and the sub-family of the bank transaction code, in a structured and hierarchical\r\n            format.\r\n            Usage: If a specific family or subfamily code cannot be provided, the generic family code defined for the domain or\r\n            the generic subfamily code defined for the family should be provided.\r\n            Transaction code is concatenation of 3 classification values from 3 ISO classification schemes or bank specific\r\n            transaction code."
+        type: string
+      debtor-reference:
+        description: Debtor reference.
+        type: string
+      debtor-reference-model:
+        description: Debtor reference model.
+        type: string
+      creditor-reference-model:
+        description: Creditor reference model.
+        type: string
+      creditor-reference:
+        description: Creditor reference.
+        type: string
+      instructed-amount:
+        description: "Instructed amount identifies the amount of money to be moved between the debtor and creditor,\r\n            before deduction of charges, expressed in the currency as ordered by the initiating party\r\n            and provides currency exchange information in case the instructed amount and/or currency is/are\r\n            different from the entry amount and/or currency."
+        $ref: '#/definitions/currency'
+      settlement-amount:
+        description: 'Settlement amount is result of the currency information applied to an instructed amount, before deduction of charges.'
+        $ref: '#/definitions/currency'
+      amount:
+        description: Amount of the transaction used for booking.
+        $ref: '#/definitions/currency'
+      running-total:
+        description: Running total is balance on account after transaction.
+        $ref: '#/definitions/currency'
+      status:
+        description: Status of the transaction.
+        enum:
+          - executed
+          - not-executed
+          - canceled
+          - future-value-date
+          - pending-blocked
+          - pending
+          - in-process
+        type: string
+      channel:
+        description: Channel used by the initiator of the transaction.
+        type: string
+      related-card:
+        description: Related card is information abut the card used to initiate the transaction.
+        $ref: '#/definitions/related-card-v2'
+      entries:
+        description: Entries list of the statement.
+        $ref: '#/definitions/enrtries-v2'
+      direction:
+        description: Direction of transaction (credit/debit).
+        type: string
+      category:
+        description: Category of the transaction.
+        type: string
+      picture:
+        description: Picture of transaction.
+        type: string
+      has-picture:
+        description: Has picture (can be true or false).
+        type: boolean
+      geolocation:
+        description: Geolocation details.
+        $ref: '#/definitions/geolocation-v2'
+      beneficiary-picture:
+        description: Beneficiary picture.
+        type: string
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    required:
+      - creditor
+      - debtor
+      - creditor-account-id
+      - debtor-account-id
+      - purpose-description
+      - priority
+      - transaction-code
+      - debtor-reference
+      - creditor-reference
+      - amount
+    type: object
+  card-reservations-v2:
+    description: Card reservations
+    properties:
+      total-count:
+        description: Total count of card reservations in the list.
+        format: int32
+        type: integer
+      page-size:
+        description: Page size represents the number of reservations in one page.
+        format: int32
+        type: integer
+      page-number:
+        description: Page number (current page)
+        format: int32
+        type: integer
+      total-pages:
+        description: Total pages count based on total transaction count and page size.
+        format: int32
+        type: integer
+      card-reservations:
+        description: Items is list of card resrvations
+        items:
+          $ref: '#/definitions/card-reservation-v2'
+        type: array
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  card-reservation-v2:
+    description: Card reservation
+    properties:
+      payment-description:
+        description: "Payment description is underlying reason for the payment transaction, eg, a charity payment, or a commercial agreement\r\n            between the creditor and the debtor. Usage: purpose is used by the end-customers, ie originating party,\r\n            initiating party, debtor, creditor, final party, to provide information concerning the nature of the payment\r\n            transaction.\r\n            Purpose is a content element, which is not used for processing by any of the agents involved in the payment"
+        type: string
+      amount:
+        description: Amount of the reservation.
+        $ref: '#/definitions/currency'
+      instructed-amount:
+        description: "Instructed amount identifies the amount of money to be moved between the debtor and creditor, before deduction of charges,\r\n            expressed in the currency as ordered by the initiating party and provides currency exchange information\r\n            in case the instructed amount and/or currency is/are different from the entry amount and/or currency."
+        $ref: '#/definitions/currency'
+      settlement-amount:
+        description: 'Settlement amount is result of the currency information applied to an instructed amount, before deduction of charges.'
+        $ref: '#/definitions/currency'
+      validity-period:
+        description: Validity period of the reservation.
+        $ref: '#/definitions/validity-period-v2'
+      kind:
+        description: Kind of transaction.
+        type: string
+      related-instruction:
+        description: Related instruction is underlaying insruction identifier on which reservation is based on.
+        type: string
+      related-card:
+        description: Related card is inoformation about the card that was used.
+        $ref: '#/definitions/related-card-v2'
+    type: object
+  card-nickname-change-v2:
+    description: Change card nickname command
+    properties:
+      card-id:
+        description: Account identifier.
+        type: string
+      nickname:
+        description: Account nickname.
+        type: string
+    required:
+      - card-id
+      - nickname
+    type: object
+  initiate-pin-change-command:
+    description: Request PIN change command
+    properties:
+      card-id:
+        description: Serial number of card which which pin will be changed.
+        type: string
+      new-pin:
+        description: Pin
+        type: string
+      expiry-date:
+        description: Year and month the card expires. Format yyMM
+        type: string
+      is-activation:
+        description: Is change of PIN during activation
+        type: boolean
+    required:
+      - card-id
+    type: object
+  classification-value:
+    description: Classification values
+    properties:
+      code:
+        description: Gets or sets the code.
+        type: string
+      literal:
+        description: Gets or sets the literal.
+        type: string
+      description:
+        description: Gets or sets the description.
+        type: string
+      id:
+        description: Gets or sets the id.
+        type: string
+      parent-id:
+        description: Gets or sets the parent id.
+        type: string
+      ordinal:
+        description: Gets or sets the ordinal.
+        type: string
+    type: object
+responses:
+  default-error-response:
+    description: 'Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()'
+schemes:
+  - http
