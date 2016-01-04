@@ -1,0 +1,151 @@
+---
+swagger: '2.0'
+basePath: "/fraud-detaction"
+schemes:
+- http
+
+host: mc-gw:80
+info:
+  title: Fraud Detection API
+  version: beta
+  description: |
+     Fraud Detection API enables to prevent fraud activitis according to legal requirements of finanacial institution.
+     With Fraud Detection API you can:
+       - Check client AML status 
+       - Check whether client is on banks black list.
+    
+tags:
+  -
+    name: AML lists
+    description:  Working with AML lists
+  -
+    name: Black Lists
+    description:   Working with Black lists
+responses:
+  default-error-response:
+    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
+    
+  
+paths:
+  "/aml-status":
+    get:
+      operationId: AMLLists_GetStatus
+      parameters:
+      - description: Personal identification number (JMBG).
+        in: query
+        name: personal-identification-number
+        required: true
+        type: string
+      - description: First name of the client.
+        in: query
+        name: first-name
+        required: true
+        type: string
+      - description: Last name of the client.
+        in: query
+        name: last-name
+        required: true
+        type: string
+      - description: City.
+        in: query
+        name: city
+        required: false
+        type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/customer-aml-status'          
+        default:
+          $ref: '#/responses/default-error-response'  
+      summary: Checks customer AML status and returns customer raiting and reliability.
+      tags:
+      - AML lists
+  "/black-list-status":
+    get:
+      operationId: BlackLists_GetStatus
+      parameters:
+      - $ref: "#/parameters/personal-identification-number"
+      - $ref: "#/parameters/first-name"
+      - $ref: "#/parameters/last-name"
+      - description: Country code.
+        in: query
+        name: country-code
+        required: false
+        type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+              items:
+                $ref: '#/definitions/customer-blacklist-status' 
+              type: array
+        default:
+          $ref: '#/responses/default-error-response'  
+      summary: Checks whether client is on banks black lists and returns percentages of belonging.
+      tags:
+      - Black Lists
+
+parameters:
+  personal-identification-number:    
+    name: personal-identification-number
+    in: query
+    description: Personal identification number (JMBG).
+    required: true
+    type: string
+  first-name:
+    description: First name of the client.
+    in: query
+    name: first-name
+    required: true
+    type: string
+  last-name:
+    description: Last name of the client.
+    in: query
+    name: last-name
+    required: true
+    type: string
+    
+definitions:
+  customer-aml-status: 
+      description: Indicates the raiting of a customer.
+      properties: 
+        rating-value: 
+          description: The evaluation of the acceptability of the customer. Possible values are in range [0-4]
+          type: "string"
+          enum: 
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+        reliability: 
+          description: The presumed accuracy of the assessment result.
+          type: "string"
+          enum: 
+          - low-risk
+          - normal-risk
+          - high-risk
+          - unacceptable-risk
+      type: "object"  
+      example:
+        rating-value: 0
+        reliability: low-risk
+  customer-blacklist-status: 
+      description: Indicates the affiliation of a customer to black list.
+      properties: 
+        percentage: 
+          description: Percentage of belonging to black list.
+          type: "string"
+        name: 
+          description: Name of black list that client belongs.
+          type: "string"
+      type: "object"    
+      example:
+        items:
+          - 
+           percentage: 80
+           name: Crna lista evropske unije
+          - 
+           percentage: 75
+           name: Crna lista ujedinjenih nacija
