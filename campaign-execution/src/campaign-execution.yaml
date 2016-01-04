@@ -1,0 +1,712 @@
+swagger: '2.0'
+info:
+  version: beta
+  title: Campaign Execution API
+  description: |
+    Campaign Execution API gives you access to active campaigns for customers, list of customers' active leads, insight to lead history and provide you ability to post responses to leads. Also allows you to intitiate campaign execution workflow. In this workflow you can perform all necessary actions that follows campaign execution process: 
+host: 'api.asee.co'
+basePath: /campaign-manager
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+tags:
+  - name: Campaigns
+    description: Working  with campaign offers
+  - name: Resources
+    description: Working  with campaign resources  
+  - name: Leads
+    description: Working with leads
+  - name: Benefits
+    description: Working with benefits that campaign provides
+paths:
+  /campaigns:  
+    get:
+      summary: Get the list of the active campaign offers 
+      description: |
+        Campaign Management endpoint returns information about the campaign offers available at a given channel or/and customer.
+        The response includes the campaign title and other details about each campaign offer, and lists the campaign offers in the proper display order by priority.
+      operationId: Campaigns_GetList
+      parameters:
+        - $ref: '#/parameters/PAN-param'
+        - $ref: '#/parameters/campaign-number-param'
+        - $ref: '#/parameters/channel-code-param'
+        - $ref: '#/parameters/customer-number-param'
+        - $ref: '#/parameters/product-code-param'
+        - $ref: '#/parameters/preferred-client-culture-param'
+        - $ref: '#/parameters/page-number-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+      tags:
+        - Campaigns
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/campaign-list' 
+        default:
+          $ref: '#/responses/default-error-response'
+      x-asee-tags:
+        - Pageable
+        - Sortable
+		
+    post:
+      summary: Add customer to the campaign.
+      tags:
+        - Campaigns
+      operationId: Campaign_Initiate
+      parameters:
+        - description: Add customer to campaign.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/initiate-campaign-command'
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+            $ref: '#/responses/default-error-response'
+      x-asee-tags: []  
+      
+  /campaigns/{campaign-code}:
+    delete:
+      summary: Remove customer from the campaign.
+      tags:
+        - Campaigns
+      operationId: Campaign_Cancel
+      parameters:
+        - $ref: '#/parameters/campaign-code-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+            $ref: '#/responses/default-error-response'
+      x-asee-tags: []    
+  
+  /campaigns/{campaign-code}/resources:  
+    get:
+      summary: Get the list of active campaign offers 
+      description: |
+        Get the list of resources used in campaign. Images are in Base64 representation for atm needs.
+      operationId: Resources_GetList
+      parameters:
+        - $ref: '#/parameters/campaign-code-param' 
+        - $ref: '#/parameters/page-number-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'        
+      tags:
+        - Resources
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/resource-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      x-asee-tags:
+        - Pageable
+        - Sortable  
+        
+  /campaigns/{campaign-code}/benefits:  
+    get:
+      summary: Get the list of benefits in campaign
+      description: |
+        Returns the list of the benefits in the campaign.
+      operationId: Benefits_GetList
+      parameters:
+        - $ref: '#/parameters/campaign-code-param' 
+        - $ref: '#/parameters/page-number-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'        
+      tags:
+        - Benefits
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/benefit-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        
+    post:
+      summary: Activates the benefit for the campaign.
+      tags:
+        - Benefits
+      operationId: Benefits_Initiate
+      parameters:
+        - $ref: '#/parameters/campaign-code-param'
+        - description: Activates the benefit for the campaign (e.g. enables x free transactions on atm for the customer) 
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/initiate-benefit-command'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+            $ref: '#/responses/default-error-response'
+      x-asee-tags: []
+      
+    delete:
+      summary: Deactivates the benefit for the campaign. 
+      tags:
+        - Benefits
+      operationId: Benefits_Cancel
+      parameters:
+        - $ref: '#/parameters/campaign-code-param'
+        - description: Deactivates the benefit for the campaign ((e.g. enables x free transactions on atm for the customer) 
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/initiate-benefit-command'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/command-result'    
+        default:
+            $ref: '#/responses/default-error-response'
+      x-asee-tags: []      
+  
+  /leads:  
+    get:
+      summary: Get the list of leads in campaign
+      description: |
+        Operation returns the list of leads. The list can be filtered to return only leads for specified campaign code and also this list can also be filtered by channel enumerated in the channel code optional parameter.
+      operationId: Leads_GetList
+      parameters:
+        - $ref: '#/parameters/campaign-number-param'
+        - $ref: '#/parameters/channel-code-param'
+        - $ref: '#/parameters/lead-status-param'
+        - $ref: '#/parameters/page-number-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+      tags:
+        - Lead
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/lead-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      x-asee-tags:
+        - Pageable
+        - Sortable      
+  
+  /leads:
+    post:
+      summary: Changes status of the lead and executes campaign benefits.
+      tags:
+        - Leads
+      operationId: Leads_Initiate
+      parameters:
+        - description: This operatuion changes status of the lead. If status changes to won also activates campaign benefits.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/initiate-lead-command'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+            $ref: '#/responses/default-error-response'
+      x-asee-tags: [] 
+      
+  /leads:
+    post:
+      summary: Create new lead.
+      tags:
+        - Leads
+      operationId: Leads_Create
+      parameters:
+        - description: This create new lead in status open.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/create-lead-command'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+            $ref: '#/responses/default-error-response'
+      x-asee-tags: []
+  
+       
+parameters:
+  PAN-param:
+    name: PAN
+    in: query
+    description: Primary Account Number is used for Off Us campaigns, to define campaign on atm that includes customers that use other bank's credit\debit cards.  
+    required: false
+    type: string
+  channel-code-param:
+    name: channel-code
+    in: query
+    description: The unique identifier of channel (web, atm, mobile, branch etc.) 
+    required: true
+    type: string
+    x-asee-compliance: This should be related to some enum or classification.
+  priority-param:
+    name: priority
+    in: query
+    description: Priority of the campaign (defines order of appearance of campaigns)
+    required: false
+    format: int32
+    type: integer
+    x-asee-compliance: Should this be related to some enum?
+  customer-number-param:
+    description: The unique identifier of the customer
+    in: query
+    name: customer-number
+    required: false
+    type: string
+  campaign-code-param:
+    name: campaign-code
+    description: The unique identifier of the campaign
+    in: path
+    required: true
+    type: string
+  campaign-number-param:
+    name: campaign-code
+    description: The unique identifier of the campaign
+    in: query
+    required: false
+    type: string  
+  product-code-param:
+    name: product-code
+    description: The unique identifier of the product
+    in: query
+    required: false
+    type: string
+  preferred-client-culture-param:
+    name: preferred-client-culture
+    description: Classification explaining culture used. Commonly used values include SrLatnCS, EnUs, Mk... For a complete list of possible values see [preferred-client-culture]() classification
+    in: query
+    required: false
+    type: string
+  page-number-param:
+    name: page-number
+    in: query
+    description: Number of page requested. For more information see general guidance on [paging and sorting]()
+    type: string
+  page-size-param:
+    name: page-size
+    in: query
+    description: Number of items on a page. For more information see general guidance on [paging and sorting]()
+    required: false
+    format: int32
+    type: integer
+    default: 10
+    x-asee-common: true 
+  page-param:
+    x-asee-compliance: This parameter should be removed. It is deprecated and replaced with page-number-param.
+    in: query
+    name: page
+    description: Page index. For more information see general guidance on [paging and sorting]()
+    required: false
+    format: int32
+    type: integer
+    x-asee-common: true
+  sort-order-param:
+    description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]()
+    in: query
+    name: sort-order
+    type: string
+    default: asc
+    enum:
+    - asc
+    - desc
+    x-asee-common: true  
+  sort-by-param:  
+    description: Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]().
+    in: query
+    name: sort-by
+    type: string
+    required: false
+  lead-status-param:
+    description: Classification explaining status of lead. Commonly used values include open, qualified, customer-rejected, won. For a complete list of possible values see [lead-status]() classification
+    in: query
+    name: lead-status
+    required: false
+    type: string
+  search-text-param:
+    description: Search text
+    in: query
+    name: search-text
+    required: false
+    type: string
+
+definitions:
+  campaign:
+    description:  
+      Base campaign execution object that contains conditions of product offer and also metadata to help visually represent offer to the client. 
+    properties:
+      campaign-code:
+        description: The unique identifier of the campaign. Campaign-code, zone-code and resource-code together make complex unique identifier of campaign offer.
+        type: string
+      zone-code:
+        description: The unique identifier of the presentation zone. Defines visual position of campaign offer (in browser, on atm..). Campaign-code, zone-code and resource-code together make complex unique identifier of campaign offer.   
+        type: string
+      ad-code:
+        description: The unique identifier of the resource. Resource defines visual representation of the campaign offer. Campaign-code, zone-code and resource-code together make complex unique identifier of campaign offer.  
+        type: string
+      campaign-priority:
+        description: Defines priority of the campaign offer. Based on this we define order of appearence for campaign offers.
+        format: int32
+        type: integer
+      ad-text: 
+        description: Marketing messsage that follows campaign offer.
+        type: string
+      zone-type:
+        description: Classification explaining presentation zones of the campaign offer. Commonly used values include dashboard, pre-login, sms, atm..For a complete list of possible values see [marketing-presentation-zone-type]() classification
+        type: string
+      media-uri:
+        description: Defines external uri (addspeed e.g.) that holds visual representation of specific campaign offer)
+        type: string
+      customer-number:
+        description: The unique identifier of the customer.
+        type: string
+      resource-title:
+        description: Title of the campaign offer
+        type: string
+      resource-description:
+        description: Holds more detailed informations about the campaign offer and the product benefits
+        type: string
+      product-code:
+        description: The unique identifier of product in campaign offer 
+        type: string
+      redirect-uri:
+        description: Internal link that holds forms for additional data to be filled if neccesary in order to apply for the product in the campaign offer.
+    type: object      
+  campaign-list:
+    description: List of campaign offers.
+    properties:
+      total-count:
+        description: Total number of items in collection.
+        format: int32
+        type: integer
+      page-size:
+        description: Number of items on a page. For more information see general guidance on [paging and sorting]()
+        format: int32
+        type: integer
+      page-number:
+        description: Page index.
+        format: int32
+        type: integer
+      total-pages:
+        description: Total number of pages.
+        format: int32
+        type: integer
+      items:
+        description: List of campaign offer items.
+        items:
+          $ref: '#/definitions/campaign'
+        type: array
+      navigations:
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        type: string
+    type: object
+  benefit:
+    description: Object that contains informations about benefits that campaign provides. Benefits are related to the conditions of product added to campaign(e.g. credit card - lower interest rate)
+    properties:
+      campaign-code:
+        description: The unique identifier of the campaign that benefit belongs to.
+        type: string
+      benefit-key:
+        description: The unique identifier of the benefit type (lower interest rate, number of free transactions on atm, monthly maintenance discount..)
+        type: string
+      benefit-value:
+        description: Value of the benefit (value of interest rate, number of months without fees on current account..)
+        type: string
+      benefit-type:
+        description: Metadata about type of information (int, string..)
+        enum:
+        - string
+        - int
+        - bool
+        - decimal
+        type: string
+      customer-number:
+        description: The unique identifier of customer
+        type: string
+      is-condition-modification:
+        description: Defines if the benefit overrides product conditions
+        type: boolean
+      is-relative-modification:
+        description: Defines if the benefit provide absolute or relative modification of existing product conditions
+        type: boolean      
+    type: object
+  benefit-list:
+    description: List of benefits
+    properties:
+      total-count:
+        description: Total number of items in collection.
+        format: int32
+        type: integer
+      page-size:
+        description: Number of items on a page. For more information see general guidance on [paging and sorting]()
+        format: int32
+        type: integer
+      page-number:
+        description: Page index.
+        format: int32
+        type: integer
+      total-pages:
+        description: Total number of pages.
+        format: int32
+        type: integer
+        description: List of benefit items.
+        items:
+          $ref: '#/definitions/benefit'
+        type: array
+    type: object  
+  resource:
+    description: Base64 representation of resource used in a campaign. This resource is designed to be presented to the customer as a visual appearence of the campaign offer (e.g. image, gif..). Additional fields carries information about resource culture, campaign end date etc.
+    properties:
+      campaign-code:
+        description: The unique identifier of campaign.
+        type: string
+      campaign-end-date:
+        x-asee-compliance: This property is in the wrong place. It should be removed from here and put into the campaign object.
+        description: Expiration dates of campaign. After this date the campaign is no longer active, and will not be presented to customers.
+        format: date-time
+        type: string
+      campaign-image:
+        description: Base64 representation of the resource (image, gif etc.)
+        type: string
+      resource-culture:
+        description: Culture of the resource.
+        type: string
+    type: object
+  resource-list:
+    description: List of campaign resources
+    properties:
+      total-count:
+        description: Total number of items in collection.
+        format: int32
+        type: integer
+      page-size:
+        description: Number of items on a page. For more information see general guidance on [paging and sorting]()
+        format: int32
+        type: integer
+      page-number:
+        description: Page index.
+        format: int32
+        type: integer
+      total-pages:
+        description: Total number of pages.
+        format: int32
+        type: integer
+        description: List of resources items.
+        items:
+          $ref: '#/definitions/resource'
+        type: array
+    type: object 
+  lead:
+    description: Sales lead is object defined as "agent per customer per campaign offer". In other words, it represents a person or a company that might be interested in your product or service. Lead history can be tracked trough changes of lead status in time. 
+    properties: 
+      lead-number:
+        description: The unique identifier of lead.
+        type: string
+      customer-number:
+        description: The unique identifier of lead.
+        type: string
+      campaign-code:
+        description: The unique identifier of campaign.
+        type: string
+      channel-code:
+        description: The unique identifier of channel (web, mobile, atm, branch etc.)
+        type: string
+      product-code:
+        description: The unique identifier of product campaign related to.
+        type: string
+      status:
+        description: Classification explaining status of lead. Commonly used values include open, qualified, customer-rejected, won. For a complete list of possible values see [lead-status]() classification
+        type: string
+      description:
+        description: More detailed information about lead.
+        type: string
+    type: object
+  lead-list:
+    description: List of leads
+    properties:
+      total-count:
+        description: Total number of items in collection.
+        format: int32
+        type: integer
+      page-size:
+        description: Number of items on a page. For more information see general guidance on [paging and sorting]()
+        format: int32
+        type: integer
+      page-number:
+        description: Page index.
+        format: int32
+        type: integer
+      total-pages:
+        description: Total number of pages.
+        format: int32
+        type: integer
+        description: List of lead items.
+        items:
+          $ref: '#/definitions/lead'
+        type: array
+    type: object 
+  link:
+    properties:
+      href:
+        type: string
+      rel:
+        type: string
+    type: object
+
+  initiate-benefit-command:
+    description: Activates benefit that campaign provides (e.g. lower interest rate for credit limit) 
+    properties: 
+      benefit:
+        description: Gets or sets the contact.
+        $ref: '#/definitions/benefit'  
+    type: object
+  
+  initiate-campaign-command:
+    description: Adds customer to campaign 
+    properties: 
+      campaign-code:
+        description: The unique identifier of the campaign.
+        type: string
+      customer-number:
+        description: The unique identifier of the customer.
+        type: string  
+    type: object  
+    
+  create-lead-command:  
+    description: Change status of lead. If status is changed to won initilaizes campaign benefits execution.
+    properties:
+      channel-code:
+        description: The unique identifier of channel(web, mobile, atm, branch etc.)
+        type: string
+      status:
+        description: Classification explaining status of lead. Commonly used values include open, qualified, customer-rejected, won. For a complete list of possible values see [lead-status]() classification
+        type: string
+      description:
+        description: More detailed information about lead.
+        type: string
+      customer-number:
+        description: The unique identifier of customer.
+        type: string
+      campaign-code:
+        description: The unique identifier of campaign.
+        type: string
+      product-code:
+        description: The unique identifier of product.
+        type: string  
+    type: object
+    
+  initiate-lead-command:
+    description: Changes status of lead. If status is changed to won initilaizes campaign benefits execution.
+    properties:
+      lead-code:
+        description: The unique identifier of sales lead
+        type: string
+      channel-code:
+        description: Unique identifier of channel(web, mobile, atm, branch etc.)
+        type: string
+      status:
+        description: Classification explaining status of lead. Commonly used values include open, qualified, customer-rejected, won. For a complete list of possible values see [lead-status]() classification
+        type: string
+      description:
+        description: More detailed information about lead.
+        type: string
+      customer-number:
+        description: The unique identifier of customer.
+        type: string
+      campaign-code:
+        description: The unique identifier of campaign.
+        type: string
+      product-code:
+        description: The unique identifier of product.
+        type: string
+      PAN:
+        description: Primary Account Number is used for Off Us campaigns, to define campaign on atm that includes customers that use other bank's credit\debit cards.  
+        type: string
+      SourceURI:
+        description: To keep information about point of access. Help us analyze efficiency of channels.
+        type: string
+      IsProvisioningCampaign:
+        description: Define if campaign is provisioning(info) campaign, without benefits involved.
+        type: boolean
+    type: object
+  command-result:
+    properties:
+      id:
+        type: string
+      created-record-status:
+        type: string
+    type: object
+  validation-problem:
+    type: array
+    items:
+      type: object
+      properties:
+        field:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              error:
+                type: string
+              message:
+                type: string
+                
+responses:
+  resource-created-response:
+    description: Resource was created successfuly.
+    schema:
+      $ref: "#/definitions/command-result"
+  validation-problem-response:
+    description: Your request was not constructed properly. Response contains the list of validation errors for each invalid element of your request. For complete list of possible validation errors see [validation errors]() classification.
+    schema: 
+      $ref: '#/definitions/validation-problem'
+  default-error-response:
+    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
+schemes:
+  - http
