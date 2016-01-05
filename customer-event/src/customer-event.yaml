@@ -3,8 +3,8 @@ responses:
   default-error-response:
     description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
 definitions:
-  event-list-light:
-    description: Paged list of customer events with small details set.
+  event-list:
+    description: Paged list of customer events.
     properties:
       total-count:
         description: Total count of records
@@ -25,7 +25,7 @@ definitions:
       items:
         description: List of customer events
         items:
-          $ref: '#/definitions/evet-data-light'
+          $ref: '#/definitions/event'
         type: array
       navigations:
         description: Links to related resources.
@@ -41,27 +41,28 @@ definitions:
         description: URI
         type: string
     type: object
-  evet-data-light:
-    description: ''
-    properties:
-      event-id:
-        description: Id of the Event
-        format: int64
-        type: integer
-      creation-datetime:
-        description: Date and time when Event is created
-        format: date-time
-        type: string
-      description:
-        description: Description of the event
-        type: string
-      event-kind:
-        description: Kind of event
-        type: string
-      uri:
-        description: URI
-        type: string
-    type: object
+  # evet-data-light:
+  #   x-asee-compliance: This object is removed. We will not use light objects to get reduced set of data. Reduced set of data is achieved with include and trim parameters in get operation.
+  #   description: ''
+  #   properties:
+  #     event-id:
+  #       description: Event identifier.
+  #       format: int64
+  #       type: integer
+  #     creation-datetime:
+  #       description: Date and time when Event is created
+  #       format: date-time
+  #       type: string
+  #     description:
+  #       description: Description of the event
+  #       type: string
+  #     event-kind:
+  #       description: Kind of event
+  #       type: string
+  #     uri:
+  #       description: URI
+  #       type: string
+  #   type: object
   link:
     properties:
       href:
@@ -88,6 +89,7 @@ definitions:
       event-kind:
         description: Kind of event
         type: string
+        x-asee-compliance: This should be related to enum.
       event-data-xml:
         description: Event related data in form of XML.
         type: string
@@ -114,7 +116,7 @@ definitions:
         type: string
     type: object
   communication-event:
-    description: 'Identifies a record of the receiving or sending (or the intention to send) of a message between two Involved Parties, one of which is typically the modeled Organization.'
+    description: Details about communication event related to customer, i.e. the record of receiving or sending a message between two parties.
     properties:
       from:
         description: Sender of event.
@@ -123,34 +125,35 @@ definitions:
         description: Title of event.
         type: string
       referral-communication-id:
-        description: "Identifies a Communication that is a referral of an previous Communication to another involved party.\r\n            For example a Communication received by one Organization Unit which is forwarded to another Organization Unit to be dealt with."
+        description: Identifies the reference of previous communication that is related to this communication event.
         type: string
       responds-to-id:
         description: The identification of a Communication as a response to another Communication.
         type: string
       communication-type:
-        description: The main porpuse of the communication
+        description: The main purpose of the communication
         enum:
-          - GeneralCommunication
-          - Complaint
-          - Feedback
+          - general-communication
+          - complaint
+          - feedback
         type: string
       resolution-status:
         description: Resolution status of the communication
         type: string
+        x-asee-compliance: This should be related to some enum or classification.
       medium:
         description: Medium that is used for the communication
         enum:
-          - Phone
-          - Mail
-          - Email
-          - Fax
-          - FaceToFaceMeeting
-          - Sms
-          - Web
-          - Wap
-          - InstantMessage
-          - OtherCommunicationTechnology
+          - phone
+          - mail
+          - email
+          - fax
+          - face-to-face-meeting
+          - sms
+          - web
+          - wap
+          - instant-message
+          - other-communication-technology
         type: string
       event-id:
         description: Event identifier
@@ -166,6 +169,7 @@ definitions:
       event-kind:
         description: Kind of event
         type: string
+        x-asee-compliance: This is redundant. Event kind is represented by object itself.
       event-data-xml:
         description: Event related data in form of XML.
         type: string
@@ -198,6 +202,7 @@ definitions:
       event-kind:
         description: Kind of event
         type: string
+        x-asee-compliance: This is redundant. Event kind is represented by object itself.
       event-data-xml:
         description: Event related data in form of XML.
         type: string
@@ -222,6 +227,7 @@ definitions:
       transaction-type:
         description: Type of transaction
         type: string
+        x-asee-compliance: This should be related to some classification?
       event-id:
         description: Event identifier.
         format: int64
@@ -236,6 +242,7 @@ definitions:
       event-kind:
         description: Kind of event
         type: string
+        x-asee-compliance: This is redundant. Event kind is represented by object itself.
       event-data-xml:
         description: Event related data in form of XML.
         type: string
@@ -249,7 +256,7 @@ definitions:
         type: string
     type: object
   customer-case-event:
-    description: Details about event related to custoemr case.
+    description: Details about event related to customer case.
     properties:
       from:
         description: Sender of event.
@@ -271,6 +278,7 @@ definitions:
       event-kind:
         description: Kind of event
         type: string
+        x-asee-compliance: This is redundant. Event kind is represented by object itself.
       event-data-xml:
         description: Event related data in form of XML.
         type: string
@@ -295,9 +303,10 @@ definitions:
       arrangement-number:
         description: The unique identifier of an Arrangement between the customer and the bank
         type: string
-      activty-type:
+      activity-type:
         description: The type of the activity
         type: string
+        x-asee-compliance: This should be related to some classification?
       event-id:
         description: Event identifier.
         format: int64
@@ -312,6 +321,7 @@ definitions:
       event-kind:
         description: Kind of event
         type: string
+        x-asee-compliance: This is redundant. Event kind is represented by object itself.
       event-data-xml:
         description: Event related data in form of XML.
         type: string
@@ -341,6 +351,7 @@ definitions:
       event-kind:
         description: Kind of event
         type: string
+        x-asee-compliance: This is redundant. Event kind is represented by object itself.
       event-data-xml:
         description: Event related data in form of XML.
         type: string
@@ -365,6 +376,7 @@ definitions:
       activity-type:
         description: The type of the activity
         type: string
+        x-asee-compliance: This should be related to some classification?
       event-id:
         description: Event identifier.
         format: int64
@@ -379,6 +391,7 @@ definitions:
       event-kind:
         description: Kind of event
         type: string
+        x-asee-compliance: This is redundant. Event kind is represented by object itself.
       event-data-xml:
         description: Event related data in form of XML.
         type: string
@@ -393,16 +406,19 @@ definitions:
     type: object
   create-communication-event-command:
     description: Parameters for event registration.
+    x-asee-compliance: Please check the conformity of these properties with the properties of communication-event object. They should match somewhat.
     properties:
       id:
         description: Command identifier
         type: string
+        x-asee-compliance: Is this event-id? Is this the value that should be returned in response, not the request parameter?
       customer-number:
         description: Customer number
         type: string
       workitem-id:
         description: Workitem number
         type: string
+        x-asee-compliance: Is this the value that should be returned in response, not the request parameter?
       description:
         description: Description of the event
         type: string
@@ -418,19 +434,20 @@ definitions:
       medium:
         description: Medium used for communication
         enum:
-          - Mail
-          - Email
-          - Fax
-          - FaceToFaceMeeting
-          - Sms
-          - Web
-          - Wap
-          - InstantMessage
-          - OtherCommunicationTechnology
+          - mail
+          - email
+          - fax
+          - face-to-face-meeting
+          - sms
+          - web
+          - wap
+          - instant-message
+          - other-communication-technology
         type: string
       purpose:
-        description: Purpose
+        description: Purpose of the communication
         type: string
+        x-asee-compliance: Looking at communi above, there is a question should this be called communication-type? Anyway, it should be related to some enum or classification.
       return-address:
         description: Return address
         type: string
@@ -441,6 +458,7 @@ definitions:
     type: object
   command-result:
     description: ''
+    x-asee-compliance: Missing description of object. Properties description should be corrected a bit.
     properties:
       id:
         description: 'Gets or sets the id of created, updated or deleted entity.'
@@ -486,7 +504,7 @@ paths:
       deprecated: false
       operationId: Events_GetList
       parameters:
-        - description: Customer number.
+        - description: Customer identifier.
           in: query
           name: customer-number
           required: false
@@ -507,7 +525,7 @@ paths:
           in: query
           name: sort-order
           required: false
-		  enum:
+          enum:
             - asc
             - desc
           type: string
@@ -534,7 +552,7 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/event-list-light'
+            $ref: '#/definitions/event-list'
         default:
             $ref: '#/responses/default-error-response'
       summary: List all registered events for a customer
@@ -545,16 +563,17 @@ paths:
       deprecated: false
       operationId: Events_Get
       parameters:
-        - description: Event id
+        - description: Event identifier.
           in: path
           name: event-id
           required: true
           type: string
-        - description: Customer number.
+        - description: Customer identifier.
           in: query
           name: customer-number
           required: false
           type: string
+          x-asee-compliance: The customer-number parameter should be removed, since event-id is required and enough to fetch specific event.
         - description: List of fields to include in response. For more information see general guidance on [response shaping]()
           in: query
           name: include-fields-list
@@ -584,16 +603,17 @@ paths:
       deprecated: false
       operationId: CommunicationEvents_Get
       parameters:
-        - description: Event id
+        - description: Event identifier.
           in: path
           name: event-id
           required: true
           type: string
-        - description: Customer number.
+        - description: Customer identifier.
           in: query
           name: customer-number
           required: false
           type: string
+          x-asee-compliance: The customer-number parameter should be removed, since event-id is required and enough to fetch specific event.
         - description: Gets or sets the field names.
           in: query
           name: include-fields-list
@@ -623,7 +643,7 @@ paths:
       deprecated: false
       operationId: SocialEvents_Get
       parameters:
-        - description: Event id
+        - description: Event identifier.
           in: path
           name: event-id
           required: true
@@ -633,6 +653,7 @@ paths:
           name: customer-number
           required: false
           type: string
+          x-asee-compliance: The customer-number parameter should be removed, since event-id is required and enough to fetch specific event.
         - description: Gets or sets the field names.
           in: query
           name: include-fields-list
@@ -662,7 +683,7 @@ paths:
       deprecated: false
       operationId: AccountingTransactionEvents_Get
       parameters:
-        - description: Event id
+        - description: Event identifier.
           in: path
           name: event-id
           required: true
@@ -672,6 +693,7 @@ paths:
           name: customer-number
           required: false
           type: string
+          x-asee-compliance: The customer-number parameter should be removed, since event-id is required and enough to fetch specific event.
         - description: Gets or sets the field names.
           in: query
           name: include-fields-list
@@ -701,7 +723,7 @@ paths:
       deprecated: false
       operationId: CustomerCaseEvents_Get
       parameters:
-        - description: Event id
+        - description: Event identifier.
           in: path
           name: event-id
           required: true
@@ -711,6 +733,7 @@ paths:
           name: customer-number
           required: false
           type: string
+          x-asee-compliance: The customer-number parameter should be removed, since event-id is required and enough to fetch specific event.
         - description: Gets or sets the field names.
           in: query
           name: include-fields-list
@@ -740,7 +763,7 @@ paths:
       deprecated: false
       operationId: ArrangementActivityEvents_Get
       parameters:
-        - description: Event id
+        - description: Event identifier.
           in: path
           name: event-id
           required: true
@@ -750,6 +773,7 @@ paths:
           name: customer-number
           required: false
           type: string
+          x-asee-compliance: The customer-number parameter should be removed, since event-id is required and enough to fetch specific event.
         - description: Gets or sets the field names.
           in: query
           name: include-fields-list
@@ -779,7 +803,7 @@ paths:
       deprecated: false
       operationId: ProfileMaintenanceEvents_Get
       parameters:
-        - description: Event id
+        - description: Event identifier.
           in: path
           name: event-id
           required: true
@@ -789,6 +813,7 @@ paths:
           name: customer-number
           required: false
           type: string
+          x-asee-compliance: The customer-number parameter should be removed, since event-id is required and enough to fetch specific event.
         - description: Gets or sets the field names.
           in: query
           name: include-fields-list
@@ -828,6 +853,7 @@ paths:
           name: customer-number
           required: false
           type: string
+          x-asee-compliance: The customer-number parameter should be removed, since event-id is required and enough to fetch specific event.
         - description: Gets or sets the field names.
           in: query
           name: include-fields-list
