@@ -1,35 +1,35 @@
----
 swagger: '2.0'
-basePath: "/fraud-detaction"
+basePath: "/fraud-detection"
 schemes:
-- http
+  - http
+host: api.asee.co
 
-host: mc-gw:80
 info:
   title: Fraud Detection API
   version: beta
   description: |
-     Fraud Detection API enables to prevent fraud activitis according to legal requirements of finanacial institution.
+     Fraud Detection API enables to prevent fraud activitis according to legal requirements of financial institution.
      With Fraud Detection API you can:
        - Check client AML status 
-       - Check whether client is on banks black list.
+       - Check whether client is on black list.
     
 tags:
   -
-    name: AML lists
-    description:  Working with AML lists
+    name: AML
+    description: Working with AML lists
   -
-    name: Black Lists
-    description:   Working with Black lists
+    name: Black lists
+    description: Working with Black lists
+
 responses:
   default-error-response:
     description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
     
   
 paths:
-  "/aml-status":
+  "/aml/status":
     get:
-      operationId: AMLLists_GetStatus
+      operationId: AML_GetStatus
       parameters:
       - description: Personal identification number (JMBG).
         in: query
@@ -46,71 +46,67 @@ paths:
         name: last-name
         required: true
         type: string
-      - description: City.
+      - description: City where the client lives.
         in: query
         name: city
         required: false
         type: string
+        x-asee-compliance: We should probably add country-code parameter here too, to have matching parameters for this and the method below.
       responses:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/customer-aml-status'          
+            $ref: '#/definitions/aml-status'          
         default:
           $ref: '#/responses/default-error-response'  
-      summary: Checks customer AML status and returns customer raiting and reliability.
+      summary: Checks customer AML status and returns customer rating and reliability.
       tags:
-      - AML lists
-  "/black-list-status":
+        - AML
+  "/black-lists/status":
     get:
       operationId: BlackLists_GetStatus
       parameters:
-      - $ref: "#/parameters/personal-identification-number"
-      - $ref: "#/parameters/first-name"
-      - $ref: "#/parameters/last-name"
+      - description: Personal identification number (JMBG).
+        in: query
+        name: personal-identification-number
+        required: true
+        type: string
+      - description: First name of the client.
+        in: query
+        name: first-name
+        required: true
+        type: string
+      - description: Last name of the client.
+        in: query
+        name: last-name
+        required: true
+        type: string
       - description: Country code.
         in: query
         name: country-code
         required: false
         type: string
+        x-asee-compliance: We should probably add city parameter here too, to have matching parameters for this and the method above.
       responses:
         '200':
           description: Success
           schema:
               items:
-                $ref: '#/definitions/customer-blacklist-status' 
+                $ref: '#/definitions/black-list-status' 
               type: array
         default:
           $ref: '#/responses/default-error-response'  
-      summary: Checks whether client is on banks black lists and returns percentages of belonging.
+      summary: Checks whether client is on black lists and returns percentages of belonging.
       tags:
-      - Black Lists
-
-parameters:
-  personal-identification-number:    
-    name: personal-identification-number
-    in: query
-    description: Personal identification number (JMBG).
-    required: true
-    type: string
-  first-name:
-    description: First name of the client.
-    in: query
-    name: first-name
-    required: true
-    type: string
-  last-name:
-    description: Last name of the client.
-    in: query
-    name: last-name
-    required: true
-    type: string
+        - Black lists
     
 definitions:
-  customer-aml-status: 
-      description: Indicates the raiting of a customer.
+
+  aml-status: 
+      description: Indicates the AML rating of a customer.
       properties: 
         rating-value: 
+          x-asee-compliance: Is there some correlation between this property and the one below? Five vs four values in enumeration.
           description: The evaluation of the acceptability of the customer. Possible values are in range [0-4]
           type: "string"
           enum: 
@@ -131,21 +127,21 @@ definitions:
       example:
         rating-value: 0
         reliability: low-risk
-  customer-blacklist-status: 
+  black-list-status: 
       description: Indicates the affiliation of a customer to black list.
       properties: 
         percentage: 
-          description: Percentage of belonging to black list.
+          description: Percent of matching.
           type: "string"
         name: 
-          description: Name of black list that client belongs.
+          description: Name of black list on which client was found.
           type: "string"
       type: "object"    
       example:
         items:
           - 
            percentage: 80
-           name: Crna lista evropske unije
+           name: EU black list
           - 
            percentage: 75
-           name: Crna lista ujedinjenih nacija
+           name: UN black list
