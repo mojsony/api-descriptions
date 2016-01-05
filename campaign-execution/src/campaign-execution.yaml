@@ -3,7 +3,8 @@ info:
   version: beta
   title: Campaign Execution API
   description: |
-    Campaign Execution API gives you access to active campaigns for customers, list of customers' active leads, insight to lead history and provide you ability to post responses to leads. Also allows you to intitiate campaign execution workflow. In this workflow you can perform all necessary actions that follows campaign execution process: 
+    Campaign Execution API gives you access to active campaigns for customers, list of customers' active leads, insight to lead history and provide you ability to post responses to leads. 
+    Also allows you to intitiate campaign execution workflow. In this workflow you can perform all necessary actions that follows campaign execution process.
 host: 'api.asee.co'
 basePath: /campaign-manager
 schemes:
@@ -14,9 +15,9 @@ produces:
   - application/json
 tags:
   - name: Campaigns
-    description: Working  with campaign offers
+    description: Working with campaign offers
   - name: Resources
-    description: Working  with campaign resources  
+    description: Working with campaign resources  
   - name: Leads
     description: Working with leads
   - name: Benefits
@@ -24,18 +25,15 @@ tags:
 paths:
   /campaigns:  
     get:
-      summary: Get the list of the active campaign offers 
-      description: |
-        Campaign Management endpoint returns information about the campaign offers available at a given channel or/and customer.
-        The response includes the campaign title and other details about each campaign offer, and lists the campaign offers in the proper display order by priority.
+      summary: Gets list of available campaign offers for the customer at the given channel.
       operationId: Campaigns_GetList
       parameters:
-        - $ref: '#/parameters/PAN-param'
-        - $ref: '#/parameters/campaign-number-param'
+        - $ref: '#/parameters/account-number-param'
+        - $ref: '#/parameters/campaign-code-param'
         - $ref: '#/parameters/channel-code-param'
         - $ref: '#/parameters/customer-number-param'
         - $ref: '#/parameters/product-code-param'
-        - $ref: '#/parameters/preferred-client-culture-param'
+        - $ref: '#/parameters/preferred-language-param'
         - $ref: '#/parameters/page-number-param'
         - $ref: '#/parameters/page-size-param'
         - $ref: '#/parameters/sort-order-param'
@@ -52,14 +50,14 @@ paths:
       x-asee-tags:
         - Pageable
         - Sortable
-		
+
     post:
-      summary: Add customer to the campaign.
+      summary: Adds customer to campaign.
       tags:
         - Campaigns
-      operationId: Campaign_Initiate
+      operationId: Campaigns_Initiate
       parameters:
-        - description: Add customer to campaign.
+        - description: Parameters for adding customer to campaign.
           in: body
           name: cmd
           required: true
@@ -68,20 +66,18 @@ paths:
       responses:
         '200':
           description: OK
-        '201':
-          description: Created
           schema:
             $ref: '#/definitions/command-result'
         default:
             $ref: '#/responses/default-error-response'
       x-asee-tags: []  
-      
+
   /campaigns/{campaign-code}:
     delete:
-      summary: Remove customer from the campaign.
+      summary: Removes customer from campaign.
       tags:
         - Campaigns
-      operationId: Campaign_Cancel
+      operationId: Campaigns_Cancel
       parameters:
         - $ref: '#/parameters/campaign-code-param'
       responses:
@@ -92,12 +88,10 @@ paths:
         default:
             $ref: '#/responses/default-error-response'
       x-asee-tags: []    
-  
+
   /campaigns/{campaign-code}/resources:  
     get:
-      summary: Get the list of active campaign offers 
-      description: |
-        Get the list of resources used in campaign. Images are in Base64 representation for atm needs.
+      summary: Returns list of media resources for campaign.
       operationId: Resources_GetList
       parameters:
         - $ref: '#/parameters/campaign-code-param' 
@@ -117,12 +111,10 @@ paths:
       x-asee-tags:
         - Pageable
         - Sortable  
-        
+
   /campaigns/{campaign-code}/benefits:  
     get:
-      summary: Get the list of benefits in campaign
-      description: |
-        Returns the list of the benefits in the campaign.
+      summary: Returns list of benefits in the campaign.
       operationId: Benefits_GetList
       parameters:
         - $ref: '#/parameters/campaign-code-param' 
@@ -142,20 +134,21 @@ paths:
       x-asee-tags:
         - Pageable
         - Sortable
-        
+
+  /campaigns/{campaign-code}/benefits/activate:
     post:
-      summary: Activates the benefit for the campaign.
+      summary: Activates the benefit of the campaign, e.g. enables x free transactions on atm for the customer.
       tags:
         - Benefits
-      operationId: Benefits_Initiate
+      operationId: Benefits_Activate
       parameters:
         - $ref: '#/parameters/campaign-code-param'
-        - description: Activates the benefit for the campaign (e.g. enables x free transactions on atm for the customer) 
+        - description: Parameters for activation of campaign benefit.
           in: body
           name: cmd
           required: true
           schema:
-            $ref: '#/definitions/initiate-benefit-command'
+            $ref: '#/definitions/activate-benefit-command'
       responses:
         '200':
           description: OK
@@ -164,41 +157,36 @@ paths:
         default:
             $ref: '#/responses/default-error-response'
       x-asee-tags: []
-      
-    delete:
-      summary: Deactivates the benefit for the campaign. 
+
+  /campaigns/{campaign-code}/benefits/deactivate:
+    post:
+      summary: Deactivates the benefit of the campaign, e.g. enables x free transactions on atm for the customer. 
       tags:
         - Benefits
-      operationId: Benefits_Cancel
+      operationId: Benefits_Deactivate
       parameters:
         - $ref: '#/parameters/campaign-code-param'
-        - description: Deactivates the benefit for the campaign ((e.g. enables x free transactions on atm for the customer) 
+        - description: Parameters for deactivation of campaign benefit.
           in: body
           name: cmd
           required: true
           schema:
-            $ref: '#/definitions/initiate-benefit-command'
+            $ref: '#/definitions/deactivate-benefit-command'
       responses:
         '200':
           description: OK
-          schema:
-            $ref: '#/definitions/command-result'
-        '201':
-          description: Created
           schema:
             $ref: '#/definitions/command-result'    
         default:
             $ref: '#/responses/default-error-response'
       x-asee-tags: []      
-  
+
   /leads:  
     get:
-      summary: Get the list of leads in campaign
-      description: |
-        Operation returns the list of leads. The list can be filtered to return only leads for specified campaign code and also this list can also be filtered by channel enumerated in the channel code optional parameter.
+      summary: Returns list of leads for campaign filtered by specific channel and lead status.
       operationId: Leads_GetList
       parameters:
-        - $ref: '#/parameters/campaign-number-param'
+        - $ref: '#/parameters/campaign-code-param'
         - $ref: '#/parameters/channel-code-param'
         - $ref: '#/parameters/lead-status-param'
         - $ref: '#/parameters/page-number-param'
@@ -206,7 +194,7 @@ paths:
         - $ref: '#/parameters/sort-order-param'
         - $ref: '#/parameters/sort-by-param'
       tags:
-        - Lead
+        - Leads
       responses:
         '200':
           description: OK
@@ -216,38 +204,15 @@ paths:
           $ref: '#/responses/default-error-response'
       x-asee-tags:
         - Pageable
-        - Sortable      
-  
-  /leads:
+        - Sortable
+
     post:
-      summary: Changes status of the lead and executes campaign benefits.
-      tags:
-        - Leads
-      operationId: Leads_Initiate
-      parameters:
-        - description: This operatuion changes status of the lead. If status changes to won also activates campaign benefits.
-          in: body
-          name: cmd
-          required: true
-          schema:
-            $ref: '#/definitions/initiate-lead-command'
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/command-result'
-        default:
-            $ref: '#/responses/default-error-response'
-      x-asee-tags: [] 
-      
-  /leads:
-    post:
-      summary: Create new lead.
+      summary: Creates new lead in status open.
       tags:
         - Leads
       operationId: Leads_Create
       parameters:
-        - description: This create new lead in status open.
+        - description: Parameters for creating new lead.
           in: body
           name: cmd
           required: true
@@ -261,13 +226,36 @@ paths:
         default:
             $ref: '#/responses/default-error-response'
       x-asee-tags: []
+
+
+  /leads/{lead-code}/response:
+    post:
+      summary: Changes status of the lead and activates campaign benefits if status is won.
+      tags:
+        - Leads
+      operationId: Leads_Respond
+      parameters:
+        - description: Parameters for changing status of the lead.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/respond-lead-command'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+            $ref: '#/responses/default-error-response'
+      x-asee-tags: [] 
   
        
 parameters:
-  PAN-param:
-    name: PAN
+  account-number-param:
+    name: account-number
     in: query
-    description: Primary Account Number is used for Off Us campaigns, to define campaign on atm that includes customers that use other bank's credit\debit cards.  
+    description: Primary account number that is used for off-us campaigns to identify the person who is not the client of the bank.
     required: false
     type: string
   channel-code-param:
@@ -276,7 +264,7 @@ parameters:
     description: The unique identifier of channel (web, atm, mobile, branch etc.) 
     required: true
     type: string
-    x-asee-compliance: This should be related to some enum or classification.
+    x-asee-compliance: This should be related to some classification.
   priority-param:
     name: priority
     in: query
@@ -284,7 +272,7 @@ parameters:
     required: false
     format: int32
     type: integer
-    x-asee-compliance: Should this be related to some enum?
+    x-asee-compliance: This should be related to some enum.
   customer-number-param:
     description: The unique identifier of the customer
     in: query
@@ -296,29 +284,16 @@ parameters:
     description: The unique identifier of the campaign
     in: path
     required: true
-    type: string
-  campaign-number-param:
-    name: campaign-code
-    description: The unique identifier of the campaign
-    in: query
-    required: false
-    type: string  
+    type: string 
   product-code-param:
     name: product-code
     description: The unique identifier of the product
     in: query
     required: false
     type: string
-  preferred-client-culture-param:
-    name: preferred-client-culture
-    description: Classification explaining culture used. Commonly used values include SrLatnCS, EnUs, Mk... For a complete list of possible values see [preferred-client-culture]() classification
-    in: query
-    required: false
-    type: string
-  page-number-param:
-    name: page-number
-    in: query
-    description: Number of page requested. For more information see general guidance on [paging and sorting]()
+  preferred-language-param:
+    name: preferred-language
+    description: Prefered language/culture of the customer.
     type: string
   page-size-param:
     name: page-size
@@ -329,8 +304,7 @@ parameters:
     type: integer
     default: 10
     x-asee-common: true 
-  page-param:
-    x-asee-compliance: This parameter should be removed. It is deprecated and replaced with page-number-param.
+  page-number-param:
     in: query
     name: page
     description: Page index. For more information see general guidance on [paging and sorting]()
@@ -355,7 +329,7 @@ parameters:
     type: string
     required: false
   lead-status-param:
-    description: Classification explaining status of lead. Commonly used values include open, qualified, customer-rejected, won. For a complete list of possible values see [lead-status]() classification
+    description: Status of the lead. For complete list of possible values see [lead-status]() classification
     in: query
     name: lead-status
     required: false
@@ -369,45 +343,52 @@ parameters:
 
 definitions:
   campaign:
-    description:  
-      Base campaign execution object that contains conditions of product offer and also metadata to help visually represent offer to the client. 
+    description: 
+      Base campaign execution object that contains conditions of product offer and also metadata to help visually represent offer to the client. Campaign-code, zone-code and ad-code together make complex unique identifier of campaign offer.
     properties:
       campaign-code:
-        description: The unique identifier of the campaign. Campaign-code, zone-code and resource-code together make complex unique identifier of campaign offer.
+        description: The unique identifier of the campaign. 
         type: string
       zone-code:
-        description: The unique identifier of the presentation zone. Defines visual position of campaign offer (in browser, on atm..). Campaign-code, zone-code and resource-code together make complex unique identifier of campaign offer.   
+        description: The unique identifier of the presentation zone. Defines visual position of campaign offer (in browser, on atm, etc.)
         type: string
+        x-asee-compliance: What is this property? There is already a zone-type below! Maybe this is channel-code? Also, it should be related to some classification.
       ad-code:
-        description: The unique identifier of the resource. Resource defines visual representation of the campaign offer. Campaign-code, zone-code and resource-code together make complex unique identifier of campaign offer.  
+        description: The unique identifier of the resource. Resource defines visual representation of the campaign offer. 
         type: string
       campaign-priority:
         description: Defines priority of the campaign offer. Based on this we define order of appearence for campaign offers.
         format: int32
         type: integer
+        x-asee-compliance: This should be related to enum.
       ad-text: 
         description: Marketing messsage that follows campaign offer.
         type: string
       zone-type:
-        description: Classification explaining presentation zones of the campaign offer. Commonly used values include dashboard, pre-login, sms, atm..For a complete list of possible values see [marketing-presentation-zone-type]() classification
+        description: Defines presentation zone for campaign, e.g. dashboard, pre-login, sms, atm. For a complete list of possible values see [marketing-presentation-zone-type]() classification.
         type: string
       media-uri:
-        description: Defines external uri (addspeed e.g.) that holds visual representation of specific campaign offer)
+        description: Defines external uri that holds visual representation of specific campaign offer.
         type: string
       customer-number:
         description: The unique identifier of the customer.
         type: string
-      resource-title:
-        description: Title of the campaign offer
+      campaign-title:
+        description: Title of campaign offer.
         type: string
-      resource-description:
-        description: Holds more detailed informations about the campaign offer and the product benefits
+      campaign-description:
+        description: Detailed informations about campaign offer and related product benefits.
         type: string
       product-code:
-        description: The unique identifier of product in campaign offer 
+        description: The unique identifier of the product related to campaign offer.
         type: string
       redirect-uri:
         description: Internal link that holds forms for additional data to be filled if neccesary in order to apply for the product in the campaign offer.
+      campaign-end-date:
+        x-asee-compliance: This property has been moved from resource object. It obviously belongs to campaign offer object.
+        description: Expiration date of campaign. After this date the campaign is no longer active, and will not be presented to customers.
+        format: date-time
+        type: string
     type: object      
   campaign-list:
     description: List of campaign offers.
@@ -417,7 +398,7 @@ definitions:
         format: int32
         type: integer
       page-size:
-        description: Number of items on a page. For more information see general guidance on [paging and sorting]()
+        description: Number of items on a page.
         format: int32
         type: integer
       page-number:
@@ -445,7 +426,7 @@ definitions:
         type: string
     type: object
   benefit:
-    description: Object that contains informations about benefits that campaign provides. Benefits are related to the conditions of product added to campaign(e.g. credit card - lower interest rate)
+    description: Contains information about campaign benefit, i.e. special condition provided with the product under campaign (e.g. lower interest rate for credit card).
     properties:
       campaign-code:
         description: The unique identifier of the campaign that benefit belongs to.
@@ -453,11 +434,12 @@ definitions:
       benefit-key:
         description: The unique identifier of the benefit type (lower interest rate, number of free transactions on atm, monthly maintenance discount..)
         type: string
+        x-asee-compliance: This should be related to some classification?
       benefit-value:
         description: Value of the benefit (value of interest rate, number of months without fees on current account..)
         type: string
       benefit-type:
-        description: Metadata about type of information (int, string..)
+        description: "Metadata about type of information. Possible values are:"
         enum:
         - string
         - int
@@ -499,20 +481,15 @@ definitions:
         type: array
     type: object  
   resource:
-    description: Base64 representation of resource used in a campaign. This resource is designed to be presented to the customer as a visual appearence of the campaign offer (e.g. image, gif..). Additional fields carries information about resource culture, campaign end date etc.
+    description: Media resource providing visual appearance of campaign offer, e.g. image, gif, etc.
     properties:
       campaign-code:
         description: The unique identifier of campaign.
         type: string
-      campaign-end-date:
-        x-asee-compliance: This property is in the wrong place. It should be removed from here and put into the campaign object.
-        description: Expiration dates of campaign. After this date the campaign is no longer active, and will not be presented to customers.
-        format: date-time
-        type: string
       campaign-image:
         description: Base64 representation of the resource (image, gif etc.)
         type: string
-      resource-culture:
+      resource-language:
         description: Culture of the resource.
         type: string
     type: object
@@ -524,7 +501,7 @@ definitions:
         format: int32
         type: integer
       page-size:
-        description: Number of items on a page. For more information see general guidance on [paging and sorting]()
+        description: Number of items on a page.
         format: int32
         type: integer
       page-number:
@@ -541,13 +518,13 @@ definitions:
         type: array
     type: object 
   lead:
-    description: Sales lead is object defined as "agent per customer per campaign offer". In other words, it represents a person or a company that might be interested in your product or service. Lead history can be tracked trough changes of lead status in time. 
+    description: Sales lead is defined as "agent per customer per campaign offer". In other words, it represents a person or a company that might be interested in your product or service. Lead history can be tracked trough changes of lead status in time. 
     properties: 
       lead-number:
         description: The unique identifier of lead.
         type: string
       customer-number:
-        description: The unique identifier of lead.
+        description: The unique identifier of customer.
         type: string
       campaign-code:
         description: The unique identifier of campaign.
@@ -555,11 +532,12 @@ definitions:
       channel-code:
         description: The unique identifier of channel (web, mobile, atm, branch etc.)
         type: string
+        x-asee-compliance: This should be related to some classification.
       product-code:
         description: The unique identifier of product campaign related to.
         type: string
       status:
-        description: Classification explaining status of lead. Commonly used values include open, qualified, customer-rejected, won. For a complete list of possible values see [lead-status]() classification
+        description: Status of the lead. For complete list of possible values see [lead-status]() classification
         type: string
       description:
         description: More detailed information about lead.
@@ -573,7 +551,7 @@ definitions:
         format: int32
         type: integer
       page-size:
-        description: Number of items on a page. For more information see general guidance on [paging and sorting]()
+        description: Number of items on a page.
         format: int32
         type: integer
       page-number:
@@ -597,12 +575,26 @@ definitions:
         type: string
     type: object
 
-  initiate-benefit-command:
+  activate-benefit-command:
     description: Activates benefit that campaign provides (e.g. lower interest rate for credit limit) 
     properties: 
-      benefit:
-        description: Gets or sets the contact.
-        $ref: '#/definitions/benefit'  
+      campaign-code:
+        description: The unique identifier of campaign.
+        type: string
+      benefit-key:
+        description: The unique identifier of benefit to be initiated.
+        type: string
+    type: object
+	
+  deactivate-benefit-command:
+    description: Activates benefit that campaign provides (e.g. lower interest rate for credit limit) 
+    properties: 
+      campaign-code:
+        description: The unique identifier of campaign.
+        type: string
+      benefit-key:
+        description: The unique identifier of benefit to be initiated.
+        type: string
     type: object
   
   initiate-campaign-command:
@@ -620,10 +612,11 @@ definitions:
     description: Change status of lead. If status is changed to won initilaizes campaign benefits execution.
     properties:
       channel-code:
-        description: The unique identifier of channel(web, mobile, atm, branch etc.)
+        description: The unique identifier of channel (web, mobile, atm, branch etc.)
         type: string
+        x-asee-compliance: This should be related to some classification.
       status:
-        description: Classification explaining status of lead. Commonly used values include open, qualified, customer-rejected, won. For a complete list of possible values see [lead-status]() classification
+        description: Status of the lead. For complete list of possible values see [lead-status]() classification
         type: string
       description:
         description: More detailed information about lead.
@@ -636,51 +629,66 @@ definitions:
         type: string
       product-code:
         description: The unique identifier of product.
-        type: string  
+        type: string
+      account-number:
+        x-asee-compliance: The account-number (PAN) property should be added too.
+        description: Primary account number that is used for off-us campaigns to identify the person who is not the client of the bank.
+        type: string
     type: object
     
-  initiate-lead-command:
+  respond-lead-command:
     description: Changes status of lead. If status is changed to won initilaizes campaign benefits execution.
     properties:
       lead-code:
-        description: The unique identifier of sales lead
+        description: The unique identifier of sales lead.
         type: string
       channel-code:
-        description: Unique identifier of channel(web, mobile, atm, branch etc.)
+        description: Unique identifier of channel (web, mobile, atm, branch etc.)
         type: string
+        x-asee-compliance: This should be related to some classification.
       status:
-        description: Classification explaining status of lead. Commonly used values include open, qualified, customer-rejected, won. For a complete list of possible values see [lead-status]() classification
+        description: Status of the lead. For complete list of possible values see [lead-status]() classification
         type: string
       description:
         description: More detailed information about lead.
         type: string
       customer-number:
+        x-asee-compliance: This property is redundant, it should be removed. It was initially submitted when the lead was created.
         description: The unique identifier of customer.
         type: string
       campaign-code:
+        x-asee-compliance: This property is redundant, it should be removed. It was initially submitted when the lead was created.
         description: The unique identifier of campaign.
         type: string
       product-code:
+        x-asee-compliance: This property is redundant, it should be removed. It was initially submitted when the lead was created.
         description: The unique identifier of product.
         type: string
-      PAN:
-        description: Primary Account Number is used for Off Us campaigns, to define campaign on atm that includes customers that use other bank's credit\debit cards.  
+      account-number:
+        x-asee-compliance: This property is redundant, it should be removed. It was initially submitted when the lead was created.
+        description: Primary account number that is used for off-us campaigns to identify the person who is not the client of the bank.
         type: string
-      SourceURI:
-        description: To keep information about point of access. Help us analyze efficiency of channels.
+      source-uri:
+        description: Keeps information about point of access, which helps with the analysis of efficiency of the channels.
         type: string
-      IsProvisioningCampaign:
-        description: Define if campaign is provisioning(info) campaign, without benefits involved.
+      is-provisioning-campaign:
+        x-asee-compliance: This property should be removed from the object. Definition of campaign says whether there are benefits involved, it is not something that client application should determine when creating or updating status of the lead.
+        description: Defines whether this is the provisioning (info) campaign, without benefits involved.
         type: boolean
     type: object
+
   command-result:
+    x-asee-compliance: Missing description of object.
     properties:
       id:
+        x-asee-compliance: Missing description of property.
         type: string
       created-record-status:
+        x-asee-compliance: Missing description of property.
         type: string
     type: object
   validation-problem:
+    x-asee-compliance: Missing description of object and properties.
     type: array
     items:
       type: object
@@ -708,5 +716,3 @@ responses:
       $ref: '#/definitions/validation-problem'
   default-error-response:
     description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
-schemes:
-  - http
