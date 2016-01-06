@@ -48,46 +48,41 @@ definitions:
         description: Unique identifier of customer case
         type: string
       case-type:
-        description: Type of customer case
+        description: Type of delivered customer service request.
         type: string
-        x-asee-compliance: This should be related to the enum complaint, service-request, callback-request.
+        x-asee-compliance: This property should be related to some classification.
       case-class:
-        description: Gets or sets the case class
-        x-asee-compliance: case-class property should be removed. Case type is specified through previous property.
+        description: Case class.
         enum:
           - complaint
-          - service-request
-        x-asee-compliance: It seems like callback-request is missing?
+          - customer-service-request
+          - callback-request
         type: string
+        x-asee-compliance: Can this property have some better name than the 'case-class'? For me, most natural name is case-type, but then the previous property should be renamed to e.g. service-request-type.
       registered-by-id:
-        description: Gets or sets the registered ID
-        x-asee-compliance: For all the properties - the "gets or sets" should be removed and description should be changed into more human readable form, describing the meaning of property and not just repeating its name.
+        description: Unique identifier of the party that creates the case.
         type: string
       registered-by-name:
-        description: Gets or sets the registered by name
+        description: Name of the party that opens the case.
         type: string
       updated-by-id:
-        description: Gets or sets the updated by ID
+        description: Unique identifier of the party that changed the case.
         type: string
       updated-by-name:
-        description: Gets or sets the updated by name
+        description: Name of the party that changed the case.
         type: string
       customer-id:
-        description: Gets or sets the customer ID
+        description: Unique identifier of the client.
         type: string
       customer-name:
-        description: Gets or sets the customer name
+        description: Name of the client that is linked to the case.
         type: string
-      customer-ident-num:
-        description: Gets or sets the customer identification number
-        type: string
-        x-asee-compliance: What is this property used for? It should probably be removed. There is an ID above.
       registration-date:
-        description: Gets or sets the date from
+        description: Date of opening.
         format: date-time
         type: string
       state:
-        description: Gets or sets the states
+        description: State of the case.
         enum:
           - active
           - resolved
@@ -96,26 +91,26 @@ definitions:
           - accepted
         type: string
       resolution:
-        description: Gets or sets the resolution
+        description: Resolution of the case.
         type: string
       importance:
-        description: Gets or sets the importance
+        description: The level of imporance.
         enum:
           - low
           - standard
           - very-important
         type: string
       title:
-        description: Gets or sets the title
+        description: Tile of the case.
         type: string
       details:
-        description: Gets or sets the details
+        description: Details about the case.
         type: string
       arrangement-number:
         description: Arrangement number to which the case is related
         type: string
       attachments:
-        description: Files associated with customer case.
+        description: Associated case files.
         items:
           $ref: '#/definitions/attachment'
         type: array
@@ -139,87 +134,33 @@ definitions:
         description: Unique identifier of attachment.
         type: string
       meta-name:
-        description: Gets or sets the meta name
+        description: Meta name of the attachment.
         type: string
       uri:
         description: URI
         type: string
     type: object
-  request-validation-problem:
-    x-asee-compliance: Missing description of object.
-    properties:
-      validation-errors:
-        items:
-          $ref: '#/definitions/problem-description'
-        type: array
-      type:
-        type: string
-      title:
-        type: string
-      details:
-        type: string
-    type: object
-  problem-description:
-    description: ''
-    x-asee-compliance: Missing description of object.
-    properties:
-      field:
-        description: Gets or sets the field.
-        type: string
-      validation-errors:
-        description: Gets or sets the validation errors.
-        items:
-          $ref: '#/definitions/validation-error'
-        type: array
-    type: object
-  validation-error:
-    description: ''
-    x-asee-compliance: Missing description of object.
-    properties:
-      error-message:
-        description: Gets or sets the error message.
-        type: string
-      error-code:
-        description: Gets or sets the error code.
-        type: string
-    type: object
-  business-problem:
-    x-asee-compliance: Missing description of object.
-    properties:
-      type:
-        type: string
-      title:
-        type: string
-      details:
-        type: string
-    type: object
   update-case-command:
-    description: UpdateOnCaseProgressCommand parameters
-    x-asee-compliance: Correct the description of this object to more human readable, e.g. Provides parameters for update of customer case. Same goes for all other command objects.
+    description: Updates resolution and state of some case.
     properties:
       case-type:
         description: Case type
         enum:
           - complaint
-          - service-request
-        x-asee-compliance: It seems like callback-request is missing?
+          - customer-service-request
+          - callback-request
         type: string
       case-id:
-        description: Case ID
+        description: Unique identifier of customer case
         type: string
       updated-by-id:
-        description: Gets or sets the updated by ID
+        description: Identifier of the party that is modifying the case.
         type: string
-        x-asee-compliance: We have this information from invocation context? This property probably should not exist.
-      updated-by-name:
-        description: Gets or sets the updated by name
-        type: string
-        x-asee-compliance: This property probably should not exist, we retrieve information about name from id of updater person, i.e. from invocation context.
       resolution:
-        description: Gets or sets the resolution
+        description: Resolution of the case.
         type: string
       state:
-        description: Gets or sets the states
+        description: Current state of the case.
         enum:
           - resolved
           - closed
@@ -228,7 +169,7 @@ definitions:
     type: object
   command-result:
     description: ''
-    x-asee-compliance: Missing description of object.
+    x-asee-compliance: Missing description of object. Description of properties should be corrected too.
     properties:
       id:
         description: 'Gets or sets the id of created, updated or deleted entity.'
@@ -237,53 +178,27 @@ definitions:
         description: 'Gets or sets the created, updated, deleted record status.'
         type: string
     type: object
-  close-case-command:
-    description: CloseCaseCommand parameters
-    x-asee-compliance: Correct the description of this object to more human readable.
-    properties:
-      case-type:
-        description: Case type
-        enum:
-          - complaint
-          - service-request
-        x-asee-compliance: It seems like callback-request is missing?
-        type: string
-      case-id:
-        description: Case ID
-        type: string
-      updated-by-id:
-        description: Gets or sets the updated by ID
-        type: string
-        x-asee-compliance: We have this information from invocation context? This property probably should not exist.
-      updated-by-name:
-        description: Gets or sets the updated by name
-        type: string
-        x-asee-compliance: This property probably should not exist, we retrieve information about name from id of updater person, i.e. from invocation context.
-      resolution:
-        description: Gets or sets the resolution
-        type: string
-    type: object
   case-history:
     description: Provides the history of customer case processing.
     properties:
       total-count:
-        description: Gets or sets the total count.
+        description: Total count.
         format: int32
         type: integer
       page-size:
-        description: Gets or sets the size of the page.
+        description: Page Size.
         format: int32
         type: integer
       page-number:
-        description: Gets or sets the page number.
+        description: Page number.
         format: int32
         type: integer
       total-pages:
-        description: Gets or sets the total pages.
+        description: Total pages.
         format: int32
         type: integer
       items:
-        description: Gets or sets the items.
+        description: List of history entries for the case.
         items:
           $ref: '#/definitions/case-history-item'
         type: array
@@ -305,37 +220,33 @@ definitions:
     description: Customer case history item
     properties:
       case-id:
-        description: Gets or sets the case ID
+        description: Unique identifier of customer case
         type: string
       case-type:
-        description: Gets or sets the case type
+        description: The type of the case is one of the delivered types of CustomerServiceRequest object type.
         enum:
           - complaint
-          - service-request
-        x-asee-compliance: The callback-request is missing in the list?
+          - customer-service-request
+          - callback-request
         type: string
       updated-by-id:
-        description: Gets or sets the updated by ID
+        description: Identifier of the party that changed the case.
         type: string
       updated-by-name:
-        description: Gets or sets the updated by name
+        description: Name of the party that changed the case.
         type: string
       customer-id:
-        description: Gets or sets the customer ID
+        description: Unique identifier of the client.
         type: string
       customer-name:
         description: Gets or sets the customer name
         type: string
-      customer-ident-num:
-        description: Gets or sets the customer identification number
-        type: string
-        x-asee-compliance: This property should be removed. There is already an ID above.
       registration-date:
-        description: Gets or sets the date from
+        description: Date of case registration.
         format: date-time
         type: string
       state:
-        description: Gets or sets the states
+        description: State of the case.
         enum:
           - active
           - resolved
@@ -344,17 +255,17 @@ definitions:
           - accepted
         type: string
       resolution:
-        description: Gets or sets the resolution
+        description: Resolution of the case.
         type: string
       importance:
-        description: Gets or sets the importance
+        description: The level of imporance.
         enum:
           - low
           - standard
           - very-important
         type: string
       details:
-        description: Gets or sets the details
+        description: Details about the case.
         type: string
       arrangement-number:
         description: Arrangement number to which the case is related
@@ -363,7 +274,7 @@ definitions:
         description: Change version
         type: string
       version-date:
-        description: Gets or sets the verson date
+        description: Version date
         format: date-time
         type: string
       uri:
@@ -371,74 +282,64 @@ definitions:
         type: string
     type: object
   create-callback-request-command:
-    description: Add Callback Request command
-    x-asee-compliance: Correct the description of this object to more human readable.
+    description: Creates callback for some customer case.
     properties:
       callback-request-time:
         description: Callback request time
         format: date-time
         type: string
       category:
-        description: category of callback request
-        x-asee-compliance: This property should be probably related to some classification and not the enum.
+        description: Category of callback request
+        x-asee-compliance: This property should be probably related to classification instead of enum.
         enum:
           - cards
           - credit
           - limit
         type: string
       customer-id:
-        description: Party identifier
+        description: Unique identifier of the client.
         type: string
     type: object
   create-complaint-command:
-    description: OpenComplaintCommand parameters
-    x-asee-compliance: Correct the description of this object to more human readable.
+    description: Creates new complaint
     properties:
       case-id:
-        description: Gets or sets the case ID
+        description: Unique case identifier
         type: string
       registered-by-id:
-        description: Gets or sets the registered ID
+        description: Identifier of the party that opens the case.
         type: string
-        x-asee-compliance: We have this information from invocation context? This property should not exist.
-      registered-by-name:
-        description: Gets or sets the registered by name
-        type: string
-        x-asee-compliance: This property probably should not exist, we retrieve information about name from id of updater person, i.e. from invocation context.
       customer-id:
-        description: Gets or sets the customer ID
+        description: Unique identifier of the client.
         type: string
       customer-name:
-        description: Gets or sets the customer name
+        description: Name of the customer.
         type: string
-      customer-ident-num:
-        description: Gets or sets the customer identification number
-        type: string
-        x-asee-compliance: This property should be removed. Customer ID is given in field above.
+        x-asee-compliance: This property should be removed, it is retrieved by customer-id above.
       importance:
-        description: Gets or sets the importance
+        description: Level of importance.
         enum:
           - low
           - standard
           - very-important
         type: string
       details:
-        description: Gets or sets the details
+        description: Details about the case.
         type: string
       arrangement-number:
-        description: Arrangement number to which the case is related
+        description: Arrangement number to which the case is related.
         type: string
       comm-reason:
-        description: Reason of the related communication
+        description: Reason of the related communication.
         type: string
       comm-reply-address:
-        description: Address for sending the reply to the customer
+        description: Address for sending the reply to the customer.
         type: string
       comm-reply-address-code:
-        description: Address code for sending the reply to the customer
+        description: Address code for sending the reply to the customer.
         type: string
       comm-type:
-        description: Type of communication
+        description: Type of communication.
         enum:
           - email
           - face-to-face-meeting
@@ -452,62 +353,52 @@ definitions:
           - web
         type: string
       case-type:
-        x-asee-compliance: This property should be removed. Type of this case is obviously service-request.
-        description: Type of case
+        description: Type of case.
         type: string
+        x-asee-compliance: This property should be removed. Type of case is obviously determined by the object type.
       related-case-id:
-        description: Gets or sets the related case ID
+        description: Unique indetifier of related case.
         type: string
     type: object
   create-service-request-command:
-    description: OpenComplaintCommand parameters
-    x-asee-compliance: Correct the description of this object to more human readable.
+    description: Creates a new service request
     properties:
       case-id:
-        description: Gets or sets the case ID
+        description: Unique case identifier
         type: string
       registered-by-id:
-        description: Gets or sets the registered ID
+        description: Identifier of the party that opens the case.
         type: string
-        x-asee-compliance: We have this information from invocation context? This property should not exist.
-      registered-by-name:
-        description: Gets or sets the registered by name
-        type: string
-        x-asee-compliance: This property probably should not exist, we retrieve information about name from id of updater person, i.e. from invocation context.
       customer-id:
-        description: Gets or sets the customer ID
+        description: Unique identifier of the client.
         type: string
       customer-name:
-        description: Gets or sets the customer name
+        description: Name of the customer.
         type: string
-      customer-ident-num:
-        description: Gets or sets the customer identification number
-        type: string
-        x-asee-compliance: This property should be removed. Customer ID is given in field above.
       importance:
-        description: Gets or sets the importance
+        description: Level of imporance.
         enum:
           - low
           - standard
           - very-important
         type: string
       details:
-        description: Gets or sets the details
+        description: Details about the case.
         type: string
       arrangement-number:
-        description: Arrangement number to which the case is related
+        description: Arrangement number to which the case is related.
         type: string
       comm-reason:
-        description: Reason of the related communication
+        description: Reason of the related communication.
         type: string
       comm-reply-address:
-        description: Address for sending the reply to the customer
+        description: Address for sending the reply to the customer.
         type: string
       comm-reply-address-code:
-        description: Address code for sending the reply to the customer
+        description: Address code for sending the reply to the customer.
         type: string
       comm-type:
-        description: Type of communication
+        description: Type of communication.
         enum:
           - email
           - face-to-face-meeting
@@ -521,34 +412,52 @@ definitions:
           - web
         type: string
       case-type:
-        x-asee-compliance: This property should be removed. Type of this case is obviously service-request.
-        description: Type of case
+        description: Type of case.
         type: string
+        x-asee-compliance: This property should be removed. Type of case is obviously determined by the object type.
       related-case-id:
-        description: Gets or sets the related case ID
+        description: Unique indetifier of related case.
         type: string
     type: object
   add-case-attachment-command:
-    description: Provides parameters for adding file reference to customer case.
+    description: Adds attachment to customer case.
     properties:
       case-id:
-        description: Case ID
+        description: Unique identifier of customer case.
         type: string
       file-id:
-        description: Attachment ID
+        description: Unique identifier of the attachment.
         type: string
       file-name:
-        description: Name of the attached document
+        description: Name of the attached document.
         type: string
       customer-id:
-        description: Gets or sets the customer ID
+        description: Unique identifier of the client.
         type: string
-        x-asee-compliance: This property is not needed. Case is already related to some customer, and the person who makes this attachment is identified from invocation context.
+    type: object
+  close-case-command:
+    description: Closes the customer case.
+    properties:
+      case-type:
+        description: Case type
+        enum:
+          - complaint
+          - customer-service-request
+          - callback-request
+        type: string
+      case-id:
+        description: Unique identifier of customer case
+        type: string
+      updated-by-id:
+        description: Identifier of the party that is modifying the case.
+        type: string
+      resolution:
+        description: Resolution of the closed case.
+        type: string
     type: object
 host: api.asee.co
-basePath: /customer-case
 info:
-  description: | 
+  description: |
     Customer case API is used to register, list and record actions on customer cases.
     You can register a customer a case, get case details, files an history, search through registered customer cases and close them when they are resolved.
     With customer case API you can: 
@@ -582,6 +491,7 @@ tags:
 paths:
   /cases:
     get:
+      consumes: []
       deprecated: false
       operationId: Cases_GetList
       parameters:
@@ -591,26 +501,26 @@ paths:
           required: false
           enum:
             - complaint
-            - service-request
-          x-asee-compliance: The callback-request is missing in the list?
+            - customer-service-request
+            - callback-request
           type: string
-        - description: Customer ID
+        - description: Unique identifier of the client.
           in: query
           name: customer-id
           required: false
           type: string
-        - description: Agent ID
+        - description: Unique identifier of the agent that opens the case.
           in: query
           name: agent-id
           required: false
           type: string
-        - description: Date from
+        - description: Case is registered from date.
           in: query
           name: date-from
           required: false
           format: date-time
           type: string
-        - description: Date to
+        - description: Case is registered to date.
           in: query
           name: date-to
           required: false
@@ -622,22 +532,11 @@ paths:
           required: false
           type: string
         - description: Title
+          x-asee-compliance: Instead of the "title" param, it would be better that "query" param remained, since through one value both titles and content of cases should be searched.
           in: query
           name: title
           required: false
           type: string
-          x-asee-compliance: Why do we have both "title" and "query" params? Probably only "query" should remain.
-        - description: Query
-          in: query
-          name: query
-          required: false
-          type: string
-        - description: Subtype
-          in: query
-          name: case-subtype
-          required: false
-          type: string
-          x-asee-compliance: Remove this parameter. The case-type parameter is given above, and it is not clear what the subtype is at all.
         - description: Number of items on a page. For more information see general guidance on [paging and sorting]().
           in: query
           name: page-size
@@ -676,57 +575,19 @@ paths:
           required: false
           items:
             type: string
-          type: array
+          type: array     
       responses:
         '200':
           description: OK
           schema:
             $ref: '#/definitions/case-list'
-        '440':
-          description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-          x-asee-compliance: Please list possible business errors if there are any. If not, remove complete 440 section.
-          schema:
-            $ref: '#/definitions/business-problem'  
         default:
           $ref: '#/responses/default-error-response'
       summary: Operation returns list of cases with basic details like registration date current lifecycle state and the name and id of the agent responsible for handling the case. When used without optional parameters all active cases are returned.
       tags:
         - Cases
-  '/cases/{case-id}/close':
-    post:
-      deprecated: false
-      operationId: Cases_Close
-      parameters:
-        - description: Info about closing the case (Resolution)
-          in: body
-          name: cmd
-          required: true
-          schema:
-            $ref: '#/definitions/close-case-command'
-        - description: Case id
-          in: path
-          name: case-id
-          required: true
-          type: string
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/command-result'
-        '440':
-          description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-          x-asee-compliance: Please list possible business errors if there are any. If not, remove complete 440 section.
-          schema:
-            $ref: '#/definitions/business-problem'  
-        default:
-          $ref: '#/responses/default-error-response'
-      summary: Operation closes the specified case. Operation returns closed case id.
-      tags:
-        - Cases
-  /cases/{case-id}:
-    get:
+  '/cases/{case-id}':
+    get:      
       deprecated: false
       operationId: Cases_Get
       parameters:
@@ -748,28 +609,22 @@ paths:
           required: false
           items:
             type: string
-          type: array
+          type: array      
       responses:
         '200':
           description: OK
           schema:
             $ref: '#/definitions/case'
-        '440':
-          description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-          x-asee-compliance: Please list possible business errors if there are any. If not, remove complete 440 section.
-          schema:
-            $ref: '#/definitions/business-problem'  
         default:
           $ref: '#/responses/default-error-response'
       summary: Operation returns specific case details.
       tags:
         - Cases
-    put:
+    put:      
       deprecated: false
       operationId: Cases_Update
       parameters:
-        - description: 'Info about the update(Resolution, State)'
+        - description: 'Info about the update (Resolution, State)'
           in: body
           name: cmd
           required: true
@@ -779,18 +634,12 @@ paths:
           in: path
           name: case-id
           required: true
-          type: string
+          type: string      
       responses:
         '200':
           description: OK
           schema:
             $ref: '#/definitions/command-result'
-        '440':
-          description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-          x-asee-compliance: Please list possible business errors if there are any. If not, remove complete 440 section.
-          schema:
-            $ref: '#/definitions/business-problem'  
         default:
           $ref: '#/responses/default-error-response'
       summary: Operation updates the specified case progress. Operation returns customer case with updated status.
@@ -818,9 +667,12 @@ paths:
           required: false
           format: int32
           type: integer
-        - description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]()
+        - description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]().
           in: query
           name: sort-order
+          enum:
+            - asc
+            - desc
           required: false
           type: string
         - description: Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]().
@@ -833,12 +685,6 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/case-history'
-        '440':
-          description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-          x-asee-compliance: Please list possible business errors if there are any. If not, remove complete 440 section.
-          schema:
-            $ref: '#/definitions/business-problem'  
         default:
           $ref: '#/responses/default-error-response'
       summary: Operation returns list of file details associated with the specific case.
@@ -856,16 +702,10 @@ paths:
           schema:
             $ref: '#/definitions/create-callback-request-command'
       responses:
-        '201':
-          description: Created
+        '200':
+          description: OK
           schema:
             $ref: '#/definitions/command-result'
-        '440':
-          description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-          x-asee-compliance: Please list possible business errors if there are any. If not, remove complete 440 section.
-          schema:
-            $ref: '#/definitions/business-problem'  
         default:
           $ref: '#/responses/default-error-response'
       summary: Add Callback Request
@@ -876,23 +716,17 @@ paths:
       deprecated: false
       operationId: Complaints_Create
       parameters:
-        - description: input parameters
+        - description: Parameters providcing details of new complaint
           in: body
           name: cmd
           required: true
           schema:
             $ref: '#/definitions/create-complaint-command'
       responses:
-        '201':
-          description: Created
+        '200':
+          description: OK
           schema:
             $ref: '#/definitions/command-result'
-        '440':
-          description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-          x-asee-compliance: Please list possible business errors if there are any. If not, remove complete 440 section.
-          schema:
-            $ref: '#/definitions/business-problem'  
         default:
           $ref: '#/responses/default-error-response'
       summary: Operation opens new customer complaint. Operation returns complaint with assigned case identifier.
@@ -903,23 +737,17 @@ paths:
       deprecated: false
       operationId: ServiceRequests_Create
       parameters:
-        - description: input parameters
+        - description: Parameters providing details of new service request
           in: body
           name: cmd
           required: true
           schema:
             $ref: '#/definitions/create-service-request-command'
       responses:
-        '201':
-          description: Created
+        '200':
+          description: OK
           schema:
             $ref: '#/definitions/command-result'
-        '440':
-          description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-          x-asee-compliance: Please list possible business errors if there are any. If not, remove complete 440 section.
-          schema:
-            $ref: '#/definitions/business-problem'  
         default:
           $ref: '#/responses/default-error-response'
       summary: Operation opens new customer service request. Operation returns service-request with assigned case identifier.
@@ -942,45 +770,64 @@ paths:
           required: true
           type: string
       responses:
-        '201':
-          description: Created
+        '200':
+          description: OK
           schema:
             $ref: '#/definitions/command-result'
-        '440':
-          description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-          x-asee-compliance: Please list possible business errors if there are any. If not, remove complete 440 section.
-          schema:
-            $ref: '#/definitions/business-problem'  
         default:
           $ref: '#/responses/default-error-response'
-      summary: Operation attach document/file to the existing Case
+      summary: Operation attaches document/file to the existing Case
       tags:
         - Cases
-  '/cases/{case-id}/attachments/{file-id}':
-    delete:
+  '/cases/{case-id}/close':
+    post:
       deprecated: false
-      operationId: Cases_RemoveAttachment
+      operationId: Cases_Close
       parameters:
-        - description: Case id
+        - description: Info about closing the case (Resolution)
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/close-case-command'
+        - description: Unique identifier of customer case.
           in: path
           name: case-id
           required: true
           type: string
-        - description: File id
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Operation closes the specified case and returns closed case id.
+      tags:
+        - Cases
+  '/cases/{case-id}/attachments/{file-id}':
+    delete:      
+      deprecated: false
+      operationId: Cases_RemoveAttachment
+      parameters:
+        - description: Unique identifier of customer case.
+          in: path
+          name: case-id
+          required: true
+          type: string
+        - description: Unique identifier of attachment.
           in: path
           name: file-id
           required: true
           type: string
+        - description: Unique identifier of the client.
+          in: query
+          name: customer-id
+          required: false
+          type: string      
       responses:
         '204':
           description: No content
-        '440':
-          description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-          x-asee-compliance: Please list possible business errors if there are any. If not, remove complete 440 section.
-          schema:
-            $ref: '#/definitions/business-problem'  
         default:
           $ref: '#/responses/default-error-response'
       summary: Operation removes attaced file from case.
