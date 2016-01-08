@@ -1,0 +1,988 @@
+swagger: '2.0'
+host: api.asee.co
+basePath: /bill-presentment
+info:
+  description: Enable users of banking mobile application payment of bills to suppliers of various services using bill presentments (invoices).
+  title: Bill Presentment
+  version: beta
+tags:
+  - description: Working with bills
+    name: Bills
+  - description: Working with issuers
+    name: Issuers
+  - description: Working with subscriptions
+    name: Subscriptions
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /bills:
+    get:
+      description: |
+        This list can be filtered by name address and/or bill status.
+        This is useful when is needed to view list of issued bills, by some criteria, or all.
+      operationId: Bills_GetList
+      parameters:
+        - $ref: '#/parameters/search-terms-param'
+        - $ref: '#/parameters/search-scope-param'
+        - $ref: '#/parameters/customer-id-param'
+        - $ref: '#/parameters/status-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/bill-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Get list of bills.
+      tags:
+        - Bills
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+  '/bills/{bill-id}':
+    get:
+      description: |
+        Shows all details available for one specified bill.
+        It is useful when is wanted some additional info about particular bill.
+      operationId: Bills_Get
+      parameters:
+        - $ref: '#/parameters/bill-id-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/bill'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Get specific bill details.
+      tags:
+        - Bills
+      x-asee-tags:
+        - Shapeable
+  '/bills/{bill-id}/snooze':
+    post:
+      description: |
+        Snooze the bill so that it can be filtered out from unpaid bill list.
+        This is useful when customer has settled the bill in different way.
+      operationId: Bills_Snooze
+      parameters:
+        - $ref: '#/parameters/bill-id-param'
+      responses:
+        '204':
+          description: No Content
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+              - [bill-not-marked-for-verification] ()
+          x-asee-compliance: Strange name of error? What does it really mean!?
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Snooze the bill.
+      tags:
+        - Bills
+      x-asee-tags: []
+  /issuers:
+    get:
+      description: |
+        This list can be filtered by name and/or address.
+        This is useful when search specific bill issuer if it is included in Your e-banking solution.
+      operationId: Issuers_GetList
+      parameters:
+        - $ref: '#/parameters/search-terms-param'
+        - $ref: '#/parameters/search-scope-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/issuer-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Get list of bill issuers.
+      tags:
+        - Issuers
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+  '/issuers/{issuer-id}':
+    get:
+      description: |
+        Displays all details about specific bill issuer from the list.
+        It is useful when is wanted to view specific payment details about particular bill isuer which is included
+        in Your e-banking solution.
+      operationId: Issuers_Get
+      parameters:
+        - $ref: '#/parameters/issuer-id-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/issuer'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Get specific bill issuer details.
+      tags:
+        - Issuers
+      x-asee-tags:
+        - Shapeable
+  /subscriptions:
+    get:
+      description: |
+        This list can be filtered by name address and/or bill status.
+        This is useful when is required to see list of subscriptions that are made by customer
+        at specific bill issuers.
+      operationId: Subscriptions_GetList
+      parameters:
+        - $ref: '#/parameters/search-terms-param'
+        - $ref: '#/parameters/search-scope-param'
+        - $ref: '#/parameters/customer-id-param'
+        - $ref: '#/parameters/status-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/subscription-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Get list of subscriptions.
+      tags:
+        - Subscriptions
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+    post:
+      description: | 
+        Serves to subscribe at bills issuer and receive bills that can be payed from the account.
+        It is possible to choose diferent kind of notifications and to set standing order for bills.
+        It is useful because it provides easier way to pay bills.
+      operationId: Subscriptions_Create
+      parameters:
+        - description: Subscribe bill presentment command.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/create-subscription-command'
+      responses:
+        '202':
+          description: Accepted
+          schema:
+            $ref: '#/definitions/command-result'
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+              - [nickname-already-exists]()
+              - [debtor-account-not-found]()
+              - [subscription-already-registered]()
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Subscribe for bills presentments.
+      tags:
+        - Subscriptions
+      x-asee-tags: []
+  '/subscriptions/{subscription-id}':
+    get:
+      description: |
+        Shows details about specific subscription, as issuing period, nickname, bill issuer...
+        It is useful when is needed to view some details about chosen subscription.
+      operationId: Subscriptions_Get
+      parameters:
+        - $ref: '#/parameters/subscription-id-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/subscription'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Get specific subscription details.
+      tags:
+        - Subscriptions
+      x-asee-tags:
+        - Shapeable
+  '/subscriptions/{subscription-id}/unsubscribe':
+    post:
+      description: |
+        It serves to cancel bills subscription.
+        It is useful when You want to stop paying bills from the account or through standing order.
+      operationId: Subscriptions_Unsubscribe
+      parameters:
+        - $ref: '#/parameters/subscription-id-param'
+      responses:
+        '204':
+          description: No Content
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Unsubscribe from active bills presentment subscription.
+      tags:
+        - Subscriptions
+      x-asee-tags: []
+parameters:
+  search-terms-param:
+    description: The terms by which the query can be filtered.
+    in: query
+    name: search-terms
+    required: false
+    type: string
+  search-scope-param:
+    description: 'Search scope (address, name).'
+    in: query
+    name: search-scope
+    required: false
+    enum:
+      - name
+      - address
+    type: string
+  customer-id-param:
+    description: Unique Customer identifier for which action will be called.
+    in: query
+    name: customer-id
+    required: false
+    type: string
+  status-param:
+    description: 'Status of an item, for example status of bill.'
+    in: query
+    name: status
+    required: false
+    collectionFormat: csv
+    items:
+      type: string
+    type: array
+  page-size-param:
+    description: 'Number of items on a page. For more information see general guidance on [paging and sorting]().'
+    in: query
+    name: page-size
+    required: false
+    format: int32
+    type: integer
+  page-param:
+    description: 'Page index. For more information see general guidance on [paging and sorting]().'
+    in: query
+    name: page
+    required: false
+    format: int32
+    type: integer
+  sort-order-param:
+    description: 'Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]()'
+    in: query
+    name: sort-order
+    required: false
+    enum:
+      - asc
+      - desc
+    type: string
+  sort-by-param:
+    description: 'Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]().'
+    in: query
+    name: sort-by
+    required: false
+    type: string
+  include-param:
+    description: 'List of fields to include in response. For more information see general guidance on [response shaping]()'
+    in: query
+    name: include
+    required: false
+    collectionFormat: csv
+    items:
+      type: string
+    type: array
+  trim-param:
+    description: 'List of fields to trim from response. For more information see general guidance on [response shaping]()'
+    in: query
+    name: trim
+    required: false
+    collectionFormat: csv
+    items:
+      type: string
+    type: array
+  bill-id-param:
+    description: Unique bill identifier.
+    in: path
+    name: bill-id
+    required: true
+    type: string
+  issuer-id-param:
+    description: Unique issuer identifier.
+    in: path
+    name: issuer-id
+    required: true
+    type: string
+  subscription-id-param:
+    description: Unique subscription identifier.
+    in: path
+    name: subscription-id
+    required: true
+    type: string
+definitions:
+  bill-list:
+    description: Bill list
+    example:
+      bills-payment-amount-sum: 0
+      bills-fee-sum: 0
+      total-count: 0
+      page-size: 10
+      page-number: 1
+      total-pages: 0
+      navigations:
+        - href: 
+          rel: first
+        - href: 
+          rel: previuos
+        - href: 
+          rel: self
+    properties:
+      bills-payment-amount-sum:
+        description: Sum of bills payment amount
+        format: double
+        type: number
+      bills-fee-sum:
+        description: Sum of bills fee
+        format: double
+        type: number
+      total-count:
+        description: Total count of bills in the list.
+        format: int32
+        type: integer
+      page-size:
+        description: Page size is number of bills contained in one page.
+        format: int32
+        type: integer
+      page-number:
+        description: Page number of current page.
+        format: int32
+        type: integer
+      total-pages:
+        description: Total pages is number of pages calculated based on record number and page size.
+        format: int32
+        type: integer
+      bills:
+        description: Items is list of bills.
+        items:
+          $ref: '#/definitions/bill'
+        type: array
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  bill:
+    description: Bill record.
+    example:
+      bill-id: '9990015520900120151103'
+      nickname: My service
+      bill-issuer:
+        name: TELENOR
+        address: Main Boulevard 90
+        city: New Belgrade
+        country-code: ''
+        geolocation:
+          lat: ''
+          lon: ''
+        picture: /9j/4AAQSkZJRgABAgEASABIAAD/4RWkRXhpZgAATU0AKgAAAAgABwESAAMAAAABAAEAAAEaAAUAAAABAAAAYgEbAAUAAAABAAAAagEoAAMAAAABAAIAAAExAAIAAAAeAAAAcgEyAAIAAAAU...
+      ordering-party:
+        name: Nikola Stojanovic
+        address: Tadeousa Koscuska 1/ 1
+        city: Belgrade
+      ordering-party-account-number: 115-0000000050378-56
+      ordering-party-reference: ''
+      ordering-party-reference-model: ''
+      bill-issuer-account-number: 265-1040310000495-28
+      bill-issuer-reference: '22222222222222222222222'
+      bill-issuer-reference-model: ''
+      invoicing-date: '2015-11-03T00:00:00'
+      due-date: '2015-11-10T00:00:00'
+      fees: []
+      amount:
+        code: ''
+        amount: 1202
+      payment-purpose: TNB_BILL_P
+      purpose-code: ''
+      payment-type: transferorder
+      payment-status: not paid
+      subscription-status: active
+    properties:
+      bill-id:
+        description: Bill identifier.
+        type: string
+      nickname:
+        description: Nickname of bill.
+        type: string
+      bill-issuer:
+        description: Bill issuer.
+        $ref: '#/definitions/issuer'
+      ordering-party:
+        description: Ordering party info.
+        $ref: '#/definitions/debtor'
+      ordering-party-account-number:
+        description: Ordering party account number.
+        type: string
+      ordering-party-reference:
+        description: Ordering party reference.
+        type: string
+      ordering-party-reference-model:
+        description: Ordering party reference model.
+        type: string
+      issuing-period:
+        description: 'Issuing period of bill (monthly, weekly...).'
+        type: string
+        x-asee-compliance: This should be the period type.
+      bill-issuer-account-number:
+        description: Bill issuer account number.
+        type: string
+      bill-issuer-reference:
+        description: Bill issuer reference.
+        type: string
+      bill-issuer-reference-model:
+        description: Bill issuer reference model.
+        type: string
+      invoicing-date:
+        description: Invoicing date (date and time when bill was issued).
+        format: date-time
+        type: string
+      due-date:
+        description: Due date (date and time when bill is due for payment).
+        format: date-time
+        type: string
+      fees:
+        description: Fees is list of bill fees.
+        items:
+          $ref: '#/definitions/fee'
+        type: array
+      amount:
+        description: Amount of bill.
+        $ref: '#/definitions/currency'
+      payment-purpose:
+        description: Payment purpose of bill.
+        type: string
+      purpose-code:
+        description: Purpose code of bill payment.
+        type: string
+      payment-type:
+        description: 'Payment type of bill (transfer order, standing order).'
+        enum:
+          - transfer-order
+          - standing-order
+        type: string
+      payment-status:
+        description: Payment status of bill.
+        type: string
+      subscription-status:
+        description: Subscription status of bill.
+        enum:
+          - pending
+          - active
+          - canceled
+        type: string
+      uri:
+        description: URI
+        type: string
+    type: object
+  link:
+    properties:
+      href:
+        description: Href.
+        type: string
+      rel:
+        description: Rel.
+        type: string
+    type: object
+  issuer-info:
+    description: Short info on bill issuer.
+    example:
+      name: Telenor
+      address: Main Boulevard 90
+      city: New Belgrade
+      country-code: SRB
+      geolocation:
+        lat: ''
+        lon: ''
+        mapped-address: ''
+    properties:
+      name:
+        description: Name of issuer.
+        type: string
+      address:
+        description: Address of issuer.
+        type: string
+      city:
+        description: City of issuer.
+        type: string
+      country-code:
+        description: Country code of issuer.
+        type: string
+      geolocation:
+        description: Geolocation of issuer.
+        $ref: '#/definitions/geolocation'
+      picture:
+        description: Picture is issuer logo.
+        type: string
+    type: object
+  debtor:
+    description: ''
+    x-asee-compliance: Missing object description.
+    example:
+      name: Nikola Stojanovic
+      address: King Alexander's Boulevard 101
+      city: Belgrade
+    properties:
+      name:
+        description: Name of debtor.
+        type: string
+      address:
+        description: Address of debtor.
+        type: string
+      city:
+        description: City of debtor.
+        type: string
+    type: object
+  fee:
+    description: Fee of a bill (single item of bill).
+    example:
+      fee-description: 'Payment for spent minutes on called conversations from th cell phone number.'
+      fee-amount:
+        code: ''
+        amount: 850
+    properties:
+      fee-description:
+        description: Fee description
+        type: string
+      fee-amount:
+        description: Fee amount
+        $ref: '#/definitions/currency'
+    type: object
+  currency:
+    description: Currency amount and code
+    example:
+      code: EUR
+      amount: 18
+    properties:
+      code:
+        description: Currency code.
+        type: string
+      amount:
+        description: Amount in the currency.
+        format: double
+        type: number
+    type: object
+  geolocation:
+    description: 'Geolocation details - Latitude, Longitude, Mapped address'
+    example:
+      lat:  44° 48' N
+      lon:  20° 27' E 
+      mapped-address: 'Main Boulevard 110, Belgrade, Serbia.'
+    properties:
+      lat:
+        description: Latitude of geolocation.
+        type: string
+      lon:
+        description: Longitude of geolocation.
+        type: string
+      mapped-address:
+        description: Mapped address from GPS coordinates.
+        type: string
+    type: object
+  business-problem:
+    x-asee-compliance: Missing description for object and properties.
+    example:
+      type: Business policy problem.
+      title: Unsuficient funds
+      details: Raised when funds are not sufficient for withdrawal.
+    properties:
+      type:
+        type: string
+      title:
+        type: string
+      details:
+        type: string
+    type: object
+  issuer-list:
+    description: Bill issuer list.
+    example:
+      total-count: 53
+      page-size: 10
+      page-number: 0
+      total-pages: 6
+      navigations:
+        - href: 
+          rel: self
+        - href: 
+          rel: next
+        - href: 
+          rel: last
+    properties:
+      total-count:
+        description: Total count of bill issuers in the list.
+        format: int32
+        type: integer
+      page-size:
+        description: Page size is number of bill issuers contained in one page.
+        format: int32
+        type: integer
+      page-number:
+        description: Page number of current page.
+        format: int32
+        type: integer
+      total-pages:
+        description: Total pages is number of pages calculated based on bill issuers count and page size.
+        format: int32
+        type: integer
+      bill-issuers:
+        description: Items is list of bill issuers.
+        items:
+          $ref: '#/definitions/issuer'
+        type: array
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  issuer:
+    x-asee-compliance: Missing object description.
+    example:
+      issuer-id: '36'
+      group-id: '6'
+      issuer:
+        name: Electrical power supply company
+        address: King Nemanja's Street 33
+        city: Begrade
+        country-code: ''
+        geolocation:
+          lat: ''
+          lon: ''
+      payment-description: 'Citizen`s payment'
+      account-number: 845-0000000137849-61
+      issuing-period: monthly
+      invoicing-date: '1'
+      due-date: '30'
+      due-date-delivered-in-file: false
+      fees:
+        - fee-amount:
+            amount: 1200
+      reference-model: 10
+      reference-model-max-len: 10
+      reference-model-min-length: 10
+      reference-model-validation-expression: "\\d{10}"
+    properties:
+      issuer-id:
+        description: Bill issuer identifier.
+        type: string
+      group-id:
+        description: Group identifier.
+        type: string
+      issuer:
+        description: Issuer of bill.
+        $ref: '#/definitions/issuer-info'
+      payment-description:
+        description: Payment description of bill issuer.
+        type: string
+      account-number:
+        description: Account number of bill issuer.
+        type: string
+      issuing-period:
+        description: 'Issuing period of bill (monthly, weekly...).'
+        type: string
+      invoicing-date:
+        description: Invoicing date is date when bill was issued.
+        type: string
+      due-date:
+        description: Due date is date when bill is due for payment.
+        type: string
+      due-date-delivered-in-file:
+        description: Due date delivered in file.
+        type: boolean
+      fees:
+        description: Fee list of bill.
+        items:
+          $ref: '#/definitions/fee'
+        type: array
+      reference-model:
+        description: Reference model.
+        format: int32
+        type: integer
+      reference-model-max-len:
+        description: Reference model max length.
+        format: int32
+        type: integer
+      payment-slip-image:
+        description: Payment slip image (issuer sleep image).
+        type: string
+      reference-model-min-length:
+        description: Min length.
+        format: int32
+        type: integer
+      reference-model-validation-expression:
+        description: Validation expression.
+        type: string
+      uri:
+        description: URI
+        type: string
+    type: object
+  subscription-list:
+    description: Subscription list (list of bill subscriptions)
+    example:
+      total-count: 0
+      page-size: 10
+      page-number: 0
+      total-pages: 0
+      items: []
+    properties:
+      total-count:
+        description: Total count of subscriptions in the list.
+        format: int32
+        type: integer
+      page-size:
+        description: Page size is number of subscriptions contained in one page.
+        format: int32
+        type: integer
+      page-number:
+        description: Page number of current page.
+        format: int32
+        type: integer
+      total-pages:
+        description: Total pages is number of pages calculated based on record number and page size.
+        format: int32
+        type: integer
+      items:
+        description: Items is list of subscriptions.
+        items:
+          $ref: '#/definitions/subscription'
+        type: array
+    type: object
+  subscription:
+    description: A record of subscription.
+    example:
+      subscription-id: '99900000735001'
+      nickname: ''
+      bill-issuer:
+        name: Company for heating production
+        address: Boulevard Nikola Tesla 33
+        city: New Belgrade
+        country-code: ''
+        geolocation:
+          lat: ''
+          lon: ''
+        picture: iVBORw0KGgoAAAANSUhEUgAAAqgAAAKpCAIAAAD/hkmuAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAP...
+      ordering-party:
+        name: Nikola Stojanovic
+        address: King Alexandar's Boluevard  1/1
+        city: Belgrade
+      ordering-party-account-id: 115-1000100019578-10
+      ordering-party-reference: ''
+      ordering-party-reference-model: ''
+      issuing-period: monthly
+      bill-issuer-account-id: 355-0003200145791-15
+      bill-issuer-reference: ''
+      bill-issuer-reference-model: ''
+      fees: []
+      payment-purpose: 'Payment of citizen.'
+      purpose-code: ''
+      payment-type: transfer_order
+      subscription-status: active
+      due-date: '20'
+    properties:
+      subscription-id:
+        description: Subscription identifier.
+        type: string
+      nickname:
+        description: Nickname of bill.
+        type: string
+      bill-issuer:
+        description: Bill issuer
+        $ref: '#/definitions/issuer'
+      ordering-party:
+        description: Ordering party info
+        $ref: '#/definitions/debtor'
+      ordering-party-account-id:
+        description: Ordering party account identifier.
+        type: string
+      ordering-party-reference:
+        description: Ordering party reference.
+        type: string
+      ordering-party-reference-model:
+        description: Ordering party reference model.
+        type: string
+      issuing-period:
+        description: 'Issuing period of bill (monthly, weekly...).'
+        type: string
+      bill-issuer-account-id:
+        description: Bill issuer account identifier.
+        type: string
+      bill-issuer-reference:
+        description: Bill issuer reference.
+        type: string
+      bill-issuer-reference-model:
+        description: Bill issuer reference model.
+        type: string
+      fees:
+        description: Fee list of bill.
+        items:
+          $ref: '#/definitions/fee'
+        type: array
+      payment-purpose:
+        description: Payment purpose of bill.
+        type: string
+      purpose-code:
+        description: Purpose code of bill payment.
+        type: string
+      payment-type:
+        description: 'Payment type of bill (transfer order, standing order).'
+        enum:
+          - transfer-order
+          - standing-order
+        type: string
+      subscription-status:
+        description: Subscription status of bill.
+        enum:
+          - pending
+          - active
+          - canceled
+        type: string
+      due-date:
+        description: Due date.
+        type: string
+    type: object
+  create-subscription-command:
+    description: Subscribe bill presentment command.
+    example:
+      nickname: My subscription for cell phone.
+      issuer-id: '24'
+      debtor:
+        name: 'Nikola Stojanovic'
+        address: 'King Alexanadars Boulevard 76'
+        city: 'Belgrade'
+      client-id: 86024
+      debtor-account-number: 115-0000000050378-56
+      documents:
+        - name: Scanned copy of the bill for January 2016.
+    properties:
+      nickname:
+        description: Nickname of the bill.
+        type: string
+      issuer-id:
+        description: Bill issuer identifier
+        type: string
+      start-date:
+        description: Start date and time from which will bill payment start.
+        format: date-time
+        type: string
+      debtor:
+        description: Debtor is bill ordering party.
+        $ref: '#/definitions/debtor'
+      client-id:
+        description: Client ID of bill is usually the value that is specified in payment order beneficiary reference number field.
+        type: string
+      debtor-account-number:
+        description: Debtor account number is ordering party account number.
+        type: string
+      use-standing-order:
+        description: 'Use standing order is true if user wants to use standing order for bill payment, otherwise is false.'
+        type: boolean
+      effective-date:
+        description: Effective date and time for standing order.
+        format: date-time
+        type: string
+      invoice-notification:
+        description: |
+          Invoice notification allows client to specify if he wants to receive notification when new bill payment invoice has arrived from the
+          bill issuer.
+        type: boolean
+      due-date-notification:
+        description: Due date notification allows client to specify if he wants to receive notification about unpaid bill on due date.
+        type: boolean
+      payment-reminder-notification:
+        description: Payment reminder notification allows client to specify if he wants to receive notification about unpaid bill several days before the due date.
+        type: boolean
+      documents:
+        description: Reference to scanned copy of bill stored in DMS.
+        items:
+          $ref: '#/definitions/attachment'
+        type: array
+    required:
+      - nickname
+      - debtor
+      - client-id
+      - debtor-account-number
+      - documents
+    type: object
+  attachment:
+    description: Reference to file associated with bill subscription.
+    example:
+      meta-name: Scaned copy of bill for January 2016.
+    properties:
+      attachment-id:
+        description: Unique identifier of attachment.
+        type: string
+      meta-name:
+        description: Meta name of the attachment.
+        type: string
+      uri:
+        description: URI
+        type: string
+    type: object
+  command-result:
+    x-asee-compliance: Missing description of object and properties.
+    description: ''
+    example: {}
+    properties:
+      id:
+        description: 'Gets or sets the id of created, updated or deleted entity.'
+        type: string
+      created-record-status:
+        description: 'Gets or sets the created, updated, deleted record status.'
+        type: string
+    type: object
+responses:
+  default-error-response:
+    description: 'Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()'
+schemes:
+  - http
