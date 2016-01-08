@@ -41,10 +41,10 @@ tags:
 paths:
   /deposit-account-openings/{workitem-number}/accept:
     post:
-      summary: Use this operation to open new deposit arrangement - account. Deposit account opening has to be valid with all terms and conditions. Deposit account opening gets status 'Accepted' after account opening.
+      summary: Use this operation to accept deposit account opening request. After acceptance, new deposit account and arrangement are opened.
       tags:
         - Deposit account openings
-      operationId: DepositAccountOpening_Accept
+      operationId: DepositAccountOpenings_Accept
       parameters:
         - $ref: "#/parameters/workitem-number-param"
         - $ref: "#/parameters/agent-id-param"
@@ -69,25 +69,26 @@ paths:
   /deposit-account-openings:
     post:
       deprecated: false
-      operationId: DepositAccountOpening_Create
-      summary: Use this operation to open saving account.
+      operationId: DepositAccountOpenings_Create
+      summary: Use this operation to create new deposit account opening request.
       tags:
         - Deposit account openings
       parameters:
-        - description: Parameters for open saving account.
+        - description: Parameters for initiating deposit account opening request.
           in: body
           name: cmd
           required: true
           schema:
             $ref: '#/definitions/initiate-deposit-account-opening-command'
       responses:
-        '200':
-          description: OK
+        '202':
+          description: Accepted
           schema:
             $ref: '#/definitions/deposit-account-opening'
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+          x-asee-compliance: Missing declaration of problems.
           schema:
             $ref: '#/definitions/business-problem'  
         default:
@@ -95,10 +96,10 @@ paths:
       
   /loan-originations/{workitem-number}/activate:
     post:
-      summary: Use this operation to activate device loan.
+      summary: Use this operation to activate the loan account based on approved loan origination request.
       tags: 
         - Loan originations
-      operationId: LoanOrigination_Activate
+      operationId: LoanOriginations_Activate
       parameters:
         - $ref: "#/parameters/workitem-number-param"
       responses:
@@ -116,21 +117,21 @@ paths:
           $ref: '#/responses/default-error-response'
   /loan-originations:
     post:
-      summary: Use this operation to initiate loan accountopening.
+      summary: Use this operation to create new loan origination request.
       tags:
          - Loan originations
       deprecated: false
-      operationId: LoanOrigination_Create
+      operationId: LoanOriginations_Create
       parameters:
-        - description: Parameters for initiate loan originations.
+        - description: Parameters for initiating loan origination request.
           in: body
           name: cmd
           required: true
           schema:
             $ref: '#/definitions/initiate-loan-origination-command'
       responses:
-        '200':
-          description: OK
+        '202':
+          description: Accepted
           schema:
             $ref: '#/definitions/command-result'
         '440':
@@ -148,7 +149,7 @@ paths:
       tags: 
         - Product account openings
      
-      operationId: ProductAccountOpening_Cancel
+      operationId: ProductAccountOpenings_Cancel
       parameters:
         - $ref: '#/parameters/workitem-number-param'
       responses:
@@ -164,11 +165,11 @@ paths:
             $ref: '#/definitions/business-problem'  
   /product-account-openings/{workitem-number}/status:
     get:
-      summary: Not part of V1. Gets the status of specific product account-opening.
+      summary: Gets the status of specific product account-opening.
       tags:
         - Product account openings
       deprecated: true
-      operationId: ProductAccountOpening_GetStatus
+      operationId: ProductAccountOpenings_GetStatus
       parameters:
        - $ref: '#/parameters/workitem-number-param'
       responses:
@@ -181,11 +182,11 @@ paths:
 
   /product-account-openings/{workitem-number}/history:
     get:
-      summary: Not part of V1. Gets the processing history of specific product account-opening.
+      summary: Gets the processing history of specific product account-opening.
       tags:
         - Product account openings
       deprecated: true
-      operationId: ProductAccountOpening_GetHistory
+      operationId: ProductAccountOpenings_GetHistory
       parameters:
         - $ref: '#/parameters/workitem-number-param'
       responses:
@@ -198,10 +199,10 @@ paths:
 
   /deposit-account-openings/{workitem-number}:
     get:
-      summary: Gets specific deposit account-opening with detailed information.
+      summary: Gets specific deposit account opening request with detailed information.
       tags: 
         - Deposit account openings
-      operationId: DepositAccountOpening_Get
+      operationId: DepositAccountOpenings_Get
       parameters:
         - $ref: "#/parameters/workitem-number-param"
       responses:
@@ -217,7 +218,7 @@ paths:
       tags: 
         - Credit facility originations
      
-      operationId: CreditFacilityOrigination_Cancel
+      operationId: CreditFacilityOriginations_Cancel
       parameters:
         - $ref: "#/parameters/workitem-number-param"
       responses:
@@ -236,7 +237,7 @@ paths:
       summary: Gets specific credit facility origination with detailed information.
       tags: 
         - Credit facility originations
-      operationId: CreditFacilityOrigination_Get
+      operationId: CreditFacilityOriginations_Get
       parameters:
         - $ref: "#/parameters/workitem-number-param"
      
@@ -252,7 +253,7 @@ paths:
       summary: Gets specific current account opening with detailed information.
       tags: 
         - Current account openings
-      operationId: CurrentAccountOpening_Get
+      operationId: CurrentAccountOpenings_Get
       parameters:
         - $ref: "#/parameters/workitem-number-param"
       responses:
@@ -264,27 +265,26 @@ paths:
           $ref: '#/responses/default-error-response' 
   /current-account-openings:
     post:
-      summary: Use this operation to create new current account opening.
+      summary: Use this operation to create new current account opening request.
       tags:
         - Current account openings
-      operationId: CurrentAccountOpening_Create
+      operationId: CurrentAccountOpenings_Create
       parameters:
-        - description: Parameters for initiate current account opening.
+        - description: Parameters for initiating current account opening.
           in: body
           name: cmd
           required: true
           schema:
             $ref: '#/definitions/initiate-current-account-opening-command'
       responses:
-        '200':
-          description: OK
+        '202':
+          description: Accepted
           schema:
             $ref: '#/definitions/command-result'
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
             - [requested-account-range]()
-            - [deposit-account-opening-maxnumber]()
             - [current-account-arrangement-maxnumber]()
           schema:
             $ref: '#/definitions/business-problem'  
@@ -293,10 +293,10 @@ paths:
 
   /loan-originations/{workitem-number}:
     get:
-      summary: Gets specific loan origination with detailed information.
+      summary: Gets specific loan origination request with detailed information.
       tags: 
         - Loan originations
-      operationId: LoanOrigination_Get
+      operationId: LoanOriginations_Get
       parameters:
         - $ref: "#/parameters/workitem-number-param"
       responses:
@@ -308,9 +308,9 @@ paths:
           $ref: '#/responses/default-error-response' 
   /product-account-openings:
     get:
-      summary: Use this operation to get list of product requests.
-      description: |
-        Supports`paging` `shaping` `sorting` `filtering`
+      summary: |
+        Use this operation to get list of product requests.
+        Supports `paging` `shaping` `sorting` `filtering`.
     
       tags: 
         - Product account openings
@@ -318,7 +318,7 @@ paths:
         - Shapeable
         - Sortable
         - Pageable
-      operationId: product-account openings-get
+      operationId: ProductAccountOpenings_GetList
       parameters:
         - $ref: "#/parameters/customer-number-param"
         - $ref: "#/parameters/page-param"
@@ -331,15 +331,15 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/product-account-opening-list'
-        '404':
-          description: NotFound
+        default:
+          $ref: '#/responses/default-error-response' 
         
   /bundled-account-openings/{workitem-number}/cancel:
     post:
       summary: Use this operation to cancel bundled account opening.
       tags: 
         - Bundled account openings
-      operationId: BundledAccountOpening_Cancel
+      operationId: BundledAccountOpenings_Cancel
       parameters:
         - $ref: '#/parameters/workitem-number-param'
       responses:
@@ -358,7 +358,7 @@ paths:
       summary: Gets specific bundled account opening with detailed information.
       tags:
         - Bundled account openings
-      operationId: BundledAccountOpening_Get
+      operationId: BundledAccountOpenings_Get
       parameters:
         - $ref: '#/parameters/workitem-number-param'
       responses:
@@ -370,21 +370,21 @@ paths:
           $ref: '#/responses/default-error-response' 
   /bundled-account-openings:
     post:
-      summary: Use this operation to create new bundled account opening.
+      summary: Use this operation to create new bundled account opening request.
       tags:
         - Bundled account openings
       deprecated: false
-      operationId: BundledAccountOpening_Create
+      operationId: BundledAccountOpenings_Create
       parameters:
-        - description: Parameters for initiate bundled account opening.
+        - description: Parameters for initiating bundled account opening.
           in: body
           name: cmd
           required: true
           schema:
             $ref: '#/definitions/initiate-bundled-account-opening-command'
       responses:
-        '200':
-          description: OK
+        '202':
+          description: Accepted
           schema:
             $ref: '#/definitions/command-result'
         '440':
@@ -402,7 +402,7 @@ paths:
       tags:
         - Current account openings
       deprecated: false
-      operationId: CurrentAccountOpening_UpdateSignOption
+      operationId: CurrentAccountOpenings_UpdateSignOption
       parameters:
         - $ref: "#/parameters/workitem-number-param"
         - description: Parameters for sign options.
@@ -434,7 +434,7 @@ paths:
       tags:
         - Credit facility originations
       deprecated: false
-      operationId: CreditFacilityOrigination_UpdateSignOption
+      operationId: CreditFacilityOriginations_UpdateSignOption
       parameters:
         - $ref: "#/parameters/workitem-number-param"
         - description: Parameters for sign options.
@@ -459,21 +459,21 @@ paths:
 
   /credit-facility-originations:
     post:
-      summary: Use this operation to create new credit facility origination.
+      summary: Use this operation to create new credit facility origination request.
       tags:
         - Credit facility originations
       deprecated: false
-      operationId: CreditFacilityOrigination_Create
+      operationId: CreditFacilityOriginations_Create
       parameters:
-        - description: Parameters for initiate credit facility origination.
+        - description: Parameters for initiating credit facility origination.
           in: body
           name: cmd
           required: true
           schema:
             $ref: '#/definitions/initiate-credit-facility-origination-command'
       responses:
-        '200':
-          description: OK
+        '202':
+          description: Accepted
           schema:
             $ref: '#/definitions/command-result'
         '440':
@@ -490,7 +490,7 @@ paths:
       tags:
         - Credit facility originations
       deprecated: false
-      operationId: CreditFacilityOrigination_Update
+      operationId: CreditFacilityOriginations_Update
       parameters:
         - description: Parameters for credit limit proposal modification.
           in: body
@@ -519,7 +519,7 @@ paths:
       tags:
         - Credit facility originations
       deprecated: false
-      operationId: CreditFacilityOrigination_UpdateDocumentsStatus
+      operationId: CreditFacilityOriginations_UpdateDocumentsStatus
       parameters:
         - $ref: "#/parameters/workitem-number-param"
       responses:
@@ -542,7 +542,7 @@ paths:
       tags:
         - Credit facility originations
       deprecated: false
-      operationId: CreditFacilityOrigination_GetProposal
+      operationId: CreditFacilityOriginations_GetProposal
       parameters:
         - $ref: "#/parameters/workitem-number-param"
       responses:
@@ -559,10 +559,10 @@ paths:
       tags:
         - Credit facility originations
       deprecated: false
-      operationId: CreditFacilityOrigination_Accept
+      operationId: CreditFacilityOriginations_Accept
       parameters:
         - $ref: "#/parameters/workitem-number-param"
-        - description: Parameters for accept credit limit request.
+        - description: Parameters for accepting credit limit request.
           in: body
           name: cmd
           required: true
@@ -617,7 +617,7 @@ paths:
       deprecated: false
       operationId: Calculations_DepositTermination
       parameters:
-        - description: Parameters for calculate deposit termination.
+        - description: Parameters for calculating deposit termination values.
           in: body
           name: cmd
           required: true
@@ -642,7 +642,7 @@ paths:
         - Calculations
       operationId: Calculations_DepositOffer
       parameters:
-        - description: Parameters for calculate deposit offer.
+        - description: Parameters for calculating deposit offer.
           in: body
           name: cmd
           required: true
@@ -667,7 +667,7 @@ paths:
         - Calculations
       operationId: Calculations_DepositPayout
       parameters:
-        - description: Parameters for calculate deposit payout.
+        - description: Parameters for calculating deposit payout.
           in: body
           name: cmd
           required: true
@@ -702,8 +702,9 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/indicative-offer-list'
-            x-asee-compliance: Wrong object! This method should return installment-calculation, which is missing in definitions below.
+            x-asee-compliance: Wrong object! This method should return installment-calculation.
+            #$ref: '#/definitions/indicative-offer-list'
+            $ref: '#/definitions/installment-plan'
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
@@ -718,14 +719,15 @@ paths:
         - Calculations
       operationId: Calculations_IndicativeOffer
       parameters:
-        - description: Fully registered customer.
+        - description: Unique identifier of the registered customer.
           in: query
           name: customer-number
           required: false
           type: string
         - description: Optional, if customer requires specific product.
+          x-asee-compliance: Indicative offer is always for some product, it is strange that this is optional.
           in: query
-          name: product-number
+          name: product-code
           required: false
           type: string
       responses:
@@ -877,17 +879,7 @@ definitions:
       - term
       - product-code
     type: object
-  simple-time-period:
-    description: Simple time period.
-    properties:
-      period:
-        description: Period
-        format: int32
-        type: integer
-      unit-of-time:
-        description: Unit of time
-        type: string
-    type: object
+  
   initiate-loan-origination-command:
     description: Parameters for loan originations initiation.
     properties:
@@ -928,9 +920,10 @@ definitions:
       campaign-id:
         description: A code by which a campaign can be identified.
         type: string
-      ship-to-order:
-        description: Indicates if ship to order should be offered to customer.
+      sign-option:
+        description: Indicates if customer wants to use ship-to-order sign option.
         type: boolean
+        x-asee-compliance: This should be related to some enum or classification.
     required:
       - customer-number
       - product-code
@@ -1011,12 +1004,16 @@ definitions:
       transaction-type:
         description: Transaction type
         type: string
+        x-asee-compliance: This should be related to some classification.
       channel-code:
         description: Channel code
         type: string
       direction:
-        description: "Direction can be buy\\sell"
+        description: Direction can be buy or sell
         type: string
+        enum:
+          - buy
+          - sell
       acquirer-code:
         description: Acquirer code
         format: byte
@@ -1053,7 +1050,7 @@ definitions:
         type: integer
     type: object
   initiate-deposit-termination-calculation-command:
-    description: Parameters for deposit termination.
+    description: Parameters for deposit termination calculation.
     properties:
       arrangement-number:
         description: Arrangement number.
@@ -1067,11 +1064,11 @@ definitions:
       calculation-items:
         description: List of calculated values for deposit assets on account.
         items:
-          $ref: '#/definitions/deposit-termination-calculation-items'
+          $ref: '#/definitions/deposit-termination-calculation-item'
         type: array
     type: object
-  deposit-termination-calculation-items:
-    description: Deposit termination calculation items.
+  deposit-termination-calculation-item:
+    description: Deposit termination calculation item.
     properties:
       total-amount:
         description: The total amount that will be witdrawn.
@@ -1138,7 +1135,7 @@ definitions:
         type: number
     type: object
   deposit-payout-calculation:
-    description: Deposit payout calculation items.
+    description: Deposit payout calculation item.
     properties:
       total-amount:
         description: The total amount that will be witdrawn.
@@ -1205,7 +1202,7 @@ definitions:
         type: number
     type: object
   classification-value:
-    description: Classification values
+    description: Classification value
     properties:
       code:
         description: Code of classification value.
@@ -1248,7 +1245,7 @@ definitions:
       - customer-number
     type: object
   deposit-offer-calculation:
-    description: Deposit offer calculation items.
+    description: Deposit offer calculation item.
     properties:
       principal-amount:
         format: double
@@ -1328,7 +1325,7 @@ definitions:
         $ref: '#/definitions/currency'
     type: object
   bill-me-later-installments:
-    description: Bill me later installments calculation request.
+    description: Bill me later installments calculation.
     properties:
       installments:
         description: Max number of installments.
@@ -1336,7 +1333,7 @@ definitions:
         type: integer
     type: object
   product-account-opening-history:
-    x-asee-compliance: Missing object description.
+    x-asee-compliance: Product account opening history.
     properties:
       items:
         description: List of work item history
@@ -1345,7 +1342,7 @@ definitions:
         type: array
     type: object
   product-account-opening-history-item:
-    description: Product account opening history object.
+    description: Product account opening history item.
     properties:
       modified-by-name:
         description: Name of person modified by
@@ -1436,9 +1433,7 @@ definitions:
       delinquency-consequences:
         description: Unsettled obligations consequences.
         type: string
-      image:
-        description: Product image
-        type: string
+     
     type: object
   command-result:
     description: Command result
@@ -1469,6 +1464,7 @@ definitions:
       status:
         description: Workitem status
         type: string
+		  
       account-number:
         description: Related account number
         type: string
@@ -1508,7 +1504,7 @@ definitions:
       workitem-number:
         description: Unique identifier for deposit account opening.
         type: string
-      product-number:
+      product-code:
         description: A code or short name by which a Product can be identified.
         type: string
       product-name:
@@ -1523,12 +1519,13 @@ definitions:
       customer-name:
         description: Customer name.
         type: string
-      customer-object-type-name:
+      customer-type:
         description: Customer type.
         type: string
       status:
         description: Workitem status
         type: string
+		   
       created-by-name:
         description: Name of the agent (bank employee) responsible for opening process, who created deposit account opening.
         type: string
@@ -1549,6 +1546,7 @@ definitions:
       kind:
         description: Kind
         type: string
+        x-asee-compliance: This should be related to some enum.
     type: object
   product-account-opening-list:
     description: Product account opening list.
@@ -1568,10 +1566,12 @@ definitions:
       kind:
         description: Kind
         type: string
+        x-asee-compliance: This should be related to enum.
       status:
         description: Workitem status
         type: string
-      product-number:
+        x-asee-compliance: This should be related to classification.
+      product-code:
         description: A code or short name by which a product can be identified.
         type: string
       product-name:
@@ -1598,9 +1598,10 @@ definitions:
       customer-name:
         description: Customer name.
         type: string
-      customer-object-type-name:
+      customer-type:
         description: Customer type.
         type: string
+        x-asee-compliance: Should be related to some enum.
       created-by-name:
         description: Name of the agent (bank employee) responsible for opening process, who created product account opening.
         type: string
@@ -1610,6 +1611,7 @@ definitions:
       requested-account-number:
         description: Customer can request specific account number.
         type: string
+        x-asee-compliance: This property should be moved to current-account-opening object.
       step:
         description: Step.
         type: string
@@ -1619,13 +1621,16 @@ definitions:
       id-card-expiration-date:
         description: ID card expiration date.
         format: date-time
+        x-asee-compliance: This property should be moved to credit-facility-origination object.
         type: string
-      offer-sto:
+      offer-sign-option:
         description: Indicates if ship to order should be offered to customer.
         type: boolean
+        x-asee-compliance: This property should be moved to current-account-opening and credit-facility-origination objects.
       is-refinancing:
-        description: Is refinancing
+        description: Indicator if this is the refinancing.
         type: boolean
+        x-asee-compliance: This property should be moved to credit-facility-origination object.
     type: object
   current-account-opening:
     description: Current account opening object.
@@ -1633,7 +1638,7 @@ definitions:
       workitem-number:
         description: Unique identifier for current account opening.
         type: string
-      product-number:
+      product-code:
         description: A code or short name by which a Product can be identified.
         type: string
       product-name:
@@ -1679,27 +1684,27 @@ definitions:
     examples:
             application/json:
               workitem-number: AP00047078
-              product-number: TipUgovora312
+              product-code: TipUgovora312
               product-name: 'Transakcioni racuni za redovno poslovanje nerezidenata pravnih lica [Teh]'
               product-family-name: Tekuci racuni privredi
               customer-number: SONYE01
               customer-name: SONY EUROPE LIMITED
               customer-object-type-name: Organization
               status: Active
-              created-by-name: sample
-              primary-currency: sample
-              comments: sample
+              created-by-name: Dubravka Milenkovic
+              primary-currency: RSD
+              comments: Klijent upoznat sa tekucom kampanjom
               requested-activation-date: '2011-07-14T10:21:12.723'
               request-date: '2011-07-14T10:21:12.723'
               requested-account-number: 343434343434
   credit-facility-origination:
     description: Credit facility origination object.
     properties:
-      work-item-number:
+      workitem-number:
         description: Work item number.
         type: string
       amount:
-        description: Requested amount.
+        description: Accepted amount.
         $ref: '#/definitions/currency'
       requested-amount:
         description: Requested amount.
@@ -1728,9 +1733,9 @@ definitions:
         description: Comment.
         type: string
       is-refinancing:
-        description: Is refinancing.
+        description: Indicator if this is the refinancing loan.
         type: boolean
-      offer-ship-to-order:
+      offer-sign-option:
         description: Indicates if ship to order should be offered to customer.
         type: boolean
       step:
@@ -1750,14 +1755,14 @@ definitions:
       term:
         description: Term.
         $ref: '#/definitions/simple-time-period'
-      idcard-expiration-date:
+      id-card-expiration-date:
         description: Id card expiration date.
         format: date-time
         type: string
-      idcard-expireing:
+      id-card-expiring:
         description: Is ID card expireing.
         type: boolean
-      idcard-expiration-period:
+      id-card-expiration-period:
         description: Id card expiration period.
         type: string
     type: object
@@ -1767,6 +1772,7 @@ definitions:
       code:
         description: Code.
         type: string
+        x-asee-compliance: Should be related to some classification.
       amount:
         description: Amount.
         format: double
@@ -1793,10 +1799,10 @@ definitions:
         description: Unique identifier for loan origination.
         type: string
       product-info:
-        description: Basic information about product for which concrete account-opening has been requested.
+        description: Basic information about product for which this loan origination request has been created.
         $ref: '#/definitions/product-info'
       customer-info:
-        description: "Basic information about account-opening's customer."
+        description: "Basic information about the customer."
         $ref: '#/definitions/customer-info'
       status-info:
         description: Status and status date information of request
@@ -1811,7 +1817,7 @@ definitions:
         description: Comments
         type: string
       requested-activation-date:
-        description: Requested Activation Date
+        description: Requested activation date
         format: date-time
         type: string
       initial-amount:
@@ -1827,7 +1833,7 @@ definitions:
       workitem-number:
         description: Unique identifier for bundled account opening.
         type: string
-      product-number:
+      product-code:
         description: A code or short name by which a product can be identified.
         type: string
       product-name:
@@ -1845,9 +1851,11 @@ definitions:
       customer-object-type-name:
         description: Customer type.
         type: string
+        x-asee-compliance: Should be related to some enum.
       status:
-        description: Work Item status
+        description: Workitem status
         type: string
+		   
       created-by-name:
         description: Name of the agent (bank employee) responsible for opening process, who created bundled account opening.
         type: string
@@ -1855,7 +1863,7 @@ definitions:
         description: Comments
         type: string
       request-date:
-        description: Request Date
+        description: Request date
         format: date-time
         type: string
       parent-arrangement-number:
@@ -1874,50 +1882,54 @@ definitions:
     type: object
     examples:
             application/json:
-              workitem-number: sample
-              product-number: sample
-              product-name: sample
-              product-family-name: sample
-              customer-number: sample
-              customer-name: sample
-              customer-object-type-name: sample
-              status: sample
+              workitem-number: AP00047078
+              product-code: ENV_01
+              product-name: Transakciona envelopa
+              product-family-name: Envelope
+              customer-number: BI0111
+              customer-name: Babic Milenko
+              customer-object-type-name: Rezident
+              status: Active
               created-by-name: sample
               comments: sample
-              request-date: '0001-01-01T00:00:00'
-              parent-arrangement-number: sample
-              bundled-name: sample
-              last-modification-date: '0001-01-01T00:00:00'
+              request-date: '2015-07-14T10:21:12.723'
+              parent-arrangement-number: AR000120000
+              bundled-name: Tekuci racun - Babic Milenko
+              last-modification-date: '2015-07-14T10:21:12.723'
   current-account-conditions:
     description: Conditions.
     properties:
       base-interest-rate:
-        description: BaseInterestRate
+        description: Base interest rate
         format: double
         type: number
       stimulant-interest-rate:
-        description: StimulantInterestRate
+        description: Stimulant interest rate
         format: double
         type: number
       penalty-interest-rate:
-        description: PenaltyInterestRate
+        description: Penalty interest rate
         format: double
         type: number
     type: object
  
   update-current-account-sign-option-command:
+    x-asee-compliance: This and the following object should be probably the same update-sign-option-command. There is no need for distinction, and this object is also missing a property comparing to credit-facility one.
     description: Sign option parameters.
     properties:
-      ship-to-order:
+      sign-option:
         description: Ship to order yes/no.
         type: boolean
+        x-asee-compliance: This should be related to some classification.
     type: object
   update-credit-facility-sign-option-command:
     description: ''
+    x-asee-compliance: Missing description of object.
     properties:
-      ship-to-order:
+      sign-option:
         description: Ship to order yes/no.
         type: boolean
+        x-asee-compliance: This should be related to some classification.
       contact-point-id:
         description: Contact point id. Property is mandatory if ship to order is true.
         format: int64
@@ -1942,7 +1954,7 @@ definitions:
     description: Term deposit arrangement is a particular type of Arrangement that places a specified amount of money with the modeled organization for a set period of time and is only available to the depositor at the end of this period.
     properties:
       status:
-        description: Work Item status
+        description: Workitem status
         enum:
           - active
           - canceled
@@ -1953,27 +1965,14 @@ definitions:
         description: Work Item status date
         format: date-time
         type: string
-      navigations:
-        description: Links to related resources.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        description: Available commands in current context.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      uri:
-        description: URI
-        type: string
     type: object
   product-account-opening-status:
-    description: Product account-opening status.
-    
+    description: Product account opening status.
     properties:
       status:
-        description: Work Item status
+        description: Workitem status
         type: string
+        x-asee-compliance: Should be related to some enum or classification.
       account-number:
         description: Related account number
         type: string
@@ -1981,10 +1980,10 @@ definitions:
   product-info:
     description: "Product's basic information."
     properties:
-      product-number:
+      product-code:
         description: A code or short name by which a product can be identified.
         type: string
-      name:
+      product-name:
         description: The primary name assigned to the product.  This name is used in reports and documents referring to the product.
         type: string
       family-name:
@@ -2009,9 +2008,11 @@ definitions:
       bank:
         description: Bank name.
         type: string
+        x-asee-compliance: Should be related to some classification.
       loan-type:
         description: Loan type.
         type: string
+        x-asee-compliance: Should be related to some classification.
       check-digit-model:
         description: Check digit model.
         type: string
@@ -2037,6 +2038,7 @@ definitions:
       marital-status:
         description: Marital status.
         type: string
+        x-asee-compliance: Should be related to some classification.
       residence-start-date:
         description: Residence start date.
         format: date-time
@@ -2044,9 +2046,11 @@ definitions:
       residence:
         description: Type of residence.
         type: string
+        x-asee-compliance: Should be related to some classification.
       education:
         description: Educational level.
         type: string
+        x-asee-compliance: Should be related to some classification.
       home-phone-number:
         description: Home phone number.
         $ref: '#/definitions/phone-number'
@@ -2110,7 +2114,7 @@ definitions:
   credit-facility-proposal:
     description: Credit facility proposal.
     properties:
-      proposal:
+      workitem-number:
         description: Proposal work item number.
         type: string
       customer:
@@ -2192,6 +2196,7 @@ definitions:
       country-code:
         description: Country code.
         type: string
+        x-asee-compliance: Should be related to some classification.
       country:
         description: Country.
         type: string
@@ -2245,12 +2250,15 @@ definitions:
       employment-position-category:
         description: Employment position category.
         type: string
+        x-asee-compliance: Should be related to some classification.
       employment-type:
         description: Type of employment.
         type: string
+        x-asee-compliance: Should be related to some classification.
       employer-type:
         description: Employer type.
         type: string
+        x-asee-compliance: Should be related to some classification.
     type: object
   additional-income:
     description: Additional income.
@@ -2261,6 +2269,7 @@ definitions:
       income-source:
         description: Additional income source.
         type: string
+        x-asee-compliance: Should be related to some classification.
     type: object
   customer-financial-data:
     description: Financial data.
@@ -2275,13 +2284,153 @@ definitions:
         description: Income taxes paid.
         type: boolean
     type: object
-  indicative-offer-list:
-    description: Idicative offer list.
+
+  # This is not the right object for result of /calculations/installment-plan.
+  # Because of this, object is put under comment and replaced with the bit corrected proper object from 1.0.
+  # indicative-offer-list:
+  #   x-asee-compliance: This object is invalid. Completely different object should be used for installment plan.
+  #   description: Indicative offer list.
+  #   properties:
+  #     items:
+  #       description: List of deposit account openings
+  #       items:
+  #         $ref: '#/definitions/indicative-offer'
+  #       type: array
+  #   type: object
+
+  installment-plan:
+    x-asee-compliance: Missing description of object.
     properties:
-      items:
-        description: List of deposit account openings
+      product-info:
+        description: Basic information about product for which calculation has been requested.
+        $ref: '#/definitions/product-info'
+      amount:
+        description: Represents calculated amount in product currency.
+        $ref: '#/definitions/currency'
+      amount-in-indexation-currency:
+        description: Represents calculated amount in indexation currency.
+        $ref: '#/definitions/currency'
+      amount-in-local-currency:
+        description: Represents calculated amount in local currency.
+        $ref: '#/definitions/currency'
+      total-interest:
+        description: Represents calculated total interest.
+        $ref: '#/definitions/currency'
+      term:
+        description: Basic information about requested arrangement maturity. Contains information about term duration period and period time unit.
+        $ref: '#/definitions/simple-time-period'
+      rows:
+        description: Information about plan rows
         items:
-          $ref: '#/definitions/indicative-offer'
+          $ref: '#/definitions/installment-plan-row'
         type: array
+      eir:
+        description: Effective interest rate.
+        format: double
+        type: number
+      interest-rate:
+        description: Nominal interest rate
+        $ref: '#/definitions/interest-rate'
+      monthly-payment:
+        description: Monthly payment amount.
+        $ref: '#/definitions/currency'
+      fee:
+        description: Represents calculated fee.
+        $ref: '#/definitions/currency'
     type: object
-  
+  interest-rate:
+    description: ''
+    x-asee-compliance: Missing description of object.
+    properties:
+      percentage:
+        description: Percentage.
+        format: double
+        type: number
+      unit-of-time:
+        description: Unit of time.
+        type: string
+    type: object
+  installment-plan-row:
+    x-asee-compliance: Missing description of object.
+    properties:
+      order:
+        description: Order
+        format: int32
+        type: integer
+      description:
+        description: Description
+        type: string
+      cash-deposit:
+        description: Cash deposit
+        format: double
+        type: number
+      cash-withdrawal:
+        description: Cash withdrawal
+        format: double
+        type: number
+      net-cash-flow:
+        description: Net cash flow
+        format: double
+        type: number
+      date:
+        description: Date
+        format: date-time
+        type: string
+      start-of-period:
+        description: Start of period
+        format: date-time
+        type: string
+      discounted-net-flow:
+        description: Discounted net flow
+        format: double
+        type: number
+      discounted-disbursements:
+        description: Discounted disbursements
+        format: double
+        type: number
+      fee:
+        description: Fee
+        format: double
+        type: number
+      tax:
+        description: Tax
+        format: double
+        type: number
+      interest:
+        description: Interest
+        format: double
+        type: number
+      loan-disbursement:
+        description: Loan disbursement
+        format: double
+        type: number
+      other-in-payment:
+        description: Other in-payment
+        format: double
+        type: number
+      other-out-payment:
+        description: Other out-payment
+        format: double
+        type: number
+      outstanding-principal:
+        description: Outstanding principal
+        format: double
+        type: number
+      principal:
+        description: Principal
+        format: double
+        type: number
+      repayment:
+        description: Repayment
+        format: double
+        type: number
+      security-deposit-flows:
+        description: Security deposit flows
+        format: double
+        type: number
+      total-days:
+        description: TotalDays
+        format: int32
+        type: integer
+    type: object
+ 
