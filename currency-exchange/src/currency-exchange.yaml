@@ -2,25 +2,25 @@ swagger: '2.0'
 host: api.asee.com
 basePath: /currency-exchange
 info:
-  description: "Currency Exchange API gives you possibility to execute, track, query orders for exchange or conversion of foreign
-                currency.
-                With Currency Exchange API you can:
-                - Create currency exchange transaction
-                - Update currency exchange transaction
-                - Delete currency exchange transaction
-                - Execute currency exchange transaction
-                - Cancel currency exchange
-                - List currency exchange transactions
-                - Search for transactions
-                - Get specific transactions
-                - Get specific transaction history"
-  title: Currency Exchange
+  description: |
+    Currency Exchange API gives you possibility to execute, track, query orders for exchange or conversion of foreign currency.
+    With Currency Exchange API you can:
+      - Create currency exchange transaction
+      - Update currency exchange transaction
+      - Delete currency exchange transaction
+      - Execute currency exchange transaction
+      - Cancel currency exchange
+      - List currency exchange transactions
+      - Search for transactions
+      - Get specific transactions
+      - Get specific transaction history
+  title: Currency Exchange API
   version: beta
 tags:
   - description: Working with classifications
     name: Classifications
-  - description: Working with exchange rates
-    name: ExchangeRates
+  - description: Working with rates
+    name: Rates
   - description: Working with transactions
     name: Transactions
   - description: Working with offers
@@ -32,23 +32,26 @@ produces:
 paths:
   '/classifications/{schema-id}':
     get:
-      operationId: Classifications_GetList
+      operationId: Classifications_Get
       parameters:
         - $ref: '#/parameters/schema-id-param'
       responses:
         '200':
           description: OK
-          schema: {}
+          schema:
+            items:
+              $ref: '#/definitions/classification-value'
+            type: array
         default:
           $ref: '#/responses/default-error-response'
-      summary: Get classification values.  ??? TO DO Description
+      summary: Get classification values.
       tags:
         - Classifications
       x-asee-tags: []
   '/rates/{date-for}':
     get:
       description: It is useful if data about rates on specific day are needed.
-      operationId: Rates_GetList
+      operationId: Rates_Get
       parameters:
         - $ref: '#/parameters/date-for-param'
         - $ref: '#/parameters/currency-codes-param'
@@ -64,12 +67,12 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/currency-exchange-rates-v2'
+            $ref: '#/definitions/rates'
         default:
           $ref: '#/responses/default-error-response'
       summary: Get exchange rates for specific day. Shows all exchange rates for chosen date.
       tags:
-        - ExchangeRates
+        - Rates
       x-asee-tags:
         - Pageable
         - Sortable
@@ -77,7 +80,7 @@ paths:
   /rates/history:
     get:
       description: It is useful when is required to track changes of rates in some time interval.
-      operationId: Rates_GetHistoryList
+      operationId: Rates_GetHistory
       parameters:
         - $ref: '#/parameters/sampling-param'
         - $ref: '#/parameters/date-from-param'
@@ -93,12 +96,12 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/currency-exchange-rates-history-v2'
+            $ref: '#/definitions/rates-history'
         default:
           $ref: '#/responses/default-error-response'
       summary: Get exchange rates for period. List of all rates for chosen time interval.
       tags:
-        - ExchangeRates
+        - Rates
       x-asee-tags:
         - Pageable
         - Sortable
@@ -108,23 +111,23 @@ paths:
       description: It is part of currency exchange process. It is also related to specific transaction that is occurring.
       operationId: Offers_Create
       parameters:
-        - description: Currency exchange transaction offer parameters.
+        - description: Currency exchange offer parameters.
           in: body
           name: cmd
           required: true
           schema:
-            $ref: '#/definitions/currency-exchange-offer-query-params-v2'
+            $ref: '#/definitions/create-offer-command'
       responses:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/currency-exchange-offer-v2'
+            $ref: '#/definitions/offer'
         '440':
-          description: "Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
- [currency-mismatch] ()
- [same-currencies] ()
- [local-currency-missing] ()
- [temporary-unavailable] ()"
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+              - [temporary-unavailable]()
+              - [night-exchange-closed]()
+              - [negative-amount]()
           schema:
             $ref: '#/definitions/business-problem'
         default:
@@ -135,8 +138,9 @@ paths:
       x-asee-tags: []
   /transactions:
     get:
-      description: "Shows all transactions related to currencies exchanges from one account to all others.
-It is useful when it is required to view this kind of transactions for chosen time interval."
+      description: |
+        Shows all transactions related to currencies exchanges from one account to all others.
+        It is useful when it is required to view this kind of transactions for chosen time interval.
       operationId: Transactions_GetList
       parameters:
         - $ref: '#/parameters/list-param'
@@ -160,7 +164,7 @@ It is useful when it is required to view this kind of transactions for chosen ti
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/transactions-v2'
+            $ref: '#/definitions/transaction-list'
         default:
           $ref: '#/responses/default-error-response'
       summary: Query currency exchange transaction list.
@@ -179,12 +183,25 @@ It is useful when it is required to view this kind of transactions for chosen ti
           name: cmd
           required: true
           schema:
-            $ref: '#/definitions/initiate-currency-exchange-command-v2'
+            $ref: '#/definitions/initiate-transaction-command'
       responses:
         '200':
           description: OK
           schema:
             $ref: '#/definitions/command-result'
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+              - [source-account-check-failed]()
+              - [destination-account-check-failed]()
+              - [amount-limit-exceeded]()
+              - [negative-amount]()
+              - [account-type-not-appropriate]()
+              - [insufficient-balance]()
+              - [frequency-limit-exceeded]()
+              - [source-amount-limit-exceeded]()
+              - [temporary-unavailable]()
+              - [night-exchange-closed]()
         default:
           $ref: '#/responses/default-error-response'
       summary: 'Initiate new currency exchange transaction. '
@@ -193,8 +210,9 @@ It is useful when it is required to view this kind of transactions for chosen ti
       x-asee-tags: []
   '/transactions/{transaction-id}':
     get:
-      description: "Shows all available details for customer about one chosen transaction.
-It is useful when more details is required to be seen."
+      description: |
+        Shows all available details for customer about one chosen transaction.
+        It is useful when more details is required to be seen.
       operationId: Transactions_Get
       parameters:
         - $ref: '#/parameters/transaction-id-param'
@@ -204,7 +222,7 @@ It is useful when more details is required to be seen."
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/currency-exchange-transaction-v2'
+            $ref: '#/definitions/transaction'
         default:
           $ref: '#/responses/default-error-response'
       summary: Get currency exchange transaction details.
@@ -214,8 +232,9 @@ It is useful when more details is required to be seen."
         - Shapeable
   /transactions/validate:
     post:
-      description: "Check all necesery validations and buisenss policy rules, before execute transaction. If some rule
-is violated, transaction is canceled with info about occured problem."
+      description: |
+        Check all necesery validations and buisenss policy rules, before execute transaction. If some rule
+        is violated, transaction is canceled with info about occured problem.
       operationId: Transactions_Validate
       parameters:
         - description: Validate currency exchange transaction command.
@@ -223,48 +242,46 @@ is violated, transaction is canceled with info about occured problem."
           name: cmd
           required: true
           schema:
-            $ref: '#/definitions/validate-currency-exchange-command-v2'
+            $ref: '#/definitions/validate-transaction-command'
       responses:
         '204':
-          description: No Content
+          description: No content
         '440':
-          description: "Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
- [source-account-check-failed] ()
- [destination-account-check-failed] ()
- [amount-limit-exceeded] ()
- [negative-amount] ()
- [account-deposit-type-not-appropriate] ()
- [unsuficient-balance] ()
- [local-currency-missing] ()
- [currency-mismatch] ()
- [same-currencies] ()
- [frequency-limit-exceeded] ()
- [source-amount-limit-exceeded] ()
- [temporary-unavailable] ()
- [night-exchanges-closed] ()"
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+              - [source-account-check-failed]()
+              - [destination-account-check-failed]()
+              - [amount-limit-exceeded]()
+              - [negative-amount]()
+              - [account-type-not-appropriate]()
+              - [insufficient-balance]()
+              - [frequency-limit-exceeded]()
+              - [source-amount-limit-exceeded]()
+              - [temporary-unavailable]()
+              - [night-exchange-closed]()
           schema:
             $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
-      summary: 'Validate currency exchange transaction. '
+      summary: Validate currency exchange transaction.
       tags:
         - Transactions
       x-asee-tags: []
 parameters:
   schema-id-param:
-    description: Schema id
+    description: Unique schema identifier
     in: path
     name: schema-id
     required: true
     type: string
   date-for-param:
-    description: Date for
+    description: Date for which data is queried.
     in: path
     name: date-for
     required: true
     type: string
   currency-codes-param:
-    description: Currency codes.
+    description: Currency codes that determine currencies.
     in: query
     name: currency-codes
     required: false
@@ -273,18 +290,19 @@ parameters:
       - EUR
       - USD
       - RSD...
+    x-asee-compliance: This should probably be classification and not enum.
     items:
       type: string
     type: array
   best-rate-param:
-    description: Best rate.
+    description: Best rate for exchange.
     in: query
     name: best-rate
     required: false
     format: int32
     type: integer
   customer-id-param:
-    description: Customer id.
+    description: Unique customer identifier.
     in: query
     name: customer-id
     required: false
@@ -337,28 +355,29 @@ parameters:
       type: string
     type: array
   sampling-param:
-    description: Sampling.
+    description: Sampling. TO DO Description.
     in: query
     name: sampling
     required: false
     format: int32
     type: integer
   date-from-param:
-    description: Date from.
+    description: Date from which some data are queried.
     in: query
     name: date-from
     required: true
     format: date-time
     type: string
   date-to-param:
-    description: Date to.
+    description: Date to which some data are queried.
     in: query
     name: date-to
     required: true
     format: date-time
     type: string
   list-param:
-    description: List.
+    x-asee-compliance: What kind of list is this? This parameter does not have good name. It mixes that transaction-type and transaction-status, value of none is strange.
+    description: Parameter for list that will be displayed.
     in: query
     name: list
     required: false
@@ -371,35 +390,35 @@ parameters:
       type: string
     type: array
   amount-from-param:
-    description: Amount from.
+    description: Lower limit for amounts that will be included in the result.
     in: query
     name: amount-from
     required: false
     format: double
     type: number
   amount-to-param:
-    description: Amount to.
+    description: Top limit for amounts that will be included in the result.
     in: query
     name: amount-to
     required: false
     format: double
     type: number
   value-date-from-param:
-    description: Value date from.
+    description: Date from which dates will be included in the result.
     in: query
     name: value-date-from
     required: false
     format: date-time
     type: string
   value-date-to-param:
-    description: Value date to.
+    description: Date to which dates will be included in the result.
     in: query
     name: value-date-to
     required: false
     format: date-time
     type: string
   purchased-currencies-param:
-    description: Purchased currencies.
+    description: Currencies that have been purchased.
     in: query
     name: purchased-currencies
     required: false
@@ -408,7 +427,7 @@ parameters:
       type: string
     type: array
   source-currencies-param:
-    description: Source currencies.
+    description: Currencies from which exchanges have been done.
     in: query
     name: source-currencies
     required: false
@@ -417,7 +436,7 @@ parameters:
       type: string
     type: array
   source-account-number-param:
-    description: Source account number.
+    description: Source account unique identifier.
     in: query
     name: source-account-number
     required: false
@@ -429,7 +448,7 @@ parameters:
     required: false
     type: string
   transaction-id-param:
-    description: Transaction id
+    description: Transaction unique identifier.
     in: path
     name: transaction-id
     required: true
@@ -438,33 +457,34 @@ definitions:
   classification-value:
     description: Classification values
     example:
-      code: sample
-      literal: sample
-      description: sample
-      id: sample
-      parent-id: sample
-      ordinal: sample
+      x-asee-compliance: This is strange example of classification, it is more like error codes list. Would be better to give example of list of currencies.
+      code: '01'
+      literal: currency-not-found
+      description: Currency not found in list of included currencies.
+      id: 
+      parent-id: 
+      ordinal: 
     properties:
       code:
-        description: Gets or sets the code.
+        description: Code of classification value.
         type: string
       literal:
-        description: Gets or sets the literal.
+        description: Short name for classification value.
         type: string
       description:
-        description: Gets or sets the description.
+        description: Description of classification value.
         type: string
       id:
-        description: Gets or sets the id.
+        description: Unique identifier of classification value.
         type: string
       parent-id:
-        description: Gets or sets the parent id.
+        description: Unique identifier of parent classification value.
         type: string
       ordinal:
-        description: Gets or sets the ordinal.
+        description: Ordinal of classification value.
         type: string
     type: object
-  currency-exchange-rates-v2:
+  rates:
     example:
       date-created: '2015-11-09T00:00:00'
       list-type: ''
@@ -473,69 +493,114 @@ definitions:
       page-size: 10
       page-number: 1
       total-pages: 0
-    $ref: '#/definitions/currency-exchange-rates-v2'
-  currency-exchange-rate-v2:
-    description: "Currency exchange rate contains details about one foreign and local currency rates. This includes info such as
-            buy, sell and middle rate."
+    properties:
+      date-created:
+        description: Date created.
+        format: date-time
+        type: string
+      list-type:
+        description: The type of exchange rate list.
+        type: string
+        x-asee-compliance: This should be related to classification.
+      rate-number:
+        description: Order number of exchange rate list for the day.
+        format: int32
+        type: integer
+      total-count:
+        description: Total count.
+        format: int32
+        type: integer
+      page-size:
+        description: Page size.
+        format: int32
+        type: integer
+      page-number:
+        description: Page number.
+        format: int32
+        type: integer
+      total-pages:
+        description: Total pages.
+        format: int32
+        type: integer
+      rates:
+        description: List of currency exchange rates.
+        items:
+          $ref: '#/definitions/rate'
+        type: array
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  rate:
+    description: |
+      Currency exchange rate contains details about one foreign and local currency rates. This includes info such as
+      buy, sell and middle rate.
     example:
       buy: 0
-      buy-cache: 0
-      country-code: sample
-      country-name: sample
-      currency-code: sample
+      buy-cash: 0
+      country-code: SRB
+      country-name: Serbia
+      currency-code: EUR
       for-local: 0
-      max-sell-cache: 0
+      max-sell-cash: 0
       middle: 0
       rate: 0
       sell: 0
-      sell-cache: 0
+      sell-cash: 0
     properties:
       buy:
         description: Buy amount
         format: double
         type: number
-      buy-cache:
-        description: Buy amount for cache
+      buy-cash:
+        description: Buy amount for cash
         format: double
         type: number
       country-code:
-        description: Country code
+        description: Country code.
         type: string
       country-name:
-        description: Country name
+        description: Country name.
         type: string
       currency-code:
-        description: Currency code
+        description: Currency code.
         type: string
       for-local:
-        description: Amount for local
+        description: Amount for local.
         format: int32
         type: integer
-      max-sell-cache:
-        description: Maximum sell cache amount
+      max-sell-cash:
+        description: Maximum sell cash amount.
         format: double
         type: number
       middle:
-        description: Middle amount
+        description: Middle amount.
         format: double
         type: number
       rate:
-        description: Rate
+        description: Rate for currencies exchange.
         format: double
         type: number
       sell:
-        description: Sell amount
+        description: Sell amount.
         format: double
         type: number
-      sell-cache:
-        description: Sell cache amount
+      sell-cash:
+        description: Sell cash amount.
         format: double
         type: number
     type: object
   link:
-    example:
-      href: sample
-      rel: sample
     properties:
       href:
         description: Gets or sets the href.
@@ -544,55 +609,95 @@ definitions:
         description: Gets or sets the rel.
         type: string
     type: object
-  currency-exchange-rates-history-v2:
+  rates-history:
+    description: Currency exchange rates history shows list of currency exchange rates for chosen period of time.
     example:
       total-count: 886
       page-size: 10
       page-number: 0
       total-pages: 0
-    $ref: '#/definitions/currency-exchange-rates-history-v2'
-  currency-exchange-offer-query-params-v2:
-    description: Currency exchange query parameters for which an offer will be calculated and displayed.
+    properties:
+      list-type:
+        description: The type of exchange rate list.
+        type: string
+        x-asee-compliance: This should be related to classification.
+      total-count:
+        description: Total count.
+        format: int32
+        type: integer
+      page-size:
+        description: Page size.
+        format: int32
+        type: integer
+      page-number:
+        description: Page number.
+        format: int32
+        type: integer
+      total-pages:
+        description: Total pages.
+        format: int32
+        type: integer
+      rates:
+        description: List of currency exchange rates.
+        items:
+          $ref: '#/definitions/rates'
+        type: array
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  create-offer-command:
+    description: Currency exchange parameters for which an offer will be calculated and displayed.
     example:
-      source-account-number: sample
-      source-account-currency: sample
-      destination-account-number: sample
-      destination-account-currency: sample
+      source-account-number: 115-0000000050378-56
+      destination-account-number: 115-1000100019578-10
       currency:
-        code: ''
-        amount: 0
+        code: EUR
+        amount: 100
+        direction: purchase
     properties:
       source-account-number:
         description: Source account number.
         type: string
-      source-account-currency:
-        description: Source account currency.
-        type: string
       destination-account-number:
         description: Destination account number.
-        type: string
-      destination-account-currency:
-        description: Destination account currency.
         type: string
       currency:
         description: Currency amount.
         $ref: '#/definitions/currency'
+      direction:
+        description: Direction.
+        enum:
+          - purchase
+          - sell
+        type: string
     type: object
   currency:
-    description: Currency amount and code
+    description: Currency amount and code.
     example:
-      code: sample
-      amount: 0
+      code: EUR
+      amount: 200
     properties:
       code:
-        description: Gets or sets the code.
+        description: Code of currency.
         type: string
       amount:
-        description: Gets or sets the amount.
+        description: Amount.
         format: double
         type: number
     type: object
-  currency-exchange-offer-v2:
+  offer:
+    description: Currency exchange offer shows details about particular transaction which is about to be realised.
     example:
       charge-amount:
         code: RSD
@@ -604,12 +709,45 @@ definitions:
       rate-for-rest: 0
       offer-id-for-rest: 0
       remaining-limit: 0
-    $ref: '#/definitions/currency-exchange-offer-v2'
+    properties:
+      charge-amount:
+        description: Charge amount
+        $ref: '#/definitions/currency'
+      rate:
+        description: Exchange rate
+        format: double
+        type: number
+      free-transactions:
+        description: Number of free transactions
+        format: int32
+        type: integer
+      local-amount:
+        description: Exchange local amount
+        format: double
+        type: number
+      offer-id:
+        description: Offer identifier
+        format: int32
+        type: integer
+      rate-for-rest:
+        description: Rate for the rest
+        format: double
+        type: number
+      offer-id-for-rest:
+        description: Offer identifier for the rest
+        format: int32
+        type: integer
+      remaining-limit:
+        description: Remaining limit amount
+        format: double
+        type: number
+    type: object
   business-problem:
+    x-asee-compliance: Missing description for object and properties.
     example:
-      type: sample
-      title: sample
-      details: sample
+      type: Business problem.
+      title: Night exchange is closed.
+      details: The transactions of exchange for this night are closed. 
     properties:
       type:
         type: string
@@ -618,29 +756,58 @@ definitions:
       details:
         type: string
     type: object
-  transactions-v2:
+  transaction-list:
+    description: Transaction list
     example:
       total-count: 20
       page-size: 10
       page-number: 1
       total-pages: 3
       navigations:
-        - href: 'http://es-citakovicm01/Experience.MultichannelApi/currency-exchange/none-transactions?offset=0&limit=10&date-from=11%2F09%2F2014%2000%3A00%3A00&date-to=11%2F09%2F2015%2000%3A00%3A00&source-account-number=115000000005037565'
-          rel: first
-        - href: 'http://es-citakovicm01/Experience.MultichannelApi/currency-exchange/none-transactions?offset=0&limit=10&date-from=11%2F09%2F2014%2000%3A00%3A00&date-to=11%2F09%2F2015%2000%3A00%3A00&source-account-number=115000000005037565'
-          rel: previuos
-        - href: 'http://es-citakovicm01/Experience.MultichannelApi/currency-exchange/none-transactions?offset=10&limit=20&date-from=11%2F09%2F2014%2000%3A00%3A00&date-to=11%2F09%2F2015%2000%3A00%3A00&source-account-number=115000000005037565'
-          rel: self
-    $ref: '#/definitions/transactions-v2'
-  currency-exchange-transaction-v2:
+    properties:
+      total-count:
+        description: Total count.
+        format: int32
+        type: integer
+      page-size:
+        description: Page size.
+        format: int32
+        type: integer
+      page-number:
+        description: Page number.
+        format: int32
+        type: integer
+      total-pages:
+        description: Total pages.
+        format: int32
+        type: integer
+      transactions:
+        description: Transaction list.
+        items:
+          $ref: '#/definitions/transaction'
+        type: array
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  transaction:
+    description: Currency exchange transaction details taht serves user to see all details about particular transaction.
     example:
-      source-account:
-        currency-code: RSD
-      destination-account:
-        currency-code: EUR
+      source-account: 115-0000000050378-56
+      destination-account: 115-1000100019578-10
       currency:
-        code: RSD
-        amount: 1157.51
+        code: EUR
+        amount: 100
       client-id: '1402679'
       status:
         code: executed
@@ -650,47 +817,83 @@ definitions:
       posted-date: '2015-11-09T10:51:05'
       executed-date: '2015-11-09T10:51:05'
       transaction-id: '99900155236001'
-      debit: true
+      direction: purchase
       has-picture: false
       category: ''
       geolocation:
         lat: ''
         lon: ''
         mapped-address: ''
-      uri: 'http://es-citakovicm01/Experience.MultichannelApi/currency-exchange/transactions/99900155236001'
-    $ref: '#/definitions/currency-exchange-transaction-v2'
-  account-v2:
-    description: "Account contains info about it's currency and unique identifier of the account."
-    example:
-      currency-code: sample
-      account-id: sample
     properties:
-      currency-code:
-        description: Gets or sets the currency code.
+      source-account:
+        description: Source account.
         type: string
-      account-id:
-        description: Gets or sets the account number.
+      destination-account:
+        description: Destination account.
         type: string
+      currency:
+        description: Currency amount.
+        $ref: '#/definitions/currency'
+      client-id:
+        description: Client identifier.
+        type: string
+      status:
+        description: Transaction status.
+        $ref: '#/definitions/status'
+      value-date:
+        description: Value date.
+        format: date-time
+        type: string
+      posted-date:
+        description: Posted date.
+        format: date-time
+        type: string
+      executed-date:
+        description: Executed date.
+        format: date-time
+        type: string
+      transaction-id:
+        description: Transaction identifier.
+        type: string
+      direction:
+        description: Direction.
+        enum:
+          - purchase
+          - sell
+        type: string
+      picture:
+        description: Transaction picture.
+        type: string
+      has-picture:
+        description: Indicator for transaction picture
+        type: boolean
+      category:
+        description: Category
+        type: string
+      geolocation:
+        description: Geolocation.
+        $ref: '#/definitions/geolocation'
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    required:
+      - value-date
     type: object
-  currency-v2:
-    description: 'Currency amount - Amount, Code'
+  status:
+    description: Currency exchange status, description and date.
     example:
-      code: sample
-      amount: 0
-    properties:
-      code:
-        description: Currency code (ISO 4217).
-        type: string
-      amount:
-        description: Amount.
-        format: double
-        type: number
-    type: object
-  currency-exchange-status-v2:
-    description: 'Currency exchange status Code, Description and Date'
-    example:
-      code: sample
-      description: sample
+      code: 123
+      description: Status of the currency exchange.
       effective-date: '0001-01-01T00:00:00'
     properties:
       code:
@@ -704,12 +907,12 @@ definitions:
         format: date-time
         type: string
     type: object
-  geolocation-v2:
+  geolocation:
     description: 'Geolocation details - Latitude, Longitude, Mapped address'
     example:
-      lat: sample
-      lon: sample
-      mapped-address: sample
+      lat: 44° 48' N
+      lon: 20° 27' E 
+      mapped-address: 'Main Boulevard 110, Belgrade, Serbia.'
     properties:
       lat:
         description: Geolocation latitude
@@ -721,14 +924,14 @@ definitions:
         description: Mapped address from GPS coordinates
         type: string
     type: object
-  initiate-currency-exchange-command-v2:
-    description: Command for initiating currency-exchange transfer
+  initiate-transaction-command:
+    description: Command for initiating currency-exchange transaction
     example:
-      source-account-number: sample
-      destination-account-number: sample
+      source-account-number: 115-1000100019578-10
+      destination-account-number: 115-0000000050378-56
       currency:
-        code: ''
-        amount: 0
+        code: 'EUR'
+        amount: 100
       value-date: '0001-01-01T00:00:00'
       contact-person:
         first-name: ''
@@ -736,14 +939,14 @@ definitions:
         email: ''
         fax-number: ''
         phone-number: ''
-      direction: sample
-      category: sample
+      direction: sell
+      category: Additional expenses.
       geolocation:
         lat: ''
         lon: ''
         mapped-address: ''
       offer-id: 0
-      transaction-id: sample
+      transaction-id: '99900234567001'
     properties:
       source-account-number:
         description: Source account number.
@@ -760,7 +963,7 @@ definitions:
         type: string
       contact-person:
         description: Contact person details.
-        $ref: '#/definitions/contact-person-v2'
+        $ref: '#/definitions/contact-person'
       direction:
         description: Direction.
         enum:
@@ -775,7 +978,7 @@ definitions:
         type: string
       geolocation:
         description: Geolocation details
-        $ref: '#/definitions/geolocation-v2'
+        $ref: '#/definitions/geolocation'
       offer-id:
         description: Offer identifier.
         format: int32
@@ -784,54 +987,62 @@ definitions:
         description: Transaction identifier.
         type: string
     type: object
-  contact-person-v2:
+  contact-person:
     description: Contact person details.
     example:
-      first-name: sample
-      last-name: sample
-      email: sample
-      fax-number: sample
-      phone-number: sample
+      first-name: Nickolas
+      last-name: Navaras
+      email: n.navaras@gmail.com
+      fax-number: +381/11 123-1234
+      phone-number: +381/11 123-1234
     properties:
       first-name:
-        description: Gets or sets the first name.
+        description: First name.
         type: string
       last-name:
-        description: Gets or sets the last name.
+        description: Last name.
         type: string
       email:
-        description: Gets or sets the email.
+        description: Email.
         type: string
       fax-number:
-        description: Gets or sets the fax.
+        description: Fax.
         type: string
       phone-number:
-        description: Gets or sets the phone number.
+        description: Phone number.
         type: string
     type: object
   command-result:
+    x-asee-compliance: Missing object description. Correct properties description.
     example:
       id: '99900155242001'
-      created-record-status: executed
-    $ref: '#/definitions/command-result'
-  validate-currency-exchange-command-v2:
-    description: Command for validating currency-exchange transfer
+      created-record-status: 'executed'
+    properties:
+      id:
+        description: 'Gets or sets the id of created, updated or deleted entity.'
+        type: string
+      created-record-status:
+        description: 'Gets or sets the created, updated, deleted record status.'
+        type: string
+    type: object
+  validate-transaction-command:
+    description: Command for validating currency-exchange transaction
     example:
-      source-account-number: sample
-      destination-account-number: sample
+      source-account-number: 115-1000100019578-10
+      destination-account-number: 115-0000000050378-56
       currency:
-        code: ''
-        amount: 0
+        code: 'EUR'
+        amount: 100
       contact-person:
         first-name: ''
         last-name: ''
         email: ''
         fax-number: ''
         phone-number: ''
-      direction: sample
-      category: sample
+      direction: purchase
+      category: House equipment.
       offer-id: 0
-      transaction-id: sample
+      transaction-id: '99923456786001'
     properties:
       source-account-number:
         description: Source account number.
@@ -844,7 +1055,7 @@ definitions:
         $ref: '#/definitions/currency'
       contact-person:
         description: Contact person.
-        $ref: '#/definitions/contact-person-v2'
+        $ref: '#/definitions/contact-person'
       direction:
         description: 'Direction (purchase, sell).'
         enum:
@@ -869,9 +1080,6 @@ definitions:
       - direction
       - category
       - transaction-id
-    type: object
-  Void:
-    properties: {}
     type: object
 responses:
   default-error-response:
