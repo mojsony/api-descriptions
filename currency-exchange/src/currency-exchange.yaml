@@ -1,19 +1,15 @@
 swagger: '2.0'
-host: api.asee.com
+host: api.asee.co
 basePath: /currency-exchange
 info:
   description: |
     Currency Exchange API gives you possibility to execute, track, query orders for exchange or conversion of foreign currency.
     With Currency Exchange API you can:
-      - Create currency exchange transaction
-      - Update currency exchange transaction
-      - Delete currency exchange transaction
-      - Execute currency exchange transaction
-      - Cancel currency exchange
-      - List currency exchange transactions
-      - Search for transactions
-      - Get specific transactions
-      - Get specific transaction history
+      - Get rates on the day.
+      - Get rates history for chosen time interval.
+      - List transactions that occured and filter them by some criteria.
+      - Get details about particular transactions.
+      - Realize exchange transaction.
   title: Currency Exchange API
   version: beta
 tags:
@@ -30,11 +26,12 @@ consumes:
 produces:
   - application/json
 paths:
-  '/classifications/{schema-id}':
+  '/classifications/{classification-id}':
     get:
+      x-asee-compliance: I have dilemma now should we use schema-id or classification-id...
       operationId: Classifications_Get
       parameters:
-        - $ref: '#/parameters/schema-id-param'
+        - $ref: '#/parameters/classification-id-param'
       responses:
         '200':
           description: OK
@@ -50,7 +47,7 @@ paths:
       x-asee-tags: []
   '/rates/{date-for}':
     get:
-      description: It is useful if data about rates on specific day are needed.
+      description: It is useful if data about rates on specific day are required.
       operationId: Rates_Get
       parameters:
         - $ref: '#/parameters/date-for-param'
@@ -143,7 +140,7 @@ paths:
         It is useful when it is required to view this kind of transactions for chosen time interval.
       operationId: Transactions_GetList
       parameters:
-        - $ref: '#/parameters/list-param'
+        - $ref: '#/parameters/status-param'
         - $ref: '#/parameters/date-from-param'
         - $ref: '#/parameters/date-to-param'
         - $ref: '#/parameters/amount-from-param'
@@ -268,10 +265,10 @@ paths:
         - Transactions
       x-asee-tags: []
 parameters:
-  schema-id-param:
-    description: Unique schema identifier
+  classification-id-param:
+    description: Unique classification identifier
     in: path
-    name: schema-id
+    name: classification-id
     required: true
     type: string
   date-for-param:
@@ -281,16 +278,13 @@ parameters:
     required: true
     type: string
   currency-codes-param:
-    description: Currency codes that determine currencies.
+    description: |
+      Currency codes that determine currencies. Currency codes are part of items in list of available currencies. 
+      For a complete list of possible values see [Currencies]() classification.
     in: query
     name: currency-codes
     required: false
     collectionFormat: csv
-    enum:
-      - EUR
-      - USD
-      - RSD...
-    x-asee-compliance: This should probably be classification and not enum.
     items:
       type: string
     type: array
@@ -375,17 +369,17 @@ parameters:
     required: true
     format: date-time
     type: string
-  list-param:
-    x-asee-compliance: What kind of list is this? This parameter does not have good name. It mixes that transaction-type and transaction-status, value of none is strange.
-    description: Parameter for list that will be displayed.
+  status-param:
+    description: Parameter that provides filter based on transaction status.
     in: query
-    name: list
+    name: status
     required: false
     collectionFormat: csv
     enum:
-      - none
-      - archive
-      - draft
+      - all-transactions
+      - executed-transactions
+      - archived-transactions
+      - draft-transactions
     items:
       type: string
     type: array
@@ -455,15 +449,15 @@ parameters:
     type: string
 definitions:
   classification-value:
-    description: Classification values
+    description: Single item of classification.
+    x-asee-compliance: This is a single item of classification, I am not sure if this example is the best.
     example:
-      x-asee-compliance: This is strange example of classification, it is more like error codes list. Would be better to give example of list of currencies.
-      code: '01'
-      literal: currency-not-found
-      description: Currency not found in list of included currencies.
-      id: 
-      parent-id: 
-      ordinal: 
+      code: sample
+      literal: currency-list
+      description: List of available currencies
+      id: sample
+      parent-id: sample
+      ordinal: sample
     properties:
       code:
         description: Code of classification value.
@@ -483,8 +477,9 @@ definitions:
       ordinal:
         description: Ordinal of classification value.
         type: string
-    type: object
+    type: object   
   rates:
+    description: Exchange rates for particular day.
     example:
       date-created: '2015-11-09T00:00:00'
       list-type: ''
@@ -499,9 +494,10 @@ definitions:
         format: date-time
         type: string
       list-type:
-        description: The type of exchange rate list.
+        description: |
+          The type of exchange rate list. 
+          Classification explaining what type of list will be displayed. For a complete list of possible values see [exchange-rates-types]() classification.
         type: string
-        x-asee-compliance: This should be related to classification.
       rate-number:
         description: Order number of exchange rate list for the day.
         format: int32
@@ -618,9 +614,10 @@ definitions:
       total-pages: 0
     properties:
       list-type:
-        description: The type of exchange rate list.
+        description: |
+          The type of exchange rate list. 
+          Classification explaining what type of list will be displayed. For a complete list of possible values see [exchange-rates-types]() classification.
         type: string
-        x-asee-compliance: This should be related to classification.
       total-count:
         description: Total count.
         format: int32
@@ -743,17 +740,20 @@ definitions:
         type: number
     type: object
   business-problem:
-    x-asee-compliance: Missing description for object and properties.
+    description: When request is well formed but some business policy doesn't allow it to be executed, busieness-problem describes taht situation.
     example:
       type: Business problem.
       title: Night exchange is closed.
       details: The transactions of exchange for this night are closed. 
     properties:
       type:
+        description: Type of error that is clasified as business policy violation problem.
         type: string
       title:
+        description: Short description.
         type: string
       details:
+        description: Detailed description of particular problem.
         type: string
     type: object
   transaction-list:
@@ -764,6 +764,12 @@ definitions:
       page-number: 1
       total-pages: 3
       navigations:
+        - href: 
+          rel: first
+        - href: 
+          rel: previuos
+        - href: 
+          rel: self
     properties:
       total-count:
         description: Total count.
@@ -1013,16 +1019,16 @@ definitions:
         type: string
     type: object
   command-result:
-    x-asee-compliance: Missing object description. Correct properties description.
+    description: Object that is regulary returned when POST request is sent. Consists of unique identidier and status of called transaction.
     example:
       id: '99900155242001'
       created-record-status: 'executed'
     properties:
       id:
-        description: 'Gets or sets the id of created, updated or deleted entity.'
+        description: Unique identifier for each particular called transaction.
         type: string
       created-record-status:
-        description: 'Gets or sets the created, updated, deleted record status.'
+        description: Short literal that denotes status of called transaction.
         type: string
     type: object
   validate-transaction-command:
