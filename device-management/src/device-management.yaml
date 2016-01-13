@@ -1,0 +1,578 @@
+swagger: '2.0'
+host: api.asee.co
+info:
+  description: |
+    Device management API is used to manage customer devices. This API provides funcionalities for managing device.
+    With device management API you can: 
+      - Register new device for a specified customer
+      - Update some of device nickname
+      - List all devices
+      - Get specific device
+      - Block device
+      - Unblock device
+      - Unregister device
+      - Register device for push notifications
+      - Regenerate push notification registration if expired
+      - List all device models
+  title: Device Management API
+  version: beta
+schemes:
+- http
+consumes:
+- application/json
+produces:
+- application/json
+tags:
+- name: Devices
+  description: Working with devices
+- name: Device models
+  description: Working with device models
+  x-asee-compliance: Model operations are deprecated and should be removed.
+paths:
+  '/devices':
+    get:
+      summary: Lists devices. When used without optional parameters all customer devices will be listed.
+      deprecated: false
+      operationId: Devices_GetList
+      parameters:
+      - description: Only devices in provided statuses will be listed. If not provided devices in all statuses will be listed.
+        in: "query"
+        name: "status"
+        required: false
+        type: "array"
+        items:
+          type: "string"
+      - $ref: "#/parameters/page-param"
+      - $ref: "#/parameters/page-size-param"
+      - $ref: "#/parameters/sort-by-param"
+      - $ref: "#/parameters/sort-order-param"
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/device-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+      - Devices
+    post:
+      summary: Operation registers new device.
+      deprecated: false
+      operationId: Devices_Register
+      parameters:
+      - description: Parameters providing details of new device.
+        in: body
+        name: cmd
+        required: true
+        schema:
+          $ref: '#/definitions/register-device-command'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+            - [nickname-not-unique]()
+            - [imei-not-unique]()
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+      - Devices
+  '/devices/{imei}':
+    get:
+      summary: Get information about specific device.
+      deprecated: false
+      operationId: Devices_Get
+      parameters:
+      - $ref: "#/parameters/imei-param"
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/device'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+      - Devices
+  '/devices/{imei}/nickname':
+    put:
+      summary: Updates device nickname.
+      deprecated: false
+      operationId: Devices_UpdateNickname
+      parameters:
+      - $ref: "#/parameters/imei-param"
+      - description: Parameters providing data nedded for updating device.
+        in: body
+        name: cmd
+        required: true
+        schema:
+          $ref: '#/definitions/update-device-nickname-command'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+            - [nickname-not-unique]()
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+      - Devices
+  '/devices/{imei}/push-notifications':
+    post:
+      summary: Operation for enabling device to recieve push notifications. Beside device IMEI and status it returns push registration Id.
+      deprecated: false
+      operationId: Devices_RegisterPushNotifications
+      parameters:
+      - $ref: "#/parameters/imei-param"
+      - description: Parameters providing data nedded for push notification registration
+        x-asee-compliance: This parameter should be removed, since there is no information in this command that cannot be retrieved from existing device information which can be retrieved by provided imei parameter.
+        in: body
+        name: cmd
+        required: true
+        schema:
+          $ref: '#/definitions/register-push-notifications-command'
+      responses:
+        '200':
+          description: Returns device IMEI, device status and Registration Id.
+          schema:
+            $ref: '#/definitions/command-result'
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+            - [not-valid-device-status]()
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+      - Devices
+	  
+  '/devices/{imei}/regenerate-push-notifications-registration':
+    post:
+      x-asee-compliance: This method should be removed. This operation should be performed by previous method, i.e. the same method that registers device for push notifications, should re-register if expired.
+      summary: Operation regenerates expired push notification registration. More precisely, it generate new registration Id. Beside device imei and status it returns registration Id.
+      deprecated: false
+      operationId: Devices_RegeneratePushNotificationsRegistration
+      parameters:
+      - $ref: "#/parameters/imei-param"
+      responses:
+        '200':
+          description: Returns Registration Id of push notification registration.
+          schema:
+            $ref: '#/definitions/push-notifications-registration-command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+      - Devices
+
+  '/devices/{imei}/block':
+    post:
+      summary: Updates device status to blocked. It returns device IMEI and status.
+      deprecated: false
+      operationId: Devices_Block
+      parameters:
+      - $ref: "#/parameters/imei-param"
+      responses:
+        '200':
+          description: OK.
+          schema:
+            $ref: '#/definitions/command-result'
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+            - [not-valid-device-status]()
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+      - Devices
+  '/devices/{imei}/unblock':
+    post:
+      summary: Updates device status to unblocked. It returns device IMEI and status.
+      deprecated: false
+      operationId: Devices_Unblock
+      parameters:
+      - $ref: "#/parameters/imei-param"
+      responses:
+        '200':
+          description: OK.
+          schema:
+            $ref: '#/definitions/command-result'
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+            - [not-valid-device-status]()
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+      - Devices
+  '/devices/{imei}/unregister':
+    post:
+      summary: Updates device status to unregistred. It returns device IMEI and status.
+      deprecated: false
+      operationId: Devices_Unregister
+      parameters:
+      - $ref: "#/parameters/imei-param"
+      responses:
+        '200':
+          description: OK.
+          schema:
+            $ref: '#/definitions/command-result'
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+            - [not-valid-device-status]()
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+      - Devices
+	  
+  '/device-models':
+    get:
+      x-asee-compliance: This method is deprecated and should be removed! It was necessary in era when there was a wide range of proprietary java and simbian phones, and when administration of supported phone types and their characteristics had to be provided in the system.
+      summary: Lists available device models.
+      deprecated: false
+      operationId: DeviceModels_GetList
+      parameters:
+      - $ref: "#/parameters/page-param"
+      - $ref: "#/parameters/page-size-param"
+      - $ref: "#/parameters/sort-by-param"
+      - $ref: "#/parameters/sort-order-param"
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/device-model-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+      - Device models
+  '/devices-models/{model-code}':
+    get:
+      x-asee-compliance: This method is deprecated and should be removed! It was necessary in era when there was a wide range of proprietary java and simbian phones, and when administration of supported phone types and their characteristics had to be provided in the system.
+      summary: Get information about specific device model
+      deprecated: false
+      operationId: DeviceModels_Get
+      parameters:
+      - description: Code that uniquely identifies device model.
+        in: path
+        name: model-code
+        required: true
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/device-model'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+      - Device models
+definitions:
+  device-model:
+    x-asee-compliance: This object is deprecated and should be removed! It was necessary in era when there was a wide range of proprietary java and simbian phones, and when administration of supported phone types and their characteristics had to be provided in the system.
+    description: Contains details on the device model.
+    properties:
+      model-code:
+        description: Code that uniquely identifies device model.
+        type: string
+      name:
+        description: Device model name.
+        type: string
+      description:
+        description: Contains detailed description for device model.
+        type: string
+      brand-name:
+        description: Field representing the name of the device manufacturer.
+        type: string
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  device-model-list:
+    x-asee-compliance: This object is deprecated and should be removed! It was necessary in era when there was a wide range of proprietary java and simbian phones, and when administration of supported phone types and their characteristics had to be provided in the system.
+    description: Paged list of device models.
+    properties:
+      total-count:
+        description: Total count.
+        format: int32
+        type: integer
+      page-size:
+        description: Page size.
+        format: int32
+        type: integer
+      page-number:
+        description: Page number.
+        format: int32
+        type: integer
+      total-pages:
+        description: Total pages.
+        format: int32
+        type: integer
+      items:
+        description: List of device models.
+        items:
+          $ref: '#/definitions/device-model'
+        type: array
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  device:
+    description: Contains details of device.
+    properties:
+      imei:
+        description: Device IMEI (The International Mobile Station Equipment Identity), that uniquely identifies the device.
+        type: string
+      customer-id:
+        description: Device owner unique identifier.
+        type: string
+      status:
+        description: Identifies a status from Customer perspective.
+        enum:
+        - "active"
+        - "blocked"
+        - "unregistered"
+        type: string
+      nickname:
+        description: Nickname given by device owner.
+        type: string
+      operating-system:
+        description: Device running operating system.
+        type: string
+      brand-name:
+        description: Device manufacturer.
+        type: string
+      model-name:
+        description: Device model name.
+        type: string
+      installation-Id:
+        description: Unique installation identifier.
+        type: string
+      push-id:
+        description: Push notifications Registration Id.
+        type: string
+      push-expiration-date:
+        description: If device is already registered for push notifications, this property contains expiration date.
+        format: "date-time"
+        type: "string"
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  device-list:
+    description: Paged list of devices.
+    properties:
+      total-count:
+        description: Total count.
+        format: int32
+        type: integer
+      page-size:
+        description: Page size.
+        format: int32
+        type: integer
+      page-number:
+        description: Page number.
+        format: int32
+        type: integer
+      total-pages:
+        description: Total pages.
+        format: int32
+        type: integer
+      items:
+        description: List of device models.
+        items:
+          $ref: '#/definitions/device'
+        type: array
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  register-device-command:
+    description: Registers new device for a user.
+    properties:
+      imei:
+        description: Device IMEI (The International Mobile Station Equipment Identity).
+        type: string
+      operating-system:
+        description: Device running operating system.
+        type: string
+      nickname:
+        description: Nick name given by device owner.
+        type: string
+      brand-name:
+        description: Device manufacturer.
+        type: string
+      model-name:
+        description: Device model name.
+        type: string
+    type: object
+  update-device-nickname-command:
+    description: Updates device nick name.
+    properties:
+      imei:
+        x-asee-compliance: This property is not needed, it is already provided in operation path.
+        description: Device IMEI (The International Mobile Station Equipment Identity).
+        type: string
+      nick-name:
+        description: New nickname for current device.
+        type: string
+    type: object
+  register-push-notifications-command:
+    x-asee-compliance: This object is not needed and should be removed, since all its properties are already stored in device definition which can be retrieved by imei parameter already provided in the path.
+    description: Registers device for push notifications.
+    properties:
+      imei:
+        x-asee-compliance: This property is not needed, it is already provided in operation path.
+        description: Device IMEI (The International Mobile Station Equipment Identity).
+        type: string
+      installation-id:
+        x-asee-compliance: This property is not needed, it is already contained in definition of device which can be retrieved by imei.
+        description: Device push handle / identification.
+        type: string
+      platform:
+        x-asee-compliance: Isn't this something that is already determined by operating-system of device? I think it is and this property should be removed.
+        description: Device platform.
+        enum:
+        - "mpns"
+        - "wns"
+        - "apns"
+        - "gcm"
+        type: string
+    type: object
+  push-notifications-registration-command-result:
+    x-asee-compliance: This object should be removed. Instead, plain command-result may be used by returning push registration id value in id parameter. IMEI does not need to be returned.
+    description: ''
+    properties:
+      registration-id:
+        description: 'Push notifications registration Id.'
+        type: string
+      id:
+        description: 'Gets or sets the id of created, updated or deleted entity.'
+        type: string
+      created-record-status:
+        description: 'Gets or sets the created, updated, deleted record status.'
+        type: string
+    type: object
+  command-result:
+    description: ''
+    x-asee-compliance: Missing description of object. Description of properties should be corrected too.
+    properties:
+      id:
+        description: 'Gets or sets the id of created, updated or deleted entity.'
+        type: string
+      created-record-status:
+        description: 'Gets or sets the created, updated, deleted record status.'
+        type: string
+    type: object
+  business-problem:
+    x-asee-compliance: Missing object description. Description of properties missing too.
+    properties:
+      problem:
+        type: string
+      message:
+        type: string
+      details:
+        type: string
+  link:
+    properties:
+      href:
+        description: Gets or sets the href.
+        type: string
+      rel:
+        description: Gets or sets the rel.
+        type: string
+    type: object
+responses:
+  default-error-response:
+    description: Besides specific status codes above, other standard http [status codes] (http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
+parameters:
+  imei-param:
+    name: imei
+    in: path
+    description: Device IMEI (The International Mobile Station Equipment Identity).
+    required: true
+    type: string
+  page-param:
+    name: page
+    in: query
+    description: Page index. For more information see general guidance on [paging and sorting]()
+    type: integer
+    default: 1
+    x-asee-common: true
+  page-size-param:
+    name: page-size
+    in: query
+    description: Number of items on a page. For more information see general guidance on [paging and sorting]()
+    required: false
+    type: integer
+    default: 10
+    x-asee-common: true
+  sort-order-param:
+    description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]()
+    in: query
+    name: sort-order
+    type: string
+    default: asc
+    enum:
+    - asc
+    - desc
+    x-asee-common: true
+  sort-by-param:
+    description: Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]()
+    in: query
+    name: sort-by
+    type: string
+    x-asee-common: true
