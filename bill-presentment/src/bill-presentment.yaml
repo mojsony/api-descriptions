@@ -81,13 +81,6 @@ paths:
       responses:
         '204':
           description: No Content
-        '440':
-          description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
-              - [bill-not-marked-for-verification] ()
-          x-asee-compliance: Strange name of error? What does it really mean!?
-          schema:
-            $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
       summary: Snooze the bill.
@@ -200,7 +193,7 @@ paths:
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
               - [nickname-already-exists]()
-              - [debtor-account-not-found]()
+              - [debtor-account-not-active]()
               - [subscription-already-registered]()
           schema:
             $ref: '#/definitions/business-problem'
@@ -243,6 +236,14 @@ paths:
       responses:
         '204':
           description: No Content
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+              - [subscription-not-active]()
+              - [unpaid-bills-exist]()
+              - [standing-order-scheduled]()
+          schema:
+            $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
       summary: Unsubscribe from active bills presentment subscription.
@@ -465,8 +466,7 @@ definitions:
         type: string
       issuing-period:
         description: 'Issuing period of bill (monthly, weekly...).'
-        type: string
-        x-asee-compliance: This should be the period type.
+        $ref: '#/definitions/simple-time-period'
       bill-issuer-account-number:
         description: Bill issuer account number.
         type: string
@@ -559,11 +559,10 @@ definitions:
         type: string
     type: object
   debtor:
-    description: ''
-    x-asee-compliance: Missing object description.
+    description: Owner of account who will pay a bill. 
     example:
       name: Nikola Stojanovic
-      address: King Alexander's Boulevard 101
+      address: King Alexandar's Boulevard 101
       city: Belgrade
     properties:
       name:
@@ -623,17 +622,20 @@ definitions:
         type: string
     type: object
   business-problem:
-    x-asee-compliance: Missing description for object and properties.
+    description: When request is well formed but some business policy doesn't allow it to be executed, busieness-problem describes taht situation.
     example:
       type: Business policy problem.
-      title: Unsuficient funds
+      title: Insuficient funds
       details: Raised when funds are not sufficient for withdrawal.
     properties:
       type:
+        description: Type of error that is clasified as business policy violation problem.
         type: string
       title:
+        description: Short description.
         type: string
       details:
+        description: Detailed description of particular problem.
         type: string
     type: object
   issuer-list:
@@ -687,7 +689,7 @@ definitions:
         type: string
     type: object
   issuer:
-    x-asee-compliance: Missing object description.
+    description: Party that issues bills to it's clients.
     example:
       issuer-id: '36'
       group-id: '6'
@@ -730,7 +732,7 @@ definitions:
         type: string
       issuing-period:
         description: 'Issuing period of bill (monthly, weekly...).'
-        type: string
+        $ref: '#/definitions/simple-time-period'
       invoicing-date:
         description: Invoicing date is date when bill was issued.
         type: string
@@ -853,7 +855,7 @@ definitions:
         type: string
       issuing-period:
         description: 'Issuing period of bill (monthly, weekly...).'
-        type: string
+        $ref: '#/definitions/simple-time-period'
       bill-issuer-account-id:
         description: Bill issuer account identifier.
         type: string
@@ -898,7 +900,7 @@ definitions:
       issuer-id: '24'
       debtor:
         name: 'Nikola Stojanovic'
-        address: 'King Alexanadars Boulevard 76'
+        address: King Alexanadar's Boulevard 76
         city: 'Belgrade'
       client-id: 86024
       debtor-account-number: 115-0000000050378-56
@@ -969,18 +971,54 @@ definitions:
         description: URI
         type: string
     type: object
-  command-result:
-    x-asee-compliance: Missing description of object and properties.
-    description: ''
-    example: {}
+  simple-time-period:
+    description: Simple time period
+    example:
+      period: 15
+      unit-of-time: days
     properties:
-      id:
-        description: 'Gets or sets the id of created, updated or deleted entity.'
-        type: string
-      created-record-status:
-        description: 'Gets or sets the created, updated, deleted record status.'
+      period:
+        description: Period.
+        format: int32
+        type: integer
+      unit-of-time:
+        description: 'Unit of time with allowed values: days, months or years.'
+        enum:
+          - days
+          - months
+          - years
         type: string
     type: object
+  command-result:
+    description: Object that is regulary returned when POST request is sent. Consists of unique identidier and status of called transaction.
+    example:
+      id: '99900155242001'
+      created-record-status: 'executed'
+    properties:
+      id:
+        description: Unique identifier for each particular called transaction.
+        type: string
+      created-record-status:
+        description: Short literal that denotes status of called transaction.
+        type: string
+    type: object
+  validation-error: 
+    x-asee-compliance: Missing description of object and properties. 
+    type: array 
+    items: 
+      type: object 
+      properties: 
+        field: 
+          type: string 
+        errors: 
+          type: array 
+          items: 
+            type: object 
+            properties: 
+              error: 
+                type: string 
+              message: 
+                type: string
 responses:
   default-error-response:
     description: 'Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()'
