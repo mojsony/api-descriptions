@@ -1,0 +1,1412 @@
+swagger: "2.0"
+info:
+  version: "beta"
+  title: Product Matching API
+  description: |
+    Product Matching API provides product information needed for channel applications. The main functions are search over product catalog and kind-specific detailed product information. Besides arrangement-based products, product catalog also contains all services bundled into these arrangement-based products.     
+host: api.asee.co
+basePath: /product-matching
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+tags:
+ -
+  name: Products
+  description: Works with products
+ -
+  name: Card access products
+  description: Working with card access products
+ -
+  name: Credit facility products
+  description: Working with credit facility products
+ -
+  name: Overdraft facility products
+  description: Working with overdraft facility products
+ -
+  name: Current account products
+  description: Working with current account products
+ -
+  name: Demand deposit products
+  description: Working with demand deposit products
+ -
+  name: Electronic access products
+  description: Working with electronic access products
+ -
+  name: Term deposit products
+  description: Working with term deposit products
+ -
+  name: Term loan products
+  description: Working with term loan products
+ -
+  name: Product documentation
+  description: Working with necessary product documentation
+ -
+  name: Classifications
+  description: Working with classifications
+paths:
+  /products:
+    get:
+      summary: Returns list of products with general information.
+      tags: 
+        - Products
+      x-asee-tags:
+        - Shapeable        
+        - Sortable
+        - Pageable
+      operationId: Products_GetList
+      parameters:
+        # Remove commented parameters. They are already sent through request header/invocation context.
+        # - $ref: "#/parameters/customer-number-param"
+        - $ref: "#/parameters/status-param"
+        - $ref: "#/parameters/kind-param"
+        - $ref: "#/parameters/name-param"
+        - $ref: "#/parameters/product-family-param"        
+        # - $ref: "#/parameters/preferred-client-culture-param"
+        # - $ref: "#/parameters/channel-code-param"      
+        - $ref: "#/parameters/page-param"
+        - $ref: "#/parameters/page-size-param"
+        - $ref: "#/parameters/sort-by-param"
+        - $ref: "#/parameters/sort-order-param"        
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/product-info-list'          
+        default:
+          $ref: '#/responses/default-error-response'
+  /products/{product-number}:
+    get: 
+      summary: Returns product details
+      tags: 
+        - Products
+      operationId: Products_Get
+      parameters:             
+        - $ref: "#/parameters/product-number-param"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/product-info'          
+        default:
+          $ref: '#/responses/default-error-response'          
+  /card-access-products/{product-number}:
+    get: 
+      summary: Returns card access product with detailed information
+      tags: 
+        - Card access products
+      operationId: CardAccessProducts_Get
+      parameters:
+        # Remove commented parameters. They are already sent through request header/invocation context.
+        # - $ref: "#/parameters/customer-number-param"
+        # - $ref: "#/parameters/preferred-client-culture-param"
+        # - $ref: "#/parameters/channel-code-param"
+        - $ref: "#/parameters/campaign-code-param"          
+        - $ref: "#/parameters/product-number-param"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/card-access-product'          
+        default:
+          $ref: '#/responses/default-error-response'
+  /credit-facility-products/{product-number}:
+    get: 
+      summary: Returns a credit facility product with detailed information
+      tags: 
+        - Credit facility products
+      operationId: CreditFacilityProducts_Get
+      parameters:
+        # Remove commented parameters. They are already sent through request header/invocation context.
+        # - $ref: "#/parameters/customer-number-param"
+        # - $ref: "#/parameters/preferred-client-culture-param"
+        # - $ref: "#/parameters/channel-code-param"  
+        - $ref: "#/parameters/campaign-code-param"                     
+        - $ref: "#/parameters/product-number-param"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/credit-facility-product'          
+        default:
+          $ref: '#/responses/default-error-response' 
+  /overdraft-facility-products/{product-number}:
+    get: 
+      summary: Returns overdraft facility product with detailed information
+      tags: 
+        - Overdraft facility products
+      operationId: OverdraftFacilityProducts_Get
+      parameters:
+        # Remove commented parameters. They are already sent through request header/invocation context.
+        # - $ref: "#/parameters/customer-number-param"
+        # - $ref: "#/parameters/preferred-client-culture-param"
+        # - $ref: "#/parameters/channel-code-param"  
+        - $ref: "#/parameters/campaign-code-param"                     
+        - $ref: "#/parameters/product-number-param"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/overdraft-facility-product'          
+        default:
+          $ref: '#/responses/default-error-response' 
+  /current-account-products/{product-number}:
+    get: 
+      summary: Returns current account product with detailed information
+      tags: 
+        - Current account products
+      operationId: CurrentAccountProducts_Get
+      parameters:
+        # Remove commented parameters. They are already sent through request header/invocation context.
+        # - $ref: "#/parameters/customer-number-param"
+        # - $ref: "#/parameters/preferred-client-culture-param"
+        # - $ref: "#/parameters/channel-code-param"  
+        - $ref: "#/parameters/campaign-code-param"                     
+        - $ref: "#/parameters/product-number-param"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/current-account-product'          
+        default:
+          $ref: '#/responses/default-error-response'
+  /demand-deposit-products/{product-number}:
+    get: 
+      summary: Returns demand deposit product with detailed information
+      tags: 
+        - Demand deposit products
+      operationId: DemandDepositProducts_Get
+      parameters:
+        # Remove commented parameters. They are already sent through request header/invocation context.
+        # - $ref: "#/parameters/customer-number-param"
+        # - $ref: "#/parameters/preferred-client-culture-param"
+        # - $ref: "#/parameters/channel-code-param"  
+        - $ref: "#/parameters/campaign-code-param"                     
+        - $ref: "#/parameters/product-number-param"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/demand-deposit-product'          
+        default:
+          $ref: '#/responses/default-error-response'
+  /electronic-access-products/{product-number}:
+    get: 
+      summary: Returns electronic access product with detailed information
+      tags: 
+        - Electronic access products
+      operationId: ElectronicAccessProducts_Get
+      parameters:
+        # Remove commented parameters. They are already sent through request header/invocation context.
+        # - $ref: "#/parameters/customer-number-param"
+        # - $ref: "#/parameters/preferred-client-culture-param"
+        # - $ref: "#/parameters/channel-code-param"  
+        - $ref: "#/parameters/campaign-code-param"                     
+        - $ref: "#/parameters/product-number-param"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/electronic-access-product'          
+        default:
+          $ref: '#/responses/default-error-response'
+  /term-deposit-products/{product-number}:
+    get: 
+      summary: Returns term deposit product with detailed information.
+      tags: 
+        - Term deposit products
+      operationId: TermDepositProducts_Get
+      parameters:
+        # Remove commented parameters. They are already sent through request header/invocation context.
+        # - $ref: "#/parameters/customer-number-param"
+        # - $ref: "#/parameters/preferred-client-culture-param"
+        # - $ref: "#/parameters/channel-code-param"  
+        - $ref: "#/parameters/campaign-code-param"                     
+        - $ref: "#/parameters/product-number-param"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/term-deposit-product'          
+        default:
+          $ref: '#/responses/default-error-response'
+  /term-loan-products/{product-number}:
+    get: 
+      summary: Returns term loan product with detailed information
+      tags: 
+        - Term loan products
+      operationId: TermLoanProducts_Get
+      parameters:
+        # Remove commented parameters. They are already sent through request header/invocation context.
+        # - $ref: "#/parameters/customer-number-param"
+        # - $ref: "#/parameters/preferred-client-culture-param"
+        # - $ref: "#/parameters/channel-code-param"  
+        - $ref: "#/parameters/campaign-code-param"                     
+        - $ref: "#/parameters/product-number-param"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/term-loan-product'          
+        default:
+          $ref: '#/responses/default-error-response'
+  /products/{product-number}/bundled-products:
+    get: 
+      summary: Returns bundled products for basic product
+      tags: 
+        - Products
+      operationId: Products_GetBundledProducts
+      parameters:
+        # Remove commented parameters. They are already sent through request header/invocation context.
+        # - $ref: "#/parameters/customer-number-param"
+        # - $ref: "#/parameters/preferred-client-culture-param"
+        # - $ref: "#/parameters/channel-code-param"  
+        - $ref: "#/parameters/campaign-code-param"                     
+        - $ref: "#/parameters/product-number-param"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/bundled-product-info-list'          
+        default:
+          $ref: '#/responses/default-error-response'
+  /products/{product-number}/documentation:
+    get: 
+      summary: Returns necessary product documentation for product
+      tags: 
+        - Products
+      operationId: Products_GetDocumentation
+      parameters:                    
+        - $ref: "#/parameters/product-number-param"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/product-documentation-list'          
+        default:
+          $ref: '#/responses/default-error-response'
+  /classifications: 
+    get: 
+      x-asee-compliance: This method is not needed. This API should only contain GET /classifications/{schema} method, and not the method returning all existing schemas in all APIs.
+      summary: Returns all classification schema used in API contacts
+      tags: 
+        - Classifications
+      operationId: "Classifications_GetList"
+      responses:
+          '200':
+            description: Success
+            schema:
+              $ref: '#/definitions/classification-list'
+          default:
+            $ref: '#/responses/default-error-response'
+  /classifications/{schema}:
+    get: 
+      summary: Returns the classification values for provided schema
+      tags: 
+        - Classifications
+      operationId: Classifications_Get
+      parameters:                    
+        - 
+          description: "Schema name which values should be fetched. For complete list of schemas see [classifications]()"
+          in: "path"
+          name: "schema"
+          required: true
+          type: "string"
+      responses:
+        '200':
+          description: Success
+          schema:
+            items:
+              $ref: '#/definitions/classification-value'
+            type: array        
+        default:
+          $ref: '#/responses/default-error-response'
+responses:
+  default-error-response:
+    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
+parameters:
+  product-number-param:
+    name: "product-number"
+    description: "Unique product identifier."
+    in: "path"
+    required: true
+    type: "string"
+  page-param:
+    name: page
+    in: query
+    description: Page index. For more information see general guidance on [paging and sorting]()
+    type: integer
+    default: 1
+  page-size-param:
+    name: page-size
+    in: query
+    description: Number of items on a page. For more information see general guidance on [paging and sorting]()
+    required: false
+    type: integer
+    default: 10
+  sort-order-param:
+    description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]()
+    in: query
+    name: sort-order
+    type: string
+    default: asc
+    enum:
+    - asc
+    - desc
+  sort-by-param:  
+    description: Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]()
+    in: query
+    name: sort-by
+    type: string
+  customer-number-param:
+    x-asee-compliance: Remove this parameter, it is not used. It is provided in request header/invocation context.
+    description: Customer for whom result is adapted
+    in: query
+    name: customer-number
+    type: string
+    required: false
+  status-param:
+    name: status
+    in: query
+    description: Identifies product status from Customer perspective 
+    required: false
+    type: string   
+    enum:
+    - already-used-by-client
+    - coming-soon
+    - not-used-by-client     
+  kind-param:     
+    name: kind
+    in: query
+    description: Product kind. If set only products of these kinds will be returned otherwise all products will be returned
+    required: false
+    type: string
+    enum:
+    - deposit
+    - current-account
+    - demand-deposit
+    - term-deposit 
+    - finance-service
+    - term-loan
+    - credit-facility
+    - overdraft-facility
+    - product-access
+    - card-access
+    - electronic-access
+    - non-banking-product
+    - service
+    - transfer-service 
+    - information-service
+  name-param:     
+    name: name
+    in: query
+    description: Name or part of the products name
+    required: false
+    type: string
+  product-family-param:
+    name: product-family
+    in: query
+    description: Name of product family
+    required: false
+    type: string
+  preferred-client-culture-param:
+    x-asee-compliance: Remove this parameter, it is not used. It is provided in request header/invocation context.
+    name: preferred-client-culture
+    in: query
+    description: Preferred client culture  
+    required: false
+    type: string
+  channel-code-param:
+    x-asee-compliance: Remove this parameter, it is not used. It is provided in request header/invocation context.
+    name: channel-code
+    in: query
+    description: Channel code
+    required: false
+    type: string
+  campaign-code-param: 
+    name: campaign-code
+    in: query
+    description: Campaign identifier
+    required: false
+    type: string      
+definitions:
+  classification-value: 
+    description: Classification value
+    type: object
+    properties: 
+      code: 
+        description: Code of classification value
+        type: string
+      literal: 
+        description: Literal
+        type: string
+      description: 
+        description: Description
+        type: string
+      id: 
+        description: Identifier of classification value
+        type: string
+      parent-id: 
+        description: Parent classification value id
+        type: string
+      ordinal: 
+        description: Ordinal number
+        type: string
+  classification: 
+    x-asee-compliance: This object is not needed. This API should only contain GET /classifications/{schema} method, and not the method returning all existing schemas in all APIs.
+    description: Classification schema used in API contracts
+    type: object
+    properties: 
+      API: 
+        description: Name of Api in which classification shema is used.
+        type: string
+      description: 
+        description: Shema description.
+        type: string
+      name: 
+        description: Name of shema
+        type: string
+  classification-list: 
+    x-asee-compliance: This object is not needed. This API should only contain GET /classifications/{schema} method, and not the method returning all existing schemas in all APIs.
+    description: List of classification shemas.
+    properties: 
+     items: 
+       items: 
+         $ref: "#/definitions/classification"
+       type: "array"
+  classification-value-list: 
+    x-asee-compliance: This object is not needed. The response of GET /classifications/{schema} method is array of classification-value objects.
+    description: List of classification values.
+    properties: 
+     items: 
+       items: 
+         $ref: "#/definitions/classification-value"
+       type: "array"
+  paged-list:
+    description: List with support for paging
+    properties:  
+      total-count:
+        description: Total number of items in collection
+        type: integer
+      page-size:
+        description: Size of the page
+        type: integer
+      page:
+        description: Index of current page
+        type: integer
+      total-pages:
+        description: Total number of pages of set size
+        type: integer
+      sort-order:
+        description: Sort order (`asc` or `desc`). Default is asc
+        type: string
+        enum:
+        - asc
+        - desc
+      sort-by:  
+        description: Attribute of the collection item to sort by
+        type: string
+  product-info:
+    description: General information about product
+    type: object
+    required:        
+    - product-number
+    - kind
+    properties:
+      product-number:
+        type: string
+        description: The unique identifier of a Product
+      name:
+        type: string
+        description: Label given to a specific Product to identify or distinguish it from other Products
+      description:
+        type: string
+        description: Basic information about product
+      market-features:
+        type: string
+        description: Textual description of the characteristics of a Product
+      family-name:
+        type: string
+        description: Name of Subject Area to hold the subtypes of Product
+      status:
+        type: string
+        description: Identifies product status from Customer perspective    
+        enum:
+        - comming soon
+        - already-used
+        - not-used
+      kind:
+        type: string
+        description: Classifies products according to its nature and scope
+        enum:
+        - current-account
+        - demand-deposit
+        - term-deposit
+        - term-loan
+        - credit-facility
+        - overdraft-facility
+        - card-access
+        - electronic-access
+        - service
+      primary-market-segment-name:
+        type: string
+        description: Market segment where the product is primarily intended
+      is-package:
+        type: boolean
+        description: Is the product package
+      image:
+        type: string
+        description: Product image
+      application-process-description:
+        type: string
+        description: Short information how the application process for the product is performed
+      required-documentation:
+        type: string
+        description: Necessary documents if the client wants to apply for the product
+      allowed-currencies:
+        x-asee-compliance: Is this property really needed? Some of the product kinds stated above are non-financial products. Supported currencies are declared in specific product types declared below.
+        type: array
+        description: Allowed currencies for the product
+        items: 
+          $ref: "#/definitions/currency-type"                
+      is-recommended:
+        x-asee-compliance: This property is probably not needed and not used. Currently we determine if product is recommended by checking if campaign-code property is set.
+        type: boolean
+        description: Is product recommended
+      campaign-code:
+        type: string
+        description: Campaign Identifier   
+  product-info-list:
+    description: List of products
+    type: object
+    allOf: 
+      - $ref: '#/definitions/paged-list'
+    properties:
+      items:
+        type: array
+        items: 
+          $ref: '#/definitions/product-info'
+  card-access-product:
+    description: Identifies a Product which allows a Customer to obtain access to a Financial Product Arrangement
+    x-asee-compliance: Change this description to more meaningful one.
+    type: object
+    required:        
+      - product-number        
+    properties:
+      product-number:
+        type: string
+        description: The unique identifier of a Product
+      name:
+        type: string
+        description: Label given to a specific Product to identify or distinguish it from other Products
+      family-name:
+        type: string
+        description: Name of Subject Area to hold the subtypes of Product
+      status:
+        type: string
+        description: Identifies product status from Customer perspective    
+        enum:
+        - comming-soon
+        - already-used
+        - not-used
+      primary-market-segment-name:
+        type: string
+        description: Market segment where the product is primarily intended               
+      description:
+        type: string
+        description: Basic information about product
+      benefits-info:
+        type: string
+        description: Identifies a product benefits info
+      image:
+        type: string
+        description: Product image
+      cover-image:
+        type: string
+        description: Product cover image
+      application-process-description:
+        type: string
+        description: Short information how the application process for the product is performed
+      required-documentation:
+        type: string
+        description: Necessary documents if the client wants to apply for the product                
+      campaign-code:
+        type: string
+        description: Campaign Identifier
+      card-access-type:
+        type: string
+        description: Distinguishes between Product Access Services according to the manner in which use of or access to the Financial Product Arrangement is facilitated. See classification
+        x-asee-compliance: Is this the complete list?
+        enum:
+        - gift-card
+        - debit-card
+        - credit-card
+      card-brand:
+        type: string
+        description: Identifies the set of types of Financial Transaction Cards that are available. See classification
+        x-asee-compliance: This should be related to classification not the enum.
+        enum:
+        - maestro
+        - visa-electron
+        - visa
+        - american-express
+        - diners
+        - master
+        - dina-card
+      daily-transaction-limit:
+        x-asee-compliance: Why are only daily limit amount and number exposed? There are also many other relevant properties that could have been exposed too: periodic limit, membership fee, withdrawal, transaction, many other types of fees.
+        description: Identifies a limit on the total value of Accounting Transactions that may ocur through this access service over a given 24 hour period, where applicable
+        $ref: "#/definitions/currency"
+      daily-transaction-limit-number:
+        type: integer
+        description: Limit on the number of Accounting Transactions that may ocur through this access service over a given 24 hour period, where applicable
+        format: int32        
+      availability-start:
+        x-asee-compliance: Why is this property declared only for card-access product? It may be aplicable for all other products too (status comming-soon).
+        type: string                
+        description: Date from which the product is available
+        format: date-time
+      card-access-product-channels:
+        type: array
+        description: List with basic informations about Product Access Service Channels
+        items: 
+          $ref: '#/definitions/product-access-service-channel'
+  credit-facility-product:
+    description: Identifies a Finance Service where the modeled organization extends credit to another Involved Party in the form of actual funds, or as an obligation to provide funds in the future under specific conditions
+    x-asee-compliance: Change this description to more meaningful one.
+    type: object
+    properties:
+      product-number:
+        type: string
+        description: The unique identifier of a Product
+      name:
+        type: string
+        description: Label given to a specific Product to identify or distinguish it from other Products
+      family-name:
+        type: string
+        description: Name of Subject Area to hold the subtypes of Product
+      status:
+        type: string
+        description: Identifies product status from Customer perspective    
+        enum:
+        - comming-soon
+        - already-used
+        - not-used
+      primary-market-segment-name:
+        type: string
+        description: Market segment where the product is primarily intended               
+      description:
+        type: string
+        description: Basic information about product
+      benefits-info:
+        type: string
+        description: Identifies a product benefits info
+      image:
+        type: string
+        description: Product image
+      cover-image:
+        type: string
+        description: Product cover image
+      application-process-description:
+        type: string
+        description: Short information how the application process for the product is performed
+      required-documentation:
+        type: string
+        description: Necessary documents if the client wants to apply for the product                
+      campaign-code:
+        type: string
+        description: Campaign Identifier
+      minimal-repayment-amount:
+        description: Minimal repayment currency amount of the product
+        $ref: "#/definitions/currency"
+      minimal-repayment-percentage:
+        description: Minimal repayment percentage of the product
+        format: double
+        type: number
+      maximal-term-period:
+        description: Maximal term period of the product
+        $ref: "#/definitions/simple-time-period"
+      minimal-term-period:
+        description: Minimal term period of the product
+        $ref: "#/definitions/simple-time-period"
+      primary-currency:
+        description: Primary currency of the product
+        $ref: "#/definitions/currency-type"
+      maximal-amount:
+        description: Maximal monetary amount for the product
+        $ref: "#/definitions/currency"
+      minimal-amount:
+        description: Minimal monetary amount for the product
+        $ref: "#/definitions/currency"
+      allowed-currencies:
+        type: array
+        description: Allowed currencies for the product
+        items: 
+          $ref: "#/definitions/currency-type"   
+      penalty-interest-rate:
+        description: Product penalty interest rate
+        $ref: "#/definitions/calculated-interest-rate"
+      basic-interest-rate:
+        description: Product basic interest rate
+        $ref: "#/definitions/calculated-interest-rate"
+      revolving-interest-rate:
+        description: Product basic revolving rate
+        $ref: "#/definitions/calculated-interest-rate"
+      type-of-funding:
+        type: string
+        description: Identifies type of funding for the product. See classification
+        x-asee-compliance: What does this refinancing-ob-product stand for?
+        enum:
+        - cash
+        - refinancing-ob-product
+        - refinancing
+        - invoice
+  overdraft-facility-product:
+    description: TO DO
+    x-asee-compliance: Missing description of object.
+    type: object   
+    properties:
+      product-number:
+        type: string
+        description: The unique identifier of a Product
+      name:
+        type: string
+        description: Label given to a specific Product to identify or distinguish it from other Products
+      family-name:
+        type: string
+        description: Name of Subject Area to hold the subtypes of Product
+      status:
+        type: string
+        description: Identifies product status from Customer perspective    
+        enum:
+        - comming-soon
+        - already-used
+        - not-used
+      primary-market-segment-name:
+        type: string
+        description: Market segment where the product is primarily intended               
+      description:
+        type: string
+        description: Basic information about product
+      benefits-info:
+        type: string
+        description: Identifies a product benefits info
+      image:
+        type: string
+        description: Product image
+      cover-image:
+        type: string
+        description: Product cover image
+      application-process-description:
+        type: string
+        description: Short information how the application process for the product is performed
+      required-documentation:
+        type: string
+        description: Necessary documents if the client wants to apply for the product                
+      campaign-code:
+        type: string
+        description: Campaign Identifier
+      minimal-repayment-amount:
+        description: Minimal repayment amount of the product
+        $ref: "#/definitions/currency"
+      minimal-repayment-percentage:
+        description: Minimal repayment percentage of the product
+        format: double
+        type: number
+      maximal-term-period:
+        description: Maximal term period of the product
+        $ref: "#/definitions/simple-time-period"
+      minimal-term-period:
+        description: Minimal term period of the product
+        $ref: "#/definitions/simple-time-period"
+      primary-currency:
+        description: Primary currency of the product
+        $ref: "#/definitions/currency-type"
+      maximal-amount:
+        description: Maximal monetary amount for the product
+        $ref: "#/definitions/currency"
+      minimal-amount:
+        description: Minimal monetary amount for the product
+        $ref: "#/definitions/currency"
+      allowed-currencies:
+        type: array
+        description: Allowed currencies for the product
+        items: 
+          $ref: "#/definitions/currency-type"   
+      penalty-interest-rate:
+        description: Product penalty interest rate
+        $ref: "#/definitions/calculated-interest-rate"
+      basic-interest-rate:
+        description: Product basic interest rate
+        $ref: "#/definitions/calculated-interest-rate"
+      revolving-interest-rate:
+        description: Product basic revolving rate
+        $ref: "#/definitions/calculated-interest-rate"
+      type-of-funding:
+        type: string
+        description: Identifies type of funding for the product. See classification
+        x-asee-compliance: This is a very strange property for the overdraft product. It should be removed, since the overdraft is the limit extension of available assets on current account and not the loan that will be disbursed as cash, refinance or invoice payment.
+        enum:
+        - cash
+        - refinancing-ob-product
+        - refinancing
+        - invoice
+  current-account-product:
+    description: TO DO
+    x-asee-compliance: Missing description of object.
+    type: object  
+    properties:
+      product-number:
+        type: string
+        description: The unique identifier of a Product
+      name:
+        type: string
+        description: Label given to a specific Product to identify or distinguish it from other Products
+      family-name:
+        type: string
+        description: Name of Subject Area to hold the subtypes of Product
+      status:
+        type: string
+        description: Identifies product status from Customer perspective  
+        enum:
+        - comming-soon
+        - already-used
+        - not-used
+      primary-market-segment-name:
+        type: string
+        description: Market segment where the product is primarily intended               
+      description:
+        type: string
+        description: Basic information about product
+      benefits-info:
+        type: string
+        description: Identifies a product benefits info
+      image:
+        type: string
+        description: Product image
+      cover-image:
+        type: string
+        description: Product cover image
+      application-process-description:
+        type: string
+        description: Short information how the application process for the product is performed
+      required-documentation:
+        type: string
+        description: Necessary documents if the client wants to apply for the product                
+      campaign-code:
+        type: string
+        description: Campaign Identifier
+      primary-currency:
+        description: Primary currency of the product
+        $ref: "#/definitions/currency-type"
+      allowed-currencies:
+        type: array
+        description: Allowed currencies for the product
+        items: 
+          $ref: "#/definitions/currency-type"   
+      term-scale:
+        x-asee-compliance: Not completely clear what are these term periods for current account? Should be removed?
+        type: array
+        description: Identifies the term scale
+        items: 
+          $ref: "#/definitions/simple-time-range"
+      interest-rate:
+        description:  Product interest rate
+        $ref: "#/definitions/calculated-interest-rate"
+      notification:
+        x-asee-compliance: What is this property used for? It seems very strange. Should be removed.
+        type: array
+        description: List with basic informations about notification products
+        items: 
+          $ref: "#/definitions/notification"
+  demand-deposit-product:
+    description: Identifies a particular type of Deposit Product that is used for handling day-to-day transactions and can be used to accumulate savings
+    type: object
+    properties:
+      product-number:
+        type: string
+        description: The unique identifier of a Product
+      name:
+        type: string
+        description: Label given to a specific Product to identify or distinguish it from other Products
+      family-name:
+        type: string
+        description: Name of Subject Area to hold the subtypes of Product
+      status:
+        type: string
+        description: Identifies product status from Customer perspective    
+        enum:
+        - comming-soon
+        - already-used
+        - not-used
+      primary-market-segment-name:
+        type: string
+        description: Market segment where the product is primarily intended               
+      description:
+        type: string
+        description: Basic information about product
+      benefits-info:
+        type: string
+        description: Identifies a product benefits info
+      image:
+        type: string
+        description: Product image
+      cover-image:
+        type: string
+        description: Product cover image
+      application-process-description:
+        type: string
+        description: Short information how the application process for the product is performed
+      required-documentation:
+        type: string
+        description: Necessary documents if the client wants to apply for the product                
+      campaign-code:
+        type: string
+        description: Campaign Identifier
+      maximal-term-period:
+        description: Maximal term period of the product
+        $ref: "#/definitions/simple-time-period"
+      minimal-term-period:
+        description: Minimal term period of the product
+        $ref: "#/definitions/simple-time-period"
+      maximal-amount:
+        description: Maximal monetary amount for the product
+        $ref: "#/definitions/currency"
+      minimal-amount:
+        description: Minimal monetary amount for the product
+        $ref: "#/definitions/currency"
+      primary-currency:
+        description: Primary currency of the product
+        $ref: "#/definitions/currency-type"
+      allowed-currencies:
+        type: array
+        description: Allowed currencies for the product
+        items: 
+          $ref: "#/definitions/currency-type"  
+      interest-rate:
+        description: Product interest rate
+        $ref: "#/definitions/calculated-interest-rate"
+  electronic-access-product:
+    description: Identifies a Product which allows a Customer to obtain access to a Financial Product Arrangement
+    x-asee-compliance: Change this description to more meaningful one.
+    type: object
+    properties:
+      product-number:
+        type: string
+        description: The unique identifier of a Product
+      name:
+        type: string
+        description: Label given to a specific Product to identify or distinguish it from other Products
+      family-name:
+        type: string
+        description: Name of Subject Area to hold the subtypes of Product
+      status:
+        type: string
+        description: Identifies product status from Customer perspective    
+        enum:
+        - comming-soon
+        - already-used
+        - not-used
+      primary-market-segment-name:
+        type: string
+        description: Market segment where the product is primarily intended               
+      description:
+        type: string
+        description: Basic information about product
+      benefits-info:
+        type: string
+        description: Identifies a product benefits info
+      image:
+        type: string
+        description: Product image
+      cover-image:
+        type: string
+        description: Product cover image
+      application-process-description:
+        type: string
+        description: Short information how the application process for the product is performed
+      required-documentation:
+        type: string
+        description: Necessary documents if the client wants to apply for the product                
+      campaign-code:
+        type: string
+        description: Campaign Identifier
+  term-deposit-product:
+    description: to do
+    x-asee-compliance: Missing description of object.
+    type: object
+    properties:
+      product-number:
+        type: string
+        description: The unique identifier of a Product
+      name:
+        type: string
+        description: Label given to a specific Product to identify or distinguish it from other Products
+      family-name:
+        type: string
+        description: Name of Subject Area to hold the subtypes of Product
+      status:
+        type: string
+        description: Identifies product status from Customer perspective    
+        enum:
+        - comming-soon
+        - already-used
+        - not-used
+      primary-market-segment-name:
+        type: string
+        description: Market segment where the product is primarily intended               
+      description:
+        type: string
+        description: Basic information about product
+      benefits-info:
+        type: string
+        description: Identifies a product benefits info
+      image:
+        type: string
+        description: Product image
+      cover-image:
+        type: string
+        description: Product cover image
+      application-process-description:
+        type: string
+        description: Short information how the application process for the product is performed
+      required-documentation:
+        type: string
+        description: Necessary documents if the client wants to apply for the product                
+      campaign-code:
+        type: string
+        description: Campaign Identifier
+      primary-currency:
+        description: Primary currency of the product
+        $ref: "#/definitions/currency-type"
+      allowed-currencies:
+        type: array
+        description: Allowed currencies for the product
+        items: 
+          $ref: "#/definitions/currency-type"   
+      maximal-amount:
+        description: Maximal monetary amount for the product
+        $ref: "#/definitions/currency"
+      minimal-amount:
+        description: Minimal monetary amount for the product
+        $ref: "#/definitions/currency"
+      maximal-term-period:
+        description: Maximal term period of the product
+        $ref: "#/definitions/simple-time-period"
+      minimal-term-period:
+        description: Minimal term period of the product
+        $ref: "#/definitions/simple-time-period"
+      interest-rate:
+        description: Product interest rate
+        $ref: "#/definitions/calculated-interest-rate"
+  term-loan-product:
+    description: to do
+    x-asee-compliance: Missing description of object.
+    type: object
+    properties:
+      product-number:
+        type: string
+        description: The unique identifier of a Product
+      name:
+        type: string
+        description: Label given to a specific Product to identify or distinguish it from other Products
+      family-name:
+        type: string
+        description: Name of Subject Area to hold the subtypes of Product
+      status:
+        type: string
+        description: Identifies product status from Customer perspective    
+        enum:
+        - comming-soon
+        - already-used
+        - not-used
+      primary-market-segment-name:
+        type: string
+        description: Market segment where the product is primarily intended               
+      description:
+        type: string
+        description: Basic information about product
+      benefits-info:
+        type: string
+        description: Identifies a product benefits info
+      image:
+        type: string
+        description: Product image
+      cover-image:
+        type: string
+        description: Product cover image
+      application-process-description:
+        type: string
+        description: Short information how the application process for the product is performed
+      required-documentation:
+        type: string
+        description: Necessary documents if the client wants to apply for the product                
+      campaign-code:
+        type: string
+        description: Campaign Identifier
+      primary-currency:
+        description: Primary currency of the product
+        $ref: "#/definitions/currency-type"
+      allowed-currencies:
+        type: array
+        description: Allowed currencies for the product
+        items: 
+          $ref: "#/definitions/currency-type"  
+      maximal-term-period:
+        description: Maximal term period of the product
+        $ref: "#/definitions/simple-time-period"
+      minimal-term-period:
+        description: Minimal term period of the product
+        $ref: "#/definitions/simple-time-period"
+      maximal-amount:
+        description: Maximal monetary amount for the product
+        $ref: "#/definitions/currency"
+      minimal-amount:
+        description: Minimal monetary amount for the product
+        $ref: "#/definitions/currency"
+      has-grace-period:
+        x-asee-compliance: What is duration of this grace period? This value should should be provided too.
+        type: boolean
+        description: Identifies if the product has a grace period
+      is-revolving:
+        x-asee-compliance: What is the revolving percent? This value should be provided too.
+        type: boolean
+        description: Identifies if the product is revolving
+      minimal-downpayment-percentage:
+        x-asee-compliance: Ok, this is participation percent. But where is declaration of minimum deposit percent and other needed collaterals for the product? We also need these declarations for credit-facility and overdraft-facility products.
+        description: Minimal downpayment percentage for the product
+        format: double
+        type: number
+      penalty-interest-rate:
+        type: string
+        description: Product penalty interest rate
+        $ref: "#/definitions/calculated-interest-rate"
+      basic-interest-rate:
+        type: string
+        description: Product basic interest rate
+        $ref: "#/definitions/calculated-interest-rate"
+      type-of-funding:
+        type: string
+        description: Identifies type of funding for the product
+        x-asee-compliance: What is refinancing-ob-product? Also, it is stated invoice, but this object is probably missing more detailed declaration of possible purposes of the loan (classification?).
+        enum:
+        - cash
+        - refinancing-ob-product
+        - refinancing
+        - invoice
+  bundled-product-info:
+    description: Bundled product which is part of master product offering
+    type: object
+    properties:
+      product-name:
+        type: string
+        description:  Identifies the label given to a specific Product to identify or distinguish it from other Products
+      product-number:
+        type: string
+        description: The unique identifier of a Product
+      product-kind:
+        type: string
+        description: Classifies products according to its nature and scope
+        enum:
+        - current-account
+        - demand-deposit
+        - term-deposit
+        - term-loan
+        - credit-facility
+        - overdraft-facility
+        - card-access
+        - electronic-access
+        - service
+      status:
+        type: string
+        description: Identifies product status from Customer perspective    
+        enum:
+        - comming-soon
+        - already-used
+        - not-used
+      campaign-code:
+        x-asee-compliance: This flag needed too.
+        type: string
+        description: Campaign Identifier
+      image:
+        type: string
+        description: Product image
+      is-optional:
+        type: boolean
+        description: Indicate whether bundled component is optional in master product
+      minimal-number-of-instances:
+        type: integer
+        format: int32
+        description: Indicate minimal number of instances of bundled component in master product
+      maximal-number-of-instances:
+        type: integer
+        format: int32
+        description: Indicate maximal number of instances of bundled component in master product
+  bundled-product-info-list:
+    description: List of bundled product which is part of product offering
+    properties: 
+      items: 
+        items: 
+          $ref: "#/definitions/bundled-product-info"
+        type: array
+  product-documentation:
+    description: Product Documentation attached to master Product
+    type: object
+    properties:
+      product-number:
+        type: string
+        description: The unique identifier of a Product
+      document-type:
+        type: string
+        description: Identifies document type
+        x-asee-compliance: This should be classification, not the enum. Possible documents include: indicative-offer, contract, contract-draft, installment-plan, employment-cerificate, income-certificate, bill-of-exchange, administrative-ban, invoice, check-list, etc.
+        enum:
+        - check-list
+        - installment-plan
+        - employment-cerificate       
+      work-item-type:
+        x-asee-compliance: Is this property used at all? How come that the document has work-item-type, and that the product does not have one?
+        type: string
+        description: Identifies Work Item Type for which the document is associated with
+      document-review-period:
+        type: string
+        description: Identifies time period after which the document should to be reviewed
+        $ref: "#/definitions/simple-time-period"
+      is-mandatory:
+        type: boolean
+        description: Identifies whether the document is mandatory
+      work-item-phase:
+        type: string
+        description: Identifies Work Item Phase in which a document is introduced
+  product-documentation-list:
+    description: List of bundled product which is part of product offering
+    properties: 
+      items: 
+       items: 
+         $ref: "#/definitions/product-documentation"
+       type: array
+  product-access-service-channel:
+    description: Product Access Service Channel
+    type: object        
+    properties:
+      channel-number:
+        type: integer
+        format: int64
+        description: A code or short name by which a Channel can be identified
+        x-asee-compliance: This identifier should be string.
+      channel-name:
+        type: string
+        description: Identifies the label given to a specific Channel to identify or distinguish it from other Channel
+  currency-type:
+    description: Currency type
+    type: object
+    properties:
+      alphanumeric-code:
+        description: Numeric Code.
+        type: integer
+        format: int32
+      currency-code:
+        description: Currency Code.       
+        type: string
+  currency:
+    description: Currency amount and code
+    type: object  
+    properties:
+      code:
+        description: Code.
+        type: string
+      amount:
+        description: Amount.
+        format: double
+        type: number
+  simple-time-period:
+    description: Simple time period
+    type: object  
+    properties:
+      unit-of-time:
+        description: The unit of time
+        type: string
+        enum:
+        - days
+        - months
+        - years
+      period:
+        description: Number of time periods
+        format: int32
+        type: integer
+  calculated-interest-rate:
+    description: Calculated interest rate
+    type: object  
+    properties:
+      calculated-rate-unit-of-time:
+        x-asee-compliance: Why is the type of this field string? It should be simple-time-period. Also, all the components of interest rate in this object should have the same time period. It is not clear why there are 3 separate period declarations instead of one.
+        description: Calculated rate unit of time
+        type: string
+      calculated-rate-value: 
+        description: Calculated rate value
+        format: double
+        type: number
+      interest-calculation-method:
+        x-asee-compliance: The structure of this property is not ideal. It could have been enum proportional/compound with two extra fields declaring days-in-month, days-in-year.
+        description: Interest calculation method
+        type: string 
+      referent-rate-unit-of-time:
+        x-asee-compliance: The name of base interest rate is missing (e.g. EURIBOR 6M, BELIBOR, etc.). Why is the type of this field string? It should be simple-time-period. Also, all the components of interest rate in this object should have the same time period. It is not clear why there are 3 separate period declarations instead of one.
+        description: Referent rate unit of time
+        type: string
+      referent-rate-value:
+        description: Referent rate value
+        format: double
+        type: number
+      spread-rate-unit-of-time:
+        x-asee-compliance: Why is the type of this field string? It should be simple-time-period. Also, all the components of interest rate in this object should have the same time period. It is not clear why there are 3 separate period declarations instead of one.
+        description: Spread rate unit of time
+        type: string
+      spread-rate-value:
+        description: Spread rate value
+        format: double
+        type: number
+  simple-time-range:
+    description: Simple time range
+    type: object  
+    properties:
+      maximal-period:
+        description: Maximal number of time periods
+        format: int32
+        type: integer
+      maximal-unit-of-time:
+        description: Unit of time for maximal period
+        type: string
+        enum:
+          - days
+          - months
+          - years
+      minimal-period:
+        description: Minimal number of time periods
+        format: int32
+        type: integer
+      minimal-unit-of-time:
+        description: Unit of time for minimal period
+        type: string
+        enum:
+          - days
+          - months
+          - years
+  notification:
+    description: Notification
+    x-asee-compliance: This object seems very strange. It is not clear what is its purpose. Should be removed.
+    type: object  
+    required:        
+    - product-number
+    properties:
+      product-number:
+        type: string
+        description: The unique identifier of a Product
+      name:
+        type: string
+        description: Identifies the label given to a specific Product to identify or distinguish it from other Products
+      description:
+        type: string
+        description: Identifies a product description
