@@ -1,0 +1,1281 @@
+swagger: '2.0'
+info:
+  version: beta
+  title: Party Data API
+  description: |
+    Party data API gives you access to individuals and organizations registered with the financial institution whether they are customers or just prospects or related parties. 
+    Also you can get all party related information like identification documents, contacts, financial reports, classifications and arrangements. 
+    Party data service can be used to register new prospects in the system'
+host: api.asee.co
+basePath: /party-data
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+tags:
+  - name: Individuals
+    description: Working with individual customer data
+  - name: Identification documents
+    description: Working with identification documents of the individual customer
+  - name: Contacts
+    description: Working with contact data of the individual customer
+  - name: Contact preferences
+    description: Working with individual customers contact preferences
+  - name: Classifications
+    description: Working with classification shemas and their values
+paths:
+  /individuals:
+    get:
+      summary: Operation for returning list of registered individual customers
+      tags:
+        - Individuals
+      operationId: Individuals_GetList
+      parameters:
+        - $ref: '#/parameters/telecommunication-number-param'
+        - $ref: '#/parameters/email-param'
+        - $ref: '#/parameters/facebook-account-param'
+        - description: Customer number
+          in: query
+          name: customer-number
+          required: false
+          type: string
+        - $ref: '#/parameters/name-param'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/individual-list'
+        default:
+          $ref: '#/responses/default-error-response'
+    post:
+      summary: Creates the individual customer with complete (full) data.
+      tags:
+        - Individuals
+      operationId: Individuals_Create
+      parameters:
+        - description: Command contains parameters for new individual registration.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/register-individual-command'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+  /individuals/potential:
+    post:
+      summary: Creates the individual prospect customer with electronic address and telecommunication number. Represents potential client.
+      tags:
+        - Individuals
+      operationId: Individuals_CreatePotential
+      parameters:
+        - description: Command contains parameters for registration of new prospect client.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/register-potential-individual-command'
+      responses:
+        '202':
+          description: Accepted
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+  '/individuals/{customer-number}/identification-documents':
+    get:
+      summary: Operation returns list of identification-documents with basic document information.
+      tags:
+        - Identification documents
+      operationId: IdentificationDocuments_GetList
+      parameters:
+        - $ref: '#/parameters/customer-number-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/identification-document-list'
+        default:
+          $ref: '#/responses/default-error-response'
+  '/individuals/{customer-number}':
+    get:
+      summary: 'Operation returns individual containing basic information and links to other related data such are contacts, contact preferences. A list of custom defined fields defined by the financial institution is returned'
+      tags:
+        - Individuals
+      x-asee-tags:
+        - Shapeable
+      operationId: Individuals_Get
+      parameters:
+        - $ref: '#/parameters/customer-number-param'
+        - $ref: '#/parameters/include-fields-list-param'
+        - $ref: '#/parameters/exclude-field-list-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/individual'
+        default:
+          $ref: '#/responses/default-error-response'
+  '/individuals/{customer-number}/contacts/postal-address':
+    post:
+      summary: Register postal address contact for an individual
+      tags:
+        - Contacts
+      operationId: Contacts_CreatePostalAddress
+      parameters:
+        - $ref: '#/parameters/customer-number-param'
+        - description: Command contains parameters for registration of new postal address.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/register-postal-address-command'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+  '/individuals/{customer-number}/contacts/telecommunication-number':
+    post:
+      summary: Register telecommunication number contact for an individual
+      tags:
+        - Contacts
+      operationId: Contacts_CreateTelecommunicationNumber
+      parameters:
+        - $ref: '#/parameters/customer-number-param'
+        - description: Command contains parameters for registration of new telecommunication number.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/register-telecommunication-number-command'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+  '/individuals/{customer-number}/contacts/electronic-address':
+    post:
+      summary: Register electronic address contact for an individual
+      tags:
+        - Contacts
+      operationId: Contacts_CreateElectronicAddress
+      parameters:
+        - $ref: '#/parameters/customer-number-param'
+        - description: Command contains parameters for registration of new electronic address.
+          in: body
+          name: register-electronic-address
+          required: true
+          schema:
+            $ref: '#/definitions/register-electronic-address-command'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+  '/individuals/{customer-number}/contacts':
+    get:
+      summary: Get list of contacts for customer with general information. The list can be filtered to return only specific kind of contacts using the kind parameter and also this list can also be filtered by usage enumerated in the usage optional parameter.
+      tags:
+        - Contacts
+      x-asee-tags:
+        - Shapeable
+        - Sortable
+        - Pageable
+      operationId: Contacts_GetList
+      parameters:
+        - $ref: '#/parameters/customer-number-param'
+        - $ref: '#/parameters/category-param'
+        - $ref: '#/parameters/usage-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-number-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-type-param'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/contact-list'
+        default:
+          $ref: '#/responses/default-error-response'
+  '/individuals/{customer-number}/contacts/postal-address/{contact-id}':
+    get:
+      summary: 'Operation returns postal address contact for individual with basic information, usage, postal address details, contact preferences.'
+      tags:
+        - Contacts
+      operationId: Contacts_GetPostalAddress
+      parameters:
+        - $ref: '#/parameters/customer-number-param'
+        - $ref: '#/parameters/contact-id-param'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/postal-address'
+        default:
+          $ref: '#/responses/default-error-response'
+  '/individuals/{customer-number}/contacts/telecommunication-number/{contact-id}':
+    get:
+      summary: 'Operation returns telecommunication number contact for individual with basic information, usage, telecommunication number details, contact preferences.'
+      tags:
+        - Contacts
+      operationId: Contacts_GetTelecommunicationNumber
+      parameters:
+        - $ref: '#/parameters/customer-number-param'
+        - $ref: '#/parameters/contact-id-param'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/telecommunication-number'
+        default:
+          $ref: '#/responses/default-error-response'
+  '/individuals/{customer-number}/contacts/electronic-address/{contact-id}':
+    get:
+      summary: 'Operation returns electronic address contact for individual with basic information, usage, electronic address details, contact preferences.'
+      tags:
+        - Contacts
+      operationId: Contacts_GetElectronicAddress
+      parameters:
+        - $ref: '#/parameters/customer-number-param'
+        - $ref: '#/parameters/contact-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/electronic-address'
+        default:
+          $ref: '#/responses/default-error-response'
+  '/individuals/{customer-number}/contact-preferences':
+    get:
+      summary: 'Operation returns general contact preferences for individual with basic information, language, opt ins, opt outs.'
+      tags:
+        - Contact preferences
+      operationId: Individuals_GetContactPreferences
+      parameters:
+        - $ref: '#/parameters/customer-number-param'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/contact-preference'
+        default:
+          $ref: '#/responses/default-error-response'
+  '/individuals/{customer-number}/identification-documents/{document-id}':
+    get:
+      summary: Operation returns identification documents with links to a content repository if the document is available in other formats.
+      tags:
+        - Identification documents
+      operationId: Individuals_GetIdentificationDocument
+      parameters:
+        - $ref: '#/parameters/customer-number-param'
+        - $ref: '#/parameters/document-id-param'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/identification-document'
+        default:
+          $ref: '#/responses/default-error-response'
+  '/classifications/{schema}':
+    get:
+      summary: Gets the classification values.
+      tags:
+        - Classifications
+      operationId: ClassificationValues_Get
+      parameters:
+        - $ref: '#/parameters/schema-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/classification-value'
+            type: array
+        default:
+          $ref: '#/responses/default-error-response'
+
+responses:
+  default-error-response:
+    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
+
+definitions:
+  individual-list:
+    x-asee-compliance: Missing description of object.
+    properties:
+      total-count:
+        description: Total number of individuals in the list
+        format: int32
+        type: integer
+      page-size:
+        description: Number of individuals contained in one page
+        format: int32
+        type: integer
+      page-number:
+        description: Current page number
+        format: int32
+        type: integer
+      total-pages:
+        description: Number of pages calculated on page number and page size
+        format: int32
+        type: integer
+      items:
+        description: Individual items
+        items:
+          $ref: '#/definitions/individual'
+        type: array
+    type: object
+  individual:
+    description: Individual
+    properties:
+      customer-number:
+        description: Party identifier
+        type: string
+      full-name:
+        description: Human readable name of the object by which it is best recognized.
+        type: string
+      gender:
+        description: 'Gender is the characteristic pertaining to, and differentiating between, masculinity and femininity'
+        type: string
+        enum:
+          - female
+          - male
+          - unknown
+      birth-date:
+        description: Persons date of birth
+        format: date-time
+        type: string
+      place-of-birth:
+        description: Persons place of birth
+        type: string
+      country-of-birth:
+        description: Persons country of birth
+        type: string
+      category:
+        description: 'Categories of individual customers. For complete list of possible values see [category-of-individuals]() classification.'
+        type: string
+      status:
+        description: 'Identifies the state of a customer within a lifecycle model. Values see in [customer-lyfecycle-status]() classification.'
+        type: string
+      contact-preference:
+        description: General contact preference
+        $ref: '#/definitions/contact-preference'
+      primary-identification:
+        description: 'Acceptable primary proof of identity entered from original or certified documents with full name and date of birth, such passport, driving licence, personal identification card. Values see in [primary-identification-document]() classification.'
+        $ref: '#/definitions/party-identification'
+      primary-citizenship:
+        description: Primary citizenship entered from original or certified document
+        x-asee-compliance: This property should be related to classification.
+        type: string
+      relationship-manager:
+        description: Customer relations managers (CRMs) are sometimes referred to as account managers and are the liaisons between a business and its customers.
+        x-asee-compliance: What is this property used for? Its name and description are not clear. String type does not seem good enough. Probably should be removed.
+        type: string
+      legal-address:
+        x-asee-compliance: Shouldn't this also be structured as object?
+        description: Legal address
+        type: string
+      marital-status:
+        description: Marital status
+        enum:
+          - divorced
+          - common-law-marriage
+          - married
+          - single
+          - widowed
+        type: string
+      employment-status:
+        description: 'Employment status of the individual customer. For complete list of possible values see [employment-status]() classification.'
+        type: string
+      employment-info:
+        description: Employment info
+        $ref: '#/definitions/employment-info'
+      contacts:
+        description: List of contact details
+        items:
+          $ref: '#/definitions/contact'
+        type: array
+      arrangements:
+        description: List of individuals arrangements
+        items:
+          $ref: '#/definitions/arrangement-info'
+        type: array
+      mandates:
+        description: List of individuals mandates
+        items:
+          $ref: '#/definitions/mandate'
+        type: array
+      postal-address:
+        description: Postal delivery address.
+        $ref: '#/definitions/postal-address'
+    type: object
+  contact-preference:
+    x-asee-compliance: Missing description of object.
+    properties:
+      contact-preference-id:
+        x-asee-compliance: This property probably should not be exposed through API. Only currently valid general contact preferences are returned. Also, type should be string.
+        description: Contact identifier.
+        type: string
+      preferred-language:
+        x-asee-compliance: This should be related to some classification.
+        description: Preferred communication language
+        type: string
+      contact-purpose:
+        x-asee-compliance: This should be related to enum/classification. Also, this property should probably be removed, since only general preference is exposed through API. Also, in contact object this property is called usage, here it is called purpose, this should be unified.
+        description: Contact Purpose
+        type: string
+      arrangement-number:
+        x-asee-compliance: Why do we have arrangement number here? This property is not needed.
+        description: The number presented to customer as arrangement or contract number.
+        type: string
+      start-date:
+        x-asee-compliance: This property probably should not be exposed through API. Only currently valid general contact preferences are returned.
+        description: Start date.
+        format: date-time
+        type: string
+      end-date:
+        x-asee-compliance: This property probably should not be exposed through API. Only currently valid general contact preferences are returned.
+        description: End date.
+        format: date-time
+        type: string
+      opt-ins:
+        description: List of services for which the customer wants to receive notifications.
+        x-asee-compliance: Should be related to some classification.
+        items:
+          type: string
+        type: array
+      opt-outs:
+        description: List of services for which the customer does not want to receive notifications anymore.
+        x-asee-compliance: Should be related to some classification.
+        items:
+          type: string
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  party-identification:
+    x-asee-compliance: Missing description of object.
+    properties:
+      number:
+        description: Identification number
+        type: string
+      category:
+        description: 'Type of identification number. For complete list of possible values see [registration-number]() classification.'
+        type: string
+      uri:
+        description: URI
+        type: string
+    type: object
+  employment-info:
+    x-asee-compliance: Missing description of object.
+    properties:
+      employer-name:
+        x-asee-compliance: It is possible that employer id is needed too?
+        description: Employer name.
+        type: string
+      employment-date:
+        description: Employment date.
+        format: date-time
+        type: string
+      employment-position:
+        x-asee-compliance: Is this related to some classification?
+        description: Employment position.
+        type: string
+      uri:
+        description: URI
+        type: string
+    type: object
+  contact:
+    x-asee-compliance: Missing description of object.
+    properties:
+      id:
+        x-asee-compliance: This property is the same as one below. It should be removed.
+        description: Contact Id
+        format: int64
+        type: integer
+      contact-id:
+        description: Contact identifier
+        type: string
+      usage:
+        description: 'Context of usage of the contact. For complete list of possible values see [contact-usage]() classification.'
+        type: string
+      category:
+        description: 'The category of contact. For complete list of possible values see [contact-category]() classification.'
+        x-asee-compliance: Where is the information about the type of contact object? If this is the property, it should probably be called contact-type and related to enum of system supported contact types, not the classification.
+        type: string
+      details:
+        description: Contact details
+        type: string
+      postal-address:
+        x-asee-compliance: Why is the postal address exposed here as a property of base contact object? It should be removed. Postal address is specific object/type of contact derived from base contact object.
+        description: Postal address
+        $ref: '#/definitions/postal-address'
+      contact-preference:
+        x-asee-compliance: This property is not needed, it should be removed. Contact preferences are returned on the level individual object, and not for each contact separately.
+        description: Contact preference
+        $ref: '#/definitions/contact-preference'
+      is-primary:
+        description: Signifies if this is the primary contact address.
+        type: boolean
+      uri:
+        description: URI
+        type: string
+    type: object
+  arrangement-info:
+    x-asee-compliance: Missing description of object.
+    properties:
+      arrangement-number:
+        description: The number presented to customer as arrangement or contract number.
+        type: string
+      category:
+        description: 'Arrangement type. For complete list of possible values see [arrangement-category]() classification.'
+        type: string
+      navigations:
+        x-asee-compliance: Property not needed. Wrong description.
+        description: 'Values see in [arrangement-category]() classification.'
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        x-asee-compliance: Property not needed.
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  mandate:
+    x-asee-compliance: Missing description of object.
+    properties:
+      customer-number:
+        description: Customer identifier
+        type: string
+      authorized-service:
+        description: Authorized services list
+        $ref: '#/definitions/authorized-service'
+      arrangement-number:
+        description: The number presented to customer as arrangement or contract number.
+        type: string
+      effective-date:
+        description: Effective date
+        format: date-time
+        type: string
+      end-date:
+        description: End date
+        format: date-time
+        type: string
+      uri:
+        description: URI
+        type: string
+    type: object
+  postal-address:
+    x-asee-compliance: Missing description of object.
+    properties:
+      is-primary:
+        description: 'Is primary flag for postal address contact, indicating which postal address should be used if multiple choice of the same usage is avalable'
+        type: boolean
+      usage:
+        description: 'Usage type for postal address contact (home, default, business...)'
+        x-asee-compliance: This should be related to enum/classification.
+        type: string
+      country:
+        x-asee-compliance: This property should be related to classification.
+        description: Country name
+        type: string
+      locality:
+        description: Locality name
+        type: string
+      street:
+        description: Street
+        type: string
+      street-number:
+        description: Street number
+        type: string
+      apartment:
+        description: Apartment number (door number)
+        type: string
+      address-code:
+        description: Address code
+        type: string
+      floor:
+        description: Floor number
+        type: string
+      municipality:
+        description: Municipality
+        type: string
+      postal-code:
+        x-asee-compliance: This property should be related to classification.
+        description: Postal code
+        type: string
+      locality-code:
+        x-asee-compliance: What is the difference between this and postal code? This property is probably redundant.
+        description: Locality code
+        type: string
+      street-code:
+        x-asee-compliance: This property is probably not needed. If needed, street property may be related to classification, i.e. as autocomplete text.
+        description: Street code
+        type: string
+    type: object
+  link:
+    x-asee-compliance: Missing description of object, properties description is not ideal. But, probably this object is not needed at all.
+    properties:
+      href:
+        description: Gets or sets the href.
+        type: string
+      rel:
+        description: Gets or sets the rel.
+        type: string
+    type: object
+  authorized-service:
+    x-asee-compliance: Missing description of object and its properties.
+    properties:
+      category:
+        type: string
+        x-asee-compliance: This should be related to some classification.
+      limit:
+        $ref: '#/definitions/currency'
+    type: object
+  currency:
+    description: Currency amount and code
+    properties:
+      code:
+        description: Currency code.
+        type: string
+      amount:
+        description: Amount.
+        format: double
+        type: number
+    type: object
+  register-individual-command:
+    x-asee-compliance: Missing description of object.
+    properties:
+      id:
+        x-asee-compliance: This property is not needed, should be removed.
+        description: Command identifier
+        type: string
+      first-name:
+        description: Human readable first name of the object by which it is best recognized.
+        x-asee-compliance: Correct this description to something better.
+        maxLength: 40
+        minLength: 0
+        type: string
+      last-name:
+        description: Human readable last name of the object by which it is best recognized.
+        x-asee-compliance: Correct this description to something better.
+        maxLength: 40
+        minLength: 0
+        type: string
+      telecommunication-number:
+        description: Telecommunication number
+        $ref: '#/definitions/telecommunication-number'
+      electronic-address:
+        description: Electronic address
+        $ref: '#/definitions/electronic-address'
+      identity-card:
+        description: Document which confirms personal identity.
+        $ref: '#/definitions/identity-card'
+      personal-identification-number:
+        description:  Unique identification number of person
+        type: string
+      birth-place-code:
+        description: Unique reference number to the place
+        x-asee-compliance: This property should be related to classification.
+        maxLength: 20
+        minLength: 0
+        type: string
+      birth-place:
+        description: Place name
+        type: string
+      birth-country:
+        description: ISOA3 Code for country
+        x-asee-compliance: This property should be related to classification.
+        maxLength: 3
+        minLength: 3
+        type: string
+      middle-name:
+        description: 'The additional names given to a individual, usually at birth, and which appear sequentially between the first name and last name.'
+        maxLength: 36
+        minLength: 0
+        type: string
+      country-of-residence:
+        description: ISO A3 Code
+        x-asee-compliance: This property should be related to classification.
+        maxLength: 20
+        minLength: 0
+        type: string
+      legal-address:
+        description: Details about official address (address from identification document)
+        $ref: '#/definitions/postal-address'
+      contact-address:
+        description: Details about contact address
+        $ref: '#/definitions/postal-address'
+      delivery-address:
+        description: Details about delivery address
+        $ref: '#/definitions/postal-address'
+      employment-status:
+        description: "The status of the Individual's employment. Eg:employed, farmer, leave-of-absence, not-employed, part-time-job...."
+        x-asee-compliance: This property should be related to classification.
+        maxLength: 50
+        minLength: 0
+        type: string
+      foreign-official:
+        description: Is the person foreign official
+        type: boolean
+      related-to-foreign-official:
+        description: Is the person member of foreign official's family
+        type: boolean
+      customer-number:
+        description: 'Business identifier of the party in the core system. It can be either core generated, or imported.'
+        maxLength: 30
+        minLength: 0
+        type: string
+      residential-status:
+        description: Customer residence status. For complete list of possible values see [residential-status]() classification.'
+        maxLength: 50
+        minLength: 0
+        type: string
+    required:
+      - first-name
+      - last-name
+      - personal-identification-number
+      - birth-country
+      - middle-name
+    type: object
+  telecommunication-number:
+    x-asee-compliance: Missing description of object.
+    properties:
+      usage:
+        description: Usage type for telecommunication number
+        x-asee-compliance: This should be related to enum or classification.
+        type: string
+      is-primary:
+        description: Flag that this is the primary telephone number that should be used for communication with customer.
+        type: boolean
+      category:
+        description: 'Values see in [telecommunication-number-category]() classification.'
+        type: string
+      number:
+        description: Local number
+        maxLength: 20
+        minLength: 0
+        type: string
+      area-code:
+        description: AreaCode number
+        maxLength: 20
+        minLength: 0
+        type: string
+      country-code:
+        description: CountryCode number
+        maxLength: 20
+        minLength: 0
+        type: string
+      extension:
+        description: Extension number
+        maxLength: 20
+        minLength: 0
+        type: string
+    required:
+      - usage
+      - category
+      - number
+    type: object
+  electronic-address:
+    x-asee-compliance: Missing description of object.
+    properties:
+      is-primary:
+        description: Flag that this is the primary electronic address that should be used for communication with customer.
+        type: boolean
+      usage:
+        description: Usage type for electronic address contact
+        x-asee-compliance: This should be related to enum or classification.
+        type: string
+      category:
+        description: Electronic address category
+        x-asee-compliance: This should be related to enum.
+        type: string
+      address-text:
+        description: Address text
+        maxLength: 255
+        minLength: 0
+        type: string
+    required:
+      - usage
+      - category
+      - address-text
+    type: object
+  identity-card:
+    x-asee-compliance: This object should be removed and identification-document object should be used instead. The identification-document object should be extended to contain all the missing properties from identification-card object.
+    properties:
+      card-number:
+        description: Id or serial number of the identification document.
+        maxLength: 36
+        minLength: 0
+        type: string
+      identity-card-category:
+        description: 'See values in [primary-identification-document]() clasifications'
+        type: string
+      issuing-date:
+        description: Date of last issuing
+        format: date-time
+        type: string
+      end-date:
+        description: Document validity end date
+        format: date-time
+        type: string
+      start-date:
+        description: Document validity start date
+        x-asee-compliance: This is the same as issuing date, should be removed.
+        format: date-time
+        type: string
+      issuing-place:
+        description: Reference to the place where document is issued.
+        maxLength: 20
+        minLength: 0
+        type: string
+      authority:
+        description: The authority the issued the document
+        maxLength: 100
+        minLength: 0
+        type: string
+    type: object
+  command-result:
+    x-asee-compliance: Missing description for object and its properties.
+    description: ''
+    properties:
+      id:
+        description: 'Gets or sets the id of created, updated or deleted entity.'
+        type: string
+      created-record-status:
+        description: Status of the record operation. For complete list of possible values see [record-status]() classification.
+        type: string
+    type: object
+  register-potential-individual-command:
+    description: Register light individual command
+    properties:
+      id:
+        x-asee-compliance: This property should be removed, it is not needed.
+        description: Command identifier
+        type: string
+      first-name:
+        description: Human readable first name of the object by which it is best recognized.
+        maxLength: 40
+        minLength: 0
+        type: string
+      last-name:
+        description: Human readable last name of the object by which it is best recognized.
+        maxLength: 40
+        minLength: 0
+        type: string
+      telecommunication-number:
+        description: Phone number
+        $ref: '#/definitions/telecommunication-number'
+      electronic-address:
+        description: Electronic address
+        $ref: '#/definitions/electronic-address'
+      postal-address:
+        description: Postal address
+        $ref: '#/definitions/postal-address'
+      description:
+        description: Description
+        type: string
+      personal-identification-number:
+        description: Identification number which uniquely identify person
+        type: string
+      passport-number:
+        description: Passport serial number
+        type: string
+    required:
+      - first-name
+      - last-name
+    type: object
+  identification-document-list:
+    x-asee-compliance: Missing description of object.
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/identification-document'
+        type: array
+    type: object
+  identification-document:
+    x-asee-compliance: Missing description of object. This object should be extended to contain all the missing properties from identification-card object. The identification-card object should be removed.
+    properties:
+      valid-to-date:
+        description: Valid till date
+        format: date-time
+        type: string
+      status:
+        description: Status of document
+        type: string
+      number:
+        description: Registration number
+        type: string
+      category:
+        description: Category of identification document. For complete list of possible values see [registration-number]() classification.
+        type: string
+      uri:
+        description: URI
+        type: string
+    type: object
+  register-postal-address-command:
+    description: Register postal address command
+    x-asee-compliance: There are differences between this and postal-address object, although these two should pretty much correspond to each other.
+    properties:
+      id:
+        x-asee-compliance: This property should be removed, it is not needed.
+        description: Command identifier
+        type: string
+      contact-id:
+        description: Contact identifier
+        x-asee-compliance: Do we have this info when registering primary postal address? Probably not. Should be removed.
+        type: string
+      party-id:
+        description: 'Business identifier of the party in the core system. It can be either core generated, or imported.'
+        x-asee-compliance: This property is already provided in operation path. It is redundant here and should be removed.
+        type: string
+      is-primary:
+        description: 'Is primary flag for postal address contact, indicating which postal address should be used if multiple choice of the same usage is avalable'
+        type: boolean
+      usage:
+        description: 'Usage type for postal address contact (home, default, business...)'
+        x-asee-compliance: This should be related to enum/classification.
+        type: string
+      country:
+        description: ISOA3 Code for country
+        x-asee-compliance: This should be related to classification.
+        maxLength: 3
+        minLength: 3
+        type: string
+      locality-code:
+        description: Unique reference number to the place
+        x-asee-compliance: Where is the postal-code property in this object? Probably postal-code should be used instead of this locality-code.
+        type: string
+      locality:
+        description: Place name
+        type: string
+      street:
+        description: Identifies the street on which an address is located.
+        maxLength: 100
+        minLength: 0
+        type: string
+      street-code:
+        x-asee-compliance: This property is probably not needed. If needed, street property may be related to classification, i.e. as autocomplete text.
+        description: Unique reference number to the street
+        type: string
+      street-number:
+        description: Street number (building number)
+        type: string
+      apartment:
+        description: Apartment number (door number)
+        maxLength: 10
+        minLength: 0
+        type: string
+      address-code:
+        description: 'Unique external address reference ID, from the state address register.'
+        maxLength: 255
+        minLength: 0
+        type: string
+      end-date:
+        description: End date is used in delete address scenarion. After this date this address is not in use any more
+        x-asee-compliance: This property and described behaviour should probably not be used through MC API in this way. If needed, there should be some operation that changes /status of address.
+        format: date-time
+        type: string
+      floor:
+        description: Floor number
+        type: string
+    required:
+      - usage
+      - country
+      - locality-code
+      - street
+      - street-number
+    type: object
+  register-telecommunication-number-command:
+    description: Register telecommunication number contact
+    properties:
+      id:
+        x-asee-compliance: This property should be removed, it is not needed.
+        description: Command identifier
+        type: string
+      contact-id:
+        description: Contact identifier
+        type: string
+      party-id:
+        description: 'Business identifier of the party in the core system. It can be either core generated, or imported.'
+        x-asee-compliance: This property is already provided in operation path. It is redundant here and should be removed.
+        type: string
+      usage:
+        description: 'Usage type for telecommunication number. For complete list of possible values see [contact-usage]() classification.'
+        type: string
+      is-primary:
+        description: 'Is primary flag for telecommunication number, indicating which telecommunication number should be used if multiple choice of the same kind and usage is avalable'
+        type: boolean
+      category:
+        description: 'Telecommunication number category. For complete list of possible values see [telecommunication-number-category]() classification.'
+        type: string
+      number:
+        description: Phone number
+        maxLength: 20
+        minLength: 0
+        type: string
+      end-date:
+        description: End date is used in delete address scenarion. After this date this address is not in use any more
+        x-asee-compliance: This property and described behaviour should probably not be used through MC API in this way. If needed, there should be some operation that changes /status of address.
+        format: date-time
+        type: string
+    required:
+      - usage
+      - category
+      - number
+    type: object
+  register-electronic-address-command:
+    description: Register electronic address contact command
+    properties:
+      id:
+        x-asee-compliance: This property should be removed, it is not needed.
+        description: Command identifier
+        type: string
+      contact-id:
+        description: Contact identifier
+        format: int64
+        type: integer
+      party-id:
+        description: 'Business identifier of the party in the core system. It can be either core generated, or imported.'
+        x-asee-compliance: This property is already provided in operation path. It is redundant here and should be removed.
+        type: string
+      is-primary:
+        description: 'Is primary flag for electronic address contact, indicating which electronic address should be used if multiple choice of the same kind and usage is avalable'
+        type: boolean
+      usage:
+        description: 'Usage type for electronic address.For complete list of possible values see [contact-usage]() classification.'
+        type: string
+      category:
+        description: 'Category of electronic address. For complete list of possible values see [electronic-address-category]() classification.'
+        type: string
+      address-text:
+        description: Address text
+        maxLength: 255
+        minLength: 0
+        type: string
+      end-date:
+        description: End date is used in delete address scenarion. After this date this address is not in use any more
+        format: date-time
+        type: string
+    required:
+      - usage
+      - category
+      - address-text
+    type: object
+  contact-list:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/contact'
+        type: array
+    type: object
+  individuals-contact:
+    x-asee-compliance: Remove this object, it is the same as the contact object described above. We shouldn't have two objects for the same purpose.
+    properties:
+      id:
+        description: Contact Id
+        format: int64
+        type: integer
+      contact-id:
+        description: Contact identifier
+        type: string
+      usage:
+        description: 'Usage type for electronic address. For complete list of possible values see [contact-usage]() classification.'
+        type: string
+      category:
+        description: 'Category od contact address. For complete list of possible values see [contact-address-category]() classification.'
+        type: string
+      details:
+        description: Contact details
+        type: string
+      contact-preference:
+        description: List of contact preferences. Each contact preference describes for which purposes this contact will be used.
+        items:
+          $ref: '#/definitions/contact-preference'
+        type: array
+      is-primary:
+        description: Is primary
+        type: boolean
+      uri:
+        description: URI
+        type: string
+    type: object
+  identification-document-details:
+    x-asee-compliance: Remove this object, it is not needed, it is not used. The identification-document (extended/merged with properties of identification-card) should be the main object to use.
+    properties:
+      links-to-document-content:
+        description: Links to a content repository if the document is available in other formats.
+        items:
+          type: string
+        type: array
+      issuing-date:
+        description: Issuing date of document.
+        format: date-time
+        type: string
+      document-issuer:
+        description: Issuer of document
+        type: string
+      valid-to-date:
+        description: Valid till date
+        format: date-time
+        type: string
+      status:
+        description: Status of document
+        type: string
+      number:
+        description: registration number
+        type: string
+      kind:
+        description: 'Values see in [registration-number]() classification.'
+        type: string
+      uri:
+        description: URI
+        type: string
+    type: object
+  classification-value: 
+    description: "Classification value"
+    properties: 
+      code: 
+        description: "Code of classification value."
+        type: "string"
+      literal: 
+        description: "Literal."
+        type: "string"
+      description: 
+        description: "Description."
+        type: "string"
+      id: 
+        description: "Identifier of classification value."
+        type: "string"
+      parent-id: 
+        description: "Parent classification value id."
+        type: "string"
+      ordinal: 
+        description: "Ordinal number."
+        type: "string"
+    type: "object"
+parameters:
+  telecommunication-number-param:
+    description: Telecommunication number
+    in: query
+    name: telecommunication-number
+    required: false
+    type: string
+  email-param:
+    description: Electronic address
+    in: query
+    name: email
+    required: false
+    type: string
+  facebook-account-param:
+    description: Facebook account
+    in: query
+    name: facebook-account
+    required: false
+    type: string
+  customer-number-param:
+    description: Customer number
+    in: path
+    name: customer-number
+    required: true
+    type: string
+  name-param:
+    description: Customer Name
+    in: query
+    name: name
+    required: false
+    type: string
+  include-fields-list-param:
+    description: Gets or sets the field names.
+    in: query
+    name: include-fields-list
+    required: false
+    items:
+      type: string
+    type: array
+  exclude-field-list-param:
+    description: Gets or sets the field names.
+    in: query
+    name: exclude-field-list
+    required: false
+    items:
+      type: string
+    type: array
+  category-param:
+    description: 'Category of contact (e.g. phone, mobile, email, postal-address,...). If set, only contacts of these kinds will be returned. If not set, all contacts will be returned.'
+    in: query
+    name: category
+    required: false
+    items:
+      type: string
+    type: array
+  usage-param:
+    description: 'Usage of contact (e.g. seasonal, assistant, work, home, default, business, legal,...). If set, only contacts of these usage will be returned. If not set, all contacts will be returned.'
+    in: query
+    name: usage
+    required: false
+    items:
+      type: string
+    type: array
+  page-size-param:
+    description: Gets or sets the size of the page.
+    in: query
+    name: page-size
+    required: false
+    format: int32
+    type: integer
+  page-number-param:
+    description: Gets or sets the page number.
+    in: query
+    name: page-number
+    required: false
+    format: int32
+    type: integer
+  sort-order-param:
+    description: Gets or sets the sort order - direction (ASC or DESC).
+    in: query
+    name: sort-order
+    required: false
+    type: string
+  sort-type-param:
+    description: Gets or sets the name of the column for sorting.
+    in: query
+    name: sort-type
+    required: false
+    type: string
+  contact-id-param:
+    description: Contact identifier
+    in: path
+    name: contact-id
+    required: true
+    type: string
+  document-id-param:
+    description: Document identifier in the core system
+    in: path
+    name: document-id
+    required: true
+    type: string
+  schema-param:
+    description: Schema name
+    in: path
+    name: schema
+    required: true
+    type: string
