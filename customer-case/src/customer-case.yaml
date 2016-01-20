@@ -45,33 +45,31 @@ definitions:
     description: Contains details of customer case.
     properties:
       case-id:
-        description: Unique identifier of customer case
+        description: Unique identifier of customer case.
+        type: string
+      case-topic:
+        description: Type of the customer's request. For complete list of possible values see [case-topic]() classification.
         type: string
       case-type:
-        description: Type of delivered customer service request.
-        type: string
-        x-asee-compliance: This property should be related to some classification.
-      case-class:
-        description: Case class.
+        description: Type of the case object.
         enum:
           - complaint
-          - customer-service-request
+          - service-request
           - callback-request
         type: string
-        x-asee-compliance: Can this property have some better name than the 'case-class'? For me, most natural name is case-type, but then the previous property should be renamed to e.g. service-request-type.
-      registered-by-id:
+      registered-by-party-number:
         description: Unique identifier of the party that creates the case.
         type: string
-      registered-by-name:
+      registered-by-party-name:
         description: Name of the party that opens the case.
         type: string
-      updated-by-id:
+      updated-by-party-number:
         description: Unique identifier of the party that changed the case.
         type: string
-      updated-by-name:
+      updated-by-party-name:
         description: Name of the party that changed the case.
         type: string
-      customer-id:
+      customer-number:
         description: Unique identifier of the client.
         type: string
       customer-name:
@@ -101,13 +99,13 @@ definitions:
           - very-important
         type: string
       title:
-        description: Tile of the case.
+        description: Title of the case.
         type: string
       details:
         description: Details about the case.
         type: string
       arrangement-number:
-        description: Arrangement number to which the case is related
+        description: Arrangement number to which the case is related.
         type: string
       attachments:
         description: Associated case files.
@@ -139,21 +137,24 @@ definitions:
       uri:
         description: URI
         type: string
-    type: object
+    type: object    
   update-case-command:
     description: Updates resolution and state of some case.
     properties:
       case-type:
+        x-asee-compliance: This property is redundant and should be removed. The case-type is automatically recognized by case-id which is already defined in operation path.
         description: Case type
         enum:
           - complaint
-          - customer-service-request
+          - service-request
           - callback-request
         type: string
       case-id:
+        x-asee-compliance: This property is redundant and should be removed. The case-id parameter is already defined in operation path.
         description: Unique identifier of customer case
         type: string
-      updated-by-id:
+      updated-by-party-number:
+        x-asee-compliance: This parameter is redundant and should be removed. This value is already submitted through invocation context.
         description: Identifier of the party that is modifying the case.
         type: string
       resolution:
@@ -168,14 +169,13 @@ definitions:
         type: string
     type: object
   command-result:
-    description: ''
-    x-asee-compliance: Missing description of object. Description of properties should be corrected too.
+    description: The result of the executed command.
     properties:
       id:
-        description: 'Gets or sets the id of created, updated or deleted entity.'
+        description: 'Returns the identifier of created, updated or deleted object.'
         type: string
       created-record-status:
-        description: 'Gets or sets the created, updated, deleted record status.'
+        description: 'Status of the object (created, updated, deleted).'
         type: string
     type: object
   case-history:
@@ -226,21 +226,20 @@ definitions:
         description: The type of the case is one of the delivered types of CustomerServiceRequest object type.
         enum:
           - complaint
-          - customer-service-request
+          - service-request
           - callback-request
         type: string
-      updated-by-id:
+      updated-by-party-number:
         description: Identifier of the party that changed the case.
         type: string
-      updated-by-name:
+      updated-by-party-name:
         description: Name of the party that changed the case.
         type: string
-      customer-id:
+      customer-number:
         description: Unique identifier of the client.
         type: string
       customer-name:
-        description: Gets or sets the customer name
-        type: string
+        description: Gets or sets the customer name.
       registration-date:
         description: Date of case registration.
         format: date-time
@@ -282,21 +281,16 @@ definitions:
         type: string
     type: object
   create-callback-request-command:
-    description: Creates callback for some customer case.
+    description: Creates customer case for callback.
     properties:
       callback-request-time:
         description: Callback request time
         format: date-time
         type: string
       category:
-        description: Category of callback request
-        x-asee-compliance: This property should be probably related to classification instead of enum.
-        enum:
-          - cards
-          - credit
-          - limit
+        description: 'Category of callback request. For a complete list of possible values see [callback-category]() classification.'
         type: string
-      customer-id:
+      customer-number:
         description: Unique identifier of the client.
         type: string
     type: object
@@ -306,16 +300,13 @@ definitions:
       case-id:
         description: Unique case identifier
         type: string
-      registered-by-id:
+      registered-by-party-number:
+        x-asee-compliance: This property is redundant and should be removed. This value is already submitted through invocation context.
         description: Identifier of the party that opens the case.
         type: string
-      customer-id:
+      customer-number:
         description: Unique identifier of the client.
         type: string
-      customer-name:
-        description: Name of the customer.
-        type: string
-        x-asee-compliance: This property should be removed, it is retrieved by customer-id above.
       importance:
         description: Level of importance.
         enum:
@@ -329,17 +320,17 @@ definitions:
       arrangement-number:
         description: Arrangement number to which the case is related.
         type: string
-      comm-reason:
+      title:
         description: Reason of the related communication.
         type: string
-      comm-reply-address:
+      reply-address:
         description: Address for sending the reply to the customer.
         type: string
-      comm-reply-address-code:
+      reply-address-code:
         description: Address code for sending the reply to the customer.
         type: string
-      comm-type:
-        description: Type of communication.
+      communication-channel:
+        description: Communication channel through which case was received.
         enum:
           - email
           - face-to-face-meeting
@@ -352,10 +343,9 @@ definitions:
           - other-communication-technology
           - web
         type: string
-      case-type:
-        description: Type of case.
+      case-topic:
+        description: Type of the customer's request. For complete list of possible values see [case-topic]() classification.
         type: string
-        x-asee-compliance: This property should be removed. Type of case is obviously determined by the object type.
       related-case-id:
         description: Unique indetifier of related case.
         type: string
@@ -366,17 +356,15 @@ definitions:
       case-id:
         description: Unique case identifier
         type: string
-      registered-by-id:
+      registered-by-party-number:
+        x-asee-compliance: This property is redundant and should be removed. This value is already submitted through invocation context.
         description: Identifier of the party that opens the case.
         type: string
-      customer-id:
+      customer-number:
         description: Unique identifier of the client.
         type: string
-      customer-name:
-        description: Name of the customer.
-        type: string
       importance:
-        description: Level of imporance.
+        description: Level of importance.
         enum:
           - low
           - standard
@@ -388,17 +376,17 @@ definitions:
       arrangement-number:
         description: Arrangement number to which the case is related.
         type: string
-      comm-reason:
+      title:
         description: Reason of the related communication.
         type: string
-      comm-reply-address:
+      reply-address:
         description: Address for sending the reply to the customer.
         type: string
-      comm-reply-address-code:
+      reply-address-code:
         description: Address code for sending the reply to the customer.
         type: string
-      comm-type:
-        description: Type of communication.
+      communication-channel:
+        description: Communication channel through which case was received.
         enum:
           - email
           - face-to-face-meeting
@@ -411,10 +399,9 @@ definitions:
           - other-communication-technology
           - web
         type: string
-      case-type:
-        description: Type of case.
+      case-topic:
+        description: Type of the customer's request. For complete list of possible values see [case-topic]() classification.
         type: string
-        x-asee-compliance: This property should be removed. Type of case is obviously determined by the object type.
       related-case-id:
         description: Unique indetifier of related case.
         type: string
@@ -431,7 +418,7 @@ definitions:
       file-name:
         description: Name of the attached document.
         type: string
-      customer-id:
+      customer-number:
         description: Unique identifier of the client.
         type: string
     type: object
@@ -439,22 +426,24 @@ definitions:
     description: Closes the customer case.
     properties:
       case-type:
+        x-asee-compliance: This property is redundant and should be removed. The case-type is automatically recognized by case-id which is already defined in operation path.
         description: Case type
         enum:
           - complaint
-          - customer-service-request
+          - service-request
           - callback-request
         type: string
       case-id:
-        description: Unique identifier of customer case
+        x-asee-compliance: This property is redundant and should be removed. The case-id parameter is already defined in operation path.
+        description: Unique identifier of customer case.
         type: string
-      updated-by-id:
+      updated-by-party-number:
         description: Identifier of the party that is modifying the case.
         type: string
       resolution:
         description: Resolution of the closed case.
         type: string
-    type: object
+    type: object  
 host: api.asee.co
 info:
   description: |
@@ -501,12 +490,17 @@ paths:
           required: false
           enum:
             - complaint
-            - customer-service-request
+            - service-request
             - callback-request
+          type: string
+        - description: Type of the customer's request. For complete list of possible values see [case-topic]() classification.
+          in: query
+          name: case-topic
+          required: false
           type: string
         - description: Unique identifier of the client.
           in: query
-          name: customer-id
+          name: customer-number
           required: false
           type: string
         - description: Unique identifier of the agent that opens the case.
@@ -531,10 +525,9 @@ paths:
           name: states
           required: false
           type: string
-        - description: Title
-          x-asee-compliance: Instead of the "title" param, it would be better that "query" param remained, since through one value both titles and content of cases should be searched.
+        - description: Query
           in: query
-          name: title
+          name: query
           required: false
           type: string
         - description: Number of items on a page. For more information see general guidance on [paging and sorting]().
@@ -552,11 +545,11 @@ paths:
         - description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]().
           in: query
           name: sort-order
-          required: false
-          enum:
+          enum: 
             - asc
             - desc
           type: string
+          required: false
         - description: Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]().
           in: query
           name: sort-by
@@ -575,7 +568,7 @@ paths:
           required: false
           items:
             type: string
-          type: array     
+          type: array      
       responses:
         '200':
           description: OK
@@ -587,7 +580,7 @@ paths:
       tags:
         - Cases
   '/cases/{case-id}':
-    get:      
+    get:
       deprecated: false
       operationId: Cases_Get
       parameters:
@@ -620,7 +613,8 @@ paths:
       summary: Operation returns specific case details.
       tags:
         - Cases
-    put:      
+  '/cases/{case-id}/status':
+    put:     
       deprecated: false
       operationId: Cases_Update
       parameters:
@@ -634,13 +628,13 @@ paths:
           in: path
           name: case-id
           required: true
-          type: string      
+          type: string     
       responses:
         '200':
           description: OK
           schema:
             $ref: '#/definitions/command-result'
-        default:
+          default:
           $ref: '#/responses/default-error-response'
       summary: Operation updates the specified case progress. Operation returns customer case with updated status.
       tags:
@@ -679,7 +673,7 @@ paths:
           in: query
           name: sort-by
           required: false
-          type: string
+          type: string      
       responses:
         '200':
           description: OK
@@ -691,16 +685,16 @@ paths:
       tags:
         - Cases
   /callback-requests:
-    post:
+    post:      
       deprecated: false
       operationId: CallbackRequests_Create
       parameters:
-        - description: 'Command parametars (party-id, categorry, callback-request-time)'
+        - description: 'Command contains parameters for creating callback request.'
           in: body
           name: cmd
           required: true
           schema:
-            $ref: '#/definitions/create-callback-request-command'
+            $ref: '#/definitions/create-callback-request-command'      
       responses:
         '200':
           description: OK
@@ -712,16 +706,16 @@ paths:
       tags:
         - Callback requests
   /complaints:
-    post:
+    post:     
       deprecated: false
       operationId: Complaints_Create
       parameters:
-        - description: Parameters providcing details of new complaint
+        - description: Command contains parameters for creating new complaint.
           in: body
           name: cmd
           required: true
           schema:
-            $ref: '#/definitions/create-complaint-command'
+            $ref: '#/definitions/create-complaint-command'      
       responses:
         '200':
           description: OK
@@ -733,16 +727,16 @@ paths:
       tags:
         - Complaints
   /service-requests:
-    post:
+    post:      
       deprecated: false
       operationId: ServiceRequests_Create
       parameters:
-        - description: Parameters providing details of new service request
+        - description: Command contains parameters for creating new service request.
           in: body
           name: cmd
           required: true
           schema:
-            $ref: '#/definitions/create-service-request-command'
+            $ref: '#/definitions/create-service-request-command'      
       responses:
         '200':
           description: OK
@@ -754,7 +748,7 @@ paths:
       tags:
         - Service requests
   '/cases/{case-id}/attachments':
-    post:
+    post:    
       deprecated: false
       operationId: Cases_AddAttachment
       parameters:
@@ -768,7 +762,7 @@ paths:
           in: path
           name: case-id
           required: true
-          type: string
+          type: string      
       responses:
         '200':
           description: OK
@@ -780,7 +774,7 @@ paths:
       tags:
         - Cases
   '/cases/{case-id}/close':
-    post:
+    post:     
       deprecated: false
       operationId: Cases_Close
       parameters:
@@ -794,7 +788,7 @@ paths:
           in: path
           name: case-id
           required: true
-          type: string
+          type: string      
       responses:
         '200':
           description: OK
@@ -806,7 +800,7 @@ paths:
       tags:
         - Cases
   '/cases/{case-id}/attachments/{file-id}':
-    delete:      
+    delete:
       deprecated: false
       operationId: Cases_RemoveAttachment
       parameters:
@@ -822,7 +816,7 @@ paths:
           type: string
         - description: Unique identifier of the client.
           in: query
-          name: customer-id
+          name: customer-number
           required: false
           type: string      
       responses:
