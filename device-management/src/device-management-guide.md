@@ -5,12 +5,11 @@ Device Management API enables you to register devices, mange device statuses, en
    
 Key Resources
 -------------
-Device Management API has two top level collection resources:
+Device Management API has only one top level collection resources:
 
 Resource | Description
 ----------- |-----------
-*devices*  | Includes basic data about devices such as nickname, device imei, device status, customer etc. Beside this basic data it contains some data whichregards push notifications.
-*device models*    | Includes basic data about devices models such as name, device model code, brand name etc. 
+*devices*  | Includes basic data about devices such as nickname, device imei, device status, customer etc. Beside this basic data it contains some data whichregards push notifications. 
 
 Getting started tutorial
 ---------------
@@ -43,7 +42,8 @@ POST /devices
   "imei": "990000862471854",
   "operating-system": "iOS 9.x",
   "nickname": "My Phone",
-  "device-model-code": "IP-6S"
+  "brand-name": "Apple IPhone",
+  "model-name": "IP-6S"
 }
 ```
 You will get back `200 OK` status code device IMEI and device status. 
@@ -70,11 +70,11 @@ You will get back `200 OK` status code and json representation for fetched reque
       "status": "active"
       "nickname": "My Phone"
       "operating-system": "iOS 9.x"
-      "device-model-code": "IP-6S"
-      "device-model-name": "IPhone 6S"
+      "brand-name": "Apple IPhone",
+      "model-name": "IP-6S"
       "installation-id": 
-      "registration-id": 
-      "registration-id-expiration-date": 
+      "push-id": 
+      "push-expiration-date": 
 }
 ```
 
