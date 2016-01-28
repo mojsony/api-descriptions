@@ -17,14 +17,13 @@ tags:
   - name: Templates
     description: Working with survey templates
   - name: Surveys
-    description: Working with surveys
+    description: Working with survey responses
 paths:
   /templates:
     get:
       summary: Operation returns list of surveys templates with basic survey information.
       operationId: Templates_GetList
       x-asee-tags:
-        - Shapeable
         - Sortable
         - Pageable
       tags:
@@ -38,60 +37,50 @@ paths:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/surveys'
+            $ref: '#/definitions/survey-list'
         default:
           $ref: '#/responses/default-error-response'
   '/templates/{template-id}':
     get:
       summary: Operation generates survey for specific customer based on surveys template id
       operationId: Templates_Get
-      x-asee-tags:
-        - Shapeable
-        - Sortable
-        - Pageable
       tags:
         - Templates
       parameters:
         - $ref: '#/parameters/template-id-param'
-        - $ref: '#/parameters/survey-request-param'
       responses:
         '200':
           description: Success
           schema:
             $ref: '#/definitions/survey'
-        '440':
-          description: Business problem
-          schema:
-            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
   /surveys:
     post:
-      summary: Operation captures response to a survey
-      operationId: Surveys_CaptureResponse
-      x-asee-tags:
-        - Shapeable
-        - Sortable
-        - Pageable
+      summary: Operation captures survey response.
+      operationId: Surveys_Capture
       tags:
         - Surveys
       parameters:
-        - $ref: '#/parameters/survey-response-param'
+        - description: Contains customer answers to survey.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/capture-survey-command'
       responses:
         '200':
           description: Success
           schema:
             $ref: '#/definitions/command-result'
-        '440':
-          description: Business problem
-          schema:
-            $ref: '#/definitions/business-problem'
+        '400':
+          $ref: '#/responses/validation-problem-response'
+        default:
+          $ref: '#/responses/default-error-response'
   '/surveys/{survey-id}':
     get:
-      summary: Operation returns the completed survey with questions and answers
-      operationId: Surveys_GetSurveyDetails
-      x-asee-tags:
-        - Shapeable
-        - Sortable
-        - Pageable
+      summary: Operation returns details of completed survey with questions and answers
+      operationId: Surveys_Get
       tags:
         - Surveys
       parameters:
@@ -101,8 +90,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/survey'
-        '400':
-          $ref: '#/responses/validation-problem-response'
+        default:
+          $ref: '#/responses/default-error-response'
 parameters:
   page-size-param:
     name: page-size
@@ -129,20 +118,6 @@ parameters:
     required: false
     description: Gets or sets the name of the column for sorting.
     type: string
-  survey-response-param:
-    name: survey-response
-    in: body
-    required: true
-    description: ''
-    schema:
-      $ref: '#/definitions/survey-response'
-  survey-request-param:
-    name: survey-request
-    in: body
-    required: true
-    description: ''
-    schema:
-      $ref: '#/definitions/survey-request'
   survey-id-param:
     name: survey-id
     in: path
@@ -163,54 +138,30 @@ responses:
   default-error-response:
     description: 'Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()'
 definitions:
-  survey-response:
-    description: Response to survey with customer answers to survey
+  capture-survey-command:
+    description: Response to survey with customer answers.
     properties:
-      id:
-        description: Command identifier
-        type: string
-      customer-id:
-        description: 'Business identifier of the party in the core system. It can be either core generated, or imported.'
+      customer-number:
+        description: Customer number.
         type: string
       template-id:
-        description: Template identifier
+        description: Template identifier.
         type: string
       answers:
-        description: List of answers
+        description: List of answers.
         items:
-          $ref: '#/definitions/question-with-answer'
+          $ref: '#/definitions/answer'
         type: array
     required:
-      - customer-id
+      - customer-number
       - template-id
     type: object
-  survey-request:
-    description: Survey request
-    properties:
-      customer-id:
-        description: 'Business identifier of the party in the core system. It can be either core generated, or imported.'
-        type: string
-    required:
-      - customer-id
-    type: object
-  question-with-answer:
-    description: Answer
-    properties:
-      question-id:
-        description: Question identifier
-        type: string
-      answer:
-        description: Answer
-        $ref: '#/definitions/answer'
-    required:
-      - question-id
-    type: object
-  surveys:
-    description: List of surveys
+  survey-list:
+    description: List of survey templates.
     properties:
       total-count:
         description: Gets or sets the total count.
-        format: 'int32,'
+        format: int32
         type: integer
       page-size:
         description: Gets or sets the size of the page.
@@ -228,45 +179,32 @@ definitions:
         description: List of surveys with basic survey information.
         items:
           $ref: '#/definitions/survey-info'
-          type: array
-      navigations:
-        description: Links to related resources.
-        items:
-          $ref: '#/definitions/link'
         type: array
-      commands:
-        description: Available commands in current context.
-        items:
-          $ref: '#/definitions/link'
-          type: array
-      uri:
-        description: URI
-        type: string
     type: object
   survey:
-    description: Completed survey
+    description: Definition of survey with questions and answers. Answers are filled-in if customer has already submitted survey.
     properties:
       survey-id:
-        description: Survey identifier
+        description: Identifier of submitted survey. Empty if the client has not yet submitted survey.
         type: string
       date-created:
-        description: Created on
+        description: Date when survey was submitted. Empty if the client has not yet submitted survey.
         format: date-time
         type: string
       survey-info:
         description: Basic survey info
         $ref: '#/definitions/survey-info'
       survey-sections:
-        description: List of sections
+        description: List of sections in survey.
         items:
           $ref: '#/definitions/survey-section'
         type: array
     type: object
   survey-info:
-    description: Basic informations about survey
+    description: Basic information about survey template.
     properties:
       template-id:
-        description: Uniquely identifies surveys template
+        description: Uniquely identifies survey template
         type: string
       title:
         description: Human readable name of the survey by which it is best recognized.
@@ -278,33 +216,31 @@ definitions:
         description: Publication date
         format: date-time
         type: string
-      uri:
-        description: URI
-        type: string
     type: object
   survey-section:
     description: Survey section
     properties:
-      survey-section-id:
-        description: Survey section identifier
+      section-id:
+        description: Survey section identifier.
         type: string
       order:
-        description: Section order in survey
+        description: Section order in survey.
         format: int32
         type: integer
       title:
-        description: Section title
+        description: Section title.
         type: string
       description:
-        description: Textual description about section
+        description: Textual description about section.
         type: string
-      survey-sections:
-        description: List of child sections
+      sections:
+        x-asee-compliance: This may lead to infinite recursion. I am not sure if we should go so deep in nested levels of survey sections. The property should probably be removed.
+        description: List of child sections.
         items:
           $ref: '#/definitions/survey-section'
         type: array
       questions:
-        description: List of questions
+        description: List of questions.
         items:
           $ref: '#/definitions/question'
         type: array
@@ -313,27 +249,39 @@ definitions:
     description: Question
     properties:
       question-id:
-        description: Question identifier
+        description: Question identifier.
         type: string
       order:
-        description: Order of question in a survey
+        description: Order of question in a survey.
         format: int32
         type: integer
       title:
-        description: Question title
+        description: Question title.
         type: string
       description:
-        description: A textual description of the question
+        description: Textual description of the question.
         type: string
       kind:
+        x-asee-compliance: This should be related to enum, e.g. the one added below. Check the list of possible values.
         description: Question kind.
+        enum:
+          - text
+          - numeric
+          - date
+          - bool
+          - options
+          - multiple-options
+          - currency
+          - unit-of-measure
         type: string
-      question-options:
+      possible-options:
+        x-asee-compliance: This should be the list of id-value pairs. I am not sure that this additionalProperties covers it well. Probably should be array type instead. Also, this list of values should be returned translated in the communication language set in customer profile.
         additionalProperties:
           type: string
-        description: Dictionary containes possible answers on question if question type is options or multiple-options.
+        description: Dictionary contains possible drop down values if question type is options, multiple-options, currency or unit-of-measure.
         type: object
       units-of-measure:
+        x-asee-compliance: This property is redundant and should be removed. List of values should be returned through question-options property and indicator that the field is of unit-of-measure type is returned through kind property.
         description: 'Units of measure. Example for currency would be: USD, EUR, CHF. Example for length: km, m, cm'
         items:
           type: string
@@ -346,40 +294,40 @@ definitions:
         $ref: '#/definitions/answer'
     type: object
   answer:
-    description: Answer
+    description: Provides answer to survey question in corresponding type.
+    x-asee-compliance: The structure of this object is a bit awkward, but ok, I understand the problem. However, it would be nicer if instead of 6 there could be only one field, and the type of value stored in that field is already determined by kind of question.
     properties:
-      text:
-        description: This property contains answer if question type is text
+      question-id:
+        description: Question identifier.
         type: string
-      bool-answer:
-        description: This property contains answer if question type is bool
+      text-value:
+        description: Contains answer if question type is text.
+        type: string
+      bool-value:
+        description: Contains answer if question type is bool.
         type: boolean
-      numeric:
-        description: This property contains answer if question type is numeric
+      numeric-value:
+        description: Contains answer if question type is numeric.
         format: double
         type: number
-      date:
-        description: This property contains answer if question type is date
+      date-value:
+        description: Contains answer if question type is date.
         format: date-time
         type: string
       unit-of-measure:
-        description: This property contains selected unit-of-measure
+        x-asee-compliance: This property is redundant and should be removed. Selected unit-of-measure should be returned through the selected-option property stated below.
+        description: Contains selected unit-of-measure.
         type: string
-      option-id:
-        description: This property contains answer if question type is options or multiple-options
+      selected-option:
+        x-asee-compliance: It is not enough to just return the id of selected option. Both id and value should be returned. Also, the value should be in communication language set in customer profile.
+        description: Contains answer if question type is options or multiple-options.
         type: string
-    type: object
-  link:
-    properties:
-      href:
-        description: Gets or sets the href.
-        type: string
-      rel:
-        description: Gets or sets the rel.
-        type: string
+    required:
+      - question-id
     type: object
   command-result:
     description: ''
+    x-asee-compliance: Missing description of object, description of properties should be corrected.
     properties:
       id:
         description: 'Gets or sets the id of created, updated or deleted entity.'
@@ -389,6 +337,7 @@ definitions:
         type: string
     type: object
   validation-problem:
+    x-asee-compliance: Missing description of object and its properties.
     type: array
     items:
       type: object
@@ -415,12 +364,3 @@ definitions:
         errors:
           - error: check-digit-invalid
             message: Check digit is invalid for this field
-  business-problem:
-    properties:
-      type:
-        type: string
-      title:
-        type: string
-      details:
-        type: string
-    type: object
