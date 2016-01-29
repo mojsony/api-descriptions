@@ -51,7 +51,11 @@ paths:
         name: city
         required: false
         type: string
-        x-asee-compliance: We should probably add country-code parameter here too, to have matching parameters for this and the method below.
+      - description: Country code.
+        in: query
+        name: country-code
+        required: false
+        type: string
       responses:
         '200':
           description: Success
@@ -81,12 +85,16 @@ paths:
         name: last-name
         required: true
         type: string
+      - description: City where the client lives.
+        in: query
+        name: city
+        required: false
+        type: string
       - description: Country code.
         in: query
         name: country-code
         required: false
         type: string
-        x-asee-compliance: We should probably add city parameter here too, to have matching parameters for this and the method above.
       responses:
         '200':
           description: Success
