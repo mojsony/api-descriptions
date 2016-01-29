@@ -7,11 +7,11 @@ Fraud Detection API enables to prevent fraud activitis according to legal requir
    
 Key Resources
 -------------
-Fraud detection API has two top level collection resources: aml lists, black lists
+Fraud detection API has two top level collection resources: aml , black lists
 
 Resource | Description
 ----------- |-----------
-*aml lists*  | Includes detection of suspicious activity such as predictive crimes of money laundering, financing of terrorism, securities fraud and market manipulation.
+*aml*  | Includes detection of suspicious activity such as predictive crimes of money laundering, financing of terrorism, securities fraud and market manipulation.
 *black lists*    | Includes a list of persons, organizations or nations suspected or convicted of fraudulent, illegal or criminal activity, and therefore excluded from a service or penalized in some other manner. A blacklist may be maintained by any entity, ranging from a small business enterprise to an inter-governmental body. Depending on the scope of the blacklist, it may either be secret or public.
 
 Getting started tutorial
@@ -38,7 +38,7 @@ Prefix the path with the correct root URL in order to obtain the full resource p
 ###3. Check customer AML status
 Let's assume that you want to check client aml risk assessment. You can do that at following endpoint:
 ```
-GET /aml-status?personal-identification-number=0607983130013&first-name=Branislav&last-name=Vuković
+GET /aml/status?personal-identification-number=0607983130013&first-name=Branislav&last-name=Vuković
 ```
 You will get back `200 OK` status code and json representation for fetched request. 
 
@@ -51,7 +51,7 @@ You will get back `200 OK` status code and json representation for fetched reque
 ###4. Check whether client is on black lists
 Let's assume that you want to check whether client is on any black list and if so what is the percentage of the match. You can do that at following endpoint
 ```
-GET/black-list-status?personal-identification-number=0607983130013&first-name=Branislav&last-name=Vuković
+GET/black-lists/status?personal-identification-number=0607983130013&first-name=Branislav&last-name=Vuković
 ```
 You will get back `200 OK` status code and json representation for fetched request. 
 ```json
