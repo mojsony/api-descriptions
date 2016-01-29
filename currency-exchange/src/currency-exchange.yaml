@@ -26,12 +26,11 @@ consumes:
 produces:
   - application/json
 paths:
-  '/classifications/{classification-id}':
+  '/classifications/{schema-id}':
     get:
-      x-asee-compliance: I have dilemma now should we use schema-id or classification-id...
       operationId: Classifications_Get
       parameters:
-        - $ref: '#/parameters/classification-id-param'
+        - $ref: '#/parameters/schema-id-param'
       responses:
         '200':
           description: OK
@@ -119,12 +118,17 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/offer'
+        '400':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+            - [negative-amount] ()
+          schema:
+            $ref: '#/definitions/validation-problem'
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
-              - [temporary-unavailable]()
-              - [night-exchange-closed]()
-              - [negative-amount]()
+            - [temporary-unavailable]()
+            - [night-exchange-closed]()
           schema:
             $ref: '#/definitions/business-problem'
         default:
@@ -186,19 +190,26 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/command-result'
+        '400':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+            - [negative-amount] ()
+          schema:
+            $ref: '#/definitions/validation-problem'
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
-              - [source-account-check-failed]()
-              - [destination-account-check-failed]()
-              - [amount-limit-exceeded]()
-              - [negative-amount]()
-              - [account-type-not-appropriate]()
-              - [insufficient-balance]()
-              - [frequency-limit-exceeded]()
-              - [source-amount-limit-exceeded]()
-              - [temporary-unavailable]()
-              - [night-exchange-closed]()
+            - [source-account-check-failed]()
+            - [destination-account-check-failed]()
+            - [amount-limit-exceeded]()
+            - [account-type-not-appropriate]()
+            - [insufficient-balance]()
+            - [frequency-limit-exceeded]()
+            - [source-amount-limit-exceeded]()
+            - [temporary-unavailable]()
+            - [night-exchange-closed]()
+          schema:
+            $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
       summary: 'Initiate new currency exchange transaction. '
@@ -243,19 +254,24 @@ paths:
       responses:
         '204':
           description: No content
+        '400':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+            - [negative-amount] ()
+          schema:
+            $ref: '#/definitions/validation-problem'
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
-              - [source-account-check-failed]()
-              - [destination-account-check-failed]()
-              - [amount-limit-exceeded]()
-              - [negative-amount]()
-              - [account-type-not-appropriate]()
-              - [insufficient-balance]()
-              - [frequency-limit-exceeded]()
-              - [source-amount-limit-exceeded]()
-              - [temporary-unavailable]()
-              - [night-exchange-closed]()
+            - [source-account-check-failed]()
+            - [destination-account-check-failed]()
+            - [amount-limit-exceeded]()
+            - [account-type-not-appropriate]()
+            - [insufficient-balance]()
+            - [frequency-limit-exceeded]()
+            - [source-amount-limit-exceeded]()
+            - [temporary-unavailable]()
+            - [night-exchange-closed]()
           schema:
             $ref: '#/definitions/business-problem'
         default:
@@ -265,10 +281,10 @@ paths:
         - Transactions
       x-asee-tags: []
 parameters:
-  classification-id-param:
+  schema-id-param:
     description: Unique classification identifier
     in: path
-    name: classification-id
+    name: schema-id
     required: true
     type: string
   date-for-param:
@@ -450,14 +466,13 @@ parameters:
 definitions:
   classification-value:
     description: Single item of classification.
-    x-asee-compliance: This is a single item of classification, I am not sure if this example is the best.
     example:
-      code: sample
-      literal: currency-list
-      description: List of available currencies
-      id: sample
-      parent-id: sample
-      ordinal: sample
+      code: 00001
+      literal: EUR
+      description: European Dollar
+      id: 1 
+      parent-id: 5
+      ordinal: 1
     properties:
       code:
         description: Code of classification value.
@@ -488,6 +503,10 @@ definitions:
       page-size: 10
       page-number: 1
       total-pages: 0
+      sort-order: desc
+      sort-by: date-created
+    allOf: 
+    - $ref: '#/definitions/paged-list'  
     properties:
       date-created:
         description: Date created.
@@ -500,22 +519,6 @@ definitions:
         type: string
       rate-number:
         description: Order number of exchange rate list for the day.
-        format: int32
-        type: integer
-      total-count:
-        description: Total count.
-        format: int32
-        type: integer
-      page-size:
-        description: Page size.
-        format: int32
-        type: integer
-      page-number:
-        description: Page number.
-        format: int32
-        type: integer
-      total-pages:
-        description: Total pages.
         format: int32
         type: integer
       rates:
@@ -612,28 +615,16 @@ definitions:
       page-size: 10
       page-number: 0
       total-pages: 0
+      sort-order:
+      sort-by:
+    allOf: 
+    - $ref: '#/definitions/paged-list'  
     properties:
       list-type:
         description: |
           The type of exchange rate list. 
           Classification explaining what type of list will be displayed. For a complete list of possible values see [exchange-rates-types]() classification.
         type: string
-      total-count:
-        description: Total count.
-        format: int32
-        type: integer
-      page-size:
-        description: Page size.
-        format: int32
-        type: integer
-      page-number:
-        description: Page number.
-        format: int32
-        type: integer
-      total-pages:
-        description: Total pages.
-        format: int32
-        type: integer
       rates:
         description: List of currency exchange rates.
         items:
@@ -739,30 +730,15 @@ definitions:
         format: double
         type: number
     type: object
-  business-problem:
-    description: When request is well formed but some business policy doesn't allow it to be executed, busieness-problem describes taht situation.
-    example:
-      type: Business problem.
-      title: Night exchange is closed.
-      details: The transactions of exchange for this night are closed. 
-    properties:
-      type:
-        description: Type of error that is clasified as business policy violation problem.
-        type: string
-      title:
-        description: Short description.
-        type: string
-      details:
-        description: Detailed description of particular problem.
-        type: string
-    type: object
   transaction-list:
-    description: Transaction list
+    description: List of currency exchange transactions.
     example:
       total-count: 20
       page-size: 10
       page-number: 1
       total-pages: 3
+      sort-order:
+      sort-by:
       navigations:
         - href: 
           rel: first
@@ -770,25 +746,11 @@ definitions:
           rel: previuos
         - href: 
           rel: self
+    allOf: 
+    - $ref: '#/definitions/paged-list'  
     properties:
-      total-count:
-        description: Total count.
-        format: int32
-        type: integer
-      page-size:
-        description: Page size.
-        format: int32
-        type: integer
-      page-number:
-        description: Page number.
-        format: int32
-        type: integer
-      total-pages:
-        description: Total pages.
-        format: int32
-        type: integer
       transactions:
-        description: Transaction list.
+        description: Transactions list.
         items:
           $ref: '#/definitions/transaction'
         type: array
@@ -807,7 +769,7 @@ definitions:
         type: string
     type: object
   transaction:
-    description: Currency exchange transaction details taht serves user to see all details about particular transaction.
+    description: Details of currency exchange transaction.
     example:
       source-account: 115-0000000050378-56
       destination-account: 115-1000100019578-10
@@ -1019,7 +981,7 @@ definitions:
         type: string
     type: object
   command-result:
-    description: Object that is regulary returned when POST request is sent. Consists of unique identidier and status of called transaction.
+    description: Object that is returned when operation is regularly performed. Consists of unique identifier and status of called transaction.
     example:
       id: '99900155242001'
       created-record-status: 'executed'
@@ -1032,7 +994,7 @@ definitions:
         type: string
     type: object
   validate-transaction-command:
-    description: Command for validating currency-exchange transaction
+    description: Command for validating currency-exchange transaction.
     example:
       source-account-number: 115-1000100019578-10
       destination-account-number: 115-0000000050378-56
@@ -1087,8 +1049,71 @@ definitions:
       - category
       - transaction-id
     type: object
+  paged-list:
+    description: List with support for paging
+    properties:  
+      total-count:
+        description: Total number of items in collection
+        type: integer
+      page-size:
+        description: Size of the page
+        type: integer
+      page:
+        description: Index of current page
+        type: integer
+      total-pages:
+        description: Total number of pages of set size
+        type: integer
+      sort-order:
+        description: Sort order (`asc` or `desc`). Default is asc
+        type: string
+        enum:
+        - asc
+        - desc
+      sort-by:  
+        description: Attribute of the collection item to sort by
+        type: string
+    type: object
+  validation-problem:
+    description: Got when request that is sent have some errors.
+    example:
+      error: entry-parameters-not-valid
+      message: Parameters You have entered are not valid.
+    properties:
+      error:
+        description: Error literal.
+        type: string
+      message:
+        description: Displayed message.
+        type: string
+    type: object
+  business-problem:
+    description: When request is well formed but some business policy doesn't allow it to be executed, busieness-problem describes taht situation.
+    example:
+      type: Business problem.
+      title: Night exchange is closed.
+      details: The transactions of exchange for this night are closed. 
+    properties:
+      type:
+        description: Type of error that is clasified as business policy violation problem.
+        type: string
+      title:
+        description: Short description.
+        type: string
+      details:
+        description: Detailed description of particular problem.
+        type: string
+    type: object
 responses:
+#   resource-created-response:
+#     description: Resource was created successfuly.
+#     schema:
+#       $ref: "#/definitions/command-result"
+#   validation-problem-response:
+#     description: Your request was not constructed properly. Response contains the list of validation errors for each invalid element of your request. For complete list of possible validation errors see [validation errors]() classification.
+#     schema: 
+#       $ref: '#/definitions/validation-problem'
   default-error-response:
-    description: 'Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()'
+    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
 schemes:
   - http
