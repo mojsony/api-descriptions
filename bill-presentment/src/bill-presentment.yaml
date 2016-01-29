@@ -24,10 +24,9 @@ paths:
         This is useful when is needed to view list of issued bills, by some criteria, or all.
       operationId: Bills_GetList
       parameters:
-        - $ref: '#/parameters/search-terms-param'
-        - $ref: '#/parameters/search-scope-param'
-        - $ref: '#/parameters/customer-id-param'
-        - $ref: '#/parameters/status-param'
+        - $ref: '#/parameters/issuer-name-param'
+        - $ref: '#/parameters/issuer-address-param'
+        - $ref: '#/parameters/bill-status-param'
         - $ref: '#/parameters/page-size-param'
         - $ref: '#/parameters/page-param'
         - $ref: '#/parameters/sort-order-param'
@@ -94,8 +93,8 @@ paths:
         This is useful when search specific bill issuer if it is included in Your e-banking solution.
       operationId: Issuers_GetList
       parameters:
-        - $ref: '#/parameters/search-terms-param'
-        - $ref: '#/parameters/search-scope-param'
+        - $ref: '#/parameters/issuer-name-param'
+        - $ref: '#/parameters/issuer-address-param'
         - $ref: '#/parameters/page-size-param'
         - $ref: '#/parameters/page-param'
         - $ref: '#/parameters/sort-order-param'
@@ -147,10 +146,9 @@ paths:
         at specific bill issuers.
       operationId: Subscriptions_GetList
       parameters:
-        - $ref: '#/parameters/search-terms-param'
-        - $ref: '#/parameters/search-scope-param'
-        - $ref: '#/parameters/customer-id-param'
-        - $ref: '#/parameters/status-param'
+        - $ref: '#/parameters/issuer-name-param'
+        - $ref: '#/parameters/issuer-address-param'
+        - $ref: '#/parameters/subscription-status-param'
         - $ref: '#/parameters/page-size-param'
         - $ref: '#/parameters/page-param'
         - $ref: '#/parameters/sort-order-param'
@@ -251,36 +249,43 @@ paths:
         - Subscriptions
       x-asee-tags: []
 parameters:
-  search-terms-param:
-    description: The terms by which the query can be filtered.
+  issuer-name-param:
+    description: Name of bill issuer.
     in: query
-    name: search-terms
+    name: issuer-name
     required: false
     type: string
-  search-scope-param:
-    description: 'Search scope (address, name).'
+  issuer-address-param:
+    description: Address of bill issuer.
     in: query
-    name: search-scope
-    required: false
-    enum:
-      - name
-      - address
-    type: string
-  customer-id-param:
-    description: Unique Customer identifier for which action will be called.
-    in: query
-    name: customer-id
+    name: issuer-address
     required: false
     type: string
-  status-param:
-    description: 'Status of an item, for example status of bill.'
+  bill-status-param:
+    description: Status of bill payment.
     in: query
     name: status
     required: false
     collectionFormat: csv
     items:
       type: string
+    enum:
+      - all
+      - paid
+      - not-paid
+      - pending
     type: array
+  subscription-status-param:
+    description: Status of bill subscription.
+    in: query
+    name: status
+    required: false
+    enum:
+      - pending
+      - active
+      - blocked
+      - closed
+    type: string
   page-size-param:
     description: 'Number of items on a page. For more information see general guidance on [paging and sorting]().'
     in: query
@@ -349,13 +354,17 @@ parameters:
 definitions:
   bill-list:
     description: Bill list
+    allOf: 
+    - $ref: '#/definitions/paged-list'
     example:
-      bills-payment-amount-sum: 0
-      bills-fee-sum: 0
       total-count: 0
       page-size: 10
       page-number: 1
       total-pages: 0
+      sort-order: asc
+      sort-by:
+      bills-payment-amount-sum: 0
+      bills-fee-sum: 0
       navigations:
         - href: 
           rel: first
@@ -372,22 +381,6 @@ definitions:
         description: Sum of bills fee
         format: double
         type: number
-      total-count:
-        description: Total count of bills in the list.
-        format: int32
-        type: integer
-      page-size:
-        description: Page size is number of bills contained in one page.
-        format: int32
-        type: integer
-      page-number:
-        description: Page number of current page.
-        format: int32
-        type: integer
-      total-pages:
-        description: Total pages is number of pages calculated based on record number and page size.
-        format: int32
-        type: integer
       bills:
         description: Items is list of bills.
         items:
@@ -625,7 +618,7 @@ definitions:
     description: When request is well formed but some business policy doesn't allow it to be executed, busieness-problem describes taht situation.
     example:
       type: Business policy problem.
-      title: Insuficient funds
+      title: Insufficient funds
       details: Raised when funds are not sufficient for withdrawal.
     properties:
       type:
@@ -645,6 +638,8 @@ definitions:
       page-size: 10
       page-number: 0
       total-pages: 6
+      sort-order: asc
+      sort-by:
       navigations:
         - href: 
           rel: self
@@ -652,23 +647,9 @@ definitions:
           rel: next
         - href: 
           rel: last
+    allOf: 
+    - $ref: '#/definitions/paged-list'
     properties:
-      total-count:
-        description: Total count of bill issuers in the list.
-        format: int32
-        type: integer
-      page-size:
-        description: Page size is number of bill issuers contained in one page.
-        format: int32
-        type: integer
-      page-number:
-        description: Page number of current page.
-        format: int32
-        type: integer
-      total-pages:
-        description: Total pages is number of pages calculated based on bill issuers count and page size.
-        format: int32
-        type: integer
       bill-issuers:
         description: Items is list of bill issuers.
         items:
@@ -776,24 +757,12 @@ definitions:
       page-size: 10
       page-number: 0
       total-pages: 0
+      sort-order: asc
+      sort-by:
       items: []
+    allOf: 
+    - $ref: '#/definitions/paged-list'
     properties:
-      total-count:
-        description: Total count of subscriptions in the list.
-        format: int32
-        type: integer
-      page-size:
-        description: Page size is number of subscriptions contained in one page.
-        format: int32
-        type: integer
-      page-number:
-        description: Page number of current page.
-        format: int32
-        type: integer
-      total-pages:
-        description: Total pages is number of pages calculated based on record number and page size.
-        format: int32
-        type: integer
       items:
         description: Items is list of subscriptions.
         items:
@@ -1002,25 +971,55 @@ definitions:
         description: Short literal that denotes status of called transaction.
         type: string
     type: object
-  validation-error: 
-    x-asee-compliance: Missing description of object and properties. 
-    type: array 
-    items: 
-      type: object 
-      properties: 
-        field: 
-          type: string 
-        errors: 
-          type: array 
-          items: 
-            type: object 
-            properties: 
-              error: 
-                type: string 
-              message: 
-                type: string
+#   validation-problem:
+#     description: Got when request that is sent have some errors.
+#     example:
+#       error: entry-parameters-not-valid
+#       message: Parameters You have entered are not valid.
+#     properties:
+#       error:
+#         description: Error literal.
+#         type: string
+#       message:
+#         description: Displayed message.
+#         type: string
+#     type: object 
+  paged-list:
+    description: List with support for paging and sorting
+    properties:  
+      total-count:
+        description: Total number of items in collection
+        type: integer
+      page-size:
+        description: Size of the page
+        type: integer
+      page:
+        description: Index of current page
+        type: integer
+      total-pages:
+        description: Total number of pages of set size
+        type: integer
+      sort-order:
+        description: Sort order (`asc` or `desc`). Default is asc
+        type: string
+        enum:
+        - asc
+        - desc
+      sort-by:  
+        description: Attribute of the collection item to sort by
+        type: string
 responses:
+#   resource-created-response:
+#     description: Resource was created successfuly.
+#     schema:
+#       $ref: "#/definitions/command-result"
+#   validation-problem-response:
+#     description: |
+#       Your request was not constructed properly. Response contains the list of validation errors for each invalid element of your request. 
+#       For complete list of possible validation errors see [validation errors]() classification.
+#     schema: 
+#       $ref: '#/definitions/validation-problem'
   default-error-response:
-    description: 'Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()'
+    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
 schemes:
   - http
