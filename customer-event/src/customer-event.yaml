@@ -127,8 +127,7 @@ definitions:
           - feedback
         type: string
       resolution-status:
-        description: Resolution status of the communication.
-        x-asee-compliance: This property should be related to some enum or classification.
+        description: 'Resolution status of the communication. For complete list of possible values see [resolution-status]() classification.'
         type: string
       medium:
         description: Medium that is used for the communication.
@@ -475,7 +474,13 @@ definitions:
         type: string
       customer-number:
         description: Customer number
-        type: string      
+        type: string
+      related-workitem-number:
+        description: Unique identifier of the workitem to whom the event is related to.
+        type: string
+      description:
+        description: Description of the event
+        type: string
       from:
         description: Sender of event.
         type: string
@@ -484,10 +489,6 @@ definitions:
         type: string
       title:
         description: Title of event.
-        type: string
-      description:
-        x-asee-compliance: Description was erased comparing to previous version. I have put it back. If we have title, then it's logical to have text (description) of that message too?
-        description: Description of the event
         type: string
       medium:
         description: Medium used for communication
@@ -503,14 +504,14 @@ definitions:
           - other-communication-technology
         type: string
       purpose:
-        description: Purpose of the communication
-        x-asee-compliance: This should be related to some classification.
+        description: Purpose of the communication. For complete list of possible values see [purpose]() classification.
         type: string
       return-address:
         description: Return address
         type: string
     required:
       - customer-number
+      - related-workitem-number
       - medium
     type: object
   command-result:
@@ -635,7 +636,7 @@ paths:
           schema:
             $ref: '#/definitions/event-list'
         default:
-            $ref: '#/responses/default-error-response'
+            $ref: '#/responses/default-error-response'      
       summary: List all registered events for a customer
       tags:
         - Events
@@ -648,12 +649,6 @@ paths:
           in: path
           name: event-id
           required: true
-          type: string
-        - description: Customer identifier.
-          x-asee-compliance: What do we need this parameter for? Event is already uniquely identifier by event-id parameter which is mandatory. It should be removed.
-          in: query
-          name: customer-number
-          required: false
           type: string
         - description: List of fields to include in response. For more information see general guidance on [response shaping]()
           in: query
@@ -689,12 +684,6 @@ paths:
           name: event-id
           required: true
           type: string
-        - description: Customer identifier.
-          x-asee-compliance: What do we need this parameter for? Event is already uniquely identifier by event-id parameter which is mandatory. It should be removed.
-          in: query
-          name: customer-number
-          required: false
-          type: string
         - description: Gets or sets the field names.
           in: query
           name: include-fields-list
@@ -728,12 +717,6 @@ paths:
           in: path
           name: event-id
           required: true
-          type: string
-        - description: Customer identifier.
-          x-asee-compliance: What do we need this parameter for? Event is already uniquely identifier by event-id parameter which is mandatory. It should be removed.
-          in: query
-          name: customer-number
-          required: false
           type: string
         - description: Gets or sets the field names.
           in: query
@@ -769,12 +752,6 @@ paths:
           name: event-id
           required: true
           type: string
-        - description: Customer identifier.
-          x-asee-compliance: What do we need this parameter for? Event is already uniquely identifier by event-id parameter which is mandatory. It should be removed.
-          in: query
-          name: customer-number
-          required: false
-          type: string
         - description: Gets or sets the field names.
           in: query
           name: include-fields-list
@@ -808,12 +785,6 @@ paths:
           in: path
           name: event-id
           required: true
-          type: string
-        - description: Customer identifier.
-          x-asee-compliance: What do we need this parameter for? Event is already uniquely identifier by event-id parameter which is mandatory. It should be removed.
-          in: query
-          name: customer-number
-          required: false
           type: string
         - description: Gets or sets the field names.
           in: query
@@ -849,12 +820,6 @@ paths:
           name: event-id
           required: true
           type: string
-        - description: Customer identifier.
-          x-asee-compliance: What do we need this parameter for? Event is already uniquely identifier by event-id parameter which is mandatory. It should be removed.
-          in: query
-          name: customer-number
-          required: false
-          type: string
         - description: Gets or sets the field names.
           in: query
           name: include-fields-list
@@ -868,7 +833,7 @@ paths:
           required: false
           items:
             type: string
-          type: array      
+          type: array
       responses:
         '200':
           description: OK
@@ -888,12 +853,6 @@ paths:
           in: path
           name: event-id
           required: true
-          type: string
-        - description: Customer identifier.
-          x-asee-compliance: What do we need this parameter for? Event is already uniquely identifier by event-id parameter which is mandatory. It should be removed.
-          in: query
-          name: customer-number
-          required: false
           type: string
         - description: Gets or sets the field names.
           in: query
@@ -929,12 +888,6 @@ paths:
           name: event-id
           required: true
           type: string
-        - description: Customer identifier.
-          x-asee-compliance: What do we need this parameter for? Event is already uniquely identifier by event-id parameter which is mandatory. It should be removed.
-          in: query
-          name: customer-number
-          required: false
-          type: string
         - description: Gets or sets the field names.
           in: query
           name: include-fields-list
@@ -960,7 +913,7 @@ paths:
       tags:
         - Chargable activity events
   /communication-events:
-    post:     
+    post:      
       deprecated: false
       operationId: CommunicationEvents_Create
       parameters:
