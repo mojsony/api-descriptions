@@ -6,14 +6,13 @@ When request is valid and no standard status code describes situation, Currency 
 To learn more see general guidance on [error handling]()
 
      Literal                              |  Code | Description                                                                           
-     ------------------------------------ | -----:| -------------------------------------------------------------------------------------- 
-     temporary-unavailable                | 51201 | Exchange job can not be done now. Please try again later.                             
-     negative-amount                      | 51202 | Entered amount must be positive.                                                      
-     insufficient-balance                 | 51205 | Source account does not have sufficient available balance.                            
+     ------------------------------------ | -----:| --------------------------------------------------------------------------------------                          
      night-exchange-closed                | 51250 | The transactions of exchange for this night are closed.                               
      source-account-check-failed          | 51251 | Check of source account failed.                                                       
      destination-account-check-failed     | 51252 | Check of destination account failed.                                                  
      account-type-not-appropriate         | 51253 | Source and destination accounts have to be either current account or saving on demand.
      amount-limit-exceeded                | 51255 | This amount exceeds limit for this currency in sight accounts.                        
      frequency-limit-exceeded             | 51256 | Number of withdrawals for the time period is exceeded.                                
-     source-amount-limit-exceeded         | 51257 | This amount exceeds withdrawal limit on source account.                                                   
+     source-amount-limit-exceeded         | 51257 | This amount exceeds withdrawal limit on source account. 
+     temporary-unavailable                | 51258 | Exchange job can not be done now. Please try again later.                                                 
+     insufficient-balance                 | 51259 | Source account does not have sufficient available balance.
