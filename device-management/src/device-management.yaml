@@ -328,34 +328,32 @@ definitions:
     type: object
   update-device-nickname-command:
     description: Updates device nick name.
-    properties:
-      imei:
-        x-asee-compliance: This property is not needed, it is already provided in operation path.
-        description: Device IMEI (The International Mobile Station Equipment Identity).
-        type: string
+    properties: 
       nick-name:
         description: New nickname for current device.
         type: string
     type: object 
   command-result:
-    description: ''
-    x-asee-compliance: Missing description of object. Description of properties should be corrected too.
+    description: Command result provides status of operation and identifier of the record.
     properties:
       id:
-        description: 'Gets or sets the id of created, updated or deleted entity.'
+        description: Id of created, updated or deleted entity.
         type: string
       created-record-status:
-        description: 'Gets or sets the created, updated, deleted record status.'
+        description: The created, updated, deleted record status.
         type: string
     type: object
   business-problem:
-    x-asee-compliance: Missing object description. Description of properties missing too.
+    description: Provides information about business policy violation that prevents operation from being executed.
     properties:
       problem:
+        description: Literal.
         type: string
       message:
+        description: Error message.
         type: string
       details:
+        description: Detailed description of error.
         type: string
   link:
     properties:
