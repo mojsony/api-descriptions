@@ -137,26 +137,10 @@ definitions:
       uri:
         description: URI
         type: string
-    type: object    
+    type: object  
   update-case-command:
     description: Updates resolution and state of some case.
     properties:
-      case-type:
-        x-asee-compliance: This property is redundant and should be removed. The case-type is automatically recognized by case-id which is already defined in operation path.
-        description: Case type
-        enum:
-          - complaint
-          - service-request
-          - callback-request
-        type: string
-      case-id:
-        x-asee-compliance: This property is redundant and should be removed. The case-id parameter is already defined in operation path.
-        description: Unique identifier of customer case
-        type: string
-      updated-by-party-number:
-        x-asee-compliance: This parameter is redundant and should be removed. This value is already submitted through invocation context.
-        description: Identifier of the party that is modifying the case.
-        type: string
       resolution:
         description: Resolution of the case.
         type: string
@@ -238,8 +222,6 @@ definitions:
       customer-number:
         description: Unique identifier of the client.
         type: string
-      customer-name:
-        description: Gets or sets the customer name.
       registration-date:
         description: Date of case registration.
         format: date-time
@@ -300,10 +282,6 @@ definitions:
       case-id:
         description: Unique case identifier
         type: string
-      registered-by-party-number:
-        x-asee-compliance: This property is redundant and should be removed. This value is already submitted through invocation context.
-        description: Identifier of the party that opens the case.
-        type: string
       customer-number:
         description: Unique identifier of the client.
         type: string
@@ -355,10 +333,6 @@ definitions:
     properties:
       case-id:
         description: Unique case identifier
-        type: string
-      registered-by-party-number:
-        x-asee-compliance: This property is redundant and should be removed. This value is already submitted through invocation context.
-        description: Identifier of the party that opens the case.
         type: string
       customer-number:
         description: Unique identifier of the client.
@@ -425,28 +399,13 @@ definitions:
   close-case-command:
     description: Closes the customer case.
     properties:
-      case-type:
-        x-asee-compliance: This property is redundant and should be removed. The case-type is automatically recognized by case-id which is already defined in operation path.
-        description: Case type
-        enum:
-          - complaint
-          - service-request
-          - callback-request
-        type: string
-      case-id:
-        x-asee-compliance: This property is redundant and should be removed. The case-id parameter is already defined in operation path.
-        description: Unique identifier of customer case.
-        type: string
-      updated-by-party-number:
-        description: Identifier of the party that is modifying the case.
-        type: string
       resolution:
         description: Resolution of the closed case.
         type: string
-    type: object  
+    type: object
 host: api.asee.co
 info:
-  description: |
+description: |
     Customer case API is used to register, list and record actions on customer cases.
     You can register a customer a case, get case details, files an history, search through registered customer cases and close them when they are resolved.
     With customer case API you can: 
@@ -545,11 +504,11 @@ paths:
         - description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]().
           in: query
           name: sort-order
-          enum: 
+		  enum: 
             - asc
             - desc
-          type: string
-          required: false
+		  type: string
+		  required: false          
         - description: Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]().
           in: query
           name: sort-by
@@ -573,9 +532,9 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/case-list'
-        default:
-          $ref: '#/responses/default-error-response'
+            $ref: '#/definitions/case-list' 
+		  default:
+			$ref: '#/responses/default-error-response'       
       summary: Operation returns list of cases with basic details like registration date current lifecycle state and the name and id of the agent responsible for handling the case. When used without optional parameters all active cases are returned.
       tags:
         - Cases
@@ -608,13 +567,13 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/case'
-        default:
-          $ref: '#/responses/default-error-response'
+		  default:
+			$ref: '#/responses/default-error-response'
       summary: Operation returns specific case details.
       tags:
         - Cases
   '/cases/{case-id}/status':
-    put:     
+    put:      
       deprecated: false
       operationId: Cases_Update
       parameters:
@@ -628,19 +587,19 @@ paths:
           in: path
           name: case-id
           required: true
-          type: string     
+          type: string      
       responses:
         '200':
           description: OK
           schema:
             $ref: '#/definitions/command-result'
-          default:
-          $ref: '#/responses/default-error-response'
+		  default:
+			$ref: '#/responses/default-error-response'        
       summary: Operation updates the specified case progress. Operation returns customer case with updated status.
       tags:
         - Cases
   '/cases/{case-id}/history':
-    get:
+    get:      
       deprecated: false
       operationId: Cases_GetHistory
       parameters:
@@ -664,7 +623,7 @@ paths:
         - description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]().
           in: query
           name: sort-order
-          enum:
+		  enum:
             - asc
             - desc
           required: false
@@ -673,14 +632,14 @@ paths:
           in: query
           name: sort-by
           required: false
-          type: string      
+          type: string     
       responses:
         '200':
           description: OK
           schema:
             $ref: '#/definitions/case-history'
-        default:
-          $ref: '#/responses/default-error-response'
+          default:
+			$ref: '#/responses/default-error-response'
       summary: Operation returns list of file details associated with the specific case.
       tags:
         - Cases
@@ -700,8 +659,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/command-result'
-        default:
-          $ref: '#/responses/default-error-response'
+          default:
+			$ref: '#/responses/default-error-response'
       summary: Add Callback Request
       tags:
         - Callback requests
@@ -721,8 +680,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/command-result'
-        default:
-          $ref: '#/responses/default-error-response'
+          default:
+			$ref: '#/responses/default-error-response'
       summary: Operation opens new customer complaint. Operation returns complaint with assigned case identifier.
       tags:
         - Complaints
@@ -742,13 +701,13 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/command-result'
-        default:
-          $ref: '#/responses/default-error-response'
+          default:
+			$ref: '#/responses/default-error-response'
       summary: Operation opens new customer service request. Operation returns service-request with assigned case identifier.
       tags:
         - Service requests
   '/cases/{case-id}/attachments':
-    post:    
+    post:      
       deprecated: false
       operationId: Cases_AddAttachment
       parameters:
@@ -774,7 +733,7 @@ paths:
       tags:
         - Cases
   '/cases/{case-id}/close':
-    post:     
+    post:      
       deprecated: false
       operationId: Cases_Close
       parameters:
@@ -788,14 +747,14 @@ paths:
           in: path
           name: case-id
           required: true
-          type: string      
+          type: string     
       responses:
         '200':
           description: OK
           schema:
             $ref: '#/definitions/command-result'
-        default:
-          $ref: '#/responses/default-error-response'
+          default:
+			$ref: '#/responses/default-error-response'
       summary: Operation closes the specified case and returns closed case id.
       tags:
         - Cases
@@ -818,7 +777,7 @@ paths:
           in: query
           name: customer-number
           required: false
-          type: string      
+          type: string     
       responses:
         '204':
           description: No content
@@ -826,4 +785,4 @@ paths:
           $ref: '#/responses/default-error-response'
       summary: Operation removes attaced file from case.
       tags:
-        - Cases
+        - Cases  
