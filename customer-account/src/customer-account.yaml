@@ -127,17 +127,10 @@ paths:
         for different kinds of payments or transfers. Those limits are usualy related to some period of time.
         For example amount that can be taken from ATM in one day.
       operationId: Accounts_GetLimitList
-      x-asee-compliance: Do we need all these paging/sorting/trim parameters? The list of limits for account should be short enough and is more of operative kind than needed for some list view.
       parameters:
         - $ref: '#/parameters/account-number-param'
         - $ref: '#/parameters/limits-param'
         - $ref: '#/parameters/currencies-param'
-        - $ref: '#/parameters/page-size-param'
-        - $ref: '#/parameters/page-param'
-        - $ref: '#/parameters/sort-order-param'
-        - $ref: '#/parameters/sort-by-param'
-        - $ref: '#/parameters/include-param'
-        - $ref: '#/parameters/trim-param'
       responses:
         '200':
           description: OK
@@ -148,10 +141,6 @@ paths:
       summary: Gets the account limits.
       tags:
         - Accounts
-      x-asee-tags:
-        - Pageable
-        - Sortable
-        - Shapeable
   '/accounts/{account-number}/statements':
     get:
       description: |
@@ -162,6 +151,7 @@ paths:
       parameters:
         - $ref: '#/parameters/account-number-param'
         - $ref: '#/parameters/years-param'
+        - $ref: '#/parameters/issued-date-param'
         - $ref: '#/parameters/page-size-param'
         - $ref: '#/parameters/page-param'
         - $ref: '#/parameters/sort-order-param'
@@ -188,23 +178,9 @@ paths:
         Display one specific statement that is issued on specific date, with all related details
         including list of transactions and balances for particular time period.
       operationId: Accounts_GetStatement
-      x-asee-compliance: These are mostly the filter params for list of transactions, not for statements. Only statement-id should remain (maybe include and trim too).
       parameters:
         - $ref: '#/parameters/account-number-param'
         - $ref: '#/parameters/statement-id-param'
-        - $ref: '#/parameters/issued-date-param'
-        - $ref: '#/parameters/direction-param'
-        - $ref: '#/parameters/description-param'
-        - $ref: '#/parameters/types-param'
-        - $ref: '#/parameters/amount-from-param'
-        - $ref: '#/parameters/amount-to-param'
-        - $ref: '#/parameters/currencies-param'
-        - $ref: '#/parameters/page-size-param'
-        - $ref: '#/parameters/page-param'
-        - $ref: '#/parameters/sort-order-param'
-        - $ref: '#/parameters/sort-by-param'
-        - $ref: '#/parameters/include-param'
-        - $ref: '#/parameters/trim-param'
       responses:
         '200':
           description: OK
@@ -215,10 +191,6 @@ paths:
       summary: Gets the statement details.
       tags:
         - Accounts
-      x-asee-tags:
-        - Pageable
-        - Sortable
-        - Shapeable
   '/accounts/{account-number}/reservations':
     get:
       description: |
@@ -445,10 +417,10 @@ paths:
         Gets list of cards, for authenticaded user, with basic details. List can be filtered by currencies,
         kind, limits and types.
       operationId: Cards_GetList
-      x-asee-compliance: Why do we need limits and currencies params here? Please, remove.
       parameters:
         - $ref: '#/parameters/customer-id-param'
-        - $ref: '#/parameters/account-kind-param'
+        - $ref: '#/parameters/card-brand-param'
+        - $ref: '#/parameters/card-kind-param'
         - $ref: '#/parameters/card-type-param'
         - $ref: '#/parameters/limits-param'
         - $ref: '#/parameters/currencies-param'
@@ -478,11 +450,8 @@ paths:
         Presents one card details. Limits are optionally included. It is useful when is requred to see all details about specific card, as
         with related accounts and links to representational resources.
       operationId: Cards_Get
-      x-asee-compliance: Why do we need limits and currencies params here? Please, remove.
       parameters:
         - $ref: '#/parameters/card-id-param'
-        - $ref: '#/parameters/limits-param'
-        - $ref: '#/parameters/currencies-param'
       responses:
         '200':
           description: OK
@@ -702,23 +671,24 @@ paths:
       tags:
         - Cards
       x-asee-tags: []
-	  
   '/classifications': 
-    get: 
-      summary: "Returns all classification schemas used in this API."
-      tags: 
-          - Classifications
+    get:
+      description: Returns all classification schemas used in this API.      
       operationId: "Classifications_GetList"
       responses:
-          '200':
-            description: Success
-            schema:
-              $ref: '#/definitions/classification-list'
-          default:
-            $ref: '#/responses/default-error-response'
-	  
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/classification-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Returns all classification schemas used in this API.
+      tags:
+        - Classifications
+      x-asee-tags: []
   '/classifications/{schema-id}':
     get:
+      description: Returns all classification values for chosen classification.
       operationId: Classifications_Get
       parameters:
         - $ref: '#/parameters/schema-id-param'
@@ -742,11 +712,11 @@ parameters:
     required: false
     collectionFormat: csv
     enum:
-      - transactional
-      - deposit
-      - deposit-term
-      - credit-card
-      - loan
+      - current-account
+      - demand-deposit
+      - term-deposit
+      - term-loan
+      - credit-facility
     items:
       type: string
     type: array
@@ -819,22 +789,19 @@ parameters:
       type: string
     type: array
   account-number-param:
-    description: Account identifier
+    description: Account identifier.
     in: path
     name: account-number
     required: true
     type: string
   currencies-param:
-    description: Currencies by which balances are filtered. Currencies are represented by ISO 4217 aplha3 codes.
+    description: |
+      Currencies by which balances are filtered. Currencies are represented by ISO 4217 aplha3 codes.
+      For a complete list of possible values see [currencies]() classification. 
     in: query
     name: currencies
     required: false
     collectionFormat: csv
-    x-asee-compliance: This should be related to classification, not the enum.
-    enum:
-      - rsd
-      - eur
-      - ...
     items:
       type: string
     type: array
@@ -862,13 +829,6 @@ parameters:
     name: years
     required: false
     collectionFormat: csv
-    x-asee-compliance: This should not be enum!
-    enum:
-      - '2014'
-      - '2013'
-      - '2012'
-      - '2011'
-      - '2010'
     items:
       type: integer
       format: int32
@@ -887,9 +847,7 @@ parameters:
     format: date-time
     type: string
   direction-param:
-    description: "Direction of transactions filter. Value can be debit or credit.
-            Example: direction=debit"
-    x-asee-compliance: These examples for params really look strange. Please remove them.
+    description: Direction of transactions filter. transactions can be credit or debit.
     in: query
     name: direction
     required: false
@@ -898,35 +856,30 @@ parameters:
       - debit
       - credit
   description-param:
-    description: "Description part of transaction. Only transactions that contain the specified value are returned.
-            Example: description=salary."
-    x-asee-compliance: These examples for params really look strange. Please remove them.
+    description: Description part of transaction. Only transactions that contain the specified value are returned.
     in: query
     name: description
     required: false
     type: string
   types-param:
-    x-asee-compliance: The type of this parameter should be changed to array where items type is string and related to enum/classification.
-    description: "Types of transactions to be returned. This is a list separated by commas.
-            Example: types=cash"
-    x-asee-compliance: These examples for params really look strange. Please remove them.
+    description: Filter by types of transactions to be returned.
+    x-asee-compliance: This should be related to classification.
     in: query
     name: types
     required: false
-    type: string
+    collectionFormat: csv
+    items:
+      type: string
+    type: array
   amount-from-param:
-    description: "Amount limit of transaction - bottom.
-            Example: amount-from=100"
-    x-asee-compliance: These examples for params really look strange. Please remove them.
+    description: Amount limit of transaction - bottom.
     in: query
     name: amount-from
     required: false
     format: double
     type: number
   amount-to-param:
-    description: "Amount limit of transaction - top.
-            Example: amount-to=200"
-    x-asee-compliance: These examples for params really look strange. Please remove them.
+    description: Amount limit of transaction - top.
     in: query
     name: amount-to
     required: false
@@ -946,28 +899,19 @@ parameters:
     required: false
     format: date-time
     type: string
-  currency-param:
-    x-asee-compliance: Remove this param, currencies-param is already declared for same purpose.
-    description: |
-      Currencies. When specified only transactions in specified currencies are returned. By default transactions
-      in all currencies are returned.
-    in: query
-    name: currency
-    required: false
-    collectionFormat: csv
-    enum:
-      - rsd
-      - eur
-      - usd
-    items:
-      type: string
-    type: array
   status-param:
-    x-asee-compliance: This parameter should be related to enum.
     description: Status of transaction.
     in: query
     name: status
     required: false
+    enum:
+      - all
+      - draft
+      - pending
+      - future
+      - executed
+      - rejected
+      - canceled
     type: string
   beneficiary-param:
     description: Beneficiary name.
@@ -1026,49 +970,45 @@ parameters:
     name: income-id
     required: true
     type: string
-  account-kind-param:
-    x-asee-compliance: This should be related to enum.
-    description: Account kind
-    in: query
-    name: account-kind
-    required: false
-    type: string
   card-id-param:
     description: Card unique identifier.
     in: path
     name: card-id
     required: true
     type: string
+  card-brand-param:
+    description: 'Brand of the card. For example: Visa, Master. For complete list of possible values see [card-brands]() classification.'
+    in: query
+    name: brand
+    required: false
+    type: string
+  card-kind-param:
+    description: 'Kind of the card. For example: electron, standard, gold, platinum. For complete list of possible values see [card-kinds]() classification.'
+    in: query
+    name: kind
+    required: false
+    type: string
   card-type-param:
     description: Type of card.
     in: query
     name: type
     required: false
-    x-asee-compliance: Could this enum members have full and not reduced name. Vowels are missing.
     enum:
-      - crdt
-      - dbit
+      - credit
+      - debit
     type: string
   channel-param:
-    x-asee-compliance: Should this be related to classification, enum?
-    description: Channel of transaction.
+    description: Channel of transaction. For a complete list of possible values see [channels]() classification.
     in: query
     name: channel
     required: false
-    type: string
-  schema-param:
-    x-asee-compliance: This is not used, should be removed.
-    description: The classification schema.
-    in: query
-    name: schema
-    required: true
     type: string
   schema-id-param:
     description: Schema id
     in: path
     name: schema-id
     required: true
-    type: string
+    type: string   
     
 definitions:
   account-list:
@@ -1081,7 +1021,7 @@ definitions:
       page-size: 0
       page-number: 0
       total-pages: 0
-      x-asee-compliance: Items are missing in this example.
+      items: TO DO
     properties:
       total-count:
         description: Total count of accounts in the list.
@@ -1103,18 +1043,6 @@ definitions:
         description: Items is list of accounts.
         items:
           $ref: '#/definitions/account'
-        type: array
-      navigations:
-        x-asee-compliance: Probably not needed. This goes for all navigations and commands.
-        description: Links to related resources.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        x-asee-compliance: Probably not needed. This goes for all navigations and commands.
-        description: Available commands in current context.
-        items:
-          $ref: '#/definitions/link'
         type: array
       uri:
         description: URI
@@ -1139,74 +1067,32 @@ definitions:
       closing-date: '0001-01-01T00:00:00'
       related-arrangement: ''
       limits:
-        total-count: 0
-        page-size: 0
-        page-number: 0
-        total-pages: 0
-        x-asee-compliance: Items are missing.
+        items: TO DO
       balances:
+        # total-count: 0
+        # page-size: 0
+        # page-number: 0
+        # total-pages: 0
         items:
           - kind: ledger-balance
-            credit-debit: debit
+            direction: debit
             amount:
               code: AUD
               amount: 0
             value-date: '2015-11-04T00:00:00'
             calculation-date: '2015-11-04T00:00:00'
-          - kind: ledger-balance
-            credit-debit: debit
-            amount:
-              code: RSD
-              amount: 6941.03
-            value-date: '2015-11-04T00:00:00'
-            calculation-date: '2015-11-04T00:00:00'
-          - kind: ledger-balance
-            credit-debit: debit
-            amount:
-              code: EUR
-              amount: -7.32
-            value-date: '2015-11-04T00:00:00'
-            calculation-date: '2015-11-04T00:00:00'
           - kind: available-balance
-            credit-debit: credit
+            direction: credit
             amount:
               code: AUD
               amount: 7700
             value-date: '2015-11-04T00:00:00'
             calculation-date: '2015-11-04T00:00:00'
-          - kind: available-balance
-            credit-debit: credit
-            amount:
-              code: RSD
-              amount: 6341.03
-            value-date: '2015-11-04T00:00:00'
-            calculation-date: '2015-11-04T00:00:00'
-          - kind: available-balance
-            credit-debit: credit
-            amount:
-              code: EUR
-              amount: 7672.36
-            value-date: '2015-11-04T00:00:00'
-            calculation-date: '2015-11-04T00:00:00'
           - kind: onhold-balance
-            credit-debit: credit
+            direction: credit
             amount:
               code: AUD
               amount: -7700
-            value-date: '2015-11-04T00:00:00'
-            calculation-date: '2015-11-04T00:00:00'
-          - kind: onhold-balance
-            credit-debit: credit
-            amount:
-              code: RSD
-              amount: 600
-            value-date: '2015-11-04T00:00:00'
-            calculation-date: '2015-11-04T00:00:00'
-          - kind: onhold-balance
-            credit-debit: credit
-            amount:
-              code: EUR
-              amount: -7679.68
             value-date: '2015-11-04T00:00:00'
             calculation-date: '2015-11-04T00:00:00'
       related-accounts:
@@ -1336,10 +1222,9 @@ definitions:
         description: Reservations on account. Reseverations contain list of holds of funds for any reason.
         $ref: '#/definitions/account-reservation-list'
       interest-rate:
-        description: Interest rate for base currency of account
+        description: Interest rate for base currency of account.
         format: double
         type: number
-        x-asee-compliance: Missing the information on which level (daily, monthly, yearly) this interest rate is set.
       transaction-summary:
         description: Summary of transaction.
         $ref: '#/definitions/transaction-summary'
@@ -1362,11 +1247,6 @@ definitions:
         description: Revolving percent for credit limit.
         format: double
         type: number
-      next-repayment-date:
-        x-asee-compliance: This property should be removed, there is already next-installment-date property above that should be used for the same purpose.
-        description: Date and time of next payment for credit limit.
-        format: date-time
-        type: string
       is-installment-skippable:
         description: Indicates whether the payment of current due obligations can be postponed to next month.
         type: boolean
@@ -1390,44 +1270,14 @@ definitions:
         type: string
     type: object
   limit-list:
-    x-asee-compliance: Do we really need paging for this object? Most probably not. There are just few limits, and the balances collection below also does not have paging.
     description: List of account limits.
     example:
-      total-count: 0
-      page-size: 0
-      page-number: 0
-      total-pages: 0
+      items:
     properties:
-      total-count:
-        description: Total count.
-        format: int32
-        type: integer
-      page-size:
-        description: Size of the page.
-        format: int32
-        type: integer
-      page-number:
-        description: Page number.
-        format: int32
-        type: integer
-      total-pages:
-        description: Total pages.
-        format: int32
-        type: integer
       items:
         description: List of limits.
         items:
           $ref: '#/definitions/limit'
-        type: array
-      navigations:
-        description: Links to related resources.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        description: Available commands in current context.
-        items:
-          $ref: '#/definitions/link'
         type: array
       uri:
         description: URI
@@ -1438,7 +1288,7 @@ definitions:
     example:
       items:
         - kind: ledger-balance
-          credit-debit: debit
+          direction: debit
           amount:
             code: ''
             amount: 0
@@ -1453,43 +1303,13 @@ definitions:
     type: object
   related-account-list:
     description: Related accounts
-    x-asee-compliance: The paging for this object is also not needed, probably.
     example:
-      total-count: 0
-      page-size: 0
-      page-number: 0
-      total-pages: 0
+      items: TO DO
     properties:
-      total-count:
-        description: Total count.
-        format: int32
-        type: integer
-      page-size:
-        description: Page size.
-        format: int32
-        type: integer
-      page-number:
-        description: Page number.
-        format: int32
-        type: integer
-      total-pages:
-        description: Total pages.
-        format: int32
-        type: integer
       items:
         description: Related accounts.
         items:
           $ref: '#/definitions/related-account'
-        type: array
-      navigations:
-        description: Links to related resources.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        description: Available commands in current context.
-        items:
-          $ref: '#/definitions/link'
         type: array
       uri:
         description: URI
@@ -1502,7 +1322,7 @@ definitions:
       page-size: 10
       page-number: 0
       total-pages: 1
-      x-asee-compliance: Missing example of items.
+      items: TO DO
     properties:
       total-count:
         description: Total count.
@@ -1524,16 +1344,6 @@ definitions:
         description: Account reservations.
         items:
           $ref: '#/definitions/account-reservation'
-        type: array
-      navigations:
-        description: Links to related resources.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        description: Available commands in current context.
-        items:
-          $ref: '#/definitions/link'
         type: array
       uri:
         description: URI
@@ -1560,6 +1370,9 @@ definitions:
     example:
       currency-code: EUR
       interest-rate: 0
+      time-period:
+        period: 1
+        unit-of-time: months
     properties:
       currency-code:
         description: Currency code
@@ -1568,23 +1381,27 @@ definitions:
         description: Interest rate.
         format: double
         type: number
-        x-asee-compliance: Missing the information on which level (daily, monthly, yearly) this interest rate is set.
+      time-period:
+        description: Time interval on which the interest rate is set.
+        $ref: '#/definitions/simple-time-period'
     type: object
   limit:
     description: Periodic limit for transactions per channel.
     example:
-      periodicity-type: day
-      custom-limit-periodicity:
-        period-type: ''
-        period-value: 0
+      amount-limit-period:
+        period: 7
+        unit-of-time: days
+      count-limit-period:
+        period: 1
+        unit-of-time: days
       kind: atm
-      amount:
+      remaining-amount:
         code: ''
         amount: 0
       used-amount:
         code: ''
         amount: 0
-      count: 0
+      remaining-count: 0
       used-count: 0
       validity-period:
         start-date: '0001-01-01T00:00:00'
@@ -1597,20 +1414,9 @@ definitions:
         code: ''
         amount: 0
     properties:
-      periodicity-type:
-        x-asee-compliance: Remove this property. We don't need two properties defining the same thing. The periodicity is more precisely defined by the property below.
-        description: |
-          Specifies the periodicity linked to a limit for example the periodicity can indicate that the limit can be reached
-          daily or monthly.
-        enum:
-          - daily
-          - periodic
-        type: string
-      limit-periodicity:
-        description: |
-          Specifies the periodicity linked to a limit for example the periodicity can indicate that the limit can be reached
-          daily or monthly.
-        $ref: '#/definitions/limit-periodicity'
+      period:
+        description: Period of time to which limit for specified amount and number of transactions is applied.
+        $ref: '#/definitions/simple-time-period'
       kind:
         description: Nature of the limit.
         enum:
@@ -1626,21 +1432,18 @@ definitions:
           - overdraft
           - direct-debit
         type: string
-      amount:
-        x-asee-compliance: What is this? Remaining, available amount, please rename it to remaining-amount. Correct description accordingly. This is the value of remaining transactions.
-        description: 'Amount of money of the limit, expressed in a currency.'
+      remaining-amount:
+        description: 'Remaining amount of the limit, expressed in a currency.'
         $ref: '#/definitions/currency'
       used-amount:
         description: 'Used amount of money of the limit, expressed in a currency.'
         $ref: '#/definitions/currency'
-      count:
-        x-asee-compliance: What is this? Remaining, available count, please rename it to remaining-count. Correct description accordingly. This is the number of remaining transactions.
-        description: Limit expressed as number of items (transactions).
+      remaining-count:
+        description: Remaining number of transactions of the limit.
         format: int32
         type: integer
       used-count:
-        description: Used amount expressed as number of items (transactions).
-        x-asee-compliance: Wrong description, this is the number of already executed transactions.
+        description: Used number of transactions of the limit.
         format: int32
         type: integer
       validity-period:
@@ -1651,22 +1454,21 @@ definitions:
         format: int32
         type: integer
       max-count:
-        description: Currently set maximum number of transactions.
+        description: Currently set maximum number of transactions for the limit time period.
         format: int32
         type: integer
       default-amount:
-        description: Default maximum value of transactions.
+        description: Default maximum value of transactions for the limit time period.
         $ref: '#/definitions/currency'
       max-amount:
-        description: Currently set maximum value of transactions.
+        description: Currently set maximum value of transactions for the limit time period.
         $ref: '#/definitions/currency'
     type: object
   account-balance:
     description: Balance is numerical representation of the net increases and decreases in an account at a specific point in time.
     example:
-      kind: checking
-      x-asee-compliance: This kind of balance is not stated in enum below? What is checking?
-      credit-debit: debit
+      kind: current
+      direction: debit
       amount:
         code: EUR
         amount: 100
@@ -1684,7 +1486,7 @@ definitions:
           - debit-on-hold
           - amount-due
         type: string
-      credit-debit:
+      direction:
         description: Indicates whether the balance is a credit or a debit balance.
         enum:
           - credit
@@ -1694,13 +1496,11 @@ definitions:
         description: Currency and amount of the balance.
         $ref: '#/definitions/currency'
       value-date:
-        description: Date and time at which the balance is or will be available.
-        x-asee-compliance: This is probably the date and time when the balance was last changed.
+        description: Date and time when the balance was last changed.
         format: date-time
         type: string
       calculation-date:
-        description: Date and time at which the balance is calculated.
-        x-asee-compliance: This is probably the date and time when balance info has been retrieved.
+        description: Date and time when balance info has been retrieved.
         format: date-time
         type: string
     type: object
@@ -1776,7 +1576,9 @@ definitions:
         description: Amount of the reservation.
         $ref: '#/definitions/currency'
       instructed-amount:
-        description: Instructed amount identifies the amount of money to be moved between debtor and creditor before deduction of charges. It is expressed in currency as ordered by initiating party.
+        description: |
+          Instructed amount identifies the amount of money to be moved between debtor and creditor 
+          before deduction of charges. It is expressed in currency as ordered by initiating party.
         $ref: '#/definitions/currency'
       settlement-amount:
         description: 'Settlement amount is result of the currency information applied to an instructed amount, before deduction of charges.'
@@ -1807,25 +1609,6 @@ definitions:
         description: Amount.
         format: double
         type: number
-    type: object
-  limit-periodicity:
-    description: Time period on which limit is applied.
-    x-asee-compliance: Instead of this object, probably the simple-time-period could have been used.
-    example:
-      period-type: daily
-      period-value: 10
-    properties:
-      period-type:
-        description: The unit of time.
-        enum:
-          - daily
-          - monthly
-          - year
-        type: string
-      period-value:
-        description: Period quantifier.
-        format: int32
-        type: integer
     type: object
   validity-period:
     description: 'Time span defined by a start date and time, and an end date and time'
@@ -1862,20 +1645,29 @@ definitions:
         description: Short number of the card formated for diplay. Only first four and last for numbers are shown.
         type: string
       brand:
-        description: 'Brand of the card. For example: Visa, Master ...'
+        description: |
+          Brand of the card. For example: Visa, Master ... 
+          For a complete list of possible values see [card-brands]() classification.
         type: string
-        x-asee-compliance: This should be related to classification.
       kind:
-        description: 'Kind of the card. For example: electron, standard, gold, platinum ...'
+        description: |
+          Kind of the card. For example: electron, standard, gold, platinum ... 
+          For a complete list of possible values see [card-kinds]() classification. 
         type: string
-        x-asee-compliance: This should be related to classification.
       is-primary:
         description: Is primary card. (true or false).
         type: boolean
       status:
         description: Status of the card.
         type: string
-        x-asee-compliance: This should be related to enum.
+        enum:
+          - initiated
+          - active
+          - sent-to-customer
+          - returned-to-bank         
+          - temporary-blocked
+          - permanently-blocked
+          - expired
     type: object
   account-statement-list:
     description: Account statements.
@@ -1906,16 +1698,6 @@ definitions:
         items:
           $ref: '#/definitions/account-statement'
         type: array
-      navigations:
-        description: Links to related resources.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        description: Available commands in current context.
-        items:
-          $ref: '#/definitions/link'
-        type: array
       uri:
         description: URI
         type: string
@@ -1924,14 +1706,13 @@ definitions:
     description: Account statement
     example:
       statement-id: 0f8fad5b-d9cb-469f-a165-70867728950e
-      header-id: 7c9e6679-7425-40de-944b-e07fc1f90ae7
       statement-period:
         start-date: '0001-01-01T00:00:00'
       issue-date: '0001-01-01T00:00:00'
       account-number: 115-1000100019578-10
       balances:
         - kind: reserved
-          credit-debit: credit
+          direction: credit
           amount:
             code: ''
             amount: 0
@@ -1942,7 +1723,7 @@ definitions:
         page-size: 0
         page-number: 0
         total-pages: 0
-        transactions:
+        items:
           - instruction-identification: 99900153177061
             transaction-identification: executed00490110005403
             mandate-identification: 643869561
@@ -1988,7 +1769,7 @@ definitions:
             debtor-account-number: 115-0000000050248-11
             purpose-description: Installment payment.
             purpose-code: 897
-            priority: normal
+            priority: ACH
             transaction-code: pmnt-icdt-esct
             debtor-reference: 1451001000641
             debtor-reference-model: 56
@@ -2025,18 +1806,12 @@ definitions:
                 - entry-id: 2
                   booking-date: '0001-01-01T00:00:00'
                   value-date: '0001-01-01T00:00:00'
-                  credit-debit: credit
+                  direction: credit
                   amount:
                     code: ''
                     amount: 0
                   reversal: false
                   commision-wavier: false
-              navigations:
-                - href: 
-                  rel: 
-              commands:
-                - href: 
-                  rel: 
               uri: ''
             direction: debit
             category: Instalments for house equipment.
@@ -2045,29 +1820,13 @@ definitions:
               lat: ''
               lon: ''
               mapped-address: ''
-            navigations:
-              - href:
-                rel: 
-            commands:
-              - href:
-                rel:
             uri:
-        navigations:
-          - href: 
-            rel:
-        commands:
-          - href:
-            rel:
         uri: ''
       statement-order-number: 111234
     properties:
       statement-id:
         description: Statement identifier.
         type: string
-      header-id:
-        description: Header id.
-        type: string
-        x-asee-compliance: What is this identifier? Shouldn't we receive complete header information?
       statement-period:
         description: For period is period for which the statement is issued.
         $ref: '#/definitions/validity-period'
@@ -2087,18 +1846,39 @@ definitions:
         description: |
           Transactions list on which the entries are based.
           Depending on the statement and the account type this list can be empty.
-        $ref: '#/definitions/transaction-list'
+        $ref: '#/definitions/account-transaction-list'
       statement-order-number:
         description: Statement order number
         type: string
     type: object
-  transaction-list:
+  account-transaction-list:
     description: Transactions
     example:
       total-count: 0
       page-size: 0
       page-number: 0
       total-pages: 0
+      total-summary:
+        - currency-code: EUR
+          total-entries:
+            count: 39
+            sum: 0
+          total-credit-entries:
+            count: 17
+            sum: 0
+          total-debit-entries:
+            count: 14
+            sum: 0
+        - currency-code: RSD
+          total-entries:
+            count: 502
+            sum: 0
+          total-credit-entries:
+            count: 24
+            sum: 0
+          total-debit-entries:
+            count: 466
+            sum: 0
       transactions:
         - instruction-identification: 99900153177061
           transaction-identification: executed00490110005403
@@ -2145,7 +1925,7 @@ definitions:
           debtor-account-number: 0087352764836
           purpose-description: direct payment
           purpose-code: 182
-          priority: normal
+          priority: ACH
           transaction-code: pmnt-icdt-esct
           debtor-reference: 1451001000641
           debtor-reference-model: 63
@@ -2182,7 +1962,7 @@ definitions:
               - entry-id: 2
                 booking-date: '0001-01-01T00:00:00'
                 value-date: '0001-01-01T00:00:00'
-                credit-debit: credit
+                direction: credit
                 amount:
                   code: ''
                   amount: 0
@@ -2212,20 +1992,15 @@ definitions:
         description: Total pages number.
         format: int32
         type: integer
+      total-summary:
+        description: Total summary for requested transactions.
+        items:
+          $ref: '#/definitions/total-summary'
+        type: array
       items:
         description: Transactions
         items:
           $ref: '#/definitions/account-transaction'
-        type: array
-      navigations:
-        description: Links to related resources.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        description: Available commands in current context.
-        items:
-          $ref: '#/definitions/link'
         type: array
       uri:
         description: URI
@@ -2279,7 +2054,7 @@ definitions:
       debtor-account-number: 015-0039011321598-10
       purpose-description: cell phone bill payment
       purpose-code: 897
-      priority: normal
+      priority: ACH
       transaction-code: pmnt-icdt-esct
       debtor-reference: 1451001000641
       debtor-reference-model: 17822
@@ -2316,7 +2091,7 @@ definitions:
           - entry-id: 2
             booking-date: '0001-01-01T00:00:00'
             value-date: '0001-01-01T00:00:00'
-            credit-debit: debit
+            direction: debit
             amount:
               code: ''
               amount: 0
@@ -2372,13 +2147,16 @@ definitions:
           Purpose is a content element, which is not used for processing by any of the agents involved in the payment.
         type: string
       purpose-code:
-        description: 'Purpose code specifies the underlying reason for the payment transaction, as published in an external purpose code list.'
+        description: |
+          Specifies the underlying reason for the payment transaction, as published in an external purpose code list. 
+          For a complete list of possible values see [purpose-codes]() classification. 
         type: string
-        x-asee-compliance: This property should be related to classification.
       priority:
-        description: Instrument priority is priority of the transaction set by the initiator.
+        description: Priority of the transaction set by the initiator.
+        enum:
+          - ACH
+          - RTGS
         type: string
-        x-asee-compliance: This property should be related to enum.
       transaction-code:
         description: |
           Transaction code is set of elements to fully identify the type of underlying transaction resulting in an entry.
@@ -2429,9 +2207,10 @@ definitions:
           - in-process
         type: string
       channel:
-        description: Channel used by the initiator of the transaction.
+        description: |
+          Channel used by the initiator of the transaction. 
+          For a complete list of possible values see [channels]() classification.
         type: string
-        x-asee-compliance: Should be related to classification.
       related-card:
         description: Related card is information about the card used to initiate the transaction.
         $ref: '#/definitions/related-card'
@@ -2440,10 +2219,10 @@ definitions:
         $ref: '#/definitions/statement-entries'
       direction:
         description: Direction of transaction (credit/debit).
-        type: string
         enum:
           - debit
           - credit
+        type: string
       category:
         description: Category of the transaction.
         type: string
@@ -2459,16 +2238,6 @@ definitions:
       beneficiary-picture:
         description: Beneficiary picture.
         type: string
-      navigations:
-        description: Links to related resources.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        description: Available commands in current context.
-        items:
-          $ref: '#/definitions/link'
-        type: array
       uri:
         description: URI
         type: string
@@ -2547,8 +2316,7 @@ definitions:
         $ref: '#/definitions/financial-institution'
     type: object
   statement-entries:
-    x-asee-compliance: Missing description of object and properties.
-    description: Entries
+    description: Statement entries.
     example:
       total-count: 0
       page-size: 0
@@ -2558,7 +2326,7 @@ definitions:
         - entry-id: 2
           booking-date: '0001-01-01T00:00:00'
           value-date: '0001-01-01T00:00:00'
-          credit-debit: credit
+          direction: credit
           amount:
             code: ''
             amount: 0
@@ -2566,30 +2334,25 @@ definitions:
           commision-wavier: false
     properties:
       total-count:
+        description: Total count.
         format: int32
         type: integer
       page-size:
+        description: Size of the page.
         format: int32
         type: integer
       page-number:
+        description: Page number.
         format: int32
         type: integer
       total-pages:
+        description: Total pages.
         format: int32
         type: integer
       items:
+        description: List of statement entries.
         items:
           $ref: '#/definitions/statement-entry'
-        type: array
-      navigations:
-        description: Links to related resources.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        description: Available commands in current context.
-        items:
-          $ref: '#/definitions/link'
         type: array
       uri:
         description: URI
@@ -2636,9 +2399,10 @@ definitions:
         description: 'Name of a built-up area, with defined boundaries, and a local government.'
         type: string
       country-code:
-        description: ISO 3166-alpha-3 code.
+        description: |
+          ISO 3166-alpha-3 code for the country.
+          For a complete list of possible values see [country-codes]() classification.
         type: string
-        x-asee-compliance: Probably should be related to classification.
     type: object
   financial-institution:
     description: |
@@ -2671,13 +2435,12 @@ definitions:
         $ref: '#/definitions/postal-address'
     type: object
   statement-entry:
-    x-asee-compliance: Missing description of object and properties.
-    description: Entry
+    description: Statement entry.
     example:
       entry-id: 1
       booking-date: '0001-01-01T00:00:00'
       value-date: '0001-01-01T00:00:00'
-      credit-debit: credit
+      direction: credit
       amount:
         code: ''
         amount: 0
@@ -2685,8 +2448,10 @@ definitions:
       commision-wavier: false
     properties:
       entry-id:
+        description: Statement entry identifier.
         type: string
       booking-date:
+        description: Accounting date and time of statement entry.
         format: date-time
         type: string
       value-date:
@@ -2695,7 +2460,11 @@ definitions:
           account owner (in a debit entry).
         format: date-time
         type: string
-      credit-debit:
+      direction:
+        description: Is entry credit or debit.
+        enum:
+          - credit
+          - debit
         type: string
       amount:
         $ref: '#/definitions/currency'
@@ -2703,96 +2472,6 @@ definitions:
         type: boolean
       commision-wavier:
         type: boolean
-    type: object
-  account-transaction-list:
-    x-asee-compliance: This object is defined for the second time. It should be removed.
-    description: Account transactions.
-    example:
-      total-summary:
-        - currency-code: EUR
-          total-entries:
-            count: 39
-            sum: 0
-          total-credit-entries:
-            count: 17
-            sum: 0
-          total-debit-entries:
-            count: 14
-            sum: 0
-        - currency-code: RSD
-          total-entries:
-            count: 502
-            sum: 0
-          total-credit-entries:
-            count: 24
-            sum: 0
-          total-debit-entries:
-            count: 466
-            sum: 0
-      agregate-balances:
-        items:
-          - kind: ledger-balance
-            credit-debit: debit
-            amount:
-              code: EUR
-              amount: -7.32
-            value-date: '2015-11-05T09:20:43'
-            calculation-date: '2015-11-04T09:20:43'
-          - kind: ledger-balance
-            credit-debit: debit
-            amount:
-              code: RSD
-              amount: 12084.03
-            value-date: '2015-11-05T09:20:43'
-            calculation-date: '2015-11-04T09:20:43'
-          - kind: available-balance
-            credit-debit: debit
-            amount:
-              code: EUR
-              amount: -7.32
-            value-date: '2015-11-05T09:20:43'
-            calculation-date: '2015-11-04T09:20:43'
-          - kind: available-balance
-            credit-debit: debit
-            amount:
-              code: RSD
-              amount: 12084.03
-            value-date: '2015-11-05T09:20:43'
-            calculation-date: '2015-11-04T09:20:43'
-          - kind: onhold-balance
-            credit-debit: debit
-            amount:
-              code: EUR
-              amount: 0
-            value-date: '2015-11-05T09:20:43'
-            calculation-date: '2015-11-04T09:20:43'
-          - kind: onhold-balance
-            credit-debit: debit
-            amount:
-              code: RSD
-              amount: 0
-            value-date: '2015-11-05T09:20:43'
-            calculation-date: '2015-11-04T09:20:43'
-      transactions:
-        total-count: 541
-        page-size: 10
-        page-number: 0
-        total-pages: 55
-    properties:
-      account-number:
-        description: Account unique identifier.
-        type: string
-      total-summary:
-        description: Total summary for requested transactions.
-        items:
-          $ref: '#/definitions/total-summary'
-        type: array
-      agregate-balances:
-        description: Balances for requested transactions (aggregate).
-        $ref: '#/definitions/account-balance-list'
-      transactions:
-        description: Transaction list.
-        $ref: '#/definitions/transaction-list'
     type: object
   total-summary:
     description: Total summary is set of elements providing summary information on entries.
@@ -2835,20 +2514,6 @@ definitions:
         description: Sum of all individual entries included in the report.
         format: double
         type: number
-    type: object
-  command-result:
-    x-asee-compliance: Missing description of object, correct description of properties.
-    description: ''
-    example:
-      id: 30a7e1b3-e763-4789-a54d-fcc53dcf973a
-      created-record-status: available
-    properties:
-      id:
-        description: 'Gets or sets the id of created, updated or deleted entity.'
-        type: string
-      created-record-status:
-        description: 'Gets or sets the created, updated, deleted record status.'
-        type: string
     type: object
   fcy-income-list:
     description: FCY incomes are set of elements providing information on transactions that represent incomes in foreign currencies.
@@ -2966,9 +2631,10 @@ definitions:
           Purpose is a content element, which is not used for processing by any of the agents involved in the payment.
         type: string
       purpose-code:
-        description: 'Purpose code specifies the underlying reason for the payment transaction, as published in an external purpose code list.'
+        description: |
+          Purpose code specifies the underlying reason for the payment transaction, as published in an external purpose code list.
+          For a complete list of possible values see [purpose-codes]() classification.
         type: string
-        x-asee-compliance: This should be related to classification.
       debtor-reference:
         description: Debtor reference.
         type: string
@@ -2997,16 +2663,17 @@ definitions:
           - in-process
         type: string
       document-list:
-        description: Document list.
-        type: string
-        x-asee-compliance: Should this be string or the list of some well structured objects?
+        description: List of document names acording to the fcy-income.
+        items:
+          description: Name of the related document.
+          type: string
+        type: array
       bank-comment:
         description: Bank comment.
         type: string
-      has-comment:
-        description: Has bank comment (true or false).
+      comment-correction:
+        description: Status that the bank returns order to client for correction.
         type: boolean
-        x-asee-compliance: Isn't this already defined by whether the previous property is empty or not? Or the name of this property is not good, maybe it represents the status that the bank has returned order to client for correction?
     required:
       - debtor
       - creditor-account-number
@@ -3018,8 +2685,7 @@ definitions:
       - amount
     type: object
   bank-info:
-    description: ''
-    x-asee-compliance: Description of object is missing.
+    description: All relevant info about Bank.
     example:
       bank-name: Telenor Bank
       swift-code: AAAARSBG
@@ -3165,19 +2831,13 @@ definitions:
   modify-account-nickname-command:
     description: Change account nickname command.
     example:
-      account-number: 0049011000540
-      nickName: My primary account
+      nickname: My primary account
     properties:
-      account-number:
-        x-asee-compliance: This parameter is redundant, it is already passed through operation path.
-        description: Account identifier.
-        type: string
-      nickName:
+      nickname:
         description: Account nickname.
         type: string
     required:
-      - account-number
-      - nickName
+      - nickname
     type: object
   card-list:
     description: Cards paged list.
@@ -3208,16 +2868,6 @@ definitions:
         items:
           $ref: '#/definitions/card'
         type: array
-      navigations:
-        description: Links to related resources.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        description: Available commands in current context.
-        items:
-          $ref: '#/definitions/link'
-        type: array
       uri:
         description: URI
         type: string
@@ -3244,27 +2894,20 @@ definitions:
         description: Owner name.
         type: string
       brand:
-        description: 'Brand of the card. Can be visa, master, ...'
-        x-asee-compliance: This should be related to classification, not the enum.
-        enum:
-          - visa
-          - master
+        description: |
+          'Brand of the card. For example: Visa, Master ... 
+          For a complete list of possible values see [card-brands]() classification.'
         type: string
       kind:
-        description: 'Kind of card. Can be electron, standard, gold ...'
-        x-asee-compliance: This should be related to classification, not the enum.
-        enum:
-          - electron
-          - standard
-          - gold
-          - platinum
+        description: |
+          'Kind of the card. For example: electron, standard, gold, platinum ... 
+          For a complete list of possible values see [card-kinds]() classification.'
         type: string
       card-type:
         description: Credit or debit type of card.
-        x-asee-compliance: Could this enum members have full and not reduced name. Vowels are missing.
         enum:
-          - crdt
-          - dbit
+          - credit
+          - debit
         type: string
       emboss-first-line:
         description: Emboss first line.
@@ -3315,14 +2958,8 @@ definitions:
     type: object
   modify-card-limit-command:
     description: Change card limits command.
-    example:
-      card-id: 4324070002262750
-      limits: []
+    example: TO DO
     properties:
-      card-id:
-        x-asee-compliance: This property is redundant, it is already provided in operation path.
-        description: Account identifier.
-        type: string
       limit-kind:
         description: Nature of the limit
         type: string
@@ -3332,11 +2969,11 @@ definitions:
           - atm
           - internet
           - pay-by-link
-      limit-periodicity:
+      limit-period:
         description: |
           Specifies the periodicity linked to a limit for example the periodicity can indicate that the limit can be reached
           daily or monthly.
-        $ref: '#/definitions/limit-periodicity'
+        $ref: '#/definitions/simple-time-period'
       total-amount: 
         description: Maximum total value of transactions for the period.
         $ref: "#/definitions/currency"
@@ -3345,9 +2982,8 @@ definitions:
         format: int32
         type: integer
     required:
-      - card-id
       - limit-kind
-      - limit-periodicity
+      - limit-period
       - total-amount
       - total-count
     type: object
@@ -3358,6 +2994,7 @@ definitions:
       page-size: 10
       page-number: 0
       total-pages: 1
+      items:
     properties:
       total-count:
         description: Total count of card transctions in the list.
@@ -3379,16 +3016,6 @@ definitions:
         description: Items is list of card transactions.
         items:
           $ref: '#/definitions/card-transaction'
-        type: array
-      navigations:
-        description: Links to related resources.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        description: Available commands in current context.
-        items:
-          $ref: '#/definitions/link'
         type: array
       uri:
         description: URI
@@ -3444,7 +3071,7 @@ definitions:
       debtor-account-number: 115-0000000050248-11
       purpose-description: payment in store
       purpose-code: 121
-      priority: normal
+      priority: ACH
       transaction-code: pmnt-icdt-esct
       debtor-reference: 1451001000641
       debtor-reference-model: 17822
@@ -3481,7 +3108,7 @@ definitions:
           - entry-id: 1
             booking-date: '0001-01-01T00:00:00'
             value-date: '0001-01-01T00:00:00'
-            credit-debit: debit
+            direction: debit
             amount:
               code: ''
               amount: 0
@@ -3543,13 +3170,16 @@ definitions:
           Purpose is a content element, which is not used for processing by any of the agents involved in the payment.
         type: string
       purpose-code:
-        description: 'Purpose code specifies the underlying reason for the payment transaction, as published in an external purpose code list.'
+        description: |
+          Specifies the underlying reason for the payment transaction, as published in an external purpose code list. 
+          For a complete list of possible values see [purpose-codes]() classification. 
         type: string
-        x-asee-compliance: This should be related to classification.
       priority:
         description: Instrument priority is priority of the transaction set by the initiator.
+        enum:
+          - ACH
+          - RTGS
         type: string
-        x-asee-compliance: This should be related to enum.
       transaction-code:
         description: |
           Transaction code is set of elements to fully identify the type of underlying transaction resulting in an entry.
@@ -3600,7 +3230,7 @@ definitions:
           - in-process
         type: string
       channel:
-        description: Channel used by the initiator of the transaction.
+        description: Channel used by the initiator of the transaction. For a complete list of possible values see [channels]() classification.
         type: string
       related-card:
         description: Related card is information abut the card used to initiate the transaction.
@@ -3610,10 +3240,10 @@ definitions:
         $ref: '#/definitions/statement-entries'
       direction:
         description: Direction of transaction (credit/debit).
-        type: string
         enum:
           - debit
           - credit
+        type: string
       category:
         description: Category of the transaction.
         type: string
@@ -3629,16 +3259,6 @@ definitions:
       beneficiary-picture:
         description: Beneficiary picture.
         type: string
-      navigations:
-        description: Links to related resources.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        description: Available commands in current context.
-        items:
-          $ref: '#/definitions/link'
-        type: array
       uri:
         description: URI
         type: string
@@ -3682,16 +3302,6 @@ definitions:
         description: Items is list of card resrvations
         items:
           $ref: '#/definitions/card-reservation'
-        type: array
-      navigations:
-        description: Links to related resources.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        description: Available commands in current context.
-        items:
-          $ref: '#/definitions/link'
         type: array
       uri:
         description: URI
@@ -3759,15 +3369,10 @@ definitions:
   modify-card-pin-command:
     description: Request PIN change command
     example:
-      card-id: 4324070002262750
       new-pin: 123498
       expiry-date: october-2016
       is-activation: false
     properties:
-      card-id:
-        x-asee: This parameter is redundant, it is already provided in operation path.
-        description: Serial number of card which pin will be changed.
-        type: string
       new-pin:
         description: New PIN code for the card.
         type: string
@@ -3778,143 +3383,174 @@ definitions:
         description: Is change of PIN during activation
         type: boolean
     required:
-      - card-id
+      - new-pin
     type: object
   modify-card-nickname-command:
     description: Change card nickname command
     example:
-      card-id: 4324070002262750
       nickname: Primary card
     properties:
-      card-id:
-        x-asee: This parameter is redundant, it is already provided in operation path.
-        description: Serial number of card which nickname will be changed.
-        type: string
       nickname:
         description: New nickname of the card.
         type: string
     required:
-      - card-id
       - nickname
     type: object
-  classification-list: 
-    description: "List of classification shemas."
+  command-result:
+    description: |
+      Result of method call. Typicaly expected when initiate new or change existing data related to accounts.
+    example:
+      id: 30a7e1b3-e763-4789-a54d-fcc53dcf973a
+      created-record-status: available
+    properties:
+      id:
+        description: Unique identifier of returned result.
+        type: string
+      created-record-status:
+        description: Created, updated, deleted record status.
+        type: string
+    type: object
+  simple-time-period:
+    description: Simple time period.
+    example:
+      period: 15
+      unit-of-time: days
+    properties:
+      period:
+        description: Period.
+        format: int32
+        type: integer
+      unit-of-time:
+        description: 'Unit of time with allowed values: days, months or years.'
+        enum:
+          - days
+          - months
+          - years
+        type: string
+    type: object
+  classification-value: 
+    description: Classification value
+    example: TO DO
+    properties: 
+      code: 
+        description: Code of classification value.
+        type: string
+      literal: 
+        description: Literal.
+        type: string
+      description: 
+        description: Description.
+        type: string
+      id: 
+        description: Identifier of classification value.
+        type: string
+      parent-id: 
+        description: Parent classification value id.
+        type: string
+      ordinal: 
+        description: Ordinal number.
+        type: string      
+    type: object
+  classification-list:
+    description: List of classification shemas.
     properties: 
       items: 
-        items: 
+        description: List of all classification schemas.
+        items:
           $ref: "#/definitions/classification"
-        type: "array"
-    type: object
-  classification: 
-      description: "Classification schema used in API contracts"
-      properties: 
-        API: 
-          description: "Name of Api in which classification shema is used."
-          type: "string"
-        description: 
-          description: "Shema description."
-          type: "string"
-        name: 
-          description: "Name of shema"
-          type: "string"
-        values:
-          description: "List of classification values."
-          items:
-            $ref: "#/definitions/classification-value"
-          type: array
-        x-asee-compliance: Which of these properties represents schema-id/classification-id? It is missing in the list?
-        type: "object"
-  classification-value: 
-      description: "Classification value"
-      properties: 
-        code: 
-          description: "Code of classification value."
-          type: "string"
-        literal: 
-          description: "Literal."
-          type: "string"
-        description: 
-          description: "Description."
-          type: "string"
-        id: 
-          description: "Identifier of classification value."
-          type: "string"
-        parent-id: 
-          description: "Parent classification value id."
-          type: "string"
-        ordinal: 
-          description: "Ordinal number."
-          type: "string"
-      type: "object"
-  classification-value-list: 
-      x-asee-compliance: Object not needed anymore. Move example to classification object.
-      description: "List of classification values."
-      properties: 
-       items: 
-         items: 
-           $ref: "#/definitions/classification-value"
-         type: "array"
-      example:
-            - code: '0'
-              literal: card-lost
-              description: Card lost and new one should be issued.
-              id: 
-              parent-id: 
-              ordinal: 
-            - code: '1'
-              literal: card-stolen
-              description: Card stollen and new one should be issued.
-              id: 
-              parent-id: 
-              ordinal: 
-            - code: '2'
-              literal: card-damadged
-              description: Card damadged and new one should be issued.
-              id: 
-              parent-id: 
-              ordinal: 
-            - code: '3'
-              literal: emboss-name-changing
-              description: Change emboss name.
-              id: 
-              parent-id: 
-              ordinal: 
-            - code: '4'
-              literal: pin-lost
-              description: PIN code lost and new one should be created.
-              id: 
-              parent-id: 
-              ordinal:
+        type: array
+    type: object  
+  classification:
+    description: Classification schema used in API contracts.
+    example:
+      API: TO DO
+      description: TO DO
+      schema-id: TO DO
+      name: TO DO
+      values:
+        - code: '0'
+          literal: card-lost
+          description: Card lost and new one should be issued.
+          id: 
+          parent-id: 
+          ordinal: 
+        - code: '1'
+          literal: card-stolen
+          description: Card stollen and new one should be issued.
+          id: 
+          parent-id: 
+          ordinal: 
+        - code: '2'
+          literal: card-damadged
+          description: Card damadged and new one should be issued.
+          id: 
+          parent-id: 
+          ordinal: 
+        - code: '3'
+          literal: emboss-name-changing
+          description: Change emboss name.
+          id: 
+          parent-id: 
+          ordinal: 
+        - code: '4'
+          literal: pin-lost
+          description: PIN code lost and new one should be created.
+          id: 
+          parent-id: 
+          ordinal:
+    properties: 
+      API: 
+        description: Name of Api in which classification shema is used.
+        type: string
+      description: 
+        description: Shema description.
+        type: string
+      schema-id:
+        description: Unique identifier of the classification.
+        type: string
+      name: 
+        description: Name of shema.
+        type: string
+      values:
+        description: List of classification values.
+        items:
+          $ref: "#/definitions/classification-value"
+        type: array
+    type: object                
   business-problem:
-    x-asee-compliance: Missing description of object and properties.
-    properties:
-      problem:
-        type: string
-      message:
-        type: string
-      details:
-        type: string
+    description: When request is well formed but some business policy doesn't allow it to be executed, busieness-problem describes taht situation.
     example:
       problem: sent-value-not-allowed
       message: One or more sent values (max_count or max_amount) exceeds maximum allowed level!
+      details: 
+    properties:
+      problem:
+        description: Unique literal of business problem.
+        type: string
+      message:
+        description: Information sent to initiator.
+        type: string
       details:
-  validation-error: 
-    x-asee-compliance: Missing description of object and properties. 
-    type: array 
-    items: 
-      type: object 
+        description: Details.
+        type: string
+    type: object
+  validation-error:
+    description: TO DO  
+    items:    
       properties: 
         field: 
           type: string 
         errors: 
           type: array 
-          items: 
-            type: object 
+          items:   
             properties: 
               error: 
                 type: string 
               message: 
-                type: string 
+                type: string
+            type: object
+      type: object
+    type: array
 responses:
   default-error-response:
     description: 'Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()'
