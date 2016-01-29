@@ -6,7 +6,7 @@ info:
     Payment Order API gives you possibility to create, update, delete and execute balance, credit and cross-border transfers. For each type of transfer there are three types of resources you can use. 
     Drafts for working with orders in process of preparation, archive for viewing processed orders and current for orders in process of execution.
     Orders can be authorized using action authorization API. Orders can be created and issued depending on a mandate that customer has on source account.
-    Payment order API gives you access to a repository of public and personal recipient yry and also gives you ability to create, update and delete order templates that can be used for fast creation of orders.
+    Payment order API gives you access to a repository of public and personal recipients and also gives you ability to create, update and delete order templates that can be used for fast creation of orders.
     In process of creating orders recipients can be identified by their account or alias associated with recipient in customer’s recipient registry.
     Aliases can be anything, from facebook identity, mobile phone number, e-mail address to a custom value defined by customer himself.
   title: Payment Order
@@ -38,8 +38,9 @@ paths:
         It is useful when it's required to see list of public associations whom is payed often.  
       operationId: PublicBeneficiaries_GetList
       parameters:
-        - $ref: '#/parameters/search-terms-param'
-        - $ref: '#/parameters/search-scope-param'
+        - $ref: '#/parameters/beneficiary-name-param'
+        - $ref: '#/parameters/beneficiary-address-param'
+        - $ref: '#/parameters/beneficiary-account-param'
         - $ref: '#/parameters/page-size-param'
         - $ref: '#/parameters/page-param'
         - $ref: '#/parameters/sort-order-param'
@@ -67,8 +68,9 @@ paths:
         It is useful when it's required to see list of persons whom is payed often.  
       operationId: PersonalBeneficiaries_GetList
       parameters:
-        - $ref: '#/parameters/search-terms-param'
-        - $ref: '#/parameters/search-scope-param'
+        - $ref: '#/parameters/beneficiary-name-param'
+        - $ref: '#/parameters/beneficiary-address-param'
+        - $ref: '#/parameters/beneficiary-account-param'
         - $ref: '#/parameters/page-size-param'
         - $ref: '#/parameters/page-param'
         - $ref: '#/parameters/sort-order-param'
@@ -236,12 +238,11 @@ paths:
       x-asee-tags:
         - Pageable
         - Sortable
-  '/classifications/{classification-id}':
+  '/classifications/{schema-id}':
     get:
-      x-asee-compliance: I have dilemma now should we use schema-id or classification-id...
       operationId: Classifications_Get
       parameters:
-        - $ref: '#/parameters/classification-id-param'
+        - $ref: '#/parameters/schema-id-param'
       responses:
         '200':
           description: OK
@@ -778,11 +779,10 @@ paths:
         It is useful when it's required to see all payment templates or by some searched criteria.  
       operationId: Templates_GetList
       parameters:
-        - $ref: '#/parameters/search-terms-param'
-        - $ref: '#/parameters/search-scope-param'
+        - $ref: '#/parameters/beneficiary-name-param'
+        - $ref: '#/parameters/beneficiary-account-param'
         - $ref: '#/parameters/amount-from-param'
         - $ref: '#/parameters/amount-to-param'
-        - $ref: '#/parameters/amount-condition-param'
         - $ref: '#/parameters/currency-code-param'
         - $ref: '#/parameters/page-size-param'
         - $ref: '#/parameters/page-param'
@@ -814,8 +814,8 @@ paths:
           schema:
             $ref: '#/definitions/create-template-command'
       responses:
-        '202':
-          description: Accepted
+        '200':
+          description: OK
           schema:
             $ref: '#/definitions/command-result'
         default:
@@ -889,14 +889,14 @@ paths:
         kind... This is useful when is required to view list of transfers by searched criteria, or all transfers.
       operationId: Transfers_GetList
       parameters:
-        - $ref: '#/parameters/debtor-account-number-param'
+        - $ref: '#/parameters/beneficiary-account-param'
         - $ref: '#/parameters/transfer-kind-param'
-        - $ref: '#/parameters/list-param'
+        - $ref: '#/parameters/transfer-status-param'
         - $ref: '#/parameters/date-from-param'
         - $ref: '#/parameters/date-to-param'
         - $ref: '#/parameters/amount-from-param'
         - $ref: '#/parameters/amount-to-param'
-        - $ref: '#/parameters/beneficiary-param'
+        - $ref: '#/parameters/beneficiary-name-param'
         - $ref: '#/parameters/value-date-from-param'
         - $ref: '#/parameters/value-date-to-param'
         - $ref: '#/parameters/currency-code-param'
@@ -1119,7 +1119,7 @@ paths:
             [allowed-amount-exceeded] ()
             [blocked-account] ()
             [transfer-not-allowed] ()
-            [debtor's-card-not-active] ()
+            [debtor-card-not-active] ()
             [frequency-limit-exceeded] ()
             [amount-above-limit] ()
             [account-deposited] ()
@@ -1164,7 +1164,7 @@ paths:
             [transfer-not-allowed] ()
             [blocked-account] ()
             [transfer-not-allowed-accounts-types] ()
-            [debtor's-card-not-active] ()
+            [debtor-card-not-active] ()
             [frequency-limit-exceeded] ()
             [amount-above-limit] ()
             [account-deposited] ()
@@ -1255,7 +1255,7 @@ paths:
             [debtor-account-blocked] ()
             [work-date-not-set] ()
             [put-order-on-wait-error] ()
-            [debtor's-card-not-active] ()
+            [debtor-card-not-active] ()
             [frequency-limit-exceeded] ()
             [amount-above-limit] ()
             [payment-date-not-set] ()
@@ -1734,7 +1734,7 @@ paths:
         It is useful when only incomes are required to be seen. List can be filtered by various criteria as date-from and date-to.  
       operationId: Incomes_GetList
       parameters:
-        - $ref: '#/parameters/status-param'
+        - $ref: '#/parameters/income-status-param'
         - $ref: '#/parameters/value-date-from-param'
         - $ref: '#/parameters/value-date-to-param'
         - $ref: '#/parameters/currency-code-param'
@@ -1784,18 +1784,22 @@ paths:
       x-asee-tags:
         - Shapeable
 parameters:
-  search-terms-param:
-    description: Search parameter value.
-    x-asee-compliance: This parameter, in this form is not acceptable. It should be removed. 
+  beneficiary-name-param:
+    description: Name of the beneficiary.
     in: query
-    name: search-terms
+    name: name
     required: false
     type: string
-  search-scope-param:
-    description: Search parameter type.
-    x-asee-compliance: This parameter, in this form is not acceptable. It should be removed. 
+  beneficiary-address-param:
+    description: Address of the beneficiary.
     in: query
-    name: search-scope
+    name: address
+    required: false
+    type: string
+  beneficiary-account-param:
+    description: Beneficiary account number.
+    in: query
+    name: account
     required: false
     type: string
   page-size-param:
@@ -1864,15 +1868,15 @@ parameters:
     required: false
     type: string
   bank-country-param:
-    description: Country.
-    x-asee-compliance: This should be related to classification.
+    description: |
+      Country from which bank is.
+      For a complete list of possible values see [countries]() classification. 
     in: query
     name: bank-country
     required: false
     type: string
   ino-or-domestic-param:
     description: Ino or domestic bank.
-    x-asee-compliance: This should be related to enum.
     in: query
     name: ino-or-domestic
     required: false
@@ -1934,14 +1938,14 @@ parameters:
     name: cross-border
     required: false
     type: boolean
-  classification-id-param:
-    description: Schema id
+  schema-id-param:
+    description: Schema identifier.
     in: path
-    name: classification-id
+    name: schema-id
     required: true
     type: string
   draft-id-param:
-    description: Draft identifier
+    description: Draft identifier.
     in: path
     name: draft-id
     required: true
@@ -1960,17 +1964,10 @@ parameters:
     required: false
     format: double
     type: number
-  amount-condition-param:
-    description: amount condition.
-    x-asee-compliance: This parameter, in this form is not acceptable. It should be removed.
-    in: query
-    name: amount-condition
-    required: false
-    format: int32
-    type: integer
   currency-code-param:
-    description: currency.
-    x-asee-compliance: This parameter should be related to classification.
+    description: |
+          Currency code.
+          For a complete list of possible values see [currencies]() classification.    
     in: query
     name: currency-code
     required: false
@@ -1980,12 +1977,6 @@ parameters:
     in: path
     name: template-id
     required: true
-    type: string
-  debtor-account-number-param:
-    description: Unambiguous identification of the account of the debtor.
-    in: query
-    name: debtor-account-number
-    required: false
     type: string
   transfer-kind-param:
     description: Kind of the transfer.
@@ -2000,11 +1991,18 @@ parameters:
       - top-up
       - all
     type: string
-  list-param:
-    description: This parameter is used to filter the result. Only transfers of specific list are returned.
+  transfer-status-param:
+    description: This parameter is used to filter the result by status of the transfer. Only transfers with specific status are returned.
     in: query
     name: list
     required: false
+    enum:
+      - all
+      - pending
+      - future
+      - executed
+      - rejected
+      - canceled
     type: string
   date-from-param:
     description: Filters transfers initiated after the specified date.
@@ -2019,12 +2017,6 @@ parameters:
     name: date-to
     required: false
     format: date-time
-    type: string
-  beneficiary-param:
-    description: Filters transfers where creditor's name contains the specified value.
-    in: query
-    name: beneficiary
-    required: false
     type: string
   value-date-from-param:
     description: Filters transfers where value date is after the specified date.
@@ -2073,12 +2065,15 @@ parameters:
     name: transfer-id
     required: true
     type: string
-  status-param:
+  income-status-param:
     description: Transfer status.
-    x-asee-compliance: This should be related to enum.
     in: query
     name: status
     required: false
+    enum:
+      - pending
+      - credited
+      - in-process
     type: string
   sender-param:
     description: Sender.
@@ -2106,8 +2101,9 @@ parameters:
     type: string
 definitions:
   beneficiary-list:
-    description: ''
-    x-asee-compliance: Missing description of object.
+    description: |
+      List of beneficiaries. Can be list of public beneficiaries, 
+      or list of users personal beneficiaries.
     example:
       total-count: -1
       page-size: 10
@@ -2145,8 +2141,7 @@ definitions:
         type: string
     type: object
   beneficiary:
-    description: ''
-    x-asee-compliance: Missing description of object.
+    description: Single party which receives payments from user for some service.
     example:
       beneficiary-id: 8C408095-D0F5-4B96-AE26-3742079A99C9
       name: Peter Nicolaus
@@ -2189,8 +2184,9 @@ definitions:
         description: City.
         type: string
       country:
-        description: Country code.
-        x-asee-compliance: This property should be related to classification.
+        description: |
+          Country of beneficiary.
+          For a complete list of possible values see [countries]() classification.
         type: string
       picture:
         description: Picture.
@@ -2235,8 +2231,7 @@ definitions:
         type: string
     type: object
   account:
-    description: ''
-    x-asee-compliance: Missing description of object.
+    description: Financial account maintained by a financial institution for a customer.
     example:
       account-number: 115-0000000050378-56
       account-type: checking
@@ -2250,11 +2245,17 @@ definitions:
         type: string
       account-type:
         description: Type of the account.
-        x-asee-compliance: This property should be related to enum.
+        enum:
+          - current-account
+          - demand-deposit
+          - term-deposit
+          - term-loan
+          - credit-facility
         type: string
       currency:
-        description: currency code.
-        x-asee-compliance: This property should be related to classification.
+        description: |
+          Currency codes that determine currencies. Currency codes are part of items in list of available currencies. 
+          For a complete list of possible values see [Currencies]() classification.
         type: string
       bank-name:
         description: Name of the bank.
@@ -2267,8 +2268,7 @@ definitions:
         type: string
     type: object
   party-identifier:
-    description: ''
-    x-asee-compliance: Missing description of object. Also, there is a party-identification object (in party-data) and potentially the structure of these two objects should be aligned. Is the type enum described below final, it seems some values are missing.
+    description: 'Unique identifier of party and it`s type'
     example:
       id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       type: email
@@ -2290,10 +2290,8 @@ definitions:
       - type
     type: object
   create-personal-beneficiary-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for creating a personal beneficiary.   
     example:
-      beneficiary-id: 8C408095-D0F5-4B96-AE26-3742079A99C9
       name: Peter Nicolaus
       nickname: Peete
       address: Main boulevard 170
@@ -2318,10 +2316,6 @@ definitions:
           rel: self
       uri: http://info.example.com
     properties:
-      beneficiary-id:
-        description: Identifier.
-        x-asee-compliance: Do we need this property in create request? Probably not. Identifier is returned in response after command is executed.
-        type: string
       name:
         description: Name.
         type: string
@@ -2335,8 +2329,9 @@ definitions:
         description: City.
         type: string
       country:
-        description: Country code.
-        x-asee-compliance: This property should be related to classification.
+        description: |
+          Country of beneficiary.
+          For a complete list of possible values see [countries]() classification.
         type: string
       picture:
         description: Picture.
@@ -2369,8 +2364,7 @@ definitions:
         type: string
     type: object
   modify-personal-beneficiary-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for modification of existing personal beneficiary.
     example:
       beneficiary-id: 8C408095-D0F5-4B96-AE26-3742079A99C9
       name: Peter Nicolaus
@@ -2413,8 +2407,9 @@ definitions:
         description: City.
         type: string
       country:
-        description: Country code.
-        x-asee-compliance: This property should be related to classification.
+        description: |
+          Country.
+          For a complete list of possible values see [countries]() classification.
         type: string
       picture:
         description: Picture.
@@ -2447,8 +2442,7 @@ definitions:
         type: string
     type: object
   bank-list:
-    description: ''
-    x-asee-compliance: Missing description of object.
+    description: List of banks.
     example:
       total-count: 104596
       page-size: 10
@@ -2480,8 +2474,7 @@ definitions:
         type: string
     type: object
   bank:
-    description: ''
-    x-asee-compliance: Missing description of object.
+    description: Info about bank.
     example:
       swift-code: AAAARSBG
       bank-name: Telenor bank
@@ -2503,8 +2496,9 @@ definitions:
         description: Bank city.
         type: string
       country:
-        description: Bank country code
-        x-asee-compliance: This property should be related to classification.
+        description: |
+          Bank country code.
+          For a complete list of possible values see [countries]() classification.
         type: string
       bank-type:
         description: Bank type
@@ -2514,8 +2508,7 @@ definitions:
         type: string
     type: object
   purpose-code-list:
-    description: ''
-    x-asee-compliance: Missing description of object. In examples, english please!
+    description: List of purpose codes.
     example:
       total-count: -1
       page-size: 10
@@ -2525,9 +2518,9 @@ definitions:
       sort-by:
       items:
         - code: '102'
-          code-description: Smanjenje dep na rn stran lica u eff i u rsd
-          document-list: 
-                         'DOKUMENT KOJI JE OSNOV PLAĆANJA (PROFAKTURA/FAKTURA, UGOVOR) ; INSTRUKCIJA ZA PLAĆANJE UKOLIKO NIJE NAZNAČENA NA FAKTURI/PROFAKTURI ;'
+          code-description: 'Descrease of deposit on account of nonresident in cash and in RSD.'
+          documents:
+            - invoice
     allOf: 
     - $ref: '#/definitions/paged-list'
     properties:
@@ -2538,8 +2531,7 @@ definitions:
         type: array
     type: object
   purpose-code:
-    description: ''
-    x-asee-compliance: Missing description of object.
+    description: Purpose code for transfer.
     example:
       code: 289
       code-description: Payment of citizen.
@@ -2547,24 +2539,24 @@ definitions:
       code-type: 5
     properties:
       code:
-        description: Purpose code
+        description: Purpose code.
         type: string
       code-description:
-        description: Purpose description
+        description: Purpose description.
         type: string
-      document-list:
+      documents:
         description: List of necessary documents.
         items:
           type: string
         type: array
       code-type:
         description: Type of purpose code.
-        x-asee-compliance: This property should be related to enum.
+        enum:
+          - TO DO
         type: string
     type: object
   credit-transfer:
-    description: ''
-    x-asee-compliance: Missing description of object.
+    description: Credit transfer info.
     example:
       transfer-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       creditor:
@@ -2630,16 +2622,20 @@ definitions:
         description: Payment description.
         type: string
       purpose-code:
-        description: Purpose code.
-        x-asee-compliance: This should be related to classification.
+        description: |
+          Purpose code.
+          For a complete list of possible values see [purpose-codes]() classification.
         type: string
       instrument-priority:
         description: Instrument priority.
-        x-asee-compliance: this should be related to enum.
+        enum:
+          - ACH
+          - RTGS
         type: string
       instrument-type:
         description: Type of the instrument.
-        x-asee-compliance: this should be related to enum.
+        enum:
+          - TO DO
         type: string
       debtor-reference:
         description: Debtor reference.
@@ -2672,14 +2668,15 @@ definitions:
         description: Direction of transfer from customer's perspective (debit, credit).
         enum:
           - debit
-          - created 
+          - credit 
         type: string
       status:
         description: Transfer status.
         $ref: '#/definitions/transfer-status'
       category:
-        description: Category
-        x-asee-compliance: This should be related to classification.
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
         type: string
       picture:
         description: Picture
@@ -2719,8 +2716,7 @@ definitions:
       - value-date
     type: object
   creditor:
-    description: ''
-    x-asee-compliance: Missing description of object.
+    description: Party in transfer that recieves funds.
     example:
       name: Peter Nicolaus
       address: Main boulevard 170
@@ -2737,13 +2733,13 @@ definitions:
         description: City.
         type: string
       country:
-        description: Creditor country code
-        x-asee-compliance: This should be related to classification.
+        description: |
+          Country from which creditor is.
+          For a complete list of possible values see [countries]() classification. 
         type: string
     type: object
   debtor:
-    description: ''
-    x-asee-compliance: Missing description of object.
+    description: Party in transfer that gives funds.
     example:
       name: George Ermou
       address: Tadeousa Koscuska street no. 170
@@ -2760,8 +2756,9 @@ definitions:
         description: City.
         type: string
       country:
-        description: Creditor country code
-        x-asee-compliance: This should be related to classification.
+        description: |
+          Country from which debtor is.
+          For a complete list of possible values see [countries]() classification. 
         type: string
     type: object
   currency:
@@ -2814,8 +2811,7 @@ definitions:
         type: string
     type: object
   modify-credit-transfer-draft-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for modifying existing credit transfer draft.
     example:
       draft-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       creditor:
@@ -2866,16 +2862,20 @@ definitions:
         description: Payment description.
         type: string
       purpose-code:
-        description: Purpose code.
-        x-asee-compliance: This should be related to classification.
+        description: |
+          Purpose code.
+          For a complete list of possible values see [purpose-codes]() classification.
         type: string
       instrument-priority:
         description: Instrument priority.
-        x-asee-compliance: This should be related to enum.
+        enum:
+          - ACH
+          - RTGS
         type: string
       instrument-type:
         description: Type of the instrument.
-        x-asee-compliance: This should be related to enum.
+        enum:
+          - TO DO
         type: string
       debtor-reference:
         description: Debtor reference.
@@ -2897,8 +2897,9 @@ definitions:
         description: Debtor reference model.
         type: string
       category:
-        description: Category.
-        x-asee-compliance: This should be related to classification.
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
         type: string
       picture:
         description: Picture.
@@ -2920,10 +2921,8 @@ definitions:
       - value-date
     type: object
   create-credit-transfer-draft-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for creating credit transfer draft.
     example:
-      draft-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       creditor:
         name: ''
         address: ''
@@ -2953,10 +2952,6 @@ definitions:
         lon: ''
         mapped-address: ''
     properties:
-      draft-id:
-        description: Draft identifier.
-        x-asee-compliance: This property should be removed. This identifier is retrieved after command is executed.
-        type: string
       creditor:
         description: Name and address of the creditor.
         $ref: '#/definitions/creditor'
@@ -2973,16 +2968,20 @@ definitions:
         description: Payment description.
         type: string
       purpose-code:
-        description: Purpose code.
-        x-asee-compliance: This property should be related to classification.
+        description: |
+          Purpose code.
+          For a complete list of possible values see [purpose-codes]() classification.
         type: string
       instrument-priority:
         description: Instrument priority.
-        x-asee-compliance: This should be related to enum.
+        enum:
+          - ACH
+          - RTGS
         type: string
       instrument-type:
         description: Type of the instrument.
-        x-asee-compliance: This should be related to enum.
+        enum:
+          - TO DO
         type: string
       debtor-reference:
         description: Debtor reference.
@@ -3004,8 +3003,9 @@ definitions:
         description: Debtor reference model.
         type: string
       category:
-        description: Category.
-        x-asee-compliance: This should be related to classification.
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
         type: string
       picture:
         description: Picture.
@@ -3014,7 +3014,6 @@ definitions:
         description: Geolocation details.
         $ref: '#/definitions/geolocation'
     required:
-      - draft-id
       - creditor
       - debtor
       - creditor-account-number
@@ -3027,10 +3026,8 @@ definitions:
       - value-date
     type: object
   initiate-credit-transfer-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for initiating new credit transfer.
     example:
-      transfer-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       creditor:
         name: ''
         address: ''
@@ -3060,10 +3057,6 @@ definitions:
         lon: ''
         mapped-address: ''
     properties:
-      transfer-id:
-        description: Transfer identifier.
-        x-asee-compliance: This property should be removed. Its value is retrieve after command is executed.
-        type: string
       creditor:
         description: Name and address of the creditor.
         $ref: '#/definitions/creditor'
@@ -3080,16 +3073,20 @@ definitions:
         description: Payment description.
         type: string
       purpose-code:
-        description: Purpose code.
-        x-asee-compliance: This property should be related to classification.
+        description: |
+          Purpose code.
+          For a complete list of possible values see [purpose-codes]() classification.
         type: string
       instrument-priority:
         description: Instrument priority.
-        x-asee-compliance: This property should be related to enum.
+        enum:
+          - ACH
+          - RTGS
         type: string
       instrument-type:
         description: Type of the instrument.
-        x-asee-compliance: This property should be related to enum.
+        enum:
+          - TO DO
         type: string
       debtor-reference:
         description: Debtor reference.
@@ -3111,8 +3108,9 @@ definitions:
         description: Debtor reference model.
         type: string
       category:
-        description: Category.
-        x-asee-compliance: This should be related to classification.
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
         type: string
       picture:
         description: Picture.
@@ -3121,7 +3119,6 @@ definitions:
         description: Geolocation details.
         $ref: '#/definitions/geolocation'
     required:
-      - transfer-id
       - creditor
       - debtor
       - creditor-account-number
@@ -3134,8 +3131,7 @@ definitions:
       - value-date
     type: object
   cross-border-transfer:
-    description: ''
-    x-asee-compliance: Missing description of object.
+    description: Transfer with party from foreign country.
     example:
       transfer-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       debtor:
@@ -3154,24 +3150,9 @@ definitions:
       local-currency:
         code: ''
         amount: 0
-      bank-officer:
-        email-address: ''
-        fax-number: ''
-        first-name: ''
-        last-name: ''
-        phone-number: ''
       creditor-reference-model: 72
       creditor-reference: 70071-000004/JV
-      booking-date: '0001-01-01T00:00:00'
-      booking-place: National Bank
       charge: OUR
-      cover:
-        - cover-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
-          amount:
-            code: ''
-            amount: 0
-          description: Payment of citizen.
-          nominal-account: 115000100050061177
       currency-rate: 0
       destination-account:
         account-number: ''
@@ -3181,54 +3162,9 @@ definitions:
         swift-code: ''
         country-code: ''
       due-date: '0001-01-01T00:00:00'
-      gl-account: 115000100050078637
-      ino-charges:
-        code: ''
-        amount: 0
-      notes: My notes to explain transfer.
-      advance-payment-indicator:
-        - account:
-            account-number: ''
-            account-type: ''
-            currency-code: ''
-            bank-name: ''
-            swift-code: ''
-            country-code: ''
-          amount:
-            code: ''
-            amount: 0
-          amount=local:
-            code: ''
-            amount: 0
-          benefit: sample
-          booking-date: '0001-01-01T00:00:00'
-          branch-id: 34rt6680-8bfc-54e32-9b55-a6c0ce6aj990
-          currency-code: EUR
-          id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
-          legal-id:
-            id: ''
-            type: ''
-          name: Peter Nicolaus
-          nominal-account: 115000100050078637
-          purpose-code: 0
-          value-date: '0001-01-01T00:00:00'
       debtor-reference-model: 72
       debtor-reference: 70071-000004/JV
-      order-statistics:
-        - id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
-          advance-payment-indicator: sample
-          currency:
-            code: ''
-            amount: 0
-          contract-number: A723CX
-          contract-year: 2015
-          purpose-code: 0
-          purpose-description: Funds sending.
-          transaction-description: Transaction of sending funds in foreign state.
       reference: 70071-000004/JV
-      representative-fee:
-        code: ''
-        amount: 0
       source-account:
         account-number: ''
         account-type: ''
@@ -3293,24 +3229,11 @@ definitions:
       local-currency:
         description: Amount of transfer in local currency.
         $ref: '#/definitions/currency'
-      bank-officer:
-        x-asee-compliance: This property should be removed. It provides very strange information and is not used. It is not the job of this API and this object to provide contact information of the Bank.
-        description: Bank officer.
-        $ref: '#/definitions/contact-person'
       creditor-reference-model:
         description: Creditor reference model.
         type: string
       creditor-reference:
         description: Creditor reference number.
-        type: string
-      booking-date:
-        x-asee-compliance: This property should be removed. It is the back-end property related to general ledger, not needed by MC API. It is not used, we have executed-date below.
-        description: Booking date.
-        format: date-time
-        type: string
-      booking-place:
-        x-asee-compliance: This property should be removed. It is not needed by MC API.
-        description: Booking place.
         type: string
       charge:
         description: The party that is charged for the transfer fee.
@@ -3319,14 +3242,6 @@ definitions:
           - creditor
           - shared
         type: string
-      cover:
-        x-asee-compliance: This property should be removed. It is back end information related to general ledger, booking and payment instruction, and not needed by MC API.
-        x-asee-compliance: Even if there was a case where it would be needed to provide booking and payment instruction info, it should be than structured inside one object and not scattered like this in numerous properties of fcy payment object.
-        x-asee-compliance: Bottom line, this property not needed and not used. Should be removed.
-        description: Cover.
-        items:
-          $ref: '#/definitions/payment-instruction-cover'
-        type: array
       exchange-rate:
         description: Currency exchange rate used for transaction.
         format: double
@@ -3338,36 +3253,12 @@ definitions:
         description: Due date until which transfer should be executed.
         format: date-time
         type: string
-      gl-account:
-        x-asee-compliance: This property should be removed. It is back end information related to general ledger and not needed by MC API.
-        description: gl account
-        type: string
-      ino-charges:
-        x-asee-compliance: This property should be removed. It is not used. Either way, it is not the practice to retrieve fees in this way, there is a method for service-fee calculation in offer-management.
-        description: ino charges
-        $ref: '#/definitions/currency'
-      notes:
-        x-asee-compliance: This property should be removed, it is not used. We already have the bank-comment property below.
-        description: notes.
-        type: string
-      advance-payment-indicator:
-        x-asee-compliance: This property should be removed. It is back end information related to general ledger and not needed by MC API. Btw, the name of the property is completely wrong.
-        description: order bookings
-        items:
-          $ref: '#/definitions/foreign-booking-item'
-        type: array
       debtor-reference-model:
         description: Debtor reference model.
         type: string
       debtor-reference:
         description: Debtor reference number.
         type: string
-      order-statistics:
-        x-asee-compliance: This property should be removed. It is back end information related to general ledger and not needed by MC API.
-        description: Order statistics.
-        items:
-          $ref: '#/definitions/statistics'
-        type: array
       attachments:
         description: Order attachments.
         items:
@@ -3376,10 +3267,6 @@ definitions:
       reference-number:
         description: Reference number.
         type: string
-      representative-fee:
-        x-asee-compliance: This property should be removed. It is not used. Either way, it is not the practice to retrieve fees in this way, there is a method for service-fee calculation in offer-management.
-        description: Representative fee.
-        $ref: '#/definitions/currency'
       debtor-account:
         description: Source account.
         $ref: '#/definitions/account'
@@ -3411,8 +3298,9 @@ definitions:
         description: Transfer status.
         $ref: '#/definitions/transfer-status'
       category:
-        description: Category.
-        x-asee-compliance: This property should be related to classification.
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
         type: string
       picture:
         description: Picture.
@@ -3446,168 +3334,8 @@ definitions:
         description: URI
         type: string
     type: object
-  contact-person:
-    x-asee-compliance: After removal of unnecessary properties from fcy payment, this object is not needed anymore and should be removed.
-    description: ''
-    example:
-      email-address: peete@gmail.com
-      fax-number: +44 161 999 8888
-      first-name: George
-      last-name: Ermou
-      phone-number: +49-89-636-48018
-    properties:
-      email-address:
-        type: string
-      fax-number:
-        type: string
-      first-name:
-        type: string
-      last-name:
-        type: string
-      phone-number:
-        type: string
-    type: object
-  payment-instruction-cover:
-    x-asee-compliance: After removal of unnecessary properties from fcy payment, this object is not needed anymore and should be removed.
-    description: ''
-    example:
-      cover-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
-      amount:
-        code: EUR
-        amount: 150
-      description: sample
-      nominal-account: 115000100050078637
-    properties:
-      cover-id:
-        description: cover identifier
-        type: string
-      amount:
-        description: amount
-        $ref: '#/definitions/currency'
-      description:
-        description: description
-        type: string
-      nominal-account:
-        description: nominal account
-        type: string
-    type: object
-  foreign-booking-item:
-    x-asee-compliance: After removal of unnecessary properties from fcy payment, this object is not needed anymore and should be removed.
-    description: ''
-    example:
-      account:
-        account-number: ''
-        account-type: ''
-        currency-code: ''
-        bank-name: ''
-        swift-code: ''
-        country-code: ''
-      amount:
-        code: ''
-        amount: 0
-      amount=local:
-        code: ''
-        amount: 0
-      benefit: sample
-      booking-date: '0001-01-01T00:00:00'
-      branch-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
-      currency-code: EUR
-      id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
-      legal-id:
-        id: ''
-        type: ''
-      name: Peter Nicolaus
-      nominal-account: 115000100050078637
-      purpose-code: 0
-      value-date: '0001-01-01T00:00:00'
-    properties:
-      account:
-        description: account
-        $ref: '#/definitions/account'
-      amount:
-        description: amount
-        $ref: '#/definitions/currency'
-      amount=local:
-        description: amount local
-        $ref: '#/definitions/currency'
-      benefit:
-        description: benefit
-        type: string
-      booking-date:
-        description: booking date
-        format: date-time
-        type: string
-      branch-id:
-        description: branch identifier
-        type: string
-      currency-code:
-        description: currency code
-        type: string
-      id:
-        description: identifier
-        type: string
-      legal-id:
-        description: legal identifier
-        $ref: '#/definitions/party-identifier'
-      name:
-        description: Name.
-        type: string
-      nominal-account:
-        description: nominal account
-        type: string
-      purpose-code:
-        description: purpose code
-        format: int32
-        type: integer
-      value-date:
-        description: value date
-        format: date-time
-        type: string
-    type: object
-  statistics:
-    x-asee-compliance: After removal of unnecessary properties from fcy payment, this object is not needed anymore and should be removed.
-    description: Statistics info.
-    example:
-      id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
-      advance-payment-indicator: sample
-      currency:
-        code: ''
-        amount: 0
-      contract-number: A723CX
-      contract-year: 2015
-      purpose-code: 0
-      purpose-description: Payment of citizen.
-      transaction-description: Bill payment.
-    properties:
-      id:
-        description: identifier
-        type: string
-      advance-payment-indicator:
-        description: advance payment indicator
-        type: string
-      currency:
-        description: amount
-        $ref: '#/definitions/currency'
-      contract-number:
-        description: Contract number
-        type: string
-      contract-year:
-        description: contract year
-        type: string
-      purpose-code:
-        description: purpose code
-        format: int32
-        type: integer
-      purpose-description:
-        description: purpose description
-        type: string
-      transaction-description:
-        description: transaction description
-        type: string
-    type: object
   bank-info:
-    description: ''
-    x-asee-compliance: Missing description of object.
+    description: Basic info about bank.
     example:
       bank-name: Telenor bank
       swift-code: AAAARSBG
@@ -3644,18 +3372,17 @@ definitions:
         description: City.
         type: string
       country:
-        description: Country.
-        x-asee-compliance: This property should be related to classification.
+        description: |
+          Country from which bank is.
+          For a complete list of possible values see [countries]() classification.
         type: string
       zip-code:
         description: Zip code.
         type: string
     type: object
   create-cross-border-transfer-draft-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for creating cross-border transfer draft.
     example:
-      draft-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       debtor:
         name: ''
         address: ''
@@ -3675,22 +3402,10 @@ definitions:
       debtor-reference: 70071-000004/JV
       charge: OUR
       due-date: '0001-01-01T00:00:00'
-      notes: My notes to explain transfer.
       creditor-reference-model: 72
       creditor-reference: 70071-000004/JV
-      order-statistics:
-        - id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
-          advance-payment-indicator: sample
-          currency:
-            code: ''
-            amount: 0
-          contract-number: A723CX
-          contract-year: 2015
-          purpose-code: 182
-          purpose-description: Sending funds
-          transaction-description: Transfer between accounts of diferent owners.
       attachments:
-        - id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+        - attachment-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
           attachment-name: Confirmation
           attachment-type: pdf
       via-bank:
@@ -3719,10 +3434,6 @@ definitions:
       residence-code: 07000006
       reference-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
     properties:
-      draft-id:
-        x-asee-compliance: This property should be removed. Its value is returned in result after the command is executed.
-        description: Draft identifier.
-        type: string
       debtor:
         description: Name and address of the debtor.
         $ref: '#/definitions/debtor'
@@ -3755,22 +3466,12 @@ definitions:
         description: Due date until which transfer should be executed.
         format: date-time
         type: string
-      notes:
-        x-asee-compliance: This property should be removed, it is not used.
-        description: notes
-        type: string
       creditor-reference-model:
         description: Creditor reference model.
         type: string
       creditor-reference:
         description: Creditor reference number.
         type: string
-      order-statistics:
-        x-asee-compliance: This property should be removed. It is back end object, and not something needed by MC API.
-        description: order statistics
-        items:
-          $ref: '#/definitions/statistics'
-        type: array
       attachments:
         description: order attachments
         items:
@@ -3783,8 +3484,9 @@ definitions:
         description: Creditor destination bank.
         $ref: '#/definitions/bank-info'
       category:
-        description: Category.
-        x-asee-compliance: This property should be related to classification.
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
         type: string
       picture:
         description: Picture.
@@ -3805,8 +3507,7 @@ definitions:
       - creditor-account-number
     type: object
   modify-cross-border-transfer-draft-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for modifying existing cross-border transfer draft.
     example:
       draft-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       debtor:
@@ -3828,21 +3529,10 @@ definitions:
       debtor-reference: 30074-000089/YE
       charge: OUR
       due-date: '0001-01-01T00:00:00'
-      notes: My notes to explain transfer.
       creditor-reference-model: 72
       creditor-reference: 70071-000004/JV
-      order-statistics:
-        - id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
-          advance-payment-indicator: sample
-          currency:
-            code: ''
-            amount: 0
-          contract-number: A723CX
-          contract-year: 2015
-          purpose-code: 182
-          purpose-description: Sending funds.
       attachments:
-        - id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+        - attachment-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
           attachment-name: Confirmation
           attachment-type: pdf
       via-bank:
@@ -3906,22 +3596,12 @@ definitions:
         description: Due date until which transfer should be executed.
         format: date-time
         type: string
-      notes:
-        x-asee-compliance: This property should be removed, it is not used.
-        description: notes
-        type: string
       creditor-reference-model:
         description: Creditor reference model.
         type: string
       creditor-reference:
         description: Creditor reference number.
         type: string
-      order-statistics:
-        x-asee-compliance: This property should be removed. It is back end object, and not something needed by MC API.
-        description: order statistics
-        items:
-          $ref: '#/definitions/statistics'
-        type: array
       attachments:
         description: order attachments
         items:
@@ -3934,8 +3614,9 @@ definitions:
         description: Creditor destination bank.
         $ref: '#/definitions/bank-info'
       category:
-        description: Category.
-        x-asee-compliance: This property should be related to classification.
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
         type: string
       picture:
         description: Picture.
@@ -3956,10 +3637,8 @@ definitions:
       - creditor-account-number
     type: object
   initiate-cross-border-transfer-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for initiating new cross-border transfer.
     example:
-      transfer-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       debtor:
         name: ''
         address: ''
@@ -3979,22 +3658,10 @@ definitions:
       debtor-reference: 30071-000109/VU
       charge: OUR
       due-date: '0001-01-01T00:00:00'
-      notes: My notes to explain transfer.
       creditor-reference-model: 72
       creditor-reference: 70071-000004/JV
-      order-statistics:
-        - id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
-          advance-payment-indicator: sample
-          currency:
-            code: ''
-            amount: 0
-          contract-number: A723CX
-          contract-year: 2015
-          purpose-code: 0
-          purpose-description: Sending funds.
-          transaction-description: Transfer between diferent accounts owners.
       attachments:
-        - id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+        - attachment-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
           attachment-name: Confirmation
           attachment-type: pdf
       via-bank:
@@ -4023,10 +3690,6 @@ definitions:
       residence-code: 07000006
       reference-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
     properties:
-      transfer-id:
-        x-asee-compliance: This property should be removed. Its value is retrieved after command is executed.
-        description: Transfer identifier.
-        type: string
       debtor:
         description: Name and address of the debtor.
         $ref: '#/definitions/debtor'
@@ -4059,22 +3722,12 @@ definitions:
         description: Due date until which transfer should be executed.
         format: date-time
         type: string
-      notes:
-        x-asee-compliance: This property should be removed. It is not used.
-        description: notes
-        type: string
       creditor-reference-model:
         description: Creditor reference model.
         type: string
       creditor-reference:
         description: Creditor reference number.
         type: string
-      order-statistics:
-        x-asee-compliance: This property should be removed. It is back end property and is not used by MC API.
-        description: order statistics
-        items:
-          $ref: '#/definitions/statistics'
-        type: array
       attachments:
         description: Order attachments.
         items:
@@ -4108,10 +3761,8 @@ definitions:
       - creditor-account-number
     type: object
   create-nonresident-credit-transfer-draft-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for creating new credit transfer draft for nonresident.
     example:
-      draft-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       debtor:
         name: ''
         address: ''
@@ -4131,22 +3782,10 @@ definitions:
       debtor-reference: 30063-000004/PO
       charge: OUR
       due-date: '0001-01-01T00:00:00'
-      notes: My notes to explain transfer.
       creditor-reference-model: 72
       creditor-reference: 70071-000004/JV
-      order-statistics:
-        - id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
-          advance-payment-indicator: sample
-          currency:
-            code: ''
-            amount: 0
-          contract-number: A723CX
-          contract-year: 2015
-          purpose-code: 0
-          purpose-description: Sending funds.
-          transaction-description: Transfer between diferent account owners.
       attachments:
-        - id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+        - attachment-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
           attachment-name: Confirmation
           attachment-type: pdf
       via-bank:
@@ -4175,10 +3814,6 @@ definitions:
       residence-code: 07000006
       reference-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
     properties:
-      draft-id:
-        x-asee-compliance: This property should be removed. Its value is returned after the execution of this command.
-        description: Draft identifier.
-        type: string
       debtor:
         description: Name and address of the debtor.
         $ref: '#/definitions/debtor'
@@ -4211,22 +3846,12 @@ definitions:
         description: Due date until which transfer should be executed.
         format: date-time
         type: string
-      notes:
-        x-asee-compliance: This property should be removed.
-        description: notes
-        type: string
       creditor-reference-model:
         description: Creditor reference model.
         type: string
       creditor-reference:
         description: Creditor reference number.
         type: string
-      order-statistics:
-        x-asee-compliance: This property should be removed.
-        description: order statistics
-        items:
-          $ref: '#/definitions/statistics'
-        type: array
       attachments:
         description: Order attachments.
         items:
@@ -4239,8 +3864,9 @@ definitions:
         description: Creditor destination bank.
         $ref: '#/definitions/bank-info'
       category:
-        description: Category.
-        x-asee-compliance: This property should be related to classification.
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
         type: string
       picture:
         description: Picture.
@@ -4261,8 +3887,7 @@ definitions:
       - creditor-account-number
     type: object
   modify-nonresident-credit-transfer-draft-command:  
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for modifying existing credit transfer draft for nonresident.
     example:
       draft-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       debtor:
@@ -4284,22 +3909,10 @@ definitions:
       debtor-reference: 90032-000342/IT
       charge: OUR
       due-date: '0001-01-01T00:00:00'
-      notes: My notes to explain transfer.
       creditor-reference-model: 72
       creditor-reference: 70071-000004/JV
-      order-statistics:
-        - id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
-          advance-payment-indicator: sample
-          currency:
-            code: ''
-            amount: 0
-          contract-number: A723CX
-          contract-year: 2015
-          purpose-code: 0
-          purpose-description: Sending funds.
-          transaction-description: Transfer between diferent account owners.
       attachments:
-        - id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+        - attachment-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
           attachment-name: Confirmation
           attachment-type: pdf
       via-bank:
@@ -4363,22 +3976,12 @@ definitions:
         description: Due date until which transfer should be executed.
         format: date-time
         type: string
-      notes:
-        x-asee-compliance: This property should be removed.
-        description: notes
-        type: string
       creditor-reference-model:
         description: Creditor reference model.
         type: string
       creditor-reference:
         description: Creditor reference number.
         type: string
-      order-statistics:
-        x-asee-compliance: This property should be removed.
-        description: order statistics
-        items:
-          $ref: '#/definitions/statistics'
-        type: array
       attachments:
         description: Order attachments.
         items:
@@ -4391,8 +3994,9 @@ definitions:
         description: Creditor destination bank.
         $ref: '#/definitions/bank-info'
       category:
-        description: Category.
-        x-asee-compliance: This property should be related to classification.
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
         type: string
       picture:
         description: Picture.
@@ -4413,10 +4017,8 @@ definitions:
       - creditor-account-number
     type: object
   initiate-nonresident-credit-transfer-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for initiating new credit transfer for nonresident.
     example:
-      transfer-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       debtor:
         name: ''
         address: ''
@@ -4436,22 +4038,10 @@ definitions:
       debtor-reference: 70329-000342/JV
       charge: OUR
       due-date: '0001-01-01T00:00:00'
-      notes: My notes to explain transfer.
       creditor-reference-model: 72
       creditor-reference: 70071-000004/JV
-      order-statistics:
-        - id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
-          advance-payment-indicator: sample
-          currency:
-            code: ''
-            amount: 0
-          contract-number: A723CX
-          contract-year: 2015
-          purpose-code: 0
-          purpose-description: Sending funds.
-          transaction-description: Transfer between diferent account owners.
       attachments:
-        - id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+        - attachment-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
           attachment-name: Confirmation
           attachment-type: pdf
       via-bank:
@@ -4480,10 +4070,6 @@ definitions:
       residence-code: 07000006
       reference-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
     properties:
-      transfer-id:
-        x-asee-compliance: This property should be removed. Its value is returned after command execution.
-        description: Transfer identifier.
-        type: string
       debtor:
         description: Name and address of the debtor.
         $ref: '#/definitions/debtor'
@@ -4516,22 +4102,12 @@ definitions:
         description: Due date until which transfer should be executed.
         format: date-time
         type: string
-      notes:
-        x-asee-compliance: This property should be removed.
-        description: notes
-        type: string
       creditor-reference-model:
         description: Creditor reference model.
         type: string
       creditor-reference:
         description: Creditor reference number.
         type: string
-      order-statistics:
-        x-asee-compliance: This property should be removed.
-        description: order statistics
-        items:
-          $ref: '#/definitions/statistics'
-        type: array
       attachments:
         description: Order attachments.
         items:
@@ -4544,8 +4120,9 @@ definitions:
         description: Creditor destination bank.
         $ref: '#/definitions/bank-info'
       category:
-        description: Category.
-        x-asee-compliance: This property should be related to classification.
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
         type: string
       picture:
         description: Picture.
@@ -4566,8 +4143,7 @@ definitions:
       - creditor-account-number
     type: object
   attachment:
-    description: ''
-    x-asee-compliance: Missing description of object.
+    description: Attached file or document.
     example:
       id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       attachment-name: Confirmation
@@ -4594,14 +4170,12 @@ definitions:
           - xls
           - xlsx
         type: string
-      attachment-content:
-        x-asee-compliance: This property should be removed. The content of the file is submitted through Content Management API to DMS.
-        description: Attachment content.
+      attachment-uri:
+        description: URI
         type: string
     type: object
   balance-transfer:
-    description: ''
-    x-asee-compliance: Missing description of object.
+    description: Balance transfer details.
     example:
       id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       creditor-account-number: 115-0000000050378-56
@@ -4642,7 +4216,8 @@ definitions:
         type: string
       instrument-type:
         description: Type of the instrument.
-        x-asee-compliance: Is this property needed at all? This property should be related to enum.
+        enum:
+          - TO DO
         type: string
       currency:
         description: Currency amount.
@@ -4669,8 +4244,9 @@ definitions:
         description: Transfer status.
         $ref: '#/definitions/transfer-status'
       category:
-        description: Category.
-        x-asee-compliance: This property should be related to classification.
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
         type: string
       picture:
         description: Picture.
@@ -4703,10 +4279,8 @@ definitions:
       - value-date
     type: object
   create-balance-transfer-draft-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for creating new balance transfer draft.
     example:
-      draft-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       creditor-account-number: 119-0000000432178-48
       creditor:
         name: ''
@@ -4732,10 +4306,6 @@ definitions:
         lon: ''
         mapped-address: ''
     properties:
-      draft-id:
-        x-asee-compliance: This property should be removed. Its value is returned after command execution.
-        description: Draft identifier.
-        type: string
       creditor-account-number:
         description: Creditor account number.
         type: string
@@ -4744,7 +4314,8 @@ definitions:
         type: string
       instrument-type:
         description: Type of the instrument.
-        x-asee-compliance: Is this property needed at all? This property should be related to enum.
+        enum:
+          - TO DO
         type: string
       currency:
         description: Currency amount.
@@ -4754,8 +4325,9 @@ definitions:
         format: date-time
         type: string
       category:
-        description: Category.
-        x-asee-compliance: This property should be related to classification.
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
         type: string
       picture:
         description: Picture.
@@ -4764,7 +4336,6 @@ definitions:
         description: Geolocation details.
         $ref: '#/definitions/geolocation'
     required:
-      - draft-id
       - creditor-account-number
       - debtor-account-number
       - instrument-type
@@ -4772,8 +4343,7 @@ definitions:
       - value-date
     type: object
   modify-balance-transfer-draft-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for modifying existing balance transfer draft.
     example:
       draft-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       creditor-account-number: 114-0000000050348-23
@@ -4812,7 +4382,8 @@ definitions:
         type: string
       instrument-type:
         description: Type of the instrument.
-        x-asee-compliance: Is this property needed at all? This property should be related to enum.
+        enum:
+          - TO DO
         type: string
       currency:
         description: Currency amount.
@@ -4822,8 +4393,9 @@ definitions:
         format: date-time
         type: string
       category:
-        description: Category.
-        x-asee-compliance: This property should be related to classification.
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
         type: string
       picture:
         description: Picture.
@@ -4840,10 +4412,8 @@ definitions:
       - value-date
     type: object
   initiate-balance-transfer-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for initiating new balance transfer.
     example:
-      transfer-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       creditor-account-number: 118-0000000023478-48
       creditor:
         name: ''
@@ -4869,10 +4439,6 @@ definitions:
         lon: ''
         mapped-address: ''
     properties:
-      transfer-id:
-        x-asee-compliance: This property should be removed. Its value is returned after command execution.
-        description: Transfer identifier.
-        type: string
       creditor-account-number:
         description: Creditor account number.
         type: string
@@ -4881,7 +4447,8 @@ definitions:
         type: string
       instrument-type:
         description: Type of the instrument.
-        x-asee-compliance: Is this property needed at all? This property should be related to enum.
+        enum:
+          - TO DO
         type: string
       currency:
         description: Currency amount.
@@ -4891,8 +4458,9 @@ definitions:
         format: date-time
         type: string
       category:
-        description: Category.
-        x-asee-compliance: This property should be related to classification.
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
         type: string
       picture:
         description: Picture.
@@ -4901,7 +4469,6 @@ definitions:
         description: Geolocation details.
         $ref: '#/definitions/geolocation'
     required:
-      - transfer-id
       - creditor-account-number
       - debtor-account-number
       - instrument-type
@@ -4909,8 +4476,7 @@ definitions:
       - value-date
     type: object
   transfer:
-    description: ''
-    x-asee-compliance: Missing description of object.
+    description: Transfer details.
     example:
       transfer-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       creditor:
@@ -4939,7 +4505,6 @@ definitions:
         description: ''
         effective-date: '0001-01-01T00:00:00'
       category: expenses
-      has-picture: false
       geolocation:
         lat: ''
         lon: ''
@@ -4971,8 +4536,14 @@ definitions:
         description: Payment description.
         type: string
       transfer-type:
-        description: Type of the instrument.
-        x-asee-compliance: This property should be related to enum.
+        description: Type of the transfer.
+        enum:
+          - balance
+          - credit
+          - cross-border
+          - nonresident-credit
+          - p2p
+          - topup
         type: string
       currency:
         description: Currency amount.
@@ -4999,16 +4570,13 @@ definitions:
         description: Transfer status.
         $ref: '#/definitions/transfer-status'
       category:
-        description: Category.
-        x-asee-compliance: this property should be related to classification.
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
         type: string
       picture:
         description: Picture.
         type: string
-      has-picture:
-        x-asee-compliance: This property is not needed, there is a picture property above, which is empty or not.
-        description: Indicator of the transfer picture.
-        type: boolean
       geolocation:
         description: Geolocation details.
         $ref: '#/definitions/geolocation'
@@ -5040,10 +4608,8 @@ definitions:
       - value-date
     type: object
   create-p2p-transfer-draft-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for creating new person to person transfer draft.
     example:
-      draft-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       debtor:
         name: ''
         address: ''
@@ -5064,10 +4630,6 @@ definitions:
         lon: ''
         mapped-address: ''
     properties:
-      draft-id:
-        x-asee-compliance: This property should be removed.
-        description: Draft identifier.
-        type: string
       debtor:
         description: Name and address of the debtor.
         $ref: '#/definitions/debtor'
@@ -5098,8 +4660,9 @@ definitions:
         description: Message sent with the payment.
         type: string
       category:
-        description: Category.
-        x-asee-compliance: This property should be related to classification.
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
         type: string
       picture:
         description: Picture.
@@ -5114,8 +4677,7 @@ definitions:
       - recipient-address-kind
     type: object
   modify-p2p-transfer-draft-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for modifying existing person to person transfer draft.
     example:
       transfer-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       debtor:
@@ -5171,8 +4733,9 @@ definitions:
         description: Message sent with the payment.
         type: string
       category:
-        description: Category.
-        x-asee-compliance: This property should be related to classification.
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
         type: string
       picture:
         description: Picture.
@@ -5187,10 +4750,8 @@ definitions:
       - recipient-address-kind
     type: object
   initiate-p2p-transfer-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for initiating new person to person transfer.
     example:
-      transfer-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       debtor:
         name: ''
         address: ''
@@ -5211,10 +4772,6 @@ definitions:
         lon: ''
         mapped-address: ''
     properties:
-      transfer-id:
-        x-asee-compliance: This property should be removed. Identifier is returned after command execution.
-        description: Transfer identifer.
-        type: string
       debtor:
         description: Name and address of the debtor.
         $ref: '#/definitions/debtor'
@@ -5245,8 +4802,9 @@ definitions:
         description: Message sent with the payment.
         type: string
       category:
-        description: Category.
-        x-asee-compliance: This property should be related to classification.
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
         type: string
       picture:
         description: Picture.
@@ -5261,8 +4819,7 @@ definitions:
       - recipient-address-kind
     type: object
   initiate-bill-payment-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for initiating bill payment.
     example:
       bill-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       category: expenses
@@ -5275,8 +4832,9 @@ definitions:
         description: Bill identifier.
         type: string
       category:
-        description: Category.
-        x-asee-compliance: this property should be related to classification.
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
         type: string
       picture:
         description: Picture.
@@ -5288,8 +4846,7 @@ definitions:
       - bill-id
     type: object
   initiate-bulk-bill-payment-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for initiating bulk bill payment.
     example:
       items:
         - bill-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
@@ -5306,10 +4863,8 @@ definitions:
         type: array
     type: object
   create-template-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for creating new template.
     example:
-      template-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       name: Template for heating bill payment.
       creditor:
         name: ''
@@ -5340,8 +4895,6 @@ definitions:
         amount: 0
       creditor-reference-model: 85
       debtor-reference-model: 72
-      date-created: '0001-01-01T00:00:00'
-      date-updated: '0001-01-01T00:00:00'
       category: expenses
       confirmation-email: sandras@gmail.com
       charges-option: sample
@@ -5349,12 +4902,10 @@ definitions:
         lat: ''
         lon: ''
         mapped-address: ''
-      urgency: sample
-      documents:
-        - id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
-          blob: sample
-          file-name: Scanned bill for heating payment.
-          extension: pdf
+      attachments:
+        - attachment-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+          attachment-name: Scanned bill for heating payment.
+          attachment-type: pdf
       navigations:
         - href:
           rel: self
@@ -5363,10 +4914,6 @@ definitions:
           rel: self
       uri: http://info.example.com
     properties:
-      template-id:
-        x-asee-compliance: This property should be removed. Its value is returned after command execution.
-        description: Template identifier.
-        type: string
       name:
         description: Template name.
         type: string
@@ -5386,16 +4933,20 @@ definitions:
         description: Payment description.
         type: string
       purpose-code:
-        description: Purpose code.
-        x-asee-compliance: This property should be related to classification.
+        description: |
+          Purpose code.
+          For a complete list of possible values see [purpose-codes]() classification.
         type: string
       instrument-priority:
         description: Instrument priority.
-        x-asee-compliance: This property should be related to enum.
+        enum:
+          - ACH
+          - RTGS
         type: string
       instrument-type:
         description: Type of the instrument.
-        x-asee-compliance: This property should be related to enum.
+        enum:
+          - TO DO
         type: string
       debtor-reference:
         description: Debtor reference number.
@@ -5415,19 +4966,10 @@ definitions:
       debtor-reference-model:
         description: Debtor reference model.
         type: string
-      date-created:
-        x-asee-compliance: This property should be removed. It is automatically determined by the system when the template is saved.
-        description: Date and time when template was created.
-        format: date-time
-        type: string
-      date-updated:
-        x-asee-compliance: This property should be removed. It is automatically determined by the system when the template is saved.
-        description: Date and time when template was last updated.
-        format: date-time
-        type: string
       category:
-        description: Category.
-        x-asee-compliance: This property should be related to clasification.
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
         type: string
       picture:
         description: Picture.
@@ -5445,10 +4987,6 @@ definitions:
       geolocation:
         description: Geolocation details.
         $ref: '#/definitions/geolocation'
-      urgency:
-        x-asee-compliance: This property should be removed. There is already instrument-priority above.
-        description: Payment urgency
-        type: string
       attachments:
         description: Order attachments.
         items:
@@ -5476,12 +5014,10 @@ definitions:
       - payment-description
       - purpose-code
       - currency
-      - urgency
       - attachments
     type: object
   modify-template-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for modifying existing template.
     example:
       template-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       name: Template for heating bill payment.
@@ -5514,8 +5050,6 @@ definitions:
         amount: 0
       creditor-reference-model: 85
       debtor-reference-model: 72
-      date-created: '0001-01-01T00:00:00'
-      date-updated: '0001-01-01T00:00:00'
       category: expenses
       confirmation-email: sandras@gmail.com
       charges-option: sample
@@ -5523,12 +5057,10 @@ definitions:
         lat: ''
         lon: ''
         mapped-address: ''
-      urgency: sample
-      documents:
-        - id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
-          blob: sample
-          file-name: Scanned bill for heating payment.
-          extension: pdf
+      attachments:
+        - attachment-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+          attachment-name: Scanned bill for heating payment.
+          attachment-type: pdf
       navigations:
         - href:
           rel: self
@@ -5559,16 +5091,20 @@ definitions:
         description: Payment description.
         type: string
       purpose-code:
-        description: purpose code.
-        x-asee-compliance: This property should be related to classification.
+        description: |
+          Purpose code.
+          For a complete list of possible values see [purpose-codes]() classification.
         type: string
       instrument-priority:
         description: Instrument priority.
-        x-asee-compliance: This property should be related to enum.
+        enum:
+          - ACH
+          - RTGS
         type: string
       instrument-type:
         description: Type of the instrument.
-        x-asee-compliance: This property should be related to enum.
+        enum:
+          - TO DO
         type: string
       debtor-reference:
         description: Debtor reference number.
@@ -5588,19 +5124,10 @@ definitions:
       debtor-reference-model:
         description: Debtor reference model.
         type: string
-      date-created:
-        x-asee-compliance: This property should be removed. It is automatically determined by the system when the template is saved.
-        description: Date and time when template was created.
-        format: date-time
-        type: string
-      date-updated:
-        x-asee-compliance: This property should be removed. It is automatically determined by the system when the template is saved.
-        description: Date and time when template was last updated.
-        format: date-time
-        type: string
       category:
-        description: Category.
-        x-asee-compliance: This property should be related to clasification.
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
         type: string
       picture:
         description: Picture.
@@ -5618,10 +5145,6 @@ definitions:
       geolocation:
         description: Geolocation details.
         $ref: '#/definitions/geolocation'
-      urgency:
-        x-asee-compliance: This property should be removed. There is already instrument-priority above.
-        description: Payment urgency
-        type: string
       attachments:
         description: Order attachments.
         items:
@@ -5649,7 +5172,6 @@ definitions:
       - payment-description
       - purpose-code
       - currency
-      - urgency
       - attachments
     type: object
   bill-payment-result-list:
@@ -5691,8 +5213,7 @@ definitions:
         type: string
     type: object
   template-list:
-    description: ''
-    x-asee-compliance: Missing description of object.
+    description: List of templates.
     example:
       total-count: 0
       page-size: 0
@@ -5741,12 +5262,10 @@ definitions:
             lat: ''
             lon: ''
             mapped-address: ''
-          urgency: sample
-          documents:
-            - id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
-              blob: sample
-              file-name: Form of bill payment.
-              extension: pdf
+          attachments:
+            - attachment-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+              attachment-name: Form of bill payment.
+              attachment-type: pdf
           navigations:
             - href:
               rel: self
@@ -5784,8 +5303,7 @@ definitions:
         type: string
     type: object
   template:
-    description: ''
-    x-asee-compliance: Missing description of object.
+    description: Template details.
     example:
       template-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       name: Template for heating bill payment.
@@ -5827,12 +5345,10 @@ definitions:
         lat: ''
         lon: ''
         mapped-address: ''
-      urgency: sample
-      documents:
-        - id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
-          blob: sample
-          file-name: Scanned bill for heating payment.
-          extension: pdf
+      attachments:
+        - attachment-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+          attachment-name: Scanned bill for heating payment.
+          attachment-type: pdf
       navigations:
         - href:
           rel: self
@@ -5863,16 +5379,20 @@ definitions:
         description: Payment description.
         type: string
       purpose-code:
-        description: Purpose code.
-        x-asee-compliance: This property should be related to clasification.
+        description: |
+          Purpose code.
+          For a complete list of possible values see [purpose-codes]() classification.
         type: string
       instrument-priority:
         description: Instrument priority.
-        x-asee-compliance: This property should be related to enum.
+        enum:
+          - ACH
+          - RTGS
         type: string
       instrument-type:
         description: Type of the instrument.
-        x-asee-compliance: This property should be related to enum.
+        enum:
+          - TO DO
         type: string
       debtor-reference:
         description: Debtor reference.
@@ -5901,8 +5421,9 @@ definitions:
         format: date-time
         type: string
       category:
-        description: Category.
-        x-asee-compliance: This property should be related to classification.
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
         type: string
       picture:
         description: Picture.
@@ -5920,10 +5441,6 @@ definitions:
       geolocation:
         description: Geolocation details.
         $ref: '#/definitions/geolocation'
-      urgency:
-        x-asee-compliance: This property should be removed. There is already instrument-priority above.
-        description: Payment urgency
-        type: string
       attachments:
         description: Order attachments.
         items:
@@ -5951,60 +5468,10 @@ definitions:
       - payment-description
       - purpose-code
       - currency
-      - urgency
       - attachments
     type: object
-  creditor-bank:
-    x-asee-compliance: This object should be removed. It is not used.
-    description: ''
-    example:
-      bank-name: Telenor bank
-      swift-code: AAAARSBG
-      address: Broadway 147/III/27
-      city: New York
-      country-code: CHE
-    properties:
-      bank-name:
-        description: Creditor bank name for foreign payments.
-        type: string
-      swift-code:
-        description: Creditor bank swift code for foreign payments.
-        type: string
-      address:
-        description: Creditor bank address for foreign payments.
-        type: string
-      city:
-        description: Creditor bank city for foreign payments.
-        type: string
-      country-code:
-        description: Creditor bank country code for foreign payments.
-        type: string
-    type: object
-  template-document:
-    x-asee-compliance: This object should be removed, it is not used.
-    description: ''
-    example:
-      id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
-      blob: sample
-      file-name: MyPaymentTemplate
-      extension: sample
-    properties:
-      id:
-        description: identifier.
-        type: string
-      blob:
-        description: file content.
-        type: string
-      file-name:
-        description: file name.
-        type: string
-      extension:
-        description: file name.
-        type: string
-    type: object
   transfer-list:
-    description: ''
-    x-asee-compliance: Missing description of object.
+    description: List of transfers.
     example:
       total-count: 0
       page-size: 0
@@ -6036,8 +5503,7 @@ definitions:
         type: string
     type: object
   transfer-history:
-    description: ''
-    x-asee-compliance: Missing description of object.
+    description: Statuses history of a transfer.
     example:
       transaction-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       items:
@@ -6059,8 +5525,7 @@ definitions:
         type: array
     type: object
   transfer-history-item:
-    description: ''
-    x-asee-compliance: Missing description of object.
+    description: One status of transfer from it's history.
     example:
       customer-info:
         customer-id: ''
@@ -6078,8 +5543,7 @@ definitions:
         $ref: '#/definitions/transfer-status'
     type: object
   customer-info:
-    description: ''
-    x-asee-compliance: Missing description of object.
+    description: Details about customer.
     example:
       customer-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       name: Peter Nicolaus
@@ -6100,8 +5564,7 @@ definitions:
         type: string
     type: object
   modify-transfer-picture-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for change picture of transfer.
     example: {}
     properties:
       picture:
@@ -6109,8 +5572,7 @@ definitions:
         type: string
     type: object
   modify-transfer-geolocation-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for modifying geolocation of transfer.
     example:
       geolocation:
         lat: ''
@@ -6122,8 +5584,7 @@ definitions:
         $ref: '#/definitions/geolocation'
     type: object
   modify-transfer-category-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for changing category of transfer.
     example:
       category: expenses
     properties:
@@ -6132,10 +5593,8 @@ definitions:
         type: string
     type: object
   validate-balance-transfer-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for validating balance transfer.
     example:
-      transfer-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       creditor-account-number: 112-00000000432378-56
       debtor-account-number: 115-0000000050378-56
       instrument-type: card
@@ -6144,10 +5603,6 @@ definitions:
         amount: 0
       value-date: '0001-01-01T00:00:00'
     properties:
-      transfer-id:
-        x-asee-compliance: This property should be removed. There is no transfer-id before it is executed.
-        description: Transaction identifier.
-        type: string
       creditor-account-number:
         description: Creditor account number.
         type: string
@@ -6156,7 +5611,8 @@ definitions:
         type: string
       instrument-type:
         description: Type of the instrument.
-        x-asee-compliance: This property should be related to enum.
+        enum:
+          - TO DO
         type: string
       currency:
         description: Currency amount.
@@ -6166,7 +5622,6 @@ definitions:
         format: date-time
         type: string
     required:
-      - transfer-id
       - creditor-account-number
       - debtor-account-number
       - instrument-type
@@ -6174,10 +5629,8 @@ definitions:
       - value-date
     type: object
   validate-credit-transfer-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for validating credit transfer.
     example:
-      transfer-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       creditor:
         name: ''
         address: ''
@@ -6202,10 +5655,6 @@ definitions:
       creditor-reference-model: 85
       debtor-reference-model: 72
     properties:
-      transfer-id:
-        x-asee-compliance: This property should be removed. There is no transfer-id before it is executed.
-        description: Transfer identifier.
-        type: string
       creditor:
         description: Name and address of the creditor.
         $ref: '#/definitions/creditor'
@@ -6222,16 +5671,20 @@ definitions:
         description: Payment description.
         type: string
       purpose-code:
-        description: purpose code.
-        x-asee-compliance: This property should be related to classification.
+        description: |
+          Purpose code.
+          For a complete list of possible values see [purpose-codes]() classification.
         type: string
       instrument-priority:
         description: Instrument priority.
-        x-asee-compliance: This property should be related to enum.
+        enum:
+          - ACH
+          - RTGS
         type: string
       instrument-type:
         description: Type of the instrument.
-        x-asee-compliance: This property should be related to enum.
+        enum:
+          - TO DO
         type: string
       debtor-reference:
         description: Debtor reference.
@@ -6253,7 +5706,6 @@ definitions:
         description: Debtor reference model.
         type: string
     required:
-      - transfer-id
       - creditor
       - debtor
       - creditor-account-number
@@ -6266,10 +5718,8 @@ definitions:
       - value-date
     type: object
   validate-cross-border-transfer-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for validating cross-border transfer.
     example:
-      transfer-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       creditor:
         name: ''
         address: ''
@@ -6289,20 +5739,8 @@ definitions:
       debtor-reference: 90056-000390/JT
       charge: OUR
       due-date: '0001-01-01T00:00:00'
-      notes: My notes to explain transfer.
       creditor-reference-model: 72
       creditor-reference: 70071-000004/JV
-      order-statistics:
-        - id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
-          advance-payment-indicator: sample
-          currency:
-            code: ''
-            amount: 0
-          contract-number: A723CX
-          contract-year: 2015
-          purpose-code: 0
-          purpose-description: Sending funds.
-          transaction-description: Transfer between diferent account owners.
       via-bank:
         bank-name: ''
         swift-code: ''
@@ -6322,10 +5760,6 @@ definitions:
           country-code: ''
           zip-code: ''
     properties:
-      transfer-id:
-        x-asee-compliance: This property should be removed. There is no transfer-id before it is executed.
-        description: Transfer identifier.
-        type: string
       creditor:
         description: Name and address of the creditor.
         $ref: '#/definitions/creditor'
@@ -6358,22 +5792,12 @@ definitions:
         description: Due date until which transfer should be executed.
         format: date-time
         type: string
-      notes:
-        x-asee-compliance: This property should be removed.
-        description: notes
-        type: string
       creditor-reference-model:
         description: Creditor reference model.
         type: string
       creditor-reference:
         description: Creditor reference number.
         type: string
-      order-statistics:
-        x-asee-compliance: This property should be removed.
-        description: order statistics
-        items:
-          $ref: '#/definitions/statistics'
-        type: array
       intermediary-bank:
         description: Correspondent bank for the payment.
         $ref: '#/definitions/bank-info'
@@ -6387,17 +5811,14 @@ definitions:
       - debtor-account-number
     type: object
   execute-p2p-transfer-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for executing person to person transfer.
     example:
-      id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       creditor:
         name: ''
         address: ''
         city: ''
         country-code: ''
       creditor-account-number: 115-0000000050378-56
-      authorization-code: sample
       marketing-consent: false
       amount:
         code: ''
@@ -6405,19 +5826,11 @@ definitions:
       collection-method: sample
       atm-code: sample
     properties:
-      transfer-id:
-        x-asee-compliance: This parameter is already submitted through query path. It may be removed.
-        description: Transfer identifier.
-        type: string
       creditor:
         description: Name and addres of the creditor.
         $ref: '#/definitions/creditor'
       creditor-account-number:
         description: Creditor account number.
-        type: string
-      authorization-code:
-        x-asee-compliance: This property should be removed. Transfer identifier is already specified above.
-        description: P2P transfer reference. This is the reference to reservation made on the Debtors account.
         type: string
       marketing-consent:
         description: Consent of the recipient to receive marketing messages from the bank.
@@ -6440,10 +5853,8 @@ definitions:
       - creditor-account-number
     type: object
   validate-p2p-transfer-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for validating person to person transfer.
     example:
-      transfer-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       debtor:
         name: ''
         address: ''
@@ -6458,10 +5869,6 @@ definitions:
       due-date: '0001-01-01T00:00:00'
       notes: My notes to explain transfer.
     properties:
-      transfer-id:
-        x-asee-compliance: This property should be removed. It is returned after the transaction is initiated.
-        description: Transfer identifier.
-        type: string
       debtor:
         description: Name and address of the debtor.
         $ref: '#/definitions/debtor'
@@ -6495,10 +5902,8 @@ definitions:
       - recipient-address-kind
     type: object
   initiate-top-up-transfer-command:
-    description: Set of parameters that are sent with request.
-    x-asee-compliance: "Provide better description of the object according to purpose of operation: 'Command provides parameters for ...'"
+    description: Command provides parameters for initiating topup transfer.
     example:
-      id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
       debtor:
         name: ''
         address: ''
@@ -6515,10 +5920,6 @@ definitions:
         lon: ''
         mapped-address: ''
     properties:
-      transfer-id:
-        x-asee-compliance: This property should be removed. It is returned after the transaction is initiated.
-        description: Transfer identifer.
-        type: string
       debtor:
         description: Name and address of the debtor.
         $ref: '#/definitions/debtor'
@@ -6544,8 +5945,7 @@ definitions:
       - phone-number
     type: object
   income-list:
-    description: ''
-    x-asee-compliance: Missing description of object.
+    description: List of incomes.
     example:
       total-count: 0
       page-size: 0
@@ -6561,25 +5961,6 @@ definitions:
             bank-name: ''
             swift-code: ''
             country-code: ''
-          booking-date: '0001-01-01T00:00:00'
-          credit-origin: 0
-          fee:
-            code: ''
-            amount: 0
-          fee-foreign:
-            code: ''
-            amount: 0
-          fee-local:
-            code: ''
-            amount: 0
-          fee-reference-number: 99999999
-          fee-sum:
-            code: ''
-            amount: 0
-          fee-tax:
-            code: ''
-            amount: 0
-          fee-tax-reference-number: 44444444
           nominal-amount:
             code: ''
             amount: 0
@@ -6594,9 +5975,6 @@ definitions:
             country-code: ''
             bank-type: ''
           status: pending
-          tax:
-            code: ''
-            amount: 0
           value-date: '0001-01-01T00:00:00'
           category: expenses
           geolocation:
@@ -6604,7 +5982,7 @@ definitions:
             lon: ''
             mapped-address: ''
           attachments:
-            - id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+            - attachment-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
               attachment-name: Confirmation
               attachment-type: pdf
       navigations:
@@ -6637,8 +6015,7 @@ definitions:
         type: string
     type: object
   income:
-    description: ''
-    x-asee-compliance: Missing description of object.
+    description: Income details.
     example:
       beneficiary:
         account-number: ''
@@ -6647,25 +6024,6 @@ definitions:
         bank-name: ''
         swift-code: ''
         country-code: ''
-      booking-date: '0001-01-01T00:00:00'
-      credit-origin: 0
-      fee:
-        code: ''
-        amount: 0
-      fee-foreign:
-        code: ''
-        amount: 0
-      fee-local:
-        code: ''
-        amount: 0
-      fee-reference-number: 99999999
-      fee-sum:
-        code: ''
-        amount: 0
-      fee-tax:
-        code: ''
-        amount: 0
-      fee-tax-reference-number: 44444444
       nominal-amount:
         code: ''
         amount: 0
@@ -6680,9 +6038,6 @@ definitions:
         country-code: ''
         bank-type: ''
       status: pending
-      tax:
-        code: ''
-        amount: 0
       value-date: '0001-01-01T00:00:00'
       category: salary
       geolocation:
@@ -6690,57 +6045,19 @@ definitions:
         lon: ''
         mapped-address: ''
       attachments:
-        - id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+        - attachment-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
           attachment-name: Confirmation
           attachment-type: pdf
     properties:
       creditor-account:
         description: Beneficiary's account information.
         $ref: '#/definitions/account'
-      booking-date:
-        description: Booking date.
-        format: date-time
-        type: string
-      credit-origin:
-        x-asee-compliance: The name and type of this property should be changed. It's purpose is not clear, give some better name. It is strange that the type is int, should be related to enum probably.
-        description: Credit origin.
-        format: int32
-        type: integer
-      fee:
-        x-asee-compliance: These fee values probably shouldn't be returned with income object. None of the other transaction provides this fee info. There is offer-management/calculations/service-fee for this purpose.
-        description: Fee.
-        $ref: '#/definitions/currency'
-      fee-foreign:
-        x-asee-compliance: These fee values probably shouldn't be returned with income object. None of the other transaction provides this fee info. There is offer-management/calculations/service-fee for this purpose.
-        description: Fee foreign.
-        $ref: '#/definitions/currency'
-      fee-local:
-        x-asee-compliance: These fee values probably shouldn't be returned with income object. None of the other transaction provides this fee info. There is offer-management/calculations/service-fee for this purpose.
-        description: Fee local.
-        $ref: '#/definitions/currency'
-      fee-reference-number:
-        x-asee-compliance: These fee values probably shouldn't be returned with income object. None of the other transaction provides this fee info. There is offer-management/calculations/service-fee for this purpose.
-        description: Fee reference number.
-        type: string
-      fee-sum:
-        x-asee-compliance: These fee values probably shouldn't be returned with income object. None of the other transaction provides this fee info. There is offer-management/calculations/service-fee for this purpose.
-        description: Fee sum.
-        $ref: '#/definitions/currency'
-      fee-tax:
-        x-asee-compliance: These fee values probably shouldn't be returned with income object. None of the other transaction provides this fee info. There is offer-management/calculations/service-fee for this purpose.
-        description: Fee tax.
-        $ref: '#/definitions/currency'
-      fee-tax-reference-number:
-        x-asee-compliance: These fee values probably shouldn't be returned with income object. None of the other transaction provides this fee info. There is offer-management/calculations/service-fee for this purpose.
-        description: Fee tax reference number.
-        type: string
       currency:
         description: Currency amount.
         $ref: '#/definitions/currency'
       debtor:
-        x-asee-compliance: Wrong object type, this should be /definitions/debtor.
         description: Ordering person.
-        type: string
+        $ref: '#/definitions/debtor'
       purpose:
         description: Purpose.
         type: string
@@ -6751,20 +6068,20 @@ definitions:
         description: Information about debtor's bank.
         $ref: '#/definitions/bank'
       status:
-        x-asee-compliance: This property should be related to enum.
         description: Status.
+        enum:
+          - pending
+          - credited
+          - in-process
         type: string
-      tax:
-        x-asee-compliance: These fee values probably shouldn't be returned with income object. None of the other transaction provides this fee info. There is offer-management/calculations/service-fee for this purpose.
-        description: Tax.
-        $ref: '#/definitions/currency'
       value-date:
         description: Value date.
         format: date-time
         type: string
       category:
-        x-asee-compliance: This property should be related to some clasification.
-        description: Category.
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
         type: string
       picture:
         description: Picture.
@@ -6773,14 +6090,13 @@ definitions:
         description: Geolocation details.
         $ref: '#/definitions/geolocation'
       attachments:
-        description: attachments.
+        description: Attachments.
         items:
           $ref: '#/definitions/attachment'
         type: array
     type: object
   working-day:
-    description: ''
-    x-asee-compliance: Missing description of object.
+    description: Get date of next working day during holdays.
     example:
       date: '0001-01-01T00:00:00'
     properties:
@@ -6819,17 +6135,19 @@ definitions:
         type: string
     type: object
   command-result:
-    x-asee-compliance: Missing description of object and its properties.
+    description: Object returned typically when request for something new or some change is sent.
+    example:
+      id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+      resource-status: created
     properties:
       id:
+        description: Unique identifier.
         type: string
         readOnly: true
       resource-status:
+        description: Status result of sent command.
         type: string
         readOnly: true
-    example:
-      id: FS123212121
-      resource-status: created
   validation-problem:
     description: Got when request that is sent have some errors.
     example:
@@ -6843,38 +6161,6 @@ definitions:
         description: Displayed message.
         type: string
     type: object
-#   validation-problem:
-#     type: array
-#     items:
-#       type: object
-#       properties:
-#         field:
-#           type: string
-#         errors:
-#           type: array
-#           items:
-#             type: object
-#             properties:
-#               error:
-#                 type: string
-#               message:
-#                 type: string
-#     example:
-#       -  
-#         field: phone-number
-#         errors:
-#           -
-#             error: invalid-format
-#             message: Format for this field is invalid
-#           -
-#             error: max-length
-#             message: Content exceeds maximum alowed length 
-#       - 
-#         field: account-number
-#         errors:
-#           -
-#             error: check-digit-invalid
-#             message: Check digit is invalid for this field
   business-problem:
     description: When request is well formed but some business policy doesn't allow it to be executed, busieness-problem describes taht situation.
     example:
@@ -6925,14 +6211,6 @@ definitions:
         type: string
     type: object     
 responses:
-#   resource-created-response:
-#     description: Resource was created successfuly.
-#     schema:
-#       $ref: "#/definitions/command-result"
-#   validation-problem-response:
-#     description: Your request was not constructed properly. Response contains the list of validation errors for each invalid element of your request. For complete list of possible validation errors see [validation errors]() classification.
-#     schema: 
-#       $ref: '#/definitions/validation-problem'
   default-error-response:
     description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
 schemes:
