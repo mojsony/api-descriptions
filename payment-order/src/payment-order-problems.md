@@ -7,13 +7,10 @@ When request is valid and no standard status code describes situation, Payment O
      Literal                                |  Code | Description                                                                                                                          
      -------------------------------------- | -----:| -------------------------------------------------------------------------------------------------------------------------------------                                          
      allowed-amount-exceeded                | 50650 | This amount exceeds the amount allowed for this currency in your sight accounts!           
-                                               
      blocked-account                        | 50651 | Current account is blocked, you cannot perform the payment.                                                                          
-     
      debtor-account-blocked                 | 50687 | Selected ordering account is blocked, you cannot perform the payment. Please select another account.
-     
      transfer-not-allowed-accounts-types    | 50652 | You cannot make internal transfer between chosen accounts because of their types.                                                                                                    
-     debtor's-card-not-active               | 50654 | Debtor's card is expired or not active.                                                                                              
+     debtor-card-not-active                 | 50654 | Debtor's card is expired or not active.                                                                                              
      frequency-limit-exceeded               | 50655 | Withdrawal frequency limit is exceeded.                                                                                              
      amount-above-limit                     | 50656 | The amount is above predefined limit for this type of payment. Please contact our Contact center to request temporary limit increase.
      transfer-not-allowed                   | 50657 | Debtor account status does not allow person to person payment.                                                                       
