@@ -44,6 +44,24 @@ tags:
     name: Account terminations
     description: Working with account termination requests
   -
+    name: Current account terminations
+    description: Working with current account termination requests
+  -
+    name: Bundled account terminations
+    description: Working with bundled account termination requests
+  -
+    name: Deposit account terminations
+    description: Working with deposit account termination requests
+  -
+    name: Credit facility terminations
+    description: Working with credit facility termination requests
+  -
+    name: Loan terminations
+    description: Working with loan termination requests
+  -
+    name: Deposit payouts
+    description: Working with deposit payouts requests
+  -
     name: Arrangement amendments
     description: Working with account amendment requests
   -
@@ -100,8 +118,7 @@ paths:
             - [active-additional-card-already-exists]()
             - [owner-can-not-have-additional-card]()
           schema:
-            $ref: '#/definitions/business-problem'  
-
+            $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'                   
   /additional-card-issuances/{order-number}/cancel: 
@@ -111,7 +128,7 @@ paths:
         - Additional card issuances
       operationId: AdditionalCardIssuances_Cancel
       parameters: 
-          - 
+        - 
            description: "Number of request which cancelation is initiated."
            in: "path"
            name: "order-number"
@@ -155,7 +172,7 @@ paths:
         - Card blockades
       operationId: CardBlockades_Request
       parameters: 
-         - 
+        - 
           description: "Command contains parameters for card blocking"
           in: "body"
           name: "cmd"
@@ -281,7 +298,7 @@ paths:
       operationId: CardDeblockades_Get
       deprecated: true
       parameters: 
-         - 
+        - 
           description: "Number of order to fetch."
           in: "path"
           name: "order-number"
@@ -302,7 +319,7 @@ paths:
           - Card terminations
        operationId: CardTerminations_Get
        parameters: 
-          - 
+         - 
             description: "Number of order to fetch."
             in: "path"
             name: "order-number"
@@ -322,13 +339,13 @@ paths:
           - Card replacements
        operationId: CardReplacements_Request
        parameters: 
-        - 
-          description: "Command contains parameters for card replacement, including card serial number and instruction how to deliver new card"
-          in: "body"
-          name: "cmd"
-          required: true
-          schema: 
-            $ref: "#/definitions/request-card-replacement-command"
+         - 
+           description: "Command contains parameters for card replacement, including card serial number and instruction how to deliver new card"
+           in: "body"
+           name: "cmd"
+           required: true
+           schema: 
+             $ref: "#/definitions/request-card-replacement-command"
        responses:
         '202':
           $ref: '#/responses/request-accepted-response'
@@ -362,7 +379,6 @@ paths:
               $ref: '#/definitions/card-replacement'   
           default:
             $ref: '#/responses/default-error-response'
-
   /mandate-assignments:
     post:
         summary: Use this operation to initiate assignment of mandate.
@@ -390,6 +406,51 @@ paths:
                 $ref: '#/definitions/business-problem'          
           default:
                 $ref: '#/responses/default-error-response'  
+    get:
+        summary: Use this operation to get list of mandate assigments.
+        tags:
+          - Mandate assignments  
+        deprecated: false
+        operationId: MandateAssignments_GetList
+        parameters:
+          - description: Customer number of owner of mandate assigments.
+            in: query
+            name: customer-number
+            required: false
+            type: string
+          - $ref: "#/parameters/page-number-param"
+          - $ref: "#/parameters/page-size-param"
+          - $ref: "#/parameters/sort-by-param"
+          - $ref: "#/parameters/sort-order-param"
+          - $ref: "#/parameters/include-param" 
+          - $ref: "#/parameters/trim-param" 
+        responses:
+          '200':
+            description: OK
+            schema:
+               $ref: '#/definitions/mandate-assigments-list'
+          default:
+               $ref: '#/responses/default-error-response'     
+  /mandate-assignments/{order-number}:
+    get:
+        summary: Use this operation to get mandate assigment.
+        tags:
+          - Mandate assignments  
+        deprecated: false
+        operationId: MandateAssignments_Get
+        parameters:
+          - in: path
+            name: order-number
+            required: true
+            type: string
+            description: Order number
+        responses:
+          '200':
+             description: OK
+             schema:
+               $ref: '#/definitions/mandate-assigment'
+          default:
+               $ref: '#/responses/default-error-response'
   /mandate-assignments/{order-number}/cancel:
     post:
         summary: Use this operation to cancel assignment of mandate.
@@ -418,12 +479,6 @@ paths:
       deprecated: false
       operationId: StandingOrders_GetList
       parameters:
-        - description: Customer number of owner of standing order.
-          in: query
-          name: customer-number
-          required: false
-          type: string
-       
         - $ref: "#/parameters/page-number-param"
         - $ref: "#/parameters/page-size-param"
         - $ref: "#/parameters/sort-by-param"
@@ -450,7 +505,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/initiate-standing-order-command'
-     
       responses:
         '200':
           description: OK
@@ -459,13 +513,16 @@ paths:
         '440':
             description: |
               Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-                 - [request-already-exists]()
+                - [request-already-exists]()
             schema:
                 $ref: '#/definitions/business-problem'          
         default:
                 $ref: '#/responses/default-error-response'   
   /standing-orders/{order-number}:
     get:
+      summary: Gets standing order with detailed information.
+      tags:
+        - Standing orders
       deprecated: false
       operationId: StandingOrders_Get
       parameters:
@@ -480,13 +537,32 @@ paths:
           schema:
             $ref: '#/definitions/standing-order'
         default:
-          $ref: '#/responses/default-error-response'  
-       
-      summary: Gets standing order with detailed information.
-      tags:
-        - Standing orders
+          $ref: '#/responses/default-error-response'
+  /standing-orders/{order-number}/cancel:
+    post:
+        summary: Use this operation to cancel standing order.
+        tags:
+          - Standing orders  
+        deprecated: false
+        operationId: StandingOrders_Cancel
+        parameters:
+          - in: path
+            name: order-number
+            required: true
+            type: string
+            description: Order number
+        responses:
+          '204':
+            description: No content
+            schema:
+                $ref: '#/definitions/business-problem'          
+          default:
+                $ref: '#/responses/default-error-response'   
   /standing-orders/{order-number}/nickname:
     post:
+      summary: Use this operation to change standing order nickname.
+      tags:
+        - Standing orders
       deprecated: false
       operationId: StandingOrders_UpdateNickname
       parameters:
@@ -509,16 +585,16 @@ paths:
         '440':
             description: |
               Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-                 - [request-already-exists]()
+                - [request-already-exists]()
             schema:
                 $ref: '#/definitions/business-problem'          
         default:
-                $ref: '#/responses/default-error-response'   
-      summary: Use this operation to change standing order nickname.
-      tags:
-        - Standing orders
+                $ref: '#/responses/default-error-response'
   /standing-orders/{order-number}/skip:
     post:
+      summary: Skip standing order.
+      tags:
+        - Standing orders
       deprecated: false
       operationId: StandingOrders_Skip
       parameters:
@@ -527,13 +603,6 @@ paths:
           required: true
           type: string
           description: Standing order number.
-          x-asee-compliance: Parameter of skip-standing-order-command parameter removed since it only takes "reference-date" which doesn't make sense - skip request is submitted today and next payment date of standing order is determined by the system.
-        # - description: Command contains parameters for skip of standing order.
-        #  in: body
-        #  name: cmd
-        #  required: true
-        #  schema:
-        #    $ref: '#/definitions/skip-standing-order-command'
       responses:
         '200':
           description: OK
@@ -546,92 +615,258 @@ paths:
             schema:
                 $ref: '#/definitions/business-problem'          
         default:
-                $ref: '#/responses/default-error-response'   
-      summary: Skip standing order.
-      tags:
-        - Standing orders  
+                $ref: '#/responses/default-error-response'  
   /account-terminations:
     get:
+      summary: Gets the list of account termination requests
+      tags:
+        - Account terminations
       deprecated: false
       operationId: AccountTerminations_GetList
       parameters:
-        - $ref: "#/parameters/customer-number-param"
         - $ref: "#/parameters/page-number-param"
         - $ref: "#/parameters/page-size-param"
         - $ref: "#/parameters/sort-by-param"
         - $ref: "#/parameters/sort-order-param"
         - $ref: "#/parameters/include-param" 
-        - $ref: "#/parameters/trim-param"     
-      
+        - $ref: "#/parameters/trim-param"
       responses:
         '200':
           description: OK
           schema:
             $ref: '#/definitions/account-termination-list'
         default:
-          $ref: '#/responses/default-error-response'  
-       
-      summary: Gets the list of account termination requests
-      tags:
-        - Account terminations
+          $ref: '#/responses/default-error-response'
+  /current-account-terminations:
     post:
-      
+      summary: Use this operation to initiate current account termination.
+      tags:
+        - Current account terminations
       deprecated: false
-      operationId: AccountTerminations_Request
+      operationId: CurrentAccountTerminations_Request
       parameters:
-        - description: Command contains parameters for account termination.
+        - description: Command contains parameters for current account termination.
           in: body
           name: cmd
           required: true
           schema:
-            $ref: '#/definitions/request-account-termination-command'
-     
+            $ref: '#/definitions/request-current-account-termination-command'
       responses:
-        '200':
-          description: OK
+        '202':
+          description: Accepted
           schema:
             $ref: '#/definitions/command-result'
-        
-      summary: Use this operation to initiate account termination.
-      tags:
-        - Account terminations
-  /account-terminations/{order-number}/cancel:
+        default:
+          $ref: '#/responses/default-error-response'
+  /current-account-terminations/{order-number}/confirm:
     post:
+      summary: Use this operation to finally confirm current account termination.
+      tags:
+        - Current account terminations
       deprecated: false
-      operationId: AccountTerminations_Cancel
+      operationId: CurrentAccountTerminations_Confirm
       parameters:
-        # Parameter removed - this object contains only the order-number which is already part of path.
-        # - description: Parameters for account termination cancelation
-        #   in: body
-        #   name: cmd
-        #   required: true
-        #   schema:
-        #     $ref: '#/definitions/cancel-account-termination-command'
         - description: Order number
           in: path
           name: order-number
           required: true
           type: string
-      
       responses:
         '200':
           description: OK
           schema:
             $ref: '#/definitions/command-result'
-        '440':
-            description: |
-              Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-                 - [request-already-exists]()
-            schema:
-                $ref: '#/definitions/business-problem'          
         default:
-                $ref: '#/responses/default-error-response'   
-      summary: Use this operation to cancel account termination.
+          $ref: '#/responses/default-error-response'
+  /current-account-terminations/{order-number}/cancel:
+    post:
+      summary: Use this operation to cancel current account termination.
       tags:
-        - Account terminations
+        - Current account terminations
+      deprecated: false
+      operationId: CurrentAccountTerminations_Cancel
+      parameters:
+        - description: Order number
+          in: path
+          name: order-number
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+  /bundled-account-terminations:
+    post:
+      summary: Use this operation to initiate bundled account termination.
+      tags:
+        - Bundled account terminations
+      deprecated: false
+      operationId: BundledAccountTerminations_Request
+      parameters:
+        - description: Command contains parameters for bundled account termination.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/request-bundled-account-termination-command'
+      responses:
+        '202':
+          description: Accepted
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+  /deposit-account-terminations:
+    post:
+      summary: Use this operation to initiate deposit account termination.
+      tags:
+        - Deposit account terminations
+      deprecated: false
+      operationId: DepositAccountTerminations_Request
+      parameters:
+        - description: Command contains parameters for deposit account termination.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/request-deposit-account-termination-command'
+      responses:
+        '202':
+          description: Accepted
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+  /credit-facility-terminations:
+    post:
+      summary: Use this operation to initiate credit facility termination.
+      tags:
+        - Credit facility terminations
+      deprecated: false
+      operationId: CreditFacilityTerminations_Request
+      parameters:
+        - description: Command contains parameters for credit facility termination.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/request-credit-facility-termination-command'
+      responses:
+        '202':
+          description: Accepted
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+  /credit-facility-terminations/{order-number}/confirm:
+    post:
+      summary: Use this operation to finally confirm credit facility termination after retention process.
+      tags:
+        - Credit facility terminations
+      deprecated: false
+      operationId: CreditFacilityTerminations_Confirm
+      parameters:
+        - description: Order number
+          in: path
+          name: order-number
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+  /credit-facility-terminations/{order-number}/cancel:
+    post:
+      summary: Use this operation to cancel credit facility termination.
+      tags:
+        - Credit facility terminations
+      deprecated: false
+      operationId: CreditFacilityTerminations_Cancel
+      parameters:
+        - description: Order number
+          in: path
+          name: order-number
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+  /loan-terminations:
+    post:
+      summary: Use this operation to initiate premature loan termination.
+      tags:
+        - Loan terminations
+      deprecated: false
+      operationId: LoanTerminations_Request
+      parameters:
+        - description: Command contains parameters for loan termination.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/request-loan-termination-command'
+      responses:
+        '202':
+          description: Accepted
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+  /loan-terminations/{order-number}/confirm:
+    post:
+      summary: Use this operation to finally confirm loan termination.
+      tags:
+        - Loan terminations
+      deprecated: false
+      operationId: LoanTerminations_Confirm
+      parameters:
+        - description: Order number
+          in: path
+          name: order-number
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+  /loan-terminations/{order-number}/cancel:
+    post:
+      summary: Use this operation to cancel loan termination.
+      tags:
+        - Loan terminations
+      deprecated: false
+      operationId: LoanTerminations_Cancel
+      parameters:
+        - description: Order number
+          in: path
+          name: order-number
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
   /arrangement-amendments:
     post:
-      
+      summary: Use this operation to submit new amendment request.
+      tags:
+        - Arrangement amendments
       deprecated: false
       operationId: ArrangementAmendments_Request
       parameters:
@@ -641,7 +876,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/request-arrangement-amendment-command'
-     
       responses:
         '200':
           description: OK
@@ -650,18 +884,16 @@ paths:
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-            - [request-already-exists]()
+              - [request-already-exists]()
           schema:
             $ref: '#/definitions/business-problem'          
         default:
-          $ref: '#/responses/default-error-response'   
-        
-      summary: Use this operation to submit new amendment request.
-      tags:
-        - Arrangement amendments
+          $ref: '#/responses/default-error-response'
   /arrangement-amendments/{order-number}/cancel:
     post:
-      
+      summary: Use this operation to cancel amendment request.
+      tags:
+        - Arrangement amendments
       deprecated: false
       operationId: ArrangementAmendments_Cancel
       parameters:
@@ -674,13 +906,12 @@ paths:
         '204':
           description: No content        
         default:
-                $ref: '#/responses/default-error-response'   
-      summary: Use this operation to cancel amendment request.
-      tags:
-        - Arrangement amendments
+          $ref: '#/responses/default-error-response'
   /arrangement-amendments/{order-number}:
     get:
-      
+      summary: Gets amendment request with detailed information. Use this operation to get amendment request details.
+      tags:
+        - Arrangement amendments
       deprecated: false
       operationId: ArrangementAmendments_Get
       parameters:
@@ -695,88 +926,91 @@ paths:
           schema:
             $ref: '#/definitions/arrangement-amendment'
         default:
-          $ref: '#/responses/default-error-response'  
-        
-      summary: Gets amendment request with detailed information. Use this operation to get amendment request details.
+          $ref: '#/responses/default-error-response'
+  /deposit-payouts:
+    post:
+      summary: Use this operation to create deposit payout request.
       tags:
-        - Arrangement amendments
-  /customer-requests/{customer-number}:
+        - Deposit payouts
+      deprecated: false
+      operationId: DepositPayouts_Request
+      parameters:
+        - description: Parameters for deposit payout request initiation.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/request-deposit-payout-command'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+            - [request-already-exists]()
+          schema:
+            $ref: '#/definitions/business-problem'          
+        default:
+          $ref: '#/responses/default-error-response'
+  /customer-requests:
     get:
-     
+      summary: "Operation returns list of customer's order basic details such are order type, order state, order posting date, short description."
+      tags:
+        - Customer requests
       deprecated: false
       operationId: CustomerRequests_GetList
       parameters:
-        - description: Customer number
-          in: path
-          name: customer-number
-          required: true
-          type: string
-          x-asee-compliance: It is questionable whether the customer-number should be a path parameter. customer-number is already forwarded through invocation context.
         - description: Customer request status.
           in: query
           name: status
           required: false
           type: string
-      
       responses:
         '200':
           description: OK
           schema:
             $ref: '#/definitions/customer-request-list'
         default:
-          $ref: '#/responses/default-error-response'  
-       
-      summary: "Operation returns list of customer's order basic details such are order type, order state, order posting date, short description."
-      tags:
-        - Customer requests
-
-  # This method is not needed. There is such one in Reference Data API.
-  # /classifications: 
-  #  get: 
-  #    summary: "Returns all classification schema used in API contacts."
-  #    tags: 
-  #        - Classifications
-  #    operationId: "Classifications_GetList"
-  #    responses:
-  #        '200':
-  #          description: Success
-  #          schema:
-  #            $ref: '#/definitions/classification-list'
-  #        default:
-  #          $ref: '#/responses/default-error-response'
- 
-  /classifications/{schema}: 
-    get: 
-      summary: "Returns the classification values for provided schema."
-      tags: 
-          - Classifications
-      operationId: "Classifications_Get"
-      parameters: 
-        - 
-          description: "Schema name which values should be fetched. For complete list of schemas see [classifications]()"
-          in: "path"
-          name: "schema"
-          required: true
-          type: "string"
+          $ref: '#/responses/default-error-response'
+  /classifications: 
+    get:
+      summary: Returns all classification schemas used in this API.      
+      operationId: "Classifications_GetList"
       responses:
-          '200':
-            description: Success
-            schema:
-              items:
-                $ref: '#/definitions/classification-value'
-              type: array
-          default:
-            $ref: '#/responses/default-error-response'
-            
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/classification-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+        - Classifications
+      x-asee-tags: []
+  /classifications/{schema-id}:
+    get:
+      summary: Returns the classification values for provided schema.
+      operationId: Classifications_Get
+      parameters:
+        - $ref: '#/parameters/schema-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/classification'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+        - Classifications
+      x-asee-tags: []
 responses:
   request-accepted-response:
     description: Request has been accepted for processing.
     schema:
       $ref: "#/definitions/command-result"
   default-error-response:
-    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
-    
-    
+    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]().
 parameters:
   page-number-param:
     name: page
@@ -833,7 +1067,12 @@ parameters:
     description: Customer number.
     required: true
     type: string
-    
+  schema-id-param:
+    description: Unique schema identifier
+    in: path
+    name: schema-id
+    required: true
+    type: string 
 definitions:
   request-card-replacement-command: 
       description: Contains parameters for request creation.
@@ -903,98 +1142,67 @@ definitions:
           status-date: '2015-06-17T00:00:00'
           creation-date: '2015-06-17T10:44:57.867'
   classification-value: 
-      description: "Classification value"
+      description: Classification value.
       properties: 
         code: 
-          description: "Code of classification value."
-          type: "string"
+          description: Code of classification value.
+          type: string
         literal: 
-          description: "Literal."
-          type: "string"
+          description: Literal.
+          type: string
         description: 
-          description: "Description."
-          type: "string"
+          description: Description.
+          type: string
         id: 
-          description: "Identifier of classification value."
-          type: "string"
+          description: Identifier of classification value.
+          type: string
         parent-id: 
-          description: "Parent classification value id."
-          type: "string"
+          description: Parent classification value id.
+          type: string
         ordinal: 
-          description: "Ordinal number."
-          type: "string"
-      type: "object"
+          description: Ordinal number.
+          type: string
+      type: object
   classification: 
-      x-asee-compliance: This object is not needed. This API should only contain GET /classifications/{schema} method, and not the method returning all existing schemas in all APIs.
-      description: "Classification schema used in API contracts"
-      properties: 
-        API: 
-          description: "Name of Api in which classification shema is used."
-          type: "string"
-        description: 
-          description: "Shema description."
-          type: "string"
-        name: 
-          description: "Name of shema"
-          type: "string"
-      type: "object"
-  classification-list: 
-      x-asee-compliance: This object is not needed. This API should only contain GET /classifications/{schema} method, and not the method returning all existing schemas in all APIs.
-      description: "List of classification shemas."
-      properties: 
-       items: 
-         items: 
-           $ref: "#/definitions/classification"
-         type: "array"
-      example:
+    description: Classification schema used in API contracts.
+    properties: 
+      API: 
+        description: Name of Api in which classification shema is used.
+        type: string
+      description: 
+        description: Shema description.
+        type: string
+      schema-id:
+        description: Unique identifier of the classification.
+        type: string
+      name: 
+        description: Name of shema.
+        type: string
+      values:
+        description: List of classification values.
         items:
+          $ref: "#/definitions/classification-value"
+        type: array
+    type: "object"
+  classification-list: 
+    description: List of classification shemas.
+    properties: 
+      items:
+        description: List of all classification schemas.
+        items: 
+          $ref: "#/definitions/classification"
+        type: "array"
+    type: object
+    example:
+      items:
         - 
-           api: Customer Order 
-           description: This classification contains reasons for card replacement.
-           name: card-replacement-reason
+          api: Customer Order 
+          description: This classification contains reasons for card replacement.
+          name: card-replacement-reason
         - 
-           api: Customer Order 
-           description: This classification contains reasons for card blockade.
-           name: card-blockade-reason
-  classification-value-list: 
-      x-asee-compliance: This object is not needed. The response of GET /classifications/{schema} method is array of classification-value objects.
-      description: "List of classification values."
-      properties: 
-       items: 
-         items: 
-           $ref: "#/definitions/classification-value"
-         type: "array"
-      example:
-            - code: '0'
-              literal: card-lost
-              description: Card lost and new one should be issued.
-              id: 
-              parent-id: 
-              ordinal: 
-            - code: '1'
-              literal: card-stolen
-              description: Card stollen and new one should be issued.
-              id: 
-              parent-id: 
-              ordinal: 
-            - code: '2'
-              literal: card-damadged
-              description: Card damadged and new one should be issued.
-              id: 
-              parent-id: 
-              ordinal: 
-            - code: '3'
-              literal: emboss-name-changing
-              description: Change emboss name.
-              id: 
-              parent-id: 
-              ordinal: 
-            - code: '4'
-              literal: pin-lost
-              description: PIN code lost and new one should be created.
-              id: 
-              parent-id: 
-              ordinal: 
+          api: Customer Order 
+          description: This classification contains reasons for card blockade.
+          name: card-blockade-reason
   request-card-activation-command: 
     description: Contains parameters for request creation.
     properties: 
@@ -1299,7 +1507,6 @@ definitions:
     example:
       id: WI0000499335
       resource-status: active
-    
   business-problem:
     x-asee-compliance: Missing object description. Description of properties missing too.
     properties:
@@ -1340,7 +1547,7 @@ definitions:
         description: Customer number of authorised person.
         type: string
   standing-order-list:
-    x-asee-compliance: Missing description of object.
+    description: Standing order list.
     properties:
       total-count:
         description: Total count.
@@ -1364,7 +1571,7 @@ definitions:
           $ref: '#/definitions/standing-order'
         type: array
   standing-order:
-    x-asee-compliance: Missing description of object.
+    description: Standing order item.
     properties:
       arrangement-number:
         description: Arrangement number.
@@ -1381,78 +1588,13 @@ definitions:
       transfer-details:
         description: Transfer details. 
         $ref: '#/definitions/credit-transfer'
-        x-asee-compliance: Objects of standing-order and initiate-standing-order-command should have pretty much the same properties. Because of this, all properties below are removed and replaced with reference to credit-transfer object.
-      # creditor-account-number:
-      #   description: Creditor account number.
-      #   type: string
-      # debtor-account-number:
-      #   description: Debtor account number.
-      #   type: string
-      # creditor-account-currency-code:
-      #   description: Creditor account currency code.
-      #   type: string
-      # debtor-account-currency-code:
-      #   description: Debtor account currency code.
-      #   type: string
-      # payment-description:
-      #   description: Payment description.
-      #   type: string
-      # amount-value:
-      #   x-asee-compliance: Instead of this and next property, shouldn't we be using common "currency", i.e. currency amount type.
-      #   description: Amount.
-      #   format: double
-      #   type: number
-      # amount-currency-code:
-      #   description: Amount currency code.
-      #   type: string
-      # creditor-name:
-      #   description: Creditor name.
-      #   type: string
-      # creditor-address:
-      #   description: Creditor address.
-      #   type: string
-      # creditor-city:
-      #   description: Creditor city.
-      #   type: string
-      # creditor-country-code:
-      #   description: Creditor country code
-      #   type: string
-      # debtor-name:
-      #   description: Debtor name.
-      #   type: string
-      # debtor-address:
-      #   description: Debtor address.
-      #   type: string
-      # debtor-city:
-      #   description: Debtor city.
-      #   type: string
-      # debtor-country-code:
-      #   description: Debtor country code
-      #   type: string
-      # debtor-reference:
-      #   description: Debtor reference.
-      #   type: string
-      # creditor-reference:
-      #   description: Creditor reference.
-      #   type: string
-      # creditor-reference-model:
-      #   description: Creditor reference model.
-      #   type: string
-      # debtor-reference-model:
-      #   description: Debtor reference model.
-      #   type: string
       first-payment-date:
         description: First payment date.
         format: date-time
         type: string
-      frequency-period-multiplier:
-        description: Frequency period for periodical standing orders.
-        format: int32
-        type: integer
-      frequency-period-unit-of-time:
-        description: Frequency unit of time for periodical standing orders.
-        type: string
-        x-asee-compliance: This should be related to enum. Also, there is probably some common period type.
+      frequency:
+        description: Execution frequency for periodical standing order.
+        $ref: '#/definitions/simple-time-period'
       next-payment-date:
         description: Next payment date. 
         format: date-time
@@ -1469,22 +1611,12 @@ definitions:
         description: Standing order status.
         type: string
         x-asee-compliance: This should be related to some classification or enum.
-     
     required:
       - nickname
       - transfer-details
       - start-date
       - end-date
- 
-    type: object 
-    x-asee-compliance: Object of skip-standing-order-command parameter removed since it only takes "reference-date" which doesn't make sense - skip request is submitted today and next payment date of standing order is determined by the system.
-  # skip-standing-order-command:
-  #   description: Request for skip standing order command.
-  #   properties:
-  #     reference-date:
-  #       description: Reference date.
-  #       type: string
-  #   type: object
+    type: object
   change-standing-order-nickname-command:
     description: Request for changing standing order nickname.
     properties:
@@ -1493,6 +1625,19 @@ definitions:
         type: string
     required:
       - nickname
+    type: object
+  request-deposit-payout-command:
+    description: Request for initiating deposit payout.
+    properties:
+      account:
+        description: Number order which will be terminated.
+        type: string
+      currency:
+        description: Currency. 
+        type: string
+    required:
+      - account
+      - currency
     type: object
   initiate-standing-order-command:
     description: Parameters for standing order initiation.
@@ -1509,18 +1654,9 @@ definitions:
       transfer-details:
         description: Transfer details. 
         $ref: '#/definitions/credit-transfer'
-      # time-interval:
-      #   description: Time interval.  
-      #   format: int32
-      #   type: integer
-      frequency-period-multiplier:
-        description: Frequency period for periodical standing orders.
-        format: int32
-        type: integer
-      frequency-period-unit-of-time:
-        description: Frequency unit of time for periodical standing orders.
-        type: string
-        x-asee-compliance: This should be related to enum. Also, there is probably some common period type.
+      frequency:
+        description: Execution frequency for periodical standing order.
+        $ref: '#/definitions/simple-time-period'
       payment-date:
         description: Payment date.  
         format: date-time
@@ -1575,12 +1711,16 @@ definitions:
         type: string
       kind:
         description: Account termination request kind.
+        enum:
+          - current-account
+          - bundled-account
+          - deposit-account
+          - credit-facility
+          - loan
         type: string
-        x-asee-compliance: This should be related to some classification or enum.
-      status:
-        description: Work item status.
+      status: 
+        description: Status of request. For complete list of possible values see [workitem-processing-status]() classification.
         type: string
-        x-asee-compliance: This should be related to some classification or enum.
       product-number:
         x-asee-compliance: Why is this property relevant to termination process? It is not needed and should be removed.
         description: A code or short name by which a product can be identified.
@@ -1622,7 +1762,6 @@ definitions:
       cash-payout:
         description: Indicates if account assets will be withdrawn by cash payout.
         type: boolean
-      
     type: object
   request-arrangement-amendment-command:
     description: Parameters for initiation of arrangement amendment request.
@@ -1640,15 +1779,6 @@ definitions:
       - new-product-code
       - arrangement-number
     type: object
-  # cancel-account-termination-command:
-  #   description: Request for termination request cancellation command.
-  #   properties:
-  #     order-number:
-  #       description: Number order which will be terminated.
-  #       type: string
-  #   required:
-  #     - order-number
-  #   type: object
   arrangement-amendment:
     properties:
       status:
@@ -1691,7 +1821,66 @@ definitions:
         description: Expiration date
         format: date-time
         type: string
-      
+    type: object
+  mandate-assigments-list:
+    description: Mandate assigments list.
+    properties:
+      total-count:
+        description: Total count.
+        format: int32
+        type: integer
+      page-size:
+        description: Size of the page.
+        format: int32
+        type: integer
+      page-number:
+        description: Page number.
+        format: int32
+        type: integer
+      total-pages:
+        description: Total pages.
+        format: int32
+        type: integer
+      items:
+        description: List of mandate assigments
+        items:
+          $ref: '#/definitions/mandate-assigment'
+        type: array
+  mandate-assigment:
+    description: Customer order basic details.
+    properties:
+      order-number:
+        description: Order number.
+        type: string
+      arrangement-number:
+        description: Arrangement number.
+        type: string
+      creation-time:
+        format: date-time
+        description: Creation time of mandate assigments
+        type: string
+      expiration-date:
+        format: date-time
+        description: Expiration date
+        type: string
+      customer-name:
+        description: Customer name.
+        type: string
+      customer-number:
+        description: Customer number.
+        type: string
+      initiator-name:
+        description: Initiator name.
+        type: string
+      initiator-number:
+        description: Initiator number.
+        type: string
+      object-owner-name:
+        description: Arrangement owner name
+        type: string
+      status: 
+        description: Status of request. For complete list of possible values see [workitem-processing-status]() classification.
+        type: string
     type: object
   customer-request-list:
     description: List of customer orders.
@@ -1716,15 +1905,14 @@ definitions:
         description: Order posting date
         type: string
       status:
-        description: Order status.
+        description: Status of request. For complete list of possible values see [workitem-processing-status]() classification.
         type: string
-        x-asee-compliance: This should be related to some classification.
       description:
         description: Order description.
         type: string
     type: object
-  request-account-termination-command:
-    description: Parameters to initiate account termination.
+  request-current-account-termination-command:
+    description: Parameters to initiate current account termination.
     properties:
       account-number:
         description: The number of account to be terminated. 
@@ -1752,6 +1940,54 @@ definitions:
       - cash-payout
       - termination-reason
     type: object
+  request-bundled-account-termination-command:
+    description: Parameters to initiate bundled account termination.
+    properties:
+      account-number:
+        description: The number of account to be terminated. 
+        type: string
+    required:
+      - account-number
+    type: object
+  request-deposit-account-termination-command:
+    description: Parameters to initiate deposit account termination.
+    properties:
+      account-number:
+        description: The number of account to be terminated. 
+        type: string
+    required:
+      - account-number
+    type: object
+  request-credit-facility-termination-command:
+    description: Parameters to initiate credit facility termination.
+    properties:
+      account-number:
+        description: Account number.
+        type: string
+      redemption-reason:
+        description: Redemption reason.
+        type: string
+      additional-info:
+        description: Additional info for termination request.
+        type: string
+    required:
+      - account-number
+    type: object
+  request-loan-termination-command:
+    description: Parameters to initiate loan termination.
+    properties:
+      account-number:
+        description: Account number.
+        type: string
+      redemption-reason:
+        description: Redemption reason.
+        type: string
+      additional-info:
+        description: Additional info for termination request.
+        type: string
+    required:
+      - account-number
+    type: object
   credit-transfer:
     description: Credit transfer
     properties:
@@ -1764,17 +2000,9 @@ definitions:
       creditor-account-number:
         description: Creditor account number.
         type: string
-      # Transaction currency is specified by currency amount field below.
-      # creditor-account-currency:
-      #   description: Creditor account currency.
-      #   type: string
       debtor-account-number:
         description: Debtor account number.
         type: string
-      # Transaction currency is specified by currency amount field below.
-      # debtor-account-currency:
-      #   description: Debtor account currency.
-      #   type: string
       payment-description:
         description: Payment description.
         type: string
@@ -1811,7 +2039,6 @@ definitions:
       debit:
         description: Gets or sets a value indicating whether [debit].
         type: boolean
-     
     type: object
   currency:
     description: Currency amount and code
@@ -1854,5 +2081,20 @@ definitions:
         type: string
       country-code:
         description: Debtor country code.
+        type: string
+    type: object
+  simple-time-period:
+    description: Simple time period
+    properties:
+      period:
+        description: Period.
+        format: int32
+        type: integer
+      unit-of-time:
+        description: 'Unit of time with allowed values: days, months or years.'
+        enum:
+          - days
+          - months
+          - years
         type: string
     type: object
