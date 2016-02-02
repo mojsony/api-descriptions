@@ -88,12 +88,12 @@ paths:
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-          x-asee-compliance: Missing declaration of problems.
+              - [product-not-valid]()
+              - [deposit-account-opening-maxnumber]()
           schema:
             $ref: '#/definitions/business-problem'  
         default:
           $ref: '#/responses/default-error-response'
-      
   /loan-originations/{workitem-number}/activate:
     post:
       summary: Use this operation to activate the loan account based on approved loan origination request.
@@ -110,7 +110,7 @@ paths:
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-          x-asee-compliance: Missing declaration of problems.
+              - [product-not-valid]()
           schema:
             $ref: '#/definitions/business-problem'  
         default:
@@ -137,18 +137,16 @@ paths:
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-          x-asee-compliance: Missing declaration of problems.
+              - [product-not-valid]()
           schema:
             $ref: '#/definitions/business-problem'  
         default:
           $ref: '#/responses/default-error-response'
-     
   /product-account-openings/{workitem-number}/cancel:
     post:
       summary: Use this operation to cancel product account opening.
       tags: 
         - Product account openings
-     
       operationId: ProductAccountOpenings_Cancel
       parameters:
         - $ref: '#/parameters/workitem-number-param'
@@ -157,12 +155,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/command-result'
-        '440':
-          description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-          x-asee-compliance: Missing declaration of problems.
-          schema:
-            $ref: '#/definitions/business-problem'  
+        default:
+          $ref: '#/responses/default-error-response'  
   /product-account-openings/{workitem-number}/status:
     get:
       summary: Gets the status of specific product account-opening.
@@ -171,7 +165,7 @@ paths:
       deprecated: true
       operationId: ProductAccountOpenings_GetStatus
       parameters:
-       - $ref: '#/parameters/workitem-number-param'
+        - $ref: '#/parameters/workitem-number-param'
       responses:
         '200':
           description: OK
@@ -179,7 +173,6 @@ paths:
             $ref: '#/definitions/product-account-opening-status'
         default:
           $ref: '#/responses/default-error-response' 
-
   /product-account-openings/{workitem-number}/history:
     get:
       summary: Gets the processing history of specific product account-opening.
@@ -195,8 +188,7 @@ paths:
           schema:
             $ref: '#/definitions/product-account-opening-history'
         default:
-          $ref: '#/responses/default-error-response' 
-
+          $ref: '#/responses/default-error-response'
   /deposit-account-openings/{workitem-number}:
     get:
       summary: Gets specific deposit account opening request with detailed information.
@@ -217,7 +209,6 @@ paths:
       summary: Use this operation to cancel credit facility origination.
       tags: 
         - Credit facility originations
-     
       operationId: CreditFacilityOriginations_Cancel
       parameters:
         - $ref: "#/parameters/workitem-number-param"
@@ -226,12 +217,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/command-result'
-        '440':
-          description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-          x-asee-compliance: Missing declaration of problems.
-          schema:
-            $ref: '#/definitions/business-problem' 
+        default:
+          $ref: '#/responses/default-error-response' 
   /credit-facility-originations/{workitem-number}:
     get:
       summary: Gets specific credit facility origination with detailed information.
@@ -240,7 +227,6 @@ paths:
       operationId: CreditFacilityOriginations_Get
       parameters:
         - $ref: "#/parameters/workitem-number-param"
-     
       responses:
         '200':
           description: OK
@@ -259,7 +245,7 @@ paths:
       responses:
         '200':
           description: OK
-        schema:
+          schema:
             $ref: '#/definitions/current-account-opening'
         default:
           $ref: '#/responses/default-error-response' 
@@ -284,13 +270,12 @@ paths:
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-            - [requested-account-range]()
-            - [current-account-arrangement-maxnumber]()
+              - [requested-account-range]()
+              - [current-account-arrangement-maxnumber]()
           schema:
             $ref: '#/definitions/business-problem'  
         default:
           $ref: '#/responses/default-error-response'
-
   /loan-originations/{workitem-number}:
     get:
       summary: Gets specific loan origination request with detailed information.
@@ -311,7 +296,6 @@ paths:
       summary: |
         Use this operation to get list of product requests.
         Supports `paging` `shaping` `sorting` `filtering`.
-    
       tags: 
         - Product account openings
       x-asee-tags:
@@ -325,7 +309,6 @@ paths:
         - $ref: "#/parameters/page-size-param"
         - $ref: "#/parameters/sort-by-param"
         - $ref: "#/parameters/sort-order-param"
-            
       responses:
         '200':
           description: OK
@@ -333,7 +316,6 @@ paths:
             $ref: '#/definitions/product-account-opening-list'
         default:
           $ref: '#/responses/default-error-response' 
-        
   /bundled-account-openings/{workitem-number}/cancel:
     post:
       summary: Use this operation to cancel bundled account opening.
@@ -347,12 +329,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/command-result'
-        '440':
-          description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-          x-asee-compliance: Missing declaration of problems.
-          schema:
-            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response' 
   /bundled-account-openings/{workitem-number}:
     get:
       summary: Gets specific bundled account opening with detailed information.
@@ -390,12 +368,11 @@ paths:
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-          x-asee-compliance: Missing declaration of problems.
+              - [requested-account-range]()
           schema:
             $ref: '#/definitions/business-problem'  
         default:
           $ref: '#/responses/default-error-response'
-
   /current-account-openings/{workitem-number}/sign-option:
     put:
       summary: "Use this operation to mark in which way client wants to sign contract documentation for current account."
@@ -414,18 +391,8 @@ paths:
       responses:
         '200':
           description: OK
-          examples:
-            application/json:
-              id: null
-              created-record-status: null
           schema:
             $ref: '#/definitions/command-result'
-        '440':
-          description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-          x-asee-compliance: Missing declaration of problems.
-          schema:
-            $ref: '#/definitions/business-problem'  
         default:
           $ref: '#/responses/default-error-response'
   /credit-facility-originations/{workitem-number}/sign-option:
@@ -448,15 +415,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/command-result'
-        '440':
-          description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-          x-asee-compliance: Missing declaration of problems.
-          schema:
-            $ref: '#/definitions/business-problem'  
         default:
           $ref: '#/responses/default-error-response'
-
   /credit-facility-originations:
     post:
       summary: Use this operation to create new credit facility origination request.
@@ -484,7 +444,6 @@ paths:
             $ref: '#/definitions/business-problem'  
         default:
           $ref: '#/responses/default-error-response'
-
     put:
       summary: Use this method to modify credit facility origination.
       tags:
@@ -511,7 +470,6 @@ paths:
             $ref: '#/definitions/business-problem'  
         default:
           $ref: '#/responses/default-error-response'
-
   /credit-facility-originations/{workitem-number}/documents:
     post:
       x-asee-compliance: The usage of this method is arguable. It should be used for mapping what documentation is needed, and not to change status of request.
@@ -535,7 +493,6 @@ paths:
             $ref: '#/definitions/business-problem'  
         default:
           $ref: '#/responses/default-error-response'
-
   /credit-facility-originations/{workitem-number}/proposal:
     get:
       summary: Gets proposal details of specific credit limit account opening.
@@ -551,8 +508,7 @@ paths:
           schema:
             $ref: '#/definitions/credit-facility-proposal'
         default:
-          $ref: '#/responses/default-error-response' 
-
+          $ref: '#/responses/default-error-response'
   /credit-facility-originations/{workitem-number}/accept:
     post:
       summary: Use this operation to accept approved credit facility terms.
@@ -581,7 +537,6 @@ paths:
             $ref: '#/definitions/business-problem'  
         default:
           $ref: '#/responses/default-error-response'
-
   /calculations/service-fee:
     post:
       summary: Use this operation to calculate fees and taxes for the service.
@@ -596,7 +551,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/initiate-service-fee-calculation-command'
-     
       responses:
         '200':
           description: OK
@@ -608,7 +562,8 @@ paths:
           x-asee-compliance: Missing declaration of problems.
           schema:
             $ref: '#/definitions/business-problem' 
-
+        default:
+          $ref: '#/responses/default-error-response'
   /calculations/deposit-termination:
     post:
       summary: Use this operation to calculate deposit termination values.
@@ -633,8 +588,9 @@ paths:
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
           x-asee-compliance: Missing declaration of problems.
           schema:
-            $ref: '#/definitions/business-problem' 
-
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
   /calculations/deposit-offer:
     post:
       summary: Use this operation to calculate saving deposit offer.
@@ -659,7 +615,8 @@ paths:
           x-asee-compliance: Missing declaration of problems.
           schema:
             $ref: '#/definitions/business-problem' 
-
+        default:
+          $ref: '#/responses/default-error-response'
   /calculations/deposit-payout:
     post:
       summary: Use this operation to calculate partial deposit payout.
@@ -684,7 +641,8 @@ paths:
           x-asee-compliance: Missing declaration of problems.
           schema:
             $ref: '#/definitions/business-problem' 
-
+        default:
+          $ref: '#/responses/default-error-response'
   /calculations/installment-plan:
     post:
       summary: Use this operation to calculate installment plan and effective interest rate.
@@ -702,8 +660,6 @@ paths:
         '200':
           description: OK
           schema:
-            x-asee-compliance: Wrong object! This method should return installment-calculation.
-            #$ref: '#/definitions/indicative-offer-list'
             $ref: '#/definitions/installment-plan'
         '440':
           description: |
@@ -711,7 +667,8 @@ paths:
           x-asee-compliance: Missing declaration of problems.
           schema:
             $ref: '#/definitions/business-problem' 
-
+        default:
+          $ref: '#/responses/default-error-response'
   /calculations/indicative-offer:
     get:
       summary: Use this operation to get product related indicative offer data for specific customer.
@@ -724,11 +681,10 @@ paths:
           name: customer-number
           required: false
           type: string
-        - description: Optional, if customer requires specific product.
-          x-asee-compliance: Indicative offer is always for some product, it is strange that this is optional.
+        - description: Unique identifier of the product for which customer asks for indicative offer.
           in: query
           name: product-code
-          required: false
+          required: true
           type: string
       responses:
         '200':
@@ -736,34 +692,37 @@ paths:
           schema:
             $ref: '#/definitions/indicative-offer'
         default:
-          $ref: '#/responses/default-error-response' 
-
-  /classifications/{schema}:
+          $ref: '#/responses/default-error-response'
+  /classifications: 
     get:
-      summary: Gets the classification values.
+      summary: Returns all classification schemas used in this API.   
+      operationId: "Classifications_GetList"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/classification-list'
+        default:
+          $ref: '#/responses/default-error-response'
       tags:
         - Classifications
+      x-asee-tags: []
+  /classifications/{schema-id}:
+    get:
+      summary: Returns the classification values for provided schema.
       operationId: Classifications_Get
       parameters:
-        - description: The schema.
-          in: path
-          name: schema
-          required: true
-          type: string
+        - $ref: '#/parameters/schema-id-param'
       responses:
         '200':
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/classification-value'
-            type: array        
-        '440':
-          description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-          x-asee-compliance: Missing declaration of problems.
-          schema:
-            $ref: '#/definitions/business-problem' 
-
+            $ref: '#/definitions/classification'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+        - Classifications
+      x-asee-tags: []
   /calculations/bill-me-later/installments:
     post:
       summary: Gets maximum number of installments for the given amount.
@@ -782,19 +741,14 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/bill-me-later-installments'
-        '440':
-          description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-          x-asee-compliance: Missing declaration of problems.
-          schema:
-            $ref: '#/definitions/business-problem' 
-
+        default:
+          $ref: '#/responses/default-error-response'
 responses:
   default-error-response:
-    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
+    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]().
 parameters:
   workitem-number-param:
-    description:  Unique identifier for workitem. 
+    description: Unique identifier for workitem. 
     in: path
     name: workitem-number
     required: true
@@ -848,6 +802,12 @@ parameters:
     name: sort-by
     type: string
     x-asee-common: true 
+  schema-id-param:
+    description: Unique schema identifier
+    in: path
+    name: schema-id
+    required: true
+    type: string 
 definitions:
   initiate-deposit-account-opening-command:
     description: Parameters for initiate deposit account opening.
@@ -879,7 +839,6 @@ definitions:
       - term
       - product-code
     type: object
-  
   initiate-loan-origination-command:
     description: Parameters for loan originations initiation.
     properties:
@@ -922,13 +881,14 @@ definitions:
         type: string
       sign-option:
         description: Indicates if customer wants to use ship-to-order sign option.
-        type: boolean
-        x-asee-compliance: This should be related to some enum or classification.
+        enum:
+          - branch
+          - courier-service
+        type: string
     required:
       - customer-number
       - product-code
     type: object
-    
   initiate-bundled-account-opening-command:
     description: Parameters for bundled account opening initiation.
     properties:
@@ -1002,9 +962,8 @@ definitions:
         description: Transaction amount
         $ref: '#/definitions/currency'
       transaction-type:
-        description: Transaction type
+        description: Transaction type. For complete list of possible values see [transaction-type]() classification.
         type: string
-        x-asee-compliance: This should be related to some classification.
       channel-code:
         description: Channel code
         type: string
@@ -1223,6 +1182,36 @@ definitions:
         description: Ordinal number.
         type: string
     type: object
+  classification: 
+    description: Classification schema used in API contracts.
+    properties: 
+      API: 
+        description: Name of Api in which classification shema is used.
+        type: string
+      description: 
+        description: Shema description.
+        type: string
+      schema-id:
+        description: Unique identifier of the classification.
+        type: string
+      name: 
+        description: Name of shema.
+        type: string
+      values:
+        description: List of classification values.
+        items:
+          $ref: "#/definitions/classification-value"
+        type: array
+    type: "object"
+  classification-list: 
+    description: List of classification shemas.
+    properties: 
+      items:
+        description: List of all classification schemas.
+        items: 
+          $ref: "#/definitions/classification"
+        type: "array"
+    type: object
   initiate-deposit-offer-calculation-command:
     description: Deposit offer calculation command.
     properties:
@@ -1275,7 +1264,6 @@ definitions:
         format: double
         type: number
         description: Effective interest rate.
-     
     type: object
   initiate-deposit-payout-calculation-command:
     description: Deposit payout calculation command.
@@ -1333,7 +1321,7 @@ definitions:
         type: integer
     type: object
   product-account-opening-history:
-    x-asee-compliance: Product account opening history.
+    description: Product account opening history.
     properties:
       items:
         description: List of work item history
@@ -1360,7 +1348,6 @@ definitions:
       new-value:
         description: New Value
         type: string
-     
   indicative-offer:
     description: Indicative offer object.
     properties:
@@ -1433,7 +1420,6 @@ definitions:
       delinquency-consequences:
         description: Unsettled obligations consequences.
         type: string
-     
     type: object
   command-result:
     description: Command result
@@ -1446,31 +1432,30 @@ definitions:
         type: string
     type: object 
   business-problem:
-    x-asee-compliance: Missing object description.
+    description: Business problem.
     properties:
       type:
         type: string
-        x-asee-compliance: Missing property description.
+        description: Problem type.
       title:
         type: string
-        x-asee-compliance: Missing property description.
+        description: Title.
       details:
         type: string
-        x-asee-compliance: Missing property description.
+        description: Details.
     type: object
   product-account-opening-status:
     description: Product account opening status object.
     properties:
       status:
-        description: Workitem status
+        description: Status of request. For complete list of possible values see [workitem-processing-status]() classification.
         type: string
-		  
       account-number:
         description: Related account number
         type: string
     type: object
   product-account-opening-history:
-    x-asee-compliance: Missing object description.
+    description: Product account opening history list.
     properties:
       items:
         description: List of work item history
@@ -1523,9 +1508,8 @@ definitions:
         description: Customer type.
         type: string
       status:
-        description: Workitem status
+        description: Status of request. For complete list of possible values see [workitem-processing-status]() classification.
         type: string
-		   
       created-by-name:
         description: Name of the agent (bank employee) responsible for opening process, who created deposit account opening.
         type: string
@@ -1543,10 +1527,6 @@ definitions:
         description: Last modified date
         format: date-time
         type: string
-      kind:
-        description: Kind
-        type: string
-        x-asee-compliance: This should be related to some enum.
     type: object
   product-account-opening-list:
     description: Product account opening list.
@@ -1564,13 +1544,11 @@ definitions:
         description: Unique identifier for product account opening.
         type: string
       kind:
-        description: Kind
+        description: Kind. For complete list of possible values see [product-account-opening-kind]() classification.
         type: string
-        x-asee-compliance: This should be related to enum.
       status:
-        description: Workitem status
+        description: Status of request. For complete list of possible values see [workitem-processing-status]() classification.
         type: string
-        x-asee-compliance: This should be related to classification.
       product-code:
         description: A code or short name by which a product can be identified.
         type: string
@@ -1598,10 +1576,6 @@ definitions:
       customer-name:
         description: Customer name.
         type: string
-      customer-type:
-        description: Customer type.
-        type: string
-        x-asee-compliance: Should be related to some enum.
       created-by-name:
         description: Name of the agent (bank employee) responsible for opening process, who created product account opening.
         type: string
@@ -1611,7 +1585,7 @@ definitions:
       requested-account-number:
         description: Customer can request specific account number.
         type: string
-        x-asee-compliance: This property should be moved to current-account-opening object.
+        x-asee-compliance: NO! This property should be moved to current-account-opening object.
       step:
         description: Step.
         type: string
@@ -1621,16 +1595,16 @@ definitions:
       id-card-expiration-date:
         description: ID card expiration date.
         format: date-time
-        x-asee-compliance: This property should be moved to credit-facility-origination object.
+        x-asee-compliance: NO! This property should be moved to credit-facility-origination object.
         type: string
       offer-sign-option:
         description: Indicates if ship to order should be offered to customer.
         type: boolean
-        x-asee-compliance: This property should be moved to current-account-opening and credit-facility-origination objects.
+        x-asee-compliance: NO! This property should be moved to current-account-opening and credit-facility-origination objects.
       is-refinancing:
         description: Indicator if this is the refinancing.
         type: boolean
-        x-asee-compliance: This property should be moved to credit-facility-origination object.
+        x-asee-compliance: NO! This property should be moved to credit-facility-origination object.
     type: object
   current-account-opening:
     description: Current account opening object.
@@ -1653,11 +1627,8 @@ definitions:
       customer-name:
         description: Customer name.
         type: string
-      customer-object-type-name:
-        description: Customer type.
-        type: string
       status:
-        description: Work Item status
+        description: Status of request. For complete list of possible values see [workitem-processing-status]() classification.
         type: string
       created-by-name:
         description: Name of the agent (bank employee) responsible for opening process, who created current account opening.
@@ -1679,24 +1650,21 @@ definitions:
       requested-account-number:
         description: Customer can request specific account number.
         type: string
-     
     type: object
-    examples:
-            application/json:
-              workitem-number: AP00047078
-              product-code: TipUgovora312
-              product-name: 'Transakcioni racuni za redovno poslovanje nerezidenata pravnih lica [Teh]'
-              product-family-name: Tekuci racuni privredi
-              customer-number: SONYE01
-              customer-name: SONY EUROPE LIMITED
-              customer-object-type-name: Organization
-              status: Active
-              created-by-name: Dubravka Milenkovic
-              primary-currency: RSD
-              comments: Klijent upoznat sa tekucom kampanjom
-              requested-activation-date: '2011-07-14T10:21:12.723'
-              request-date: '2011-07-14T10:21:12.723'
-              requested-account-number: 343434343434
+    example:
+      workitem-number: AP00047078
+      product-code: TipUgovora312
+      product-name: 'Transakcioni racuni za redovno poslovanje nerezidenata pravnih lica [Teh]'
+      product-family-name: Tekuci racuni privredi
+      customer-number: SONYE01
+      customer-name: SONY EUROPE LIMITED
+      status: Active
+      created-by-name: Dubravka Milenkovic
+      primary-currency: RSD
+      comments: Klijent upoznat sa tekucom kampanjom
+      requested-activation-date: '2011-07-14T10:21:12.723'
+      request-date: '2011-07-14T10:21:12.723'
+      requested-account-number: 343434343434
   credit-facility-origination:
     description: Credit facility origination object.
     properties:
@@ -1721,7 +1689,7 @@ definitions:
         format: date-time
         type: string
       status:
-        description: Status.
+        description: Status of request. For complete list of possible values see [workitem-processing-status]() classification.
         type: string
       title:
         description: Title.
@@ -1848,14 +1816,9 @@ definitions:
       customer-name:
         description: Customer name.
         type: string
-      customer-object-type-name:
-        description: Customer type.
-        type: string
-        x-asee-compliance: Should be related to some enum.
       status:
-        description: Workitem status
+        description: Status of request. For complete list of possible values see [workitem-processing-status]() classification.
         type: string
-		   
       created-by-name:
         description: Name of the agent (bank employee) responsible for opening process, who created bundled account opening.
         type: string
@@ -1880,62 +1843,46 @@ definitions:
         format: date-time
         type: string
     type: object
-    examples:
-            application/json:
-              workitem-number: AP00047078
-              product-code: ENV_01
-              product-name: Transakciona envelopa
-              product-family-name: Envelope
-              customer-number: BI0111
-              customer-name: Babic Milenko
-              customer-object-type-name: Rezident
-              status: Active
-              created-by-name: sample
-              comments: sample
-              request-date: '2015-07-14T10:21:12.723'
-              parent-arrangement-number: AR000120000
-              bundled-name: Tekuci racun - Babic Milenko
-              last-modification-date: '2015-07-14T10:21:12.723'
-  current-account-conditions:
-    description: Conditions.
-    properties:
-      base-interest-rate:
-        description: Base interest rate
-        format: double
-        type: number
-      stimulant-interest-rate:
-        description: Stimulant interest rate
-        format: double
-        type: number
-      penalty-interest-rate:
-        description: Penalty interest rate
-        format: double
-        type: number
-    type: object
- 
+    example:
+      workitem-number: AP00047078
+      product-code: ENV_01
+      product-name: Transakciona envelopa
+      product-family-name: Envelope
+      customer-number: BI0111
+      customer-name: Babic Milenko
+      status: Active
+      created-by-name: sample
+      comments: sample
+      request-date: '2015-07-14T10:21:12.723'
+      parent-arrangement-number: AR000120000
+      bundled-name: Tekuci racun - Babic Milenko
+      last-modification-date: '2015-07-14T10:21:12.723'
   update-current-account-sign-option-command:
     x-asee-compliance: This and the following object should be probably the same update-sign-option-command. There is no need for distinction, and this object is also missing a property comparing to credit-facility one.
     description: Sign option parameters.
     properties:
       sign-option:
-        description: Ship to order yes/no.
-        type: boolean
-        x-asee-compliance: This should be related to some classification.
+        description: Contract signing option.
+        enum:
+          - branch
+          - courier-service
+        type: string
     type: object
   update-credit-facility-sign-option-command:
-    description: ''
-    x-asee-compliance: Missing description of object.
+    description: Credit facility sign option command
     properties:
       sign-option:
-        description: Ship to order yes/no.
-        type: boolean
-        x-asee-compliance: This should be related to some classification.
+        description: Contract signing option.
+        enum:
+          - branch
+          - courier-service
+        type: string
       contact-point-id:
         description: Contact point id. Property is mandatory if ship to order is true.
         format: int64
         type: integer
     required:
-      - ship-to-order
+      - sign-option
     type: object
   customer-info:
     description: Customer's basic information.
@@ -1951,10 +1898,10 @@ definitions:
         type: string
     type: object
   workitem-status-info:
-    description: Term deposit arrangement is a particular type of Arrangement that places a specified amount of money with the modeled organization for a set period of time and is only available to the depositor at the end of this period.
+    description: Provides information on current status of work item.
     properties:
       status:
-        description: Workitem status
+        description: Status of request. For complete list of possible values see [workitem-processing-status]() classification.
         enum:
           - active
           - canceled
@@ -1962,7 +1909,7 @@ definitions:
           - unknown
         type: string
       status-date:
-        description: Work Item status date
+        description: Last change date of the work item status.
         format: date-time
         type: string
     type: object
@@ -1970,9 +1917,8 @@ definitions:
     description: Product account opening status.
     properties:
       status:
-        description: Workitem status
+        description: Status of request. For complete list of possible values see [workitem-processing-status]() classification.
         type: string
-        x-asee-compliance: Should be related to some enum or classification.
       account-number:
         description: Related account number
         type: string
@@ -1998,7 +1944,7 @@ definitions:
     properties:
       amount:
         description: Amount.
-        $ref: '#/definitions/nullable-currency'
+        $ref: '#/definitions/currency'
       account-number:
         description: Account number.
         type: string
@@ -2008,11 +1954,10 @@ definitions:
       bank:
         description: Bank name.
         type: string
-        x-asee-compliance: Should be related to some classification.
+        x-asee-compliance: NO! Should be related to some classification.
       loan-type:
-        description: Loan type.
+        description: Loan type. For complete list of possible values see [loan-type]() classification.
         type: string
-        x-asee-compliance: Should be related to some classification.
       check-digit-model:
         description: Check digit model.
         type: string
@@ -2036,21 +1981,18 @@ definitions:
         description: "Customer's mother name."
         type: string
       marital-status:
-        description: Marital status.
+        description: Marital status. For complete list of possible values see [marital-status]() classification.
         type: string
-        x-asee-compliance: Should be related to some classification.
       residence-start-date:
         description: Residence start date.
         format: date-time
         type: string
       residence:
-        description: Type of residence.
+        description: Type of residence. For complete list of possible values see [residence-type]() classification.
         type: string
-        x-asee-compliance: Should be related to some classification.
       education:
-        description: Educational level.
+        description: Educational level. For complete list of possible values see [education-level]() classification.
         type: string
-        x-asee-compliance: Should be related to some classification.
       home-phone-number:
         description: Home phone number.
         $ref: '#/definitions/phone-number'
@@ -2095,13 +2037,13 @@ definitions:
         type: array
       total-additional-income-amount:
         description: Total additional income amount.
-        $ref: '#/definitions/nullable-currency'
+        $ref: '#/definitions/currency'
       total-deduction-amount:
         description: Total deduction amount.
-        $ref: '#/definitions/nullable-currency'
+        $ref: '#/definitions/currency'
       total-household-income-amount:
         description: Total household income amount.
-        $ref: '#/definitions/nullable-currency'
+        $ref: '#/definitions/currency'
       total-working-years:
         description: Total period of working years.
         format: int32
@@ -2148,15 +2090,6 @@ definitions:
       accepted-amount:
         description: Accepted amount.
         $ref: '#/definitions/currency'
-    type: object
-  nullable-currency:
-    description: Currency amount.
-    properties:
-      amount:
-        format: double
-        type: number
-      code:
-        type: string
     type: object
   phone-number:
     description: Phone number details.
@@ -2248,58 +2181,42 @@ definitions:
         format: date-time
         type: string
       employment-position-category:
-        description: Employment position category.
+        description: Employment position category. For complete list of possible values see [employment-position-category]() classification.
         type: string
-        x-asee-compliance: Should be related to some classification.
       employment-type:
-        description: Type of employment.
+        description: Type of employment. For complete list of possible values see [employment-type]() classification.
         type: string
-        x-asee-compliance: Should be related to some classification.
       employer-type:
-        description: Employer type.
+        description: Employer type. For complete list of possible values see [employer-type]() classification.
         type: string
-        x-asee-compliance: Should be related to some classification.
     type: object
   additional-income:
     description: Additional income.
     properties:
       amount:
         description: Additional income amount.
-        $ref: '#/definitions/nullable-currency'
+        $ref: '#/definitions/currency'
       income-source:
-        description: Additional income source.
+        description: Additional income source. For complete list of possible values see [workitem-processing-status]() classification.
         type: string
-        x-asee-compliance: Should be related to some classification.
+        x-asee-compliance: Wrong classification.
     type: object
   customer-financial-data:
     description: Financial data.
     properties:
       regular-income-amount:
         description: Regular income amount.
-        $ref: '#/definitions/nullable-currency'
+        $ref: '#/definitions/currency'
       regular-income-source:
         description: Source of regular income.
         type: string
+        x-asee-compliance: Should be related to classification.
       income-taxes:
         description: Income taxes paid.
         type: boolean
     type: object
-
-  # This is not the right object for result of /calculations/installment-plan.
-  # Because of this, object is put under comment and replaced with the bit corrected proper object from 1.0.
-  # indicative-offer-list:
-  #   x-asee-compliance: This object is invalid. Completely different object should be used for installment plan.
-  #   description: Indicative offer list.
-  #   properties:
-  #     items:
-  #       description: List of deposit account openings
-  #       items:
-  #         $ref: '#/definitions/indicative-offer'
-  #       type: array
-  #   type: object
-
   installment-plan:
-    x-asee-compliance: Missing description of object.
+    description: Installment plan.
     properties:
       product-info:
         description: Basic information about product for which calculation has been requested.
@@ -2339,8 +2256,7 @@ definitions:
         $ref: '#/definitions/currency'
     type: object
   interest-rate:
-    description: ''
-    x-asee-compliance: Missing description of object.
+    description: Interest rate.
     properties:
       percentage:
         description: Percentage.
@@ -2351,7 +2267,7 @@ definitions:
         type: string
     type: object
   installment-plan-row:
-    x-asee-compliance: Missing description of object.
+    description: Installment plan row.
     properties:
       order:
         description: Order
@@ -2433,4 +2349,3 @@ definitions:
         format: int32
         type: integer
     type: object
- 
