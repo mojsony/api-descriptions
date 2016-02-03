@@ -58,14 +58,11 @@ paths:
         - Pageable
       operationId: Products_GetList
       parameters:
-        # Remove commented parameters. They are already sent through request header/invocation context.
-        # - $ref: "#/parameters/customer-number-param"
         - $ref: "#/parameters/status-param"
         - $ref: "#/parameters/kind-param"
         - $ref: "#/parameters/name-param"
         - $ref: "#/parameters/product-family-param"        
-        # - $ref: "#/parameters/preferred-client-culture-param"
-        # - $ref: "#/parameters/channel-code-param"      
+        - $ref: "#/parameters/channel-code-param"      
         - $ref: "#/parameters/page-param"
         - $ref: "#/parameters/page-size-param"
         - $ref: "#/parameters/sort-by-param"
@@ -83,7 +80,8 @@ paths:
       tags: 
         - Products
       operationId: Products_Get
-      parameters:             
+      parameters:    
+        - $ref: "#/parameters/channel-code-param"
         - $ref: "#/parameters/product-number-param"
       responses:
         '200':
@@ -99,10 +97,7 @@ paths:
         - Card access products
       operationId: CardAccessProducts_Get
       parameters:
-        # Remove commented parameters. They are already sent through request header/invocation context.
-        # - $ref: "#/parameters/customer-number-param"
-        # - $ref: "#/parameters/preferred-client-culture-param"
-        # - $ref: "#/parameters/channel-code-param"
+        - $ref: "#/parameters/channel-code-param"
         - $ref: "#/parameters/campaign-code-param"          
         - $ref: "#/parameters/product-number-param"
       responses:
@@ -119,10 +114,7 @@ paths:
         - Credit facility products
       operationId: CreditFacilityProducts_Get
       parameters:
-        # Remove commented parameters. They are already sent through request header/invocation context.
-        # - $ref: "#/parameters/customer-number-param"
-        # - $ref: "#/parameters/preferred-client-culture-param"
-        # - $ref: "#/parameters/channel-code-param"  
+        - $ref: "#/parameters/channel-code-param"  
         - $ref: "#/parameters/campaign-code-param"                     
         - $ref: "#/parameters/product-number-param"
       responses:
@@ -139,10 +131,7 @@ paths:
         - Overdraft facility products
       operationId: OverdraftFacilityProducts_Get
       parameters:
-        # Remove commented parameters. They are already sent through request header/invocation context.
-        # - $ref: "#/parameters/customer-number-param"
-        # - $ref: "#/parameters/preferred-client-culture-param"
-        # - $ref: "#/parameters/channel-code-param"  
+        - $ref: "#/parameters/channel-code-param"  
         - $ref: "#/parameters/campaign-code-param"                     
         - $ref: "#/parameters/product-number-param"
       responses:
@@ -159,10 +148,7 @@ paths:
         - Current account products
       operationId: CurrentAccountProducts_Get
       parameters:
-        # Remove commented parameters. They are already sent through request header/invocation context.
-        # - $ref: "#/parameters/customer-number-param"
-        # - $ref: "#/parameters/preferred-client-culture-param"
-        # - $ref: "#/parameters/channel-code-param"  
+        - $ref: "#/parameters/channel-code-param"  
         - $ref: "#/parameters/campaign-code-param"                     
         - $ref: "#/parameters/product-number-param"
       responses:
@@ -179,10 +165,7 @@ paths:
         - Demand deposit products
       operationId: DemandDepositProducts_Get
       parameters:
-        # Remove commented parameters. They are already sent through request header/invocation context.
-        # - $ref: "#/parameters/customer-number-param"
-        # - $ref: "#/parameters/preferred-client-culture-param"
-        # - $ref: "#/parameters/channel-code-param"  
+        - $ref: "#/parameters/channel-code-param"  
         - $ref: "#/parameters/campaign-code-param"                     
         - $ref: "#/parameters/product-number-param"
       responses:
@@ -199,10 +182,7 @@ paths:
         - Electronic access products
       operationId: ElectronicAccessProducts_Get
       parameters:
-        # Remove commented parameters. They are already sent through request header/invocation context.
-        # - $ref: "#/parameters/customer-number-param"
-        # - $ref: "#/parameters/preferred-client-culture-param"
-        # - $ref: "#/parameters/channel-code-param"  
+        - $ref: "#/parameters/channel-code-param"  
         - $ref: "#/parameters/campaign-code-param"                     
         - $ref: "#/parameters/product-number-param"
       responses:
@@ -219,10 +199,7 @@ paths:
         - Term deposit products
       operationId: TermDepositProducts_Get
       parameters:
-        # Remove commented parameters. They are already sent through request header/invocation context.
-        # - $ref: "#/parameters/customer-number-param"
-        # - $ref: "#/parameters/preferred-client-culture-param"
-        # - $ref: "#/parameters/channel-code-param"  
+        - $ref: "#/parameters/channel-code-param"  
         - $ref: "#/parameters/campaign-code-param"                     
         - $ref: "#/parameters/product-number-param"
       responses:
@@ -239,10 +216,7 @@ paths:
         - Term loan products
       operationId: TermLoanProducts_Get
       parameters:
-        # Remove commented parameters. They are already sent through request header/invocation context.
-        # - $ref: "#/parameters/customer-number-param"
-        # - $ref: "#/parameters/preferred-client-culture-param"
-        # - $ref: "#/parameters/channel-code-param"  
+        - $ref: "#/parameters/channel-code-param"  
         - $ref: "#/parameters/campaign-code-param"                     
         - $ref: "#/parameters/product-number-param"
       responses:
@@ -259,10 +233,7 @@ paths:
         - Products
       operationId: Products_GetBundledProducts
       parameters:
-        # Remove commented parameters. They are already sent through request header/invocation context.
-        # - $ref: "#/parameters/customer-number-param"
-        # - $ref: "#/parameters/preferred-client-culture-param"
-        # - $ref: "#/parameters/channel-code-param"  
+        - $ref: "#/parameters/channel-code-param"  
         - $ref: "#/parameters/campaign-code-param"                     
         - $ref: "#/parameters/product-number-param"
       responses:
@@ -289,11 +260,10 @@ paths:
           $ref: '#/responses/default-error-response'
   /classifications: 
     get: 
-      x-asee-compliance: This method is not needed. This API should only contain GET /classifications/{schema} method, and not the method returning all existing schemas in all APIs.
       summary: Returns all classification schema used in API contacts
       tags: 
         - Classifications
-      operationId: "Classifications_GetList"
+      operationId: Classifications_GetList
       responses:
           '200':
             description: Success
@@ -301,38 +271,37 @@ paths:
               $ref: '#/definitions/classification-list'
           default:
             $ref: '#/responses/default-error-response'
-  /classifications/{schema}:
+  /classifications/{schema-id}:
     get: 
       summary: Returns the classification values for provided schema
       tags: 
         - Classifications
       operationId: Classifications_Get
       parameters:                    
-        - 
-          description: "Schema name which values should be fetched. For complete list of schemas see [classifications]()"
-          in: "path"
-          name: "schema"
-          required: true
-          type: "string"
+        - $ref: '#/parameters/schema-id-param'
       responses:
         '200':
-          description: Success
+          description: Ok
           schema:
-            items:
-              $ref: '#/definitions/classification-value'
-            type: array        
+              $ref: '#/definitions/classification'
         default:
           $ref: '#/responses/default-error-response'
 responses:
   default-error-response:
     description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
 parameters:
-  product-number-param:
-    name: "product-number"
-    description: "Unique product identifier."
-    in: "path"
+  schema-id-param:
+    description: Unique schema identifier
+    in: path
+    name: schema-id
     required: true
-    type: "string"
+    type: string
+  product-number-param:
+    name: product-number
+    description: Unique product identifier.
+    in: path
+    required: true
+    type: string
   page-param:
     name: page
     in: query
@@ -360,13 +329,6 @@ parameters:
     in: query
     name: sort-by
     type: string
-  customer-number-param:
-    x-asee-compliance: Remove this parameter, it is not used. It is provided in request header/invocation context.
-    description: Customer for whom result is adapted
-    in: query
-    name: customer-number
-    type: string
-    required: false
   status-param:
     name: status
     in: query
@@ -377,7 +339,7 @@ parameters:
     - already-used-by-client
     - coming-soon
     - not-used-by-client     
-  kind-param:     
+  kind-param:
     name: kind
     in: query
     description: Product kind. If set only products of these kinds will be returned otherwise all products will be returned
@@ -411,15 +373,7 @@ parameters:
     description: Name of product family
     required: false
     type: string
-  preferred-client-culture-param:
-    x-asee-compliance: Remove this parameter, it is not used. It is provided in request header/invocation context.
-    name: preferred-client-culture
-    in: query
-    description: Preferred client culture  
-    required: false
-    type: string
   channel-code-param:
-    x-asee-compliance: Remove this parameter, it is not used. It is provided in request header/invocation context.
     name: channel-code
     in: query
     description: Channel code
@@ -432,58 +386,54 @@ parameters:
     required: false
     type: string      
 definitions:
-  classification-value: 
-    description: Classification value
+  classification-list: 
+    description: List of classification shemas.
     type: object
     properties: 
-      code: 
-        description: Code of classification value
-        type: string
-      literal: 
-        description: Literal
-        type: string
-      description: 
-        description: Description
-        type: string
-      id: 
-        description: Identifier of classification value
-        type: string
-      parent-id: 
-        description: Parent classification value id
-        type: string
-      ordinal: 
-        description: Ordinal number
-        type: string
+      items: 
+        items: 
+          $ref: "#/definitions/classification"
+        type: "array"
   classification: 
-    x-asee-compliance: This object is not needed. This API should only contain GET /classifications/{schema} method, and not the method returning all existing schemas in all APIs.
     description: Classification schema used in API contracts
-    type: object
+    type: "object"
     properties: 
       API: 
         description: Name of Api in which classification shema is used.
-        type: string
+        type: "string"
       description: 
         description: Shema description.
-        type: string
+        type: "string"
       name: 
         description: Name of shema
-        type: string
-  classification-list: 
-    x-asee-compliance: This object is not needed. This API should only contain GET /classifications/{schema} method, and not the method returning all existing schemas in all APIs.
-    description: List of classification shemas.
-    properties: 
-     items: 
-       items: 
-         $ref: "#/definitions/classification"
-       type: "array"
-  classification-value-list: 
-    x-asee-compliance: This object is not needed. The response of GET /classifications/{schema} method is array of classification-value objects.
-    description: List of classification values.
-    properties: 
-     items: 
-       items: 
-         $ref: "#/definitions/classification-value"
-       type: "array"
+        type: "string"
+      values:
+        description: List of classification values.
+        items:
+          $ref: "#/definitions/classification-value"
+        type: array
+  classification-value: 
+      description: "Classification value"
+      properties: 
+        code: 
+          description: Code of classification value.
+          type: "string"
+        literal: 
+          description: Literal.
+          type: "string"
+        description: 
+          description: Description.
+          type: "string"
+        id: 
+          description: Identifier of classification value.
+          type: "string"
+        parent-id: 
+          description: Parent classification value id.
+          type: "string"
+        ordinal: 
+          description: Ordinal number.
+          type: "string"
+      type: "object"
   paged-list:
     description: List with support for paging
     properties:  
@@ -566,13 +516,11 @@ definitions:
         type: string
         description: Necessary documents if the client wants to apply for the product
       allowed-currencies:
-        x-asee-compliance: Is this property really needed? Some of the product kinds stated above are non-financial products. Supported currencies are declared in specific product types declared below.
         type: array
         description: Allowed currencies for the product
         items: 
           $ref: "#/definitions/currency-type"                
       is-recommended:
-        x-asee-compliance: This property is probably not needed and not used. Currently we determine if product is recommended by checking if campaign-code property is set.
         type: boolean
         description: Is product recommended
       campaign-code:
@@ -589,10 +537,9 @@ definitions:
         items: 
           $ref: '#/definitions/product-info'
   card-access-product:
-    description: Identifies a Product which allows a Customer to obtain access to a Financial Product Arrangement
-    x-asee-compliance: Change this description to more meaningful one.
+    description: Identifies a Product which allows a Customer to obtain access to a group of services that are related to the card
     type: object
-    required:        
+    required:
       - product-number        
     properties:
       product-number:
@@ -636,46 +583,34 @@ definitions:
         type: string
         description: Campaign Identifier
       card-access-type:
+        x-asee-compliance: We should probaby rename this to card-type. Also, maybe it is better to have this property as enum, not classification, because there are only few possible types influencing behaviour of the card: debit, credit, prepaid, gift.
         type: string
-        description: Distinguishes between Product Access Services according to the manner in which use of or access to the Financial Product Arrangement is facilitated. See classification
-        x-asee-compliance: Is this the complete list?
-        enum:
-        - gift-card
-        - debit-card
-        - credit-card
+        description: Distinguishes between Product Access Services according to the manner in which use of or access to the Financial Product Arrangement is facilitated. For complete list of possible values see [card-access-type]() classification.
       card-brand:
+        x-asee-compliance: In customer-account and other APIs we have this specified through two separate properties: card-brand and card-kind (e.g. brand is visa, kind is electron). Can we have two properties with relevant classifications here too?
         type: string
-        description: Identifies the set of types of Financial Transaction Cards that are available. See classification
-        x-asee-compliance: This should be related to classification not the enum.
-        enum:
-        - maestro
-        - visa-electron
-        - visa
-        - american-express
-        - diners
-        - master
-        - dina-card
+        description: Identifies the set of types of Financial Transaction Cards that are available. For complete list of possible values see [card-brand]() classification.
       daily-transaction-limit:
-        x-asee-compliance: Why are only daily limit amount and number exposed? There are also many other relevant properties that could have been exposed too: periodic limit, membership fee, withdrawal, transaction, many other types of fees.
+        x-asee-compliance: Why are only daily limit amount and number exposed? There are also many other relevant properties that could have been exposed too periodic limit, membership fee, withdrawal, transaction, many other types of fees. 
+         #Stefan | Conclution| We agreed that this is light functionality, not complete one. It expose only a basic set of data for some functionality. We will developed (complete) this with a specific need for it, and/or in next iteration/implementation project.
         description: Identifies a limit on the total value of Accounting Transactions that may ocur through this access service over a given 24 hour period, where applicable
         $ref: "#/definitions/currency"
       daily-transaction-limit-number:
         type: integer
         description: Limit on the number of Accounting Transactions that may ocur through this access service over a given 24 hour period, where applicable
         format: int32        
-      availability-start:
-        x-asee-compliance: Why is this property declared only for card-access product? It may be aplicable for all other products too (status comming-soon).
-        type: string                
-        description: Date from which the product is available
-        format: date-time
+      #availability-start:
+        #x-asee-compliance: Why is this property declared only for card-access product? It may be aplicable for all other products too (status comming-soon). 
+        #type: string                
+        #description: Date from which the product is available
+        #format: date-time
       card-access-product-channels:
         type: array
         description: List with basic informations about Product Access Service Channels
         items: 
           $ref: '#/definitions/product-access-service-channel'
   credit-facility-product:
-    description: Identifies a Finance Service where the modeled organization extends credit to another Involved Party in the form of actual funds, or as an obligation to provide funds in the future under specific conditions
-    x-asee-compliance: Change this description to more meaningful one.
+    description: Identifies a Loan product where the Customer is approved a certain amount, that is available without a precise definition of the repayment of the same, but with the definition of interest rate.
     type: object
     properties:
       product-number:
@@ -756,16 +691,15 @@ definitions:
         $ref: "#/definitions/calculated-interest-rate"
       type-of-funding:
         type: string
-        description: Identifies type of funding for the product. See classification
-        x-asee-compliance: What does this refinancing-ob-product stand for?
+        description: Identifies type of funding for the product. For detailed view of possible values see [type-of-funding]() classification.
+        x-asee-compliance: This property should either be related to classification or to the enum. It cannot be related to both. In this case, classification is probably the better choice. Also, mentioned classification is not defined in classification file. 
         enum:
         - cash
-        - refinancing-ob-product
-        - refinancing
+        - refinancing-other-bank-product
+        - refinancing-inside-bank-product
         - invoice
   overdraft-facility-product:
-    description: TO DO
-    x-asee-compliance: Missing description of object.
+    description:  An overdraft facility allows you to withdraw cash from your current account up to the overdraft limit approved. It is a short-term standby credit facility which is usually renewable on a specified time period.
     type: object   
     properties:
       product-number:
@@ -844,18 +778,8 @@ definitions:
       revolving-interest-rate:
         description: Product basic revolving rate
         $ref: "#/definitions/calculated-interest-rate"
-      type-of-funding:
-        type: string
-        description: Identifies type of funding for the product. See classification
-        x-asee-compliance: This is a very strange property for the overdraft product. It should be removed, since the overdraft is the limit extension of available assets on current account and not the loan that will be disbursed as cash, refinance or invoice payment.
-        enum:
-        - cash
-        - refinancing-ob-product
-        - refinancing
-        - invoice
   current-account-product:
-    description: TO DO
-    x-asee-compliance: Missing description of object.
+    description: Is a financial facility that represents the general checking account facility at the core of the consumer and small business banking activity. There is a range of supporting features that make up the standard facility (checks/cheques, standing orders, debit cards, phone and on-line banking services etc.). The fulfillment will include a range of optional services, fees and interest payments and penalties and will often be bundled and or underlie/support other financial facilities and financial transactions
     type: object  
     properties:
       product-number:
@@ -906,21 +830,21 @@ definitions:
         description: Allowed currencies for the product
         items: 
           $ref: "#/definitions/currency-type"   
-      term-scale:
-        x-asee-compliance: Not completely clear what are these term periods for current account? Should be removed?
-        type: array
-        description: Identifies the term scale
-        items: 
-          $ref: "#/definitions/simple-time-range"
+      #term-scale:
+        #x-asee-compliance: Not completely clear what are these term periods for current account? Should be removed?
+        #type: array
+        #description: Identifies a list od available term scale for current product.
+        #items: 
+          #$ref: "#/definitions/simple-time-range"
       interest-rate:
         description:  Product interest rate
         $ref: "#/definitions/calculated-interest-rate"
-      notification:
-        x-asee-compliance: What is this property used for? It seems very strange. Should be removed.
-        type: array
-        description: List with basic informations about notification products
-        items: 
-          $ref: "#/definitions/notification"
+      #notification:
+        #x-asee-compliance: What is this property used for? It seems very strange. Should be removed.
+        #type: array
+        #description: List with basic informations about notification products
+        #items: 
+          #$ref: "#/definitions/notification"
   demand-deposit-product:
     description: Identifies a particular type of Deposit Product that is used for handling day-to-day transactions and can be used to accumulate savings
     type: object
@@ -989,8 +913,7 @@ definitions:
         description: Product interest rate
         $ref: "#/definitions/calculated-interest-rate"
   electronic-access-product:
-    description: Identifies a Product which allows a Customer to obtain access to a Financial Product Arrangement
-    x-asee-compliance: Change this description to more meaningful one.
+    description: Identifies a product that provides access to a group of e-banking services.
     type: object
     properties:
       product-number:
@@ -1034,8 +957,7 @@ definitions:
         type: string
         description: Campaign Identifier
   term-deposit-product:
-    description: to do
-    x-asee-compliance: Missing description of object.
+    description: Type of Deposit product that allows customer to deposit a certain amount of money to be for a specified term, under certain conditions
     type: object
     properties:
       product-number:
@@ -1102,8 +1024,7 @@ definitions:
         description: Product interest rate
         $ref: "#/definitions/calculated-interest-rate"
   term-loan-product:
-    description: to do
-    x-asee-compliance: Missing description of object.
+    description: Is a Finance Service that is characterized by the lending of funds for a fixed term, for the purchase of goods and/or services.
     type: object
     properties:
       product-number:
@@ -1168,14 +1089,17 @@ definitions:
         $ref: "#/definitions/currency"
       has-grace-period:
         x-asee-compliance: What is duration of this grace period? This value should should be provided too.
+        #This is light exposed functionality. So for the whole functionality to be expose, we need to add more fields. This will not be develop right now,  without concrete need. So we will leave it as it is, with the remark that it shoulf be done in the next iteration/implementation project
         type: boolean
         description: Identifies if the product has a grace period
       is-revolving:
         x-asee-compliance: What is the revolving percent? This value should be provided too.
+        #This is light exposed functionality. So for the whole functionality to be expose, we need to add more fields. This will not be developt right now,  without concrete need. So we will leave it as it is, with the remark that it shoulf be done in the next iteration/implementation project
         type: boolean
         description: Identifies if the product is revolving
       minimal-downpayment-percentage:
         x-asee-compliance: Ok, this is participation percent. But where is declaration of minimum deposit percent and other needed collaterals for the product? We also need these declarations for credit-facility and overdraft-facility products.
+        #This is light exposed functionality. So for the whole functionality to be expose, we need to add more fields. This will not be developt right now,  without concrete need. So we will leave it as it is, with the remark that it shoulf be done in the next iteration.
         description: Minimal downpayment percentage for the product
         format: double
         type: number
@@ -1189,12 +1113,12 @@ definitions:
         $ref: "#/definitions/calculated-interest-rate"
       type-of-funding:
         type: string
-        description: Identifies type of funding for the product
-        x-asee-compliance: What is refinancing-ob-product? Also, it is stated invoice, but this object is probably missing more detailed declaration of possible purposes of the loan (classification?).
+        description: Identifies type of funding for the product. For detailed view of possible values see [type-of-funding]() classification.
+        x-asee-compliance: This property should either be related to classification or to the enum. It cannot be related to both. In this case, classification is probably the better choice. Also, mentioned classification is not defined in classification file. 
         enum:
         - cash
-        - refinancing-ob-product
-        - refinancing
+        - refinancing-other-bank-product
+        - refinancing-inside-bank-product
         - invoice
   bundled-product-info:
     description: Bundled product which is part of master product offering
@@ -1226,8 +1150,10 @@ definitions:
         - comming-soon
         - already-used
         - not-used
+      is-recommended:
+        type: boolean
+        description: Is product recommended
       campaign-code:
-        x-asee-compliance: This flag needed too.
         type: string
         description: Campaign Identifier
       image:
@@ -1260,14 +1186,9 @@ definitions:
         description: The unique identifier of a Product
       document-type:
         type: string
-        description: Identifies document type
-        x-asee-compliance: This should be classification, not the enum. Possible documents include: indicative-offer, contract, contract-draft, installment-plan, employment-cerificate, income-certificate, bill-of-exchange, administrative-ban, invoice, check-list, etc.
-        enum:
-        - check-list
-        - installment-plan
-        - employment-cerificate       
+        description: Identifies document type. For complete list of possible values see [document-type]() classification.
       work-item-type:
-        x-asee-compliance: Is this property used at all? How come that the document has work-item-type, and that the product does not have one?
+        x-asee-compliance: Is this property used at all? How come that the document has work-item-type, and that the product does not have one? 
         type: string
         description: Identifies Work Item Type for which the document is associated with
       document-review-period:
@@ -1291,11 +1212,9 @@ definitions:
     description: Product Access Service Channel
     type: object        
     properties:
-      channel-number:
-        type: integer
-        format: int64
+      channel-code:
+        type: string
         description: A code or short name by which a Channel can be identified
-        x-asee-compliance: This identifier should be string.
       channel-name:
         type: string
         description: Identifies the label given to a specific Channel to identify or distinguish it from other Channel
@@ -1341,9 +1260,8 @@ definitions:
     type: object  
     properties:
       calculated-rate-unit-of-time:
-        x-asee-compliance: Why is the type of this field string? It should be simple-time-period. Also, all the components of interest rate in this object should have the same time period. It is not clear why there are 3 separate period declarations instead of one.
         description: Calculated rate unit of time
-        type: string
+        $ref: "#/definitions/simple-time-period"
       calculated-rate-value: 
         description: Calculated rate value
         format: double
@@ -1355,15 +1273,14 @@ definitions:
       referent-rate-unit-of-time:
         x-asee-compliance: The name of base interest rate is missing (e.g. EURIBOR 6M, BELIBOR, etc.). Why is the type of this field string? It should be simple-time-period. Also, all the components of interest rate in this object should have the same time period. It is not clear why there are 3 separate period declarations instead of one.
         description: Referent rate unit of time
-        type: string
+        $ref: "#/definitions/simple-time-period"
       referent-rate-value:
         description: Referent rate value
         format: double
         type: number
       spread-rate-unit-of-time:
-        x-asee-compliance: Why is the type of this field string? It should be simple-time-period. Also, all the components of interest rate in this object should have the same time period. It is not clear why there are 3 separate period declarations instead of one.
         description: Spread rate unit of time
-        type: string
+        $ref: "#/definitions/simple-time-period"
       spread-rate-value:
         description: Spread rate value
         format: double
@@ -1394,19 +1311,3 @@ definitions:
           - days
           - months
           - years
-  notification:
-    description: Notification
-    x-asee-compliance: This object seems very strange. It is not clear what is its purpose. Should be removed.
-    type: object  
-    required:        
-    - product-number
-    properties:
-      product-number:
-        type: string
-        description: The unique identifier of a Product
-      name:
-        type: string
-        description: Identifies the label given to a specific Product to identify or distinguish it from other Products
-      description:
-        type: string
-        description: Identifies a product description
