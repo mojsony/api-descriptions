@@ -1,9 +1,37 @@
 Classifications
 ===============
 
-Missing purpose codes.
-Missing country codes.
-Missing channels.
+
+Purpose Codes
+-------------- 
+Description... 
+
+Literal 	               | Code  | Description
+---------------------------|-------|------------------------
+
+
+
+Channels
+-------------- 
+Description... 
+
+Literal 	               | Code  | Description
+---------------------------|-------|------------------------
+
+
+
+Country Codes
+-------------- 
+This classification contains ISO codes of Countries. For example for Country Switzerland code is CHE. 
+
+Literal 	               | Code  | Description
+---------------------------|-------|------------------------
+`CHE`                      | 00001 | Switzerland
+`GBR`                      | 00002 | United Kingdom
+`ESP`                      | 00003 | Spain
+`SRB`                      | 00004 | Serbia
+`MKD`                      | 00005 | Macedonia
+`ROU`                      | 00006 | Romania
 
 Currencies
 -------------- 
