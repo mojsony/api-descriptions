@@ -131,10 +131,10 @@ definitions:
       attachment-id:
         description: Unique identifier of attachment.
         type: string
-      meta-name:
+      attachment-name:
         description: Meta name of the attachment.
         type: string
-      uri:
+      attachment-uri:
         description: URI
         type: string
     type: object  
