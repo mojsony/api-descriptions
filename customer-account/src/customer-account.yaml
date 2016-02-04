@@ -1228,7 +1228,6 @@ definitions:
       transaction-summary:
         description: Summary of transaction.
         $ref: '#/definitions/transaction-summary'
-        type: array
       blob:
         description: BLOB.
         type: string
@@ -2592,7 +2591,6 @@ definitions:
         code: 'GBP'
         amount: 200
       status: in-process
-      document-list: all
       bank-comment: directly payed amount.
       has-comment: false
     properties:
@@ -2662,11 +2660,10 @@ definitions:
           - pending
           - in-process
         type: string
-      document-list:
+      attachments:
         description: List of document names acording to the fcy-income.
         items:
-          description: Name of the related document.
-          type: string
+          $ref: '#/definitions/attachment'
         type: array
       bank-comment:
         description: Bank comment.
@@ -2683,6 +2680,38 @@ definitions:
       - debtor-reference
       - creditor-reference
       - amount
+    type: object
+  attachment:
+    description: Attached file or document.
+    example:
+      id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+      attachment-name: Confirmation
+      attachment-type: pdf
+    properties:
+      attachment-id:
+        description: Attachment identifier.
+        type: string
+      attachment-name:
+        description: Attachment name.
+        type: string
+      attachment-type:
+        description: Attachment type.
+        enum:
+          - jpg
+          - jpeg
+          - txt
+          - doc
+          - docx
+          - pdf
+          - tiff
+          - bmp
+          - png
+          - xls
+          - xlsx
+        type: string
+      attachment-uri:
+        description: URI
+        type: string
     type: object
   bank-info:
     description: All relevant info about Bank.
