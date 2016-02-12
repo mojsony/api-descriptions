@@ -149,9 +149,6 @@ paths:
         default:
             $ref: '#/responses/default-error-response'
       x-asee-tags: []
-
-
-
 parameters:
   start-time-param:
     name: start-time
@@ -178,17 +175,6 @@ parameters:
       - email
       - virtual-inbox
       - sms 
-  priority-param:
-    x-asee-compliance: This parameter should be removed. It is not used.
-    description: Priority status of the communication (high,medium,low).
-    in: query
-    name: priority
-    required: false
-    enum:
-      - high
-      - medium
-      - low
-    type: string
   page-size-param:
     name: page-size
     in: query
@@ -250,7 +236,7 @@ parameters:
     required: true
     type: string
   conversation-type-param:
-    description: Conversation type.
+    description: Unique product code
     in: query
     name: conversation-type
     required: false
@@ -258,49 +244,23 @@ parameters:
     items:
       type: string
     type: array
-    x-asee-compliance: Do we have some enum or classification related to this?
   communication-id-param:
     description: The unique identifier of the communication
     in: path
     name: communication-id
     required: true
     type: string
-    
 definitions:
   communication-list:
     description: List of communications.
+    allOf: 
+    - $ref: '#/definitions/paged-list'
     properties:
-      total-count:
-        description: Total number of items in collection.
-        format: int32
-        type: integer
-      page-size:
-        description: Number of items on a page.
-        format: int32
-        type: integer
-      page-number:
-        description: Page index.
-        format: int32
-        type: integer
-      total-pages:
-        description: Total number of pages.
-        format: int32
-        type: integer
       items:
         description: List of communication items.
         items:
           $ref: '#/definitions/communication'
         type: array
-      navigations:
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      uri:
-        type: string
     type: object
   communication:
     description:  
@@ -343,9 +303,8 @@ definitions:
       message-type:
         description: Type of message.
         type: string
-        x-asee-compliance: This should be related to some enum, classification?
       priority:
-        description: Priority of the message (high,medium,low).
+        description: Priority of the message.
         enum:
           - high
           - medium
@@ -362,25 +321,7 @@ definitions:
         description: Message to be sent.
         $ref: '#/definitions/message'
       conversation-type:
-        description: Type of conversation.
-        type: string
-        x-asee-compliance: This should be related to some enum, classification?
-      navigations:
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      uri:
-        type: string
-    type: object
-  link:
-    properties:
-      href:
-        type: string
-      rel:
+        description: Unique product code
         type: string
     type: object
   contact:
@@ -398,8 +339,7 @@ definitions:
           - legal
         type: string
       kind:
-        description: 'Contact kind, possible values are: postal-address, phone-number, electronic-address'
-        x-asee-compliance: Please correct description. No need to repeat possible values both in description and enum below. Why are the values in description different from enum values?
+        description: Kind of contact for direct communication receiving on.
         enum:
           - email
           - sms
@@ -427,11 +367,6 @@ definitions:
         items:
           $ref: '#/definitions/message-attachment'
         type: array
-      attachment-count:
-        description: The number of attachments.
-        format: int32
-        type: integer
-        x-asee-compliance: This property should be removed. It's redundant. The number of items can be identified from attachments collection itself.
     type: object
   contact-preference:
     description: Contact preferences including preferred language and list of services that customer wishes or doesn't wish to receive information for.
@@ -456,9 +391,11 @@ definitions:
     description: Message body contains the complete content of a message and content type (text or html).
     properties:
       content-type:
-        description: Content type can be html or text.
+        description: Message content type.
+        enum:
+          - html
+          - text
         type: string
-        x-asee-compliance: This property should be related to enum.
       content:
         description: The content of a message.
         type: string
@@ -467,7 +404,13 @@ definitions:
     description: Content sent along with message, consists of a type of file, name and content.
     properties:
       content-type:
-        description: 'The type of content that is sent as an attachment, for example: png, jpg, pdf.'
+        description: The type of content that is sent as an attachment.
+        enum:
+          - pdf
+          - excel
+          - word
+          - png
+          - jpg
         type: string
       name:
         description: Attachment name.
@@ -495,13 +438,13 @@ definitions:
       - status-code
     type: object
   command-result:
-    x-asee-compliance: Missing description of object.
+    description: Command result
     properties:
       id:
-        x-asee-compliance: Missing description of property.
+        description: Id of created, updated or deleted entity.
         type: string
       created-record-status:
-        x-asee-compliance: Missing description of property.
+        description: The created, updated, deleted record status.
         type: string
     type: object
   initiate-communication-command:
@@ -541,11 +484,10 @@ definitions:
         type: string
     type: object
   communication-summary-list:
-    description: ''
-    x-asee-compliance: Missing description of object.
+    description: List of communication summaries.
     properties:
       items:
-        description: The list of communication summary items. 
+        description: List of communication summary items. 
         items:
           $ref: '#/definitions/communication-summary'
         type: array
@@ -594,13 +536,36 @@ definitions:
       - template
     type: object
   document:
-    description: ''
-    x-asee-compliance: Missing description of object.
+    description: Document content
     properties:
       data:
         description: Binary content of rendered document.
         type: string
     type: object
+  paged-list:
+    description: List with support for paging and sorting.
+    properties:  
+      total-count:
+        description: Total number of items in collection.
+        type: integer
+      page-size:
+        description: Size of the page.
+        type: integer
+      page:
+        description: Index of current page.
+        type: integer
+      total-pages:
+        description: Total number of pages of set size.
+        type: integer
+      sort-order:
+        description: Sort order (`asc` or `desc`). Default is asc.
+        type: string
+        enum:
+        - asc
+        - desc
+      sort-by:  
+        description: Attribute of the collection item to sort by.
+        type: string
 responses:
   default-error-response:
     description: 'Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()'
