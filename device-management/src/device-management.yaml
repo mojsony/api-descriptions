@@ -32,13 +32,7 @@ paths:
       deprecated: false
       operationId: Devices_GetList
       parameters:
-      - description: Only devices in provided statuses will be listed. If not provided devices in all statuses will be listed.
-        in: "query"
-        name: "status"
-        required: false
-        type: "array"
-        items:
-          type: "string"
+      - $ref: "#/parameters/status-param"
       - $ref: "#/parameters/page-param"
       - $ref: "#/parameters/page-size-param"
       - $ref: "#/parameters/sort-by-param"
@@ -229,9 +223,9 @@ definitions:
       status:
         description: Identifies a status from Customer perspective.
         enum:
-        - "active"
-        - "blocked"
-        - "unregistered"
+        - active
+        - blocked
+        - unregistered
         type: string
       nickname:
         description: Nickname given by device owner.
@@ -255,57 +249,17 @@ definitions:
         description: If device is already registered for push notifications, this property contains expiration date.
         format: "date-time"
         type: "string"
-      navigations:
-        description: Links to related resources.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        description: Available commands in current context.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      uri:
-        description: URI
-        type: string
     type: object
   device-list:
     description: Paged list of devices.
+    allOf: 
+    - $ref: '#/definitions/paged-list'
     properties:
-      total-count:
-        description: Total count.
-        format: int32
-        type: integer
-      page-size:
-        description: Page size.
-        format: int32
-        type: integer
-      page-number:
-        description: Page number.
-        format: int32
-        type: integer
-      total-pages:
-        description: Total pages.
-        format: int32
-        type: integer
       items:
         description: List of device models.
         items:
           $ref: '#/definitions/device'
         type: array
-      navigations:
-        description: Links to related resources.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        description: Available commands in current context.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      uri:
-        description: URI
-        type: string
     type: object
   register-device-command:
     description: Registers new device for a user.
@@ -317,7 +271,7 @@ definitions:
         description: Device running operating system.
         type: string
       nickname:
-        description: Nick name given by device owner.
+        description: Device nick name given by owner.
         type: string
       brand-name:
         description: Device manufacturer.
@@ -355,19 +309,48 @@ definitions:
       details:
         description: Detailed description of error.
         type: string
-  link:
-    properties:
-      href:
-        description: Gets or sets the href.
+  paged-list:
+    description: List with support for paging
+    properties:  
+      total-count:
+        description: Total number of items in collection
+        type: integer
+      page-size:
+        description: Size of the page
+        type: integer
+      page:
+        description: Index of current page
+        type: integer
+      total-pages:
+        description: Total number of pages of set size
+        type: integer
+      sort-order:
+        description: Sort order (`asc` or `desc`). Default is asc.
         type: string
-      rel:
-        description: Gets or sets the rel.
+        enum:
+        - asc
+        - desc
+      sort-by:  
+        description: Attribute of the collection item to sort by
         type: string
     type: object
 responses:
   default-error-response:
     description: Besides specific status codes above, other standard http [status codes] (http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
 parameters:
+  status-param:
+    description: Only devices in provided statuses will be listed. If not provided devices in all statuses will be listed.
+    in: query
+    name: status
+    required: false
+    collectionFormat: csv
+    enum:
+      - active
+      - blocked
+      - unregistered
+    items:
+      type: string
+    type: array
   imei-param:
     name: imei
     in: path
