@@ -205,7 +205,6 @@ paths:
             - [account-type-not-appropriate]()
             - [insufficient-balance]()
             - [frequency-limit-exceeded]()
-            - [source-amount-limit-exceeded]()
             - [temporary-unavailable]()
             - [night-exchange-closed]()
           schema:
@@ -269,7 +268,6 @@ paths:
             - [account-type-not-appropriate]()
             - [insufficient-balance]()
             - [frequency-limit-exceeded]()
-            - [source-amount-limit-exceeded]()
             - [temporary-unavailable]()
             - [night-exchange-closed]()
           schema:
@@ -526,19 +524,6 @@ definitions:
         items:
           $ref: '#/definitions/rate'
         type: array
-      navigations:
-        description: Links to related resources.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        description: Available commands in current context.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      uri:
-        description: URI
-        type: string
     type: object
   rate:
     description: |
@@ -599,15 +584,6 @@ definitions:
         format: double
         type: number
     type: object
-  link:
-    properties:
-      href:
-        description: Gets or sets the href.
-        type: string
-      rel:
-        description: Gets or sets the rel.
-        type: string
-    type: object
   rates-history:
     description: Currency exchange rates history shows list of currency exchange rates for chosen period of time.
     example:
@@ -630,19 +606,6 @@ definitions:
         items:
           $ref: '#/definitions/rates'
         type: array
-      navigations:
-        description: Links to related resources.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        description: Available commands in current context.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      uri:
-        description: URI
-        type: string
     type: object
   create-offer-command:
     description: Currency exchange parameters for which an offer will be calculated and displayed.
@@ -739,13 +702,6 @@ definitions:
       total-pages: 3
       sort-order:
       sort-by:
-      navigations:
-        - href: 
-          rel: first
-        - href: 
-          rel: previuos
-        - href: 
-          rel: self
     allOf: 
     - $ref: '#/definitions/paged-list'  
     properties:
@@ -754,19 +710,6 @@ definitions:
         items:
           $ref: '#/definitions/transaction'
         type: array
-      navigations:
-        description: Links to related resources.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        description: Available commands in current context.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      uri:
-        description: URI
-        type: string
     type: object
   transaction:
     description: Details of currency exchange transaction.
@@ -841,19 +784,6 @@ definitions:
       geolocation:
         description: Geolocation.
         $ref: '#/definitions/geolocation'
-      navigations:
-        description: Links to related resources.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        description: Available commands in current context.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      uri:
-        description: URI
-        type: string
     required:
       - value-date
     type: object
