@@ -1,45 +1,391 @@
 swagger: '2.0'
-responses:
-  default-error-response:
-    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
+host: api.asee.co
+basePath: /customer-case
+info:
+  description: |
+    Customer case API is used to register, list and record actions on customer cases.
+    You can register a customer case, get case details, files an history, search through registered customer cases and close them when they are resolved.
+    With customer case API you can: 
+      - Open a customer complaint case
+      - Open a customer service request case
+      - List customer cases
+      - Search customer cases
+      - Get customer case details
+      - Get customer case history
+      - Get customer case files
+      - Add case supporting files
+      - Update on case progress
+      - Close customer case
+  title: Customer Case API
+  version: beta
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+tags:
+  - name: Cases
+    description: Working with customer cases
+  - name: Callback requests
+    description: Working with callback requests
+  - name: Complaints
+    description: Working with complaints
+  - name: Service requests
+    description: Working with service requests
+paths:
+  /cases:
+    get:
+      consumes: []
+      deprecated: false
+      operationId: Cases_GetList
+      parameters:
+        - $ref: '#/parameters/case-type-param'
+        - $ref: '#/parameters/case-topic-param'
+        - $ref: '#/parameters/customer-number-param'
+        - $ref: '#/parameters/agent-id-param'
+        - $ref: '#/parameters/date-from-param'
+        - $ref: '#/parameters/date-to-param'
+        - $ref: '#/parameters/state-param'
+        - $ref: '#/parameters/query-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'    
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/case-list' 
+        default:
+          $ref: '#/responses/default-error-response'       
+      summary: Operation returns list of cases with basic details like registration date current lifecycle state and the name and id of the agent responsible for handling the case. When used without optional parameters all active cases are returned.
+      tags:
+        - Cases
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+  '/cases/{case-id}':
+    get:
+      deprecated: false
+      operationId: Cases_Get
+      parameters:
+        - $ref: '#/parameters/case-id-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'     
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/case'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Operation returns specific case details.
+      tags:
+        - Cases
+      x-asee-tags:
+        - Shapeable
+  '/cases/{case-id}/status':
+    put:      
+      deprecated: false
+      operationId: Cases_Update
+      parameters:
+        - $ref: '#/parameters/case-id-param'
+        - description: 'Info about the update (Resolution, State)'
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/update-case-command'  
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'        
+      summary: Operation updates the specified case progress. Operation returns customer case with updated status.
+      tags:
+        - Cases
+  '/cases/{case-id}/history':
+    get:      
+      deprecated: false
+      operationId: Cases_GetHistory
+      parameters:
+        - $ref: '#/parameters/case-id-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'  
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/case-history'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Operation returns list of file details associated with the specific case.
+      tags:
+        - Cases
+      x-asee-tags:
+        - Pageable
+        - Sortable
+  /callback-requests:
+    post:      
+      deprecated: false
+      operationId: CallbackRequests_Create
+      parameters:
+        - description: 'Command contains parameters for creating callback request.'
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/create-callback-request-command'      
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Add Callback Request
+      tags:
+        - Callback requests
+  /complaints:
+    post:     
+      deprecated: false
+      operationId: Complaints_Create
+      parameters:
+        - description: Command contains parameters for creating new complaint.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/create-complaint-command'      
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Operation opens new customer complaint. Operation returns complaint with assigned case identifier.
+      tags:
+        - Complaints
+  /service-requests:
+    post:      
+      deprecated: false
+      operationId: ServiceRequests_Create
+      parameters:
+        - description: Command contains parameters for creating new service request.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/create-service-request-command'      
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Operation opens new customer service request. Operation returns service-request with assigned case identifier.
+      tags:
+        - Service requests
+  '/cases/{case-id}/attachments':
+    post:      
+      deprecated: false
+      operationId: Cases_AddAttachment
+      parameters:
+        - $ref: '#/parameters/case-id-param'
+        - description: Id and Name of the document to be attached
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/add-case-attachment-command'   
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Operation attaches document/file to the existing Case
+      tags:
+        - Cases
+  '/cases/{case-id}/close':
+    post:      
+      deprecated: false
+      operationId: Cases_Close
+      parameters:
+        - $ref: '#/parameters/case-id-param'
+        - description: Info about closing the case (Resolution)
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/close-case-command'   
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Operation closes the specified case and returns closed case id.
+      tags:
+        - Cases
+  '/cases/{case-id}/attachments/{file-id}':
+    delete:
+      deprecated: false
+      operationId: Cases_RemoveAttachment
+      parameters:
+        - $ref: '#/parameters/case-id-param'
+        - $ref: '#/parameters/file-id-param'    
+      responses:
+        '204':
+          description: No content
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Operation removes attaced file from case.
+      tags:
+        - Cases
+parameters:
+  case-id-param:
+    description: Unique identifier of customer case.
+    in: path
+    name: case-id
+    required: true
+    type: string
+  file-id-param:
+    description: Unique identifier of attachment.
+    in: path
+    name: file-id
+    required: true
+    type: string
+  case-type-param:
+    description: Type of customer case to be retrieved.
+    in: query
+    name: case-type
+    required: false
+    enum:
+      - complaint
+      - service-request
+      - callback-request
+    type: string
+  case-topic-param:
+    description: Topic of the customer's request. For complete list of possible values see [case-topic]() classification.
+    in: query
+    name: case-topic
+    required: false
+    type: string
+  customer-number-param:
+    description: Unique identifier of the customer.
+    in: query
+    name: customer-number
+    required: false
+    type: string
+  agent-id-param:
+    description: Unique identifier of the agent that opens the case.
+    in: query
+    name: agent-id
+    required: false
+    type: string
+  date-from-param:
+    description: Filters items that have been registered after specified date.
+    in: query
+    name: date-from
+    required: false
+    format: date-time
+    type: string
+  date-to-param:
+    description: Filters items that have been registered before specified date.
+    in: query
+    name: date-to
+    required: false
+    format: date-time
+    type: string
+  state-param:
+    description: States
+    in: query
+    name: states
+    required: false
+    enum:
+      - active
+      - resolved
+      - canceled
+      - closed
+      - accepted
+    type: string
+  query-param:
+    description: Search text for title and details of customer cases.
+    in: query
+    name: query
+    required: false
+    type: string
+  page-size-param:
+    description: 'Number of items on a page. For more information see general guidance on [paging and sorting]().'
+    in: query
+    name: page-size
+    required: false
+    format: int32
+    type: integer
+  page-param:
+    description: 'Page index. For more information see general guidance on [paging and sorting]().'
+    in: query
+    name: page
+    required: false
+    format: int32
+    type: integer
+  sort-order-param:
+    description: 'Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]()'
+    in: query
+    name: sort-order
+    required: false
+    enum:
+      - asc
+      - desc
+    type: string
+  sort-by-param:
+    description: 'Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]().'
+    in: query
+    name: sort-by
+    required: false
+    type: string
+  include-param:
+    description: 'List of fields to include in response. For more information see general guidance on [response shaping]()'
+    in: query
+    name: include
+    required: false
+    collectionFormat: csv
+    items:
+      type: string
+    type: array
+  trim-param:
+    description: 'List of fields to trim from response. For more information see general guidance on [response shaping]()'
+    in: query
+    name: trim
+    required: false
+    collectionFormat: csv
+    items:
+      type: string
+    type: array
 definitions:
   case-list:
     description: Paged list of customer cases.
+    allOf: 
+    - $ref: '#/definitions/paged-list'  
     properties:
-      total-count:
-        description: Total count.
-        format: int32
-        type: integer
-      page-size:
-        description: Page size.
-        format: int32
-        type: integer
-      page-number:
-        description: Page number.
-        format: int32
-        type: integer
-      total-pages:
-        description: Total pages.
-        format: int32
-        type: integer
       items:
         description: List of customer cases.
         items:
           $ref: '#/definitions/case'
         type: array
-      navigations:
-        description: Links to related resources.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        description: Available commands in current context.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      uri:
-        description: URI
-        type: string
     type: object
   case:
     description: Contains details of customer case.
@@ -112,18 +458,6 @@ definitions:
         items:
           $ref: '#/definitions/attachment'
         type: array
-      uri:
-        description: URI
-        type: string
-    type: object
-  link:
-    properties:
-      href:
-        description: Gets or sets the href.
-        type: string
-      rel:
-        description: Gets or sets the rel.
-        type: string
     type: object
   attachment:
     description: Reference to file associated with customer case.
@@ -164,41 +498,14 @@ definitions:
     type: object
   case-history:
     description: Provides the history of customer case processing.
+    allOf: 
+    - $ref: '#/definitions/paged-list'
     properties:
-      total-count:
-        description: Total count.
-        format: int32
-        type: integer
-      page-size:
-        description: Page Size.
-        format: int32
-        type: integer
-      page-number:
-        description: Page number.
-        format: int32
-        type: integer
-      total-pages:
-        description: Total pages.
-        format: int32
-        type: integer
       items:
         description: List of history entries for the case.
         items:
           $ref: '#/definitions/case-history-item'
         type: array
-      navigations:
-        description: Links to related resources.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        description: Available commands in current context.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      uri:
-        description: URI
-        type: string
     type: object
   case-history-item:
     description: Customer case history item
@@ -207,7 +514,7 @@ definitions:
         description: Unique identifier of customer case
         type: string
       case-type:
-        description: The type of the case is one of the delivered types of CustomerServiceRequest object type.
+        description: Type of customer case.
         enum:
           - complaint
           - service-request
@@ -257,9 +564,6 @@ definitions:
       version-date:
         description: Version date
         format: date-time
-        type: string
-      uri:
-        description: URI
         type: string
     type: object
   create-callback-request-command:
@@ -403,386 +707,30 @@ definitions:
         description: Resolution of the closed case.
         type: string
     type: object
-host: api.asee.co
-info:
-description: |
-    Customer case API is used to register, list and record actions on customer cases.
-    You can register a customer a case, get case details, files an history, search through registered customer cases and close them when they are resolved.
-    With customer case API you can: 
-      - Open a customer complaint case
-      - Open a customer service request case
-      - List customer cases
-      - Search customer cases
-      - Get customer case details
-      - Get customer case history
-      - Get customer case files
-      - Add case supporting files
-      - Update on case progress
-      - Close customer case
-  title: Customer Case API
-  version: beta
-schemes:
-  - http
-consumes:
-  - application/json
-produces:
-  - application/json
-tags:
-  - name: Cases
-    description: Working with customer cases
-  - name: Callback requests
-    description: Working with callback requests
-  - name: Complaints
-    description: Working with complaints
-  - name: Service requests
-    description: Working with service requests
-paths:
-  /cases:
-    get:
-      consumes: []
-      deprecated: false
-      operationId: Cases_GetList
-      parameters:
-        - description: Case type
-          in: query
-          name: case-type
-          required: false
-          enum:
-            - complaint
-            - service-request
-            - callback-request
-          type: string
-        - description: Type of the customer's request. For complete list of possible values see [case-topic]() classification.
-          in: query
-          name: case-topic
-          required: false
-          type: string
-        - description: Unique identifier of the client.
-          in: query
-          name: customer-number
-          required: false
-          type: string
-        - description: Unique identifier of the agent that opens the case.
-          in: query
-          name: agent-id
-          required: false
-          type: string
-        - description: Case is registered from date.
-          in: query
-          name: date-from
-          required: false
-          format: date-time
-          type: string
-        - description: Case is registered to date.
-          in: query
-          name: date-to
-          required: false
-          format: date-time
-          type: string
-        - description: States
-          in: query
-          name: states
-          required: false
-          type: string
-        - description: Query
-          in: query
-          name: query
-          required: false
-          type: string
-        - description: Number of items on a page. For more information see general guidance on [paging and sorting]().
-          in: query
-          name: page-size
-          required: false
-          format: int32
-          type: integer
-        - description: Page index. For more information see general guidance on [paging and sorting]().
-          in: query
-          name: page-number
-          required: false
-          format: int32
-          type: integer
-        - description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]().
-          in: query
-          name: sort-order
-		  enum: 
-            - asc
-            - desc
-		  type: string
-		  required: false          
-        - description: Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]().
-          in: query
-          name: sort-by
-          required: false
-          type: string
-        - description: List of fields to include in response. For more information see general guidance on [response shaping]()
-          in: query
-          name: include-fields-list
-          required: false
-          items:
-            type: string
-          type: array
-        - description: List of fields to trim from response. For more information see general guidance on [response shaping]()
-          in: query
-          name: exclude-field-list
-          required: false
-          items:
-            type: string
-          type: array      
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/case-list' 
-		  default:
-			$ref: '#/responses/default-error-response'       
-      summary: Operation returns list of cases with basic details like registration date current lifecycle state and the name and id of the agent responsible for handling the case. When used without optional parameters all active cases are returned.
-      tags:
-        - Cases
-  '/cases/{case-id}':
-    get:
-      deprecated: false
-      operationId: Cases_Get
-      parameters:
-        - description: Unique identifier of customer case.
-          in: path
-          name: case-id
-          required: true
-          type: string
-        - description: List of fields to include in response. For more information see general guidance on [response shaping]()
-          in: query
-          name: include-fields-list
-          required: false
-          items:
-            type: string
-          type: array
-        - description: List of fields to trim from response. For more information see general guidance on [response shaping]()
-          in: query
-          name: exclude-field-list
-          required: false
-          items:
-            type: string
-          type: array      
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/case'
-		  default:
-			$ref: '#/responses/default-error-response'
-      summary: Operation returns specific case details.
-      tags:
-        - Cases
-  '/cases/{case-id}/status':
-    put:      
-      deprecated: false
-      operationId: Cases_Update
-      parameters:
-        - description: 'Info about the update (Resolution, State)'
-          in: body
-          name: cmd
-          required: true
-          schema:
-            $ref: '#/definitions/update-case-command'
-        - description: Unique identifier of customer case.
-          in: path
-          name: case-id
-          required: true
-          type: string      
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/command-result'
-		  default:
-			$ref: '#/responses/default-error-response'        
-      summary: Operation updates the specified case progress. Operation returns customer case with updated status.
-      tags:
-        - Cases
-  '/cases/{case-id}/history':
-    get:      
-      deprecated: false
-      operationId: Cases_GetHistory
-      parameters:
-        - description: Unique identifier of customer case.
-          in: path
-          name: case-id
-          required: true
-          type: string
-        - description: Number of items on a page. For more information see general guidance on [paging and sorting]().
-          in: query
-          name: page-size
-          required: false
-          format: int32
-          type: integer
-        - description: Page index. For more information see general guidance on [paging and sorting]().
-          in: query
-          name: page-number
-          required: false
-          format: int32
-          type: integer
-        - description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]().
-          in: query
-          name: sort-order
-		  enum:
-            - asc
-            - desc
-          required: false
-          type: string
-        - description: Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]().
-          in: query
-          name: sort-by
-          required: false
-          type: string     
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/case-history'
-          default:
-			$ref: '#/responses/default-error-response'
-      summary: Operation returns list of file details associated with the specific case.
-      tags:
-        - Cases
-  /callback-requests:
-    post:      
-      deprecated: false
-      operationId: CallbackRequests_Create
-      parameters:
-        - description: 'Command contains parameters for creating callback request.'
-          in: body
-          name: cmd
-          required: true
-          schema:
-            $ref: '#/definitions/create-callback-request-command'      
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/command-result'
-          default:
-			$ref: '#/responses/default-error-response'
-      summary: Add Callback Request
-      tags:
-        - Callback requests
-  /complaints:
-    post:     
-      deprecated: false
-      operationId: Complaints_Create
-      parameters:
-        - description: Command contains parameters for creating new complaint.
-          in: body
-          name: cmd
-          required: true
-          schema:
-            $ref: '#/definitions/create-complaint-command'      
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/command-result'
-          default:
-			$ref: '#/responses/default-error-response'
-      summary: Operation opens new customer complaint. Operation returns complaint with assigned case identifier.
-      tags:
-        - Complaints
-  /service-requests:
-    post:      
-      deprecated: false
-      operationId: ServiceRequests_Create
-      parameters:
-        - description: Command contains parameters for creating new service request.
-          in: body
-          name: cmd
-          required: true
-          schema:
-            $ref: '#/definitions/create-service-request-command'      
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/command-result'
-          default:
-			$ref: '#/responses/default-error-response'
-      summary: Operation opens new customer service request. Operation returns service-request with assigned case identifier.
-      tags:
-        - Service requests
-  '/cases/{case-id}/attachments':
-    post:      
-      deprecated: false
-      operationId: Cases_AddAttachment
-      parameters:
-        - description: Id and Name of the document to be attached
-          in: body
-          name: cmd
-          required: true
-          schema:
-            $ref: '#/definitions/add-case-attachment-command'
-        - description: Case id
-          in: path
-          name: case-id
-          required: true
-          type: string      
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/command-result'
-        default:
-          $ref: '#/responses/default-error-response'
-      summary: Operation attaches document/file to the existing Case
-      tags:
-        - Cases
-  '/cases/{case-id}/close':
-    post:      
-      deprecated: false
-      operationId: Cases_Close
-      parameters:
-        - description: Info about closing the case (Resolution)
-          in: body
-          name: cmd
-          required: true
-          schema:
-            $ref: '#/definitions/close-case-command'
-        - description: Unique identifier of customer case.
-          in: path
-          name: case-id
-          required: true
-          type: string     
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/command-result'
-          default:
-			$ref: '#/responses/default-error-response'
-      summary: Operation closes the specified case and returns closed case id.
-      tags:
-        - Cases
-  '/cases/{case-id}/attachments/{file-id}':
-    delete:
-      deprecated: false
-      operationId: Cases_RemoveAttachment
-      parameters:
-        - description: Unique identifier of customer case.
-          in: path
-          name: case-id
-          required: true
-          type: string
-        - description: Unique identifier of attachment.
-          in: path
-          name: file-id
-          required: true
-          type: string
-        - description: Unique identifier of the client.
-          in: query
-          name: customer-number
-          required: false
-          type: string     
-      responses:
-        '204':
-          description: No content
-        default:
-          $ref: '#/responses/default-error-response'
-      summary: Operation removes attaced file from case.
-      tags:
-        - Cases  
+  paged-list:
+    description: List with support for paging
+    properties:  
+      total-count:
+        description: Total number of items in collection
+        type: integer
+      page-size:
+        description: Size of the page
+        type: integer
+      page:
+        description: Index of current page
+        type: integer
+      total-pages:
+        description: Total number of pages of set size
+        type: integer
+      sort-order:
+        description: Sort order (`asc` or `desc`). Default is asc
+        type: string
+        enum:
+        - asc
+        - desc
+      sort-by:  
+        description: Attribute of the collection item to sort by
+        type: string
+responses:
+  default-error-response:
+    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
