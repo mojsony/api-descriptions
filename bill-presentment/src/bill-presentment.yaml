@@ -3,7 +3,7 @@ host: api.asee.co
 basePath: /bill-presentment
 info:
   description: Enable users of banking mobile application payment of bills to suppliers of various services using bill presentments (invoices).
-  title: Bill Presentment
+  title: Bill Presentment API
   version: beta
 tags:
   - description: Working with bills
@@ -365,13 +365,6 @@ definitions:
       sort-by:
       bills-payment-amount-sum: 0
       bills-fee-sum: 0
-      navigations:
-        - href: 
-          rel: first
-        - href: 
-          rel: previuos
-        - href: 
-          rel: self
     properties:
       bills-payment-amount-sum:
         description: Sum of bills payment amount
@@ -386,19 +379,6 @@ definitions:
         items:
           $ref: '#/definitions/bill'
         type: array
-      navigations:
-        description: Links to related resources.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        description: Available commands in current context.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      uri:
-        description: URI
-        type: string
     type: object
   bill:
     description: Bill record.
@@ -509,15 +489,6 @@ definitions:
         type: string
       uri:
         description: URI
-        type: string
-    type: object
-  link:
-    properties:
-      href:
-        description: Href.
-        type: string
-      rel:
-        description: Rel.
         type: string
     type: object
   issuer-info:
@@ -640,13 +611,6 @@ definitions:
       total-pages: 6
       sort-order: asc
       sort-by:
-      navigations:
-        - href: 
-          rel: self
-        - href: 
-          rel: next
-        - href: 
-          rel: last
     allOf: 
     - $ref: '#/definitions/paged-list'
     properties:
@@ -655,19 +619,6 @@ definitions:
         items:
           $ref: '#/definitions/issuer'
         type: array
-      navigations:
-        description: Links to related resources.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        description: Available commands in current context.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      uri:
-        description: URI
-        type: string
     type: object
   issuer:
     description: Party that issues bills to it's clients.
