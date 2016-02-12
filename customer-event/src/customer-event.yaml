@@ -1,45 +1,345 @@
 swagger: '2.0'
-responses:
-  default-error-response:
-    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
+host: api.asee.co
+basePath: /customer-event
+info:
+  description: |
+    Customer event API gives you access to all events registered for a customer or you can register new events for customers. 
+    The event registration is used only for actions and operations performed by third party system not connected to Multichannel API.
+  title: Customer Event API
+  version: beta
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+tags:
+  - name: Events
+    description: Working with customer events
+  - name: Communication events
+    description: Working with communication events
+  - name: Social events
+    description: Working with social events
+  - name: Accounting transaction events
+    description: Working with accounting transaction events
+  - name: Customer case events
+    description: Working with customer case events
+  - name: Arrangement activity events
+    description: Working with arrangement activity events
+  - name: Profile maintenance events
+    description: Working with profile maintenance events
+  - name: Chargable activity events
+    description: Working with chargable activity events
+paths:
+  /events:
+    get:
+      deprecated: false
+      operationId: Events_GetList
+      parameters:
+        - $ref: '#/parameters/event-kind-param'
+        - $ref: '#/parameters/customer-number-param'
+        - $ref: '#/parameters/date-from-param'
+        - $ref: '#/parameters/date-to-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/event-list'
+        default:
+            $ref: '#/responses/default-error-response'      
+      summary: List all registered events for a customer.
+      tags:
+        - Events
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+  '/events/{event-id}':
+    get:
+      deprecated: false
+      operationId: Events_Get
+      parameters:
+        - $ref: '#/parameters/event-id-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'     
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/event'
+        default:
+            $ref: '#/responses/default-error-response'
+      summary: Returns basic details for Communication event
+      tags:
+        - Events
+      x-asee-tags:
+        - Shapeable
+  '/communication-events/{event-id}':
+    get:
+      deprecated: false
+      operationId: CommunicationEvents_Get
+      parameters:
+        - $ref: '#/parameters/event-id-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'    
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/communication-event'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Returns details for Communication event
+      tags:
+        - Communication events
+      x-asee-tags:
+        - Shapeable
+  '/social-events/{event-id}':
+    get:
+      deprecated: false
+      operationId: SocialEvents_Get
+      parameters:
+        - $ref: '#/parameters/event-id-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'     
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/social-event'
+        default:
+            $ref: '#/responses/default-error-response'
+      summary: Returns details for Social event
+      tags:
+        - Social events
+      x-asee-tags:
+        - Shapeable
+  '/accounting-transaction-events/{event-id}':
+    get:
+      deprecated: false
+      operationId: AccountingTransactionEvents_Get
+      parameters:
+        - $ref: '#/parameters/event-id-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'   
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/accounting-transaction-event'
+        default:
+            $ref: '#/responses/default-error-response'
+      summary: Returns details for Accounting Transaction event
+      tags:
+        - Accounting transaction events
+      x-asee-tags:
+        - Shapeable
+  '/customer-case-events/{event-id}':
+    get:
+      deprecated: false
+      operationId: CustomerCaseEvents_Get
+      parameters:
+        - $ref: '#/parameters/event-id-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'     
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/customer-case-event'
+        default:
+            $ref: '#/responses/default-error-response'
+      summary: Returns details for Customer Case event
+      tags:
+        - Customer case events
+      x-asee-tags:
+        - Shapeable
+  '/arrangement-activity-events/{event-id}':
+    get:
+      deprecated: false
+      operationId: ArrangementActivityEvents_Get
+      parameters:
+        - $ref: '#/parameters/event-id-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/arrangement-activity-event'
+        default:
+            $ref: '#/responses/default-error-response'
+      summary: Returns details for Arrangement Activity Event
+      tags:
+        - Arrangement activity events
+      x-asee-tags:
+        - Shapeable
+  '/profile-maintenance-events/{event-id}':
+    get:
+      deprecated: false
+      operationId: ProfileMaintenanceEvents_Get
+      parameters:
+        - $ref: '#/parameters/event-id-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'   
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/profile-maintenance-event'
+        default:
+            $ref: '#/responses/default-error-response'
+      summary: Returns details for Profile Maintenance Event
+      tags:
+        - Profile maintenance events
+      x-asee-tags:
+        - Shapeable
+  '/chargable-activity-events/{event-id}':
+    get:
+      deprecated: false
+      operationId: ChargableActivityEvents_Get
+      parameters:
+        - $ref: '#/parameters/event-id-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'  
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/chargeable-activity-event'
+        default:
+            $ref: '#/responses/default-error-response'
+      summary: Returns details for Chargable Activity Event
+      tags:
+        - Chargable activity events
+      x-asee-tags:
+        - Shapeable
+  /communication-events:
+    post:      
+      deprecated: false
+      operationId: CommunicationEvents_Create
+      parameters:
+        - description: Details about the new communication event.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/create-communication-event-command'      
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+            $ref: '#/responses/default-error-response'
+      summary: Register new communication event
+      tags:
+        - Communication events
+parameters:
+  event-id-param:
+    description: Event identifier.
+    in: path
+    name: event-id
+    required: true
+    type: string
+  event-kind-param:
+    description: Event kind
+    in: query
+    name: event-kind
+    required: false
+    enum:
+      - communication
+      - social
+      - accounting-transaction
+      - customer-case
+      - arrangement-activity
+      - profile-maintenance
+      - chargeable-activity
+    type: string
+  customer-number-param:
+    description: Unique identifier of the customer.
+    in: query
+    name: customer-number
+    required: false
+    type: string
+  date-from-param:
+    description: Filters items that have been registered after specified date.
+    in: query
+    name: date-from
+    required: false
+    format: date-time
+    type: string
+  date-to-param:
+    description: Filters items that have been registered before specified date.
+    in: query
+    name: date-to
+    required: false
+    format: date-time
+    type: string
+  page-size-param:
+    description: 'Number of items on a page. For more information see general guidance on [paging and sorting]().'
+    in: query
+    name: page-size
+    required: false
+    format: int32
+    type: integer
+  page-param:
+    description: 'Page index. For more information see general guidance on [paging and sorting]().'
+    in: query
+    name: page
+    required: false
+    format: int32
+    type: integer
+  sort-order-param:
+    description: 'Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]()'
+    in: query
+    name: sort-order
+    required: false
+    enum:
+      - asc
+      - desc
+    type: string
+  sort-by-param:
+    description: 'Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]().'
+    in: query
+    name: sort-by
+    required: false
+    type: string
+  include-param:
+    description: 'List of fields to include in response. For more information see general guidance on [response shaping]()'
+    in: query
+    name: include
+    required: false
+    collectionFormat: csv
+    items:
+      type: string
+    type: array
+  trim-param:
+    description: 'List of fields to trim from response. For more information see general guidance on [response shaping]()'
+    in: query
+    name: trim
+    required: false
+    collectionFormat: csv
+    items:
+      type: string
+    type: array
 definitions:
   event-list:
     description: Paged list of customer events.
+    allOf: 
+    - $ref: '#/definitions/paged-list'
     properties:
-      total-count:
-        description: Total count of records
-        format: int32
-        type: integer
-      page-size:
-        description: Size of the page
-        format: int32
-        type: integer
-      page-number:
-        description: Current page number
-        format: int32
-        type: integer
-      total-pages:
-        description: Total number of pages
-        format: int32
-        type: integer
       items:
-        description: List of customer events
+        description: List of customer events.
         items:
           $ref: '#/definitions/event'
         type: array
-      navigations:
-        description: Links to related resources.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        description: Available commands in current context.
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      uri:
-        description: URI
-        type: string
     type: object
   event:
     description: 'Details about event related to customer (communication event, social event, etc)'
@@ -78,18 +378,6 @@ definitions:
         items:
           $ref: '#/definitions/event-data'
         type: array
-      uri:
-        description: URI
-        type: string
-    type: object
-  link:
-    properties:
-      href:
-        description: Gets or sets the href.
-        type: string
-      rel:
-        description: Gets or sets the rel.
-        type: string
     type: object
   event-data:
     description: Normalized representation of event specific data.
@@ -177,9 +465,6 @@ definitions:
         items:
           $ref: '#/definitions/event-data'
         type: array
-      uri:
-        description: URI
-        type: string
     type: object
   social-event:
     description: Details about social event related to customer.
@@ -221,9 +506,6 @@ definitions:
         items:
           $ref: '#/definitions/event-data'
         type: array
-      uri:
-        description: URI
-        type: string
     type: object
   accounting-transaction-event:
     description: Details about accounting event related to customer.
@@ -271,9 +553,6 @@ definitions:
         items:
           $ref: '#/definitions/event-data'
         type: array
-      uri:
-        description: URI
-        type: string
     type: object
   customer-case-event:
     description: Details about event related to customer case.
@@ -318,9 +597,6 @@ definitions:
         items:
           $ref: '#/definitions/event-data'
         type: array
-      uri:
-        description: URI
-        type: string
     type: object
   arrangement-activity-event:
     description: Details about event related to arrangement activity.
@@ -371,9 +647,6 @@ definitions:
         items:
           $ref: '#/definitions/event-data'
         type: array
-      uri:
-        description: URI
-        type: string
     type: object
   profile-maintenance-event:
     description: Details about event related to profile maintenance.
@@ -412,9 +685,6 @@ definitions:
         items:
           $ref: '#/definitions/event-data'
         type: array
-      uri:
-        description: URI
-        type: string
     type: object
   chargeable-activity-event:
     description: Details about event related to some chargeable activity.
@@ -462,9 +732,6 @@ definitions:
         items:
           $ref: '#/definitions/event-data'
         type: array
-      uri:
-        description: URI
-        type: string
     type: object
   create-communication-event-command:
     description: Parameters for event registration.
@@ -523,413 +790,32 @@ definitions:
       created-record-status:
         description: Status of the object (created, updated, deleted).
         type: string
-    type: object  
-host: api.asee.co
-basePath: /customer-event
-info:
-  description: |
-    Customer event API gives you access to all events registered for a customer or you can register new events for customers. 
-    The event registration is used only for actions and operations performed by third party system not connected to Multichannel API.
-  title: Customer Event API
-  version: beta
-schemes:
-  - http
-consumes:
-  - application/json
-produces:
-  - application/json
-tags:
-  - name: Events
-    description: Working with customer events
-  - name: Communication events
-    description: Working with communication events
-  - name: Social events
-    description: Working with social events
-  - name: Accounting transaction events
-    description: Working with accounting transaction events
-  - name: Customer case events
-    description: Working with customer case events
-  - name: Arrangement activity events
-    description: Working with arrangement activity events
-  - name: Profile maintenance events
-    description: Working with profile maintenance events
-  - name: Chargable activity events
-    description: Working with chargable activity events
-paths:
-  /events:
-    get:
-      deprecated: false
-      operationId: Events_GetList
-      parameters:
-        - description: Event kind
-          in: query
-          name: event-kind
-          required: false
-          enum:
-            - communication
-            - social
-            - accounting-transaction
-            - customer-case
-            - arrangement-activity
-            - profile-maintenance
-            - chargeable-activity
-          type: string
-        - description: Customer identifier.
-          in: query
-          name: customer-number
-          required: false
-          type: string
-        - description: Event creation date from
-          in: query
-          name: date-from
-          required: false
-          format: date-time
-          type: string
-        - description: Event creation date to
-          in: query
-          name: date-to
-          required: false
-          format: date-time
-          type: string
-        - description: Number of items on a page. For more information see general guidance on [paging and sorting]().
-          in: query
-          name: page-size
-          required: false
-          format: int32
-          type: integer
-        - description: Page index. For more information see general guidance on [paging and sorting]().
-          in: query
-          name: page-number
-          required: false
-          format: int32
-          type: integer
-        - description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]().
-          in: query
-          name: sort-order
-          required: false
-          enum:
-            - asc
-            - desc
-          type: string
-        - description: Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]().
-          in: query
-          name: sort-by
-          required: false
-          type: string
-        - description: List of fields to include in response. For more information see general guidance on [response shaping]()
-          in: query
-          name: include-fields-list
-          required: false
-          items:
-            type: string
-          type: array
-        - description: List of fields to trim from response. For more information see general guidance on [response shaping]()
-          in: query
-          name: exclude-field-list
-          required: false
-          items:
-            type: string
-          type: array      
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/event-list'
-        default:
-            $ref: '#/responses/default-error-response'      
-      summary: List all registered events for a customer
-      tags:
-        - Events
-  '/events/{event-id}':
-    get:
-      deprecated: false
-      operationId: Events_Get
-      parameters:
-        - description: Event identifier.
-          in: path
-          name: event-id
-          required: true
-          type: string
-        - description: List of fields to include in response. For more information see general guidance on [response shaping]()
-          in: query
-          name: include-fields-list
-          required: false
-          items:
-            type: string
-          type: array
-        - description: List of fields to trim from response. For more information see general guidance on [response shaping]()
-          in: query
-          name: exclude-field-list
-          required: false
-          items:
-            type: string
-          type: array      
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/event'
-        default:
-            $ref: '#/responses/default-error-response'
-      summary: Returns basic details for Communication event
-      tags:
-        - Events
-  '/communication-events/{event-id}':
-    get:
-      deprecated: false
-      operationId: CommunicationEvents_Get
-      parameters:
-        - description: Event identifier.
-          in: path
-          name: event-id
-          required: true
-          type: string
-        - description: Gets or sets the field names.
-          in: query
-          name: include-fields-list
-          required: false
-          items:
-            type: string
-          type: array
-        - description: Gets or sets the field names.
-          in: query
-          name: exclude-field-list
-          required: false
-          items:
-            type: string
-          type: array      
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/communication-event'
-        default:
-          $ref: '#/responses/default-error-response'
-      summary: Returns details for Communication event
-      tags:
-        - Communication events
-  '/social-events/{event-id}':
-    get:
-      deprecated: false
-      operationId: SocialEvents_Get
-      parameters:
-        - description: Event identifier.
-          in: path
-          name: event-id
-          required: true
-          type: string
-        - description: Gets or sets the field names.
-          in: query
-          name: include-fields-list
-          required: false
-          items:
-            type: string
-          type: array
-        - description: Gets or sets the field names.
-          in: query
-          name: exclude-field-list
-          required: false
-          items:
-            type: string
-          type: array      
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/social-event'
-        default:
-            $ref: '#/responses/default-error-response'
-      summary: Returns details for Social event
-      tags:
-        - Social events
-  '/accounting-transaction-events/{event-id}':
-    get:
-      deprecated: false
-      operationId: AccountingTransactionEvents_Get
-      parameters:
-        - description: Event identifier.
-          in: path
-          name: event-id
-          required: true
-          type: string
-        - description: Gets or sets the field names.
-          in: query
-          name: include-fields-list
-          required: false
-          items:
-            type: string
-          type: array
-        - description: Gets or sets the field names.
-          in: query
-          name: exclude-field-list
-          required: false
-          items:
-            type: string
-          type: array      
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/accounting-transaction-event'
-        default:
-            $ref: '#/responses/default-error-response'
-      summary: Returns details for Accounting Transaction event
-      tags:
-        - Accounting transaction events
-  '/customer-case-events/{event-id}':
-    get:
-      deprecated: false
-      operationId: CustomerCaseEvents_Get
-      parameters:
-        - description: Event identifier.
-          in: path
-          name: event-id
-          required: true
-          type: string
-        - description: Gets or sets the field names.
-          in: query
-          name: include-fields-list
-          required: false
-          items:
-            type: string
-          type: array
-        - description: Gets or sets the field names.
-          in: query
-          name: exclude-field-list
-          required: false
-          items:
-            type: string
-          type: array      
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/customer-case-event'
-        default:
-            $ref: '#/responses/default-error-response'
-      summary: Returns details for Customer Case event
-      tags:
-        - Customer case events
-  '/arrangement-activity-events/{event-id}':
-    get:
-      deprecated: false
-      operationId: ArrangementActivityEvents_Get
-      parameters:
-        - description: Event identifier.
-          in: path
-          name: event-id
-          required: true
-          type: string
-        - description: Gets or sets the field names.
-          in: query
-          name: include-fields-list
-          required: false
-          items:
-            type: string
-          type: array
-        - description: Gets or sets the field names.
-          in: query
-          name: exclude-field-list
-          required: false
-          items:
-            type: string
-          type: array
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/arrangement-activity-event'
-        default:
-            $ref: '#/responses/default-error-response'
-      summary: Returns details for Arrangement Activity Event
-      tags:
-        - Arrangement activity events
-  '/profile-maintenance-events/{event-id}':
-    get:
-      deprecated: false
-      operationId: ProfileMaintenanceEvents_Get
-      parameters:
-        - description: Event identifier.
-          in: path
-          name: event-id
-          required: true
-          type: string
-        - description: Gets or sets the field names.
-          in: query
-          name: include-fields-list
-          required: false
-          items:
-            type: string
-          type: array
-        - description: Gets or sets the field names.
-          in: query
-          name: exclude-field-list
-          required: false
-          items:
-            type: string
-          type: array      
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/profile-maintenance-event'
-        default:
-            $ref: '#/responses/default-error-response'
-      summary: Returns details for Profile Maintenance Event
-      tags:
-        - Profile maintenance events
-  '/chargable-activity-events/{event-id}':
-    get:
-      deprecated: false
-      operationId: ChargableActivityEvents_Get
-      parameters:
-        - description: Event identifier
-          in: path
-          name: event-id
-          required: true
-          type: string
-        - description: Gets or sets the field names.
-          in: query
-          name: include-fields-list
-          required: false
-          items:
-            type: string
-          type: array
-        - description: Gets or sets the field names.
-          in: query
-          name: exclude-field-list
-          required: false
-          items:
-            type: string
-          type: array      
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/chargeable-activity-event'
-        default:
-            $ref: '#/responses/default-error-response'
-      summary: Returns details for Chargable Activity Event
-      tags:
-        - Chargable activity events
-  /communication-events:
-    post:      
-      deprecated: false
-      operationId: CommunicationEvents_Create
-      parameters:
-        - description: Details about the new communication event.
-          in: body
-          name: cmd
-          required: true
-          schema:
-            $ref: '#/definitions/create-communication-event-command'      
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/command-result'
-        default:
-            $ref: '#/responses/default-error-response'
-      summary: Register new communication event
-      tags:
-        - Communication events
+    type: object
+  paged-list:
+    description: List with support for paging
+    properties:  
+      total-count:
+        description: Total number of items in collection
+        type: integer
+      page-size:
+        description: Size of the page
+        type: integer
+      page:
+        description: Index of current page
+        type: integer
+      total-pages:
+        description: Total number of pages of set size
+        type: integer
+      sort-order:
+        description: Sort order (`asc` or `desc`). Default is asc
+        type: string
+        enum:
+        - asc
+        - desc
+      sort-by:  
+        description: Attribute of the collection item to sort by
+        type: string
+    type: object
+responses:
+  default-error-response:
+    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
