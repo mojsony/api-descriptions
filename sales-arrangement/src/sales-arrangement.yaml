@@ -1,0 +1,435 @@
+swagger: "2.0"
+info:
+  version: "beta"
+  title: Sales Arrangement API
+  description: |
+    Sales Arrangement API gives you access to all durable arrangements customer has with financial institution such as current accounts, loans, deposits, card access arrangements, electronic access arrangements, etc. It also provides detailed arrangement information such as financial terms and conditions, cards, party roles, etc. It maps to BIAN Sales Product Agreement service domain. 
+host: playground.apistudio.io
+basePath: /try/1ceeb1fe-5739-47c1-9600-1442b8c7eecb
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+tags:
+  -
+    name: Arrangement
+    description: Working with sales arrangements 
+  -
+    name: Installment Plan
+    description: Working with installment plan as sub-resource of sales arrangement
+paths:
+  /arrangements:
+    get:
+      summary: List sales arrangements with basic information
+      tags:
+        - Arrangement
+      operationId: Arrangements_GetList
+      parameters:
+        - $ref: "#/parameters/kind-param"
+        - $ref: "#/parameters/arrangement-status-param"
+        - $ref: "#/parameters/page-param"
+        - $ref: "#/parameters/page-size-param"
+        - $ref: "#/parameters/sort-by-param"
+        - $ref: "#/parameters/sort-order-param"
+        - $ref: "#/parameters/include-param"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/arrangement-info-list'
+        '400':
+          $ref: "#/responses/validation-problem-response"
+        default:
+          $ref: '#/responses/default-error-response'
+  /arrangements/{arrangement-number}:
+    get:
+      summary: Retrieves sales arrangement general information
+      tags:
+        - Arrangement
+      operationId: Arrangements_RetrieveByArrangementNumber
+      parameters:
+        - $ref: "#/parameters/arrangement-number-param"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/arrangement-info'
+        default:
+          $ref: '#/responses/default-error-response'
+  /arrangements/{arrangement-number}/installment-plan:
+    get:
+      summary: Retrieves installment plan for the arrangement with given arrangement-number. If arrangement exists but does not have an installment plan, then empty list should be returned. 
+      tags:
+        - Installment Plan
+      operationId: Arrangements_RetrieveInstallmentPlan
+      parameters:
+        - $ref: "#/parameters/arrangement-number-param"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/installment-plan'
+        default:
+          $ref: '#/responses/default-error-response'
+responses:
+  validation-problem-response:
+    description: Your request was not constructed properly. Response contains the list of validation errors for each invalid element of your request. For complete list of possible validation errors see [validation errors]() classification.
+    schema: 
+      $ref: '#/definitions/validation-problem'
+  default-error-response:
+    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
+parameters:
+  page-param:
+    name: page
+    in: query
+    description: Page index. For more information see general guidance on [paging and sorting]()
+    type: integer
+    default: 1
+    x-asee-common: true
+  page-size-param:
+    name: page-size
+    in: query
+    description: Number of items on a page. For more information see general guidance on [paging and sorting]()
+    required: false
+    type: integer
+    default: 10
+    x-asee-common: true    
+  sort-order-param:
+    description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]()
+    in: query
+    name: sort-order
+    type: string
+    default: asc
+    enum:
+    - asc
+    - desc
+    x-asee-common: true  
+  sort-by-param:  
+    description: Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]()
+    in: query
+    name: sort-by
+    type: string
+    x-asee-common: true
+  include-param:
+    description: List of fields to include in response. For more information see general guidance on [response shaping]()
+    in: query
+    name: include
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+    x-asee-common: true      
+  kind-param:
+    name: kind
+    in: query
+    description: Selection of arrangement kinds for filtering arrangement list
+    required: false
+    type: array
+    items:
+      type: string
+      enum:
+      - current-account
+      - demand-deposit
+      - term-deposit
+      - term-loan
+      - overdraft-facility
+      - credit-facility
+      - card-access
+      - electronic-acess
+      - other-banking-product
+      - non-banking-product
+    required: false
+  arrangement-status-param:
+    name: status
+    in: query
+    description: Selection of arrangement statuses for filtering arrangement list. If no selection is specified, then only accepted, effective and suspended arrangements should be returned.
+    required: false
+    type: array
+    items:
+      type: string
+      enum:
+      - accepted
+      - effective
+      - suspended
+      - completed
+      - termination-requested
+      - terminated
+  arrangement-number-param:
+    name: arrangement-number
+    in: path
+    description: Unique identifier of arrangement
+    required: true
+    type: string
+definitions:
+  validation-problem:
+    type: array
+    items:
+      type: object
+      properties:
+        field:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              error:
+                type: string
+              message:
+                type: string
+    example:
+      -  
+        field: phone-number
+        errors:
+          -
+            error: invalid-format
+            message: Format for this field is invalid
+          -
+            error: max-length
+            message: Content exceeds maximum alowed length 
+      - 
+        field: account-number
+        errors:
+          -
+            error: check-digit-invalid
+            message: Check digit is invalid for this field
+  paged-list:
+    description: List with support for paging
+    properties:  
+      total-count:
+        description: Total number of items in collection
+        type: integer
+      page-size:
+        description: Size of the page
+        type: integer
+      page:
+        description: Index of current page
+        type: integer
+      total-pages:
+        description: Total number of pages of set size
+        type: integer
+      sort-order:
+        description: Sort order (`asc` or `desc`). Default is asc
+        type: string
+        enum:
+        - asc
+        - desc
+      sort-by:  
+        description: Attribute of the collection item to sort by
+        type: string
+  arrangement-party-role:
+    description: Represents party role played in context of arrangement - customer, guarantor, co-debtor, authorized person and other.
+    properties:
+      party-number:
+        type: string
+        description: Reference to the Party that plays the role
+      party-name:
+        type: string
+        description: The name of the Party that plays the role
+      role-kind:
+        type: string
+        description: The type of the role
+        enum:
+        - customer
+        - authorized-person
+        - co-debtor
+        - guarantor
+        - other
+        default: customer
+      role-id:
+        type: string
+        description: Used to distinguish between roles of the same kind. For Example, guarantor 1 and guarantor 2.
+      role-status:
+        type: string
+        description: Current status of the role
+        enum: 
+          - current
+          - former
+        default: current
+      start-date:
+        type: string
+        format: date-time
+        description: The date when the role started to be effective
+      end-date:
+        type: string
+        format: date-time
+        description: The date when the role ceised to be effective. If the role-status is current, then end-date shoould be empty
+    example:
+      party-number: IGNE002
+      party-name: Milivoje Klafovic
+      role-kind: authorized-person
+      role-id: AP01
+      role-status: current
+  arrangement-account-info:
+    description: Reference to related account
+    properties:
+      account-number: 
+        type: string
+        description: Unique identifier of the account
+      role-kind:
+        type: string
+        description: The role account plays in context of the arrangement
+        default: primary-account
+        enum:
+        - primary-account
+        - settlement-account
+        - sub-account
+        - other
+    example:
+      account-number: 0042201082794
+      role-kind: primary-account
+  arrangement-info:
+    description: Basic arrangement information
+    properties:
+      arrangement-number:
+        type: string
+        description: The unique identifier of an arrangement. 
+      kind:
+        type: string
+        description: Primary classification of arrangements according to product type.
+        enum:
+        - current-account
+        - demand-deposit
+        - term-deposit
+        - term-loan
+        - overdraft-facility
+        - credit-facility
+        - card-access
+        - electronic-acess
+        - other-banking-product
+        - non-banking-product
+      product-number:
+        type: string
+        description: Reference to arrangement's product
+      status:
+        type: string
+        description: Current status of arrangement as the position of the arrangement within a life-cycle model which consist of a number of states (statuses). The first lifecycle status considered here is accepted - when customer accepts the offer. Eerlier statuses which exist during offer phase are not included. 
+        enum:
+        - accepted
+        - effective
+        - suspended
+        - completed
+        - termination-requested
+        - terminated
+      contract-date:
+        type: string
+        format: date-time
+        description: The date when all terms and conditions were agreed upon and contract was signed. This is when Arrangement passed to Accepted status.
+      party-roles:
+        description: List of references to parties that play some roles in context of the arrangement. Should not be populated unless explicitely specified in include-param.
+        type: array
+        items:
+          $ref: '#/definitions/arrangement-party-role'
+      related-accounts:
+        description: List of references to accounts that play some roles in context of the arrangement. Should not be populated unless explicitely specified in include-param. 
+        type: array
+        items:
+          $ref: '#/definitions/arrangement-account-info'
+    example:
+      arrangement-number: 0042201082794
+      kind: term-loan
+  arrangement-info-list:
+    description: List of arrangements with basic/general information
+    allOf:
+    - $ref: '#/definitions/paged-list'
+    - type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/definitions/arrangement-info'
+    example:
+      - 
+        arrangement-number: 0042201082794
+        kind: term-loan
+      - 
+        arrangement-number: 0000100002378
+        kind: current-account
+  installment-plan-row:
+    description: Scheduled payment - row in installment plan. 
+    properties:
+      ordinal:
+        type: integer
+        description: Ordinal number of the row in plan
+      date:
+        type: string
+        format: date-time
+        description: Payment due date
+      activity-kind:
+        type: string
+        enum:
+        - disbursement
+        - downpayment
+        - repayment
+        - interest-payment
+        - fee-payment
+        - cash-collateral-pledging
+        - cash-collateral-release
+        description: Classification which can be used by software to recognize the meaning of the activity that triggers the payment. For example, in combination with product type it can be used at front end as a resource id for row description translation into selected culture. Grouping multiple activities into single row is allowed, and then most appropriate classification should be used. For example, disbursement activity may include downpayment, fee-payment, and cash-collateral-pledging. Also repayment activity may include interest-payment, fee-payment, and cash-collateral-release. For deposit products, disbursement activity-kind is used to describe depositing activity, while repayment is used to describe withdrawal. 
+      description: 
+        type: string
+        description: Description of the activity that triggers the payment. Should be translated in selected culture and front-end applications should use it as is. If description is not provided, front-end applications should use activity-kind to get appropriate description in selected culture. 
+      disbursement:
+        type: number
+        format: double
+        description: Loan disbursement, deposit, or guarantee opening - principal balance increase
+      starting-balance:
+        type: number
+        format: double
+        description: Principal balance before payment
+      principal-repayment: 
+        type: number
+        format: double
+        description: Principal amount to be repayed. 
+      interest-repayment:
+        type: number
+        format: double
+        description: Interest amount to be payed
+      annuity:
+        type: number
+        format: double
+        description: Sum of principal and interest to be repayed
+      outstanding-balance:
+        type: number
+        format: double
+        description: Principal balance after payment
+      fee:
+        type: number
+        format: double
+        description: Fee payment
+      other-expenses:
+        type: number
+        format: double
+        description: Other expenses
+      cash-collateral:
+        type: number
+        format: double
+        description: Positive and negative flows of cash collateral
+      deferred-payment:
+        type: number
+        format: double
+        description: Part of payment that is being delayed for some future date. If such defferal exists, then the same amount must be deducted from principal repayment. 
+      deferred-payment-installment:
+        type: number
+        format: double
+        description: Repayment of aggregated deferred payments
+      net-cash-flow:
+        type: number
+        format: double
+        description: Total net cash flow between the bank and the customer
+      discounted-net-cash-flow:
+        type: number
+        format: double
+        description: Net cash flow that is being discounted to present value using calculated EAPR
+  installment-plan:
+    description: A list of scheduled payments for entire arrangement lifecycle
+    allOf:
+    - $ref: '#/definitions/paged-list'
+    - type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/definitions/installment-plan-row'
