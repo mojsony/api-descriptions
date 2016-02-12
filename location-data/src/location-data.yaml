@@ -57,6 +57,10 @@ paths:
       summary: Gets list of branches with addresses and GPS coordinates and working hours.
       tags:
         - Branches
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
   /branches/{branch-id}:
     get:
       operationId: Branches_Get
@@ -93,6 +97,10 @@ paths:
       summary: Gets list of atms with addresses and GPS coordinates capabilities.
       tags:
         - ATMs
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
   /atms/{atm-id}:
     get:
       operationId: ATMs_Get
@@ -138,6 +146,10 @@ paths:
       summary: "Query for facilities based on coordinates or place. Operation returns list of facilities with address and GPS coordinates, capabilities, working hours."
       tags:
         - Facilities
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
   /addresses/pac:
     get:
       operationId: Addresses_GetPAC
@@ -392,13 +404,12 @@ definitions:
   branch-list:
     description: List of branches
     allOf:
-    - "$ref": "#/definitions/paged-list"
-    - type: object
-      properties:
+    - $ref: "#/definitions/paged-list"
+    properties:
+      items:
+        type: array
         items:
-          type: array
-          items:
-            "$ref": "#/definitions/branch"
+          $ref: "#/definitions/branch"
     type: object
     example:
       total-count: 2
@@ -469,10 +480,14 @@ definitions:
         description: Facility name
         type: string
       type:
-        description: Facility type (branch, atm)
+        x-asee-compliance: This property is redundant. It is obvious that this object is branch. Should be removed.
+        description: Facility type (branch, atm).
+        enum:
+          - branch
+          - atm
         type: string
       capabilities:
-        description: List of facility capabilities.
+        description: List of facility capabilities. For complete list of possible values see [capability-type]() classification.
         items:
           type: string
         type: array
@@ -489,9 +504,6 @@ definitions:
         type: string
       email:
         description: Facility e-mail
-        type: string
-      uri:
-        description: URI
         type: string
     type: object
     example:
@@ -525,7 +537,7 @@ definitions:
     description: Detail address
     properties:
       text:
-        description: Address Text
+        description: Address text
         type: string
       street:
         description: Street name
@@ -589,13 +601,12 @@ definitions:
   ATM-list:
     description: List of ATMs
     allOf:
-    - "$ref": "#/definitions/paged-list"
-    - type: object
-      properties:
+    - $ref: "#/definitions/paged-list"
+    properties:
+      items:
+        type: array
         items:
-          type: array
-          items:
-            $ref: "#/definitions/ATM"
+          $ref: "#/definitions/ATM"
     type: object
     example:
         total-count: 2
@@ -678,10 +689,14 @@ definitions:
         description: Facility name
         type: string
       type:
-        description: Facility type (branch, atm)
+        description: Facility type (branch, atm).
+        x-asee-compliance: This property is redundant. It is obvious that this object is ATM. Should be removed.
+        enum:
+          - branch
+          - atm
         type: string
       capabilities:
-        description: List of facility capabilities.
+        description: List of facility capabilities. For complete list of possible values see [capability-type]() classification.
         items:
           type: string
         type: array
@@ -698,9 +713,6 @@ definitions:
         type: string
       email:
         description: Facility e-mail
-        type: string
-      uri:
-        description: URI
         type: string
     type: object
     example:
@@ -734,13 +746,12 @@ definitions:
   facility-list:
     description: List of facilities
     allOf:
-    - "$ref": "#/definitions/paged-list"
-    - type: object
-      properties:
+    - $ref: "#/definitions/paged-list"
+    properties:
+      items:
+        type: array
         items:
-          type: array
-          items:
-            "$ref": "#/definitions/facility"
+          $ref: "#/definitions/facility"
     type: object
     example:
       total-count: 4
@@ -857,10 +868,13 @@ definitions:
         description: Facility name
         type: string
       type:
-        description: Facility type (branch, atm)
+        description: Facility type (branch, atm).
+        enum:
+          - branch
+          - atm
         type: string
       capabilities:
-        description: List of facility capabilities.
+        description: List of facility capabilities. For complete list of possible values see [capability-type]() classification.
         items:
           type: string
         type: array
@@ -878,12 +892,9 @@ definitions:
       email:
         description: Facility e-mail
         type: string
-      uri:
-        description: URI
-        type: string
     type: object
   address-pac:
-    description: Get AddressPAC method response.
+    description: Provides information is address is valid and returns corresponding postal address code.
     properties:
       is-valid:
         description: Shows whether address is valid or not
