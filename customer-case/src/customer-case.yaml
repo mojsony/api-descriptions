@@ -33,6 +33,8 @@ tags:
     description: Working with complaints
   - name: Service requests
     description: Working with service requests
+  - name: Classifications
+    description: Working with classifications
 paths:
   /cases:
     get:
@@ -80,7 +82,7 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/case'
+            $ref: '#/definitions/customer-case'
         default:
           $ref: '#/responses/default-error-response'
       summary: Operation returns specific case details.
@@ -255,6 +257,38 @@ paths:
       summary: Operation removes attaced file from case.
       tags:
         - Cases
+  '/classifications': 
+    get:
+      description: Returns all classification schemas used in this API.      
+      operationId: "Classifications_GetList"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/classification-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Returns all classification schemas used in this API.
+      tags:
+        - Classifications
+      x-asee-tags: []
+  '/classifications/{schema-id}':
+    get:
+      description: Returns all classification values for chosen classification.
+      operationId: Classifications_Get
+      parameters:
+        - $ref: '#/parameters/schema-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/classification'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Returns the classification values for provided schema.
+      tags:
+        - Classifications
+      x-asee-tags: []
 parameters:
   case-id-param:
     description: Unique identifier of customer case.
@@ -375,6 +409,12 @@ parameters:
     items:
       type: string
     type: array
+  schema-id-param:
+    description: Schema id
+    in: path
+    name: schema-id
+    required: true
+    type: string 
 definitions:
   case-list:
     description: Paged list of customer cases.
@@ -384,10 +424,10 @@ definitions:
       items:
         description: List of customer cases.
         items:
-          $ref: '#/definitions/case'
+          $ref: '#/definitions/customer-case'
         type: array
     type: object
-  case:
+  customer-case:
     description: Contains details of customer case.
     properties:
       case-id:
@@ -731,6 +771,95 @@ definitions:
       sort-by:  
         description: Attribute of the collection item to sort by
         type: string
+  classification-value: 
+    description: Classification value
+    example: TO DO
+    properties: 
+      code: 
+        description: Code of classification value.
+        type: string
+      literal: 
+        description: Literal.
+        type: string
+      description: 
+        description: Description.
+        type: string
+      id: 
+        description: Identifier of classification value.
+        type: string
+      parent-id: 
+        description: Parent classification value id.
+        type: string
+      ordinal: 
+        description: Ordinal number.
+        type: string      
+    type: object
+  classification-list:
+    description: List of classification shemas.
+    properties: 
+      items: 
+        description: List of all classification schemas.
+        items:
+          $ref: "#/definitions/classification"
+        type: array
+    type: object  
+  classification:
+    description: Classification schema used in API contracts.
+    example:
+      API: TO DO
+      description: TO DO
+      schema-id: TO DO
+      name: TO DO
+      values:
+        - code: '0'
+          literal: card-lost
+          description: Card lost and new one should be issued.
+          id: 
+          parent-id: 
+          ordinal: 
+        - code: '1'
+          literal: card-stolen
+          description: Card stollen and new one should be issued.
+          id: 
+          parent-id: 
+          ordinal: 
+        - code: '2'
+          literal: card-damadged
+          description: Card damadged and new one should be issued.
+          id: 
+          parent-id: 
+          ordinal: 
+        - code: '3'
+          literal: emboss-name-changing
+          description: Change emboss name.
+          id: 
+          parent-id: 
+          ordinal: 
+        - code: '4'
+          literal: pin-lost
+          description: PIN code lost and new one should be created.
+          id: 
+          parent-id: 
+          ordinal:
+    properties: 
+      API: 
+        description: Name of Api in which classification shema is used.
+        type: string
+      description: 
+        description: Shema description.
+        type: string
+      schema-id:
+        description: Unique identifier of the classification.
+        type: string
+      name: 
+        description: Name of shema.
+        type: string
+      values:
+        description: List of classification values.
+        items:
+          $ref: "#/definitions/classification-value"
+        type: array
+    type: object
 responses:
   default-error-response:
     description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
