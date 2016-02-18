@@ -13,37 +13,19 @@ info:
   title: Currency Exchange API
   version: beta
 tags:
-  - description: Working with classifications
-    name: Classifications
   - description: Working with rates
     name: Rates
   - description: Working with transactions
     name: Transactions
   - description: Working with offers
     name: Offers
+  - description: Working with classifications
+    name: Classifications
 consumes:
   - application/json
 produces:
   - application/json
 paths:
-  '/classifications/{schema-id}':
-    get:
-      operationId: Classifications_Get
-      parameters:
-        - $ref: '#/parameters/schema-id-param'
-      responses:
-        '200':
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/classification-value'
-            type: array
-        default:
-          $ref: '#/responses/default-error-response'
-      summary: Get classification values.
-      tags:
-        - Classifications
-      x-asee-tags: []
   '/rates/{date-for}':
     get:
       description: It is useful if data about rates on specific day are required.
@@ -278,6 +260,38 @@ paths:
       tags:
         - Transactions
       x-asee-tags: []
+  '/classifications': 
+    get:
+      description: Returns all classification schemas used in this API.      
+      operationId: "Classifications_GetList"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/classification-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Returns all classification schemas used in this API.
+      tags:
+        - Classifications
+      x-asee-tags: []
+  '/classifications/{schema-id}':
+    get:
+      description: Returns all classification values for chosen classification.
+      operationId: Classifications_Get
+      parameters:
+        - $ref: '#/parameters/schema-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/classification'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Returns the classification values for provided schema.
+      tags:
+        - Classifications
+      x-asee-tags: []
 parameters:
   schema-id-param:
     description: Unique classification identifier
@@ -462,35 +476,6 @@ parameters:
     required: true
     type: string
 definitions:
-  classification-value:
-    description: Single item of classification.
-    example:
-      code: 00001
-      literal: EUR
-      description: European Dollar
-      id: 1 
-      parent-id: 5
-      ordinal: 1
-    properties:
-      code:
-        description: Code of classification value.
-        type: string
-      literal:
-        description: Short name for classification value.
-        type: string
-      description:
-        description: Description of classification value.
-        type: string
-      id:
-        description: Unique identifier of classification value.
-        type: string
-      parent-id:
-        description: Unique identifier of parent classification value.
-        type: string
-      ordinal:
-        description: Ordinal of classification value.
-        type: string
-    type: object   
   rates:
     description: Exchange rates for particular day.
     example:
@@ -1033,6 +1018,95 @@ definitions:
       details:
         description: Detailed description of particular problem.
         type: string
+    type: object
+  classification-value: 
+    description: Classification value
+    example: TO DO
+    properties: 
+      code: 
+        description: Code of classification value.
+        type: string
+      literal: 
+        description: Literal.
+        type: string
+      description: 
+        description: Description.
+        type: string
+      id: 
+        description: Identifier of classification value.
+        type: string
+      parent-id: 
+        description: Parent classification value id.
+        type: string
+      ordinal: 
+        description: Ordinal number.
+        type: string      
+    type: object
+  classification-list:
+    description: List of classification shemas.
+    properties: 
+      items: 
+        description: List of all classification schemas.
+        items:
+          $ref: "#/definitions/classification"
+        type: array
+    type: object  
+  classification:
+    description: Classification schema used in API contracts.
+    example:
+      API: TO DO
+      description: TO DO
+      schema-id: TO DO
+      name: TO DO
+      values:
+        - code: '0'
+          literal: card-lost
+          description: Card lost and new one should be issued.
+          id: 
+          parent-id: 
+          ordinal: 
+        - code: '1'
+          literal: card-stolen
+          description: Card stollen and new one should be issued.
+          id: 
+          parent-id: 
+          ordinal: 
+        - code: '2'
+          literal: card-damadged
+          description: Card damadged and new one should be issued.
+          id: 
+          parent-id: 
+          ordinal: 
+        - code: '3'
+          literal: emboss-name-changing
+          description: Change emboss name.
+          id: 
+          parent-id: 
+          ordinal: 
+        - code: '4'
+          literal: pin-lost
+          description: PIN code lost and new one should be created.
+          id: 
+          parent-id: 
+          ordinal:
+    properties: 
+      API: 
+        description: Name of Api in which classification shema is used.
+        type: string
+      description: 
+        description: Shema description.
+        type: string
+      schema-id:
+        description: Unique identifier of the classification.
+        type: string
+      name: 
+        description: Name of shema.
+        type: string
+      values:
+        description: List of classification values.
+        items:
+          $ref: "#/definitions/classification-value"
+        type: array
     type: object
 responses:
 #   resource-created-response:
