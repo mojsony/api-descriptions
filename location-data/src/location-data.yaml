@@ -8,20 +8,15 @@ consumes:
 produces:
   - application/json
 tags:
-  -
-    name: Facilities
+  - name: Facilities
     description: Working with all financial-institution facilities
-  -
-    name: Branches
+  - name: Branches
     description: Working with branches
-  -
-    name: ATMs
+  - name: ATMs
     description: Working with ATMs
-  -
-    name: Addresses
+  - name: Addresses
     description: Working with addresses
-  -
-    name: Classifications
+  - name: Classifications
     description: Working with classifications
 info:
   description: | 
@@ -169,41 +164,38 @@ paths:
       summary: Checks whether address specified through query params is valid and returns postal address code.
       tags:
       - Addresses
-  /classifications: 
-    get: 
-      summary: "Returns all classification schemas used in API contracts."
-      tags: 
-          - Classifications
+  '/classifications': 
+    get:
+      description: Returns all classification schemas used in this API.      
       operationId: "Classifications_GetList"
       responses:
-          '200':
-            description: Success
-            schema:
-              $ref: '#/definitions/classification-list'
-          default:
-            $ref: '#/responses/default-error-response'
-  /classifications/{schema}: 
-    get: 
-      summary: "Returns the classification values for provided schema."
-      tags: 
-          - Classifications
-      operationId: "Classifications_Get"
-      parameters: 
-        - 
-          description: "Schema name which values should be fetched. For complete list of schemas see [classifications]()"
-          in: "path"
-          name: "schema"
-          required: true
-          type: "string"
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/classification-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Returns all classification schemas used in this API.
+      tags:
+        - Classifications
+      x-asee-tags: []
+  '/classifications/{schema-id}':
+    get:
+      description: Returns all classification values for chosen classification.
+      operationId: Classifications_Get
+      parameters:
+        - $ref: '#/parameters/schema-id-param'
       responses:
-          '200':
-            description: Success
-            schema:
-              items:
-                $ref: '#/definitions/classification-value'
-              type: array
-          default:
-            $ref: '#/responses/default-error-response'
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/classification'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Returns the classification values for provided schema.
+      tags:
+        - Classifications
+      x-asee-tags: []
 
 responses:
   default-error-response:
@@ -350,57 +342,15 @@ parameters:
     in: query
     name: street-number
     required: true
-    type: string  
+    type: string 
+  schema-id-param:
+    description: Schema id
+    in: path
+    name: schema-id
+    required: true
+    type: string 
     
 definitions:
-  classification-value: 
-      description: Classification value
-      properties: 
-        code: 
-          description: Code of classification value.
-          type: "string"
-        literal: 
-          description: Literal.
-          type: "string"
-        description: 
-          description: Description.
-          type: "string"
-        id: 
-          description: Identifier of classification value.
-          type: "string"
-        parent-id: 
-          description: Parent classification value id.
-          type: "string"
-        ordinal: 
-          description: Ordinal number.
-          type: "string"
-      type: "object"
-  classification-list: 
-    description: "List of classification shemas."
-    properties: 
-      items: 
-        items: 
-           $ref: "#/definitions/classification"
-        type: "array"
-    example:
-      items:
-        - 
-           api: Customer Order 
-           description: This classification contains reasons for card replacement.
-           name: capability-type
-  classification: 
-      description: "Classification schema used in API contracts"
-      properties: 
-        API: 
-          description: "Name of Api in which classification shema is used."
-          type: "string"
-        description: 
-          description: "Shema description."
-          type: "string"
-        name: 
-          description: "Name of shema"
-          type: "string"
-      type: "object"
   branch-list:
     description: List of branches
     allOf:
@@ -934,3 +884,978 @@ definitions:
       sort-by:
         description: Attribute of the collection item to sort by
         type: string
+swagger: '2.0'
+host: api.asee.co
+basePath: /location-data
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+tags:
+  - name: Facilities
+    description: Working with all financial-institution facilities
+  - name: Branches
+    description: Working with branches
+  - name: ATMs
+    description: Working with ATMs
+  - name: Addresses
+    description: Working with addresses
+  - name: Classifications
+    description: Working with classifications
+info:
+  description: | 
+    Location data API gives you access to branch, ATM and other financial-institution 
+    facilities addresses, GPS coordinates and other location or relevant data like working
+    hours. You can also query for facilities based on place or GPS coordinates to
+    get the nearest ones.
+    With location data API you can:
+      - Get the list of branches
+      - Get the list of ATMs
+      - Query for the nearest facilities around and location based on coordinates or place
+      - Get address code for specific address
+  title: Location Data API
+  version: beta
+paths:
+  /branches:
+    get:
+      operationId: Branches_GetList
+      parameters:
+        - $ref: "#/parameters/page-param"
+        - $ref: "#/parameters/page-size-param"
+        - $ref: "#/parameters/sort-by-param"
+        - $ref: "#/parameters/sort-order-param"
+        - $ref: "#/parameters/include-param" 
+        - $ref: "#/parameters/trim-param"  
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/branch-list'          
+        default:
+          $ref: '#/responses/default-error-response'  
+      summary: Gets list of branches with addresses and GPS coordinates and working hours.
+      tags:
+        - Branches
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+  /branches/{branch-id}:
+    get:
+      operationId: Branches_Get
+      parameters:
+         - $ref: "#/parameters/branch-id-param"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/branch'          
+        default:
+          $ref: '#/responses/default-error-response'  
+      summary: Get specific Branch
+      tags:
+        - Branches
+  /atms:
+    get:
+      operationId: ATMs_GetList
+      parameters:
+        - $ref: "#/parameters/ownership-type-param"
+        - $ref: "#/parameters/page-param"
+        - $ref: "#/parameters/page-size-param"
+        - $ref: "#/parameters/sort-by-param"
+        - $ref: "#/parameters/sort-order-param"
+        - $ref: "#/parameters/include-param" 
+        - $ref: "#/parameters/trim-param"  
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ATM-list'          
+        default:
+          $ref: '#/responses/default-error-response'  
+      summary: Gets list of atms with addresses and GPS coordinates capabilities.
+      tags:
+        - ATMs
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+  /atms/{atm-id}:
+    get:
+      operationId: ATMs_Get
+      parameters:
+         - $ref: "#/parameters/atm-id-param"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ATM'          
+        default:
+          $ref: '#/responses/default-error-response'  
+      summary: Gets specific ATM.
+      tags:
+        - ATMs
+  /facilities:
+    get:
+      operationId: Facilities_GetList
+      parameters:
+      - description: Unique code of each place inside one country. If not provided, method will return facility with any place code.
+        in: query
+        name: place-code
+        required: false
+        type: string
+      - $ref: "#/parameters/facility-type-param"
+      - $ref: "#/parameters/capabilities-param"
+      - $ref: "#/parameters/latitude-param"
+      - $ref: "#/parameters/longitude-param"
+      - $ref: "#/parameters/search-radius-param"
+      - $ref: "#/parameters/page-param"
+      - $ref: "#/parameters/page-size-param"
+      - $ref: "#/parameters/sort-by-param"
+      - $ref: "#/parameters/sort-order-param"
+      - $ref: "#/parameters/include-param" 
+      - $ref: "#/parameters/trim-param"  
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/facility-list'          
+        default:
+          $ref: '#/responses/default-error-response' 
+      summary: "Query for facilities based on coordinates or place. Operation returns list of facilities with address and GPS coordinates, capabilities, working hours."
+      tags:
+        - Facilities
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+  /addresses/pac:
+    get:
+      operationId: Addresses_GetPAC
+      parameters:
+        - $ref: "#/parameters/place-name-param"
+        - $ref: "#/parameters/place-code-param"
+        - $ref: "#/parameters/street-code-param"
+        - $ref: "#/parameters/street-name-param"
+        - $ref: "#/parameters/street-number-param"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/address-pac'          
+        default:
+          $ref: '#/responses/default-error-response' 
+      summary: Checks whether address specified through query params is valid and returns postal address code.
+      tags:
+      - Addresses
+  '/classifications': 
+    get:
+      description: Returns all classification schemas used in this API.      
+      operationId: "Classifications_GetList"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/classification-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Returns all classification schemas used in this API.
+      tags:
+        - Classifications
+      x-asee-tags: []
+  '/classifications/{schema-id}':
+    get:
+      description: Returns all classification values for chosen classification.
+      operationId: Classifications_Get
+      parameters:
+        - $ref: '#/parameters/schema-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/classification'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Returns the classification values for provided schema.
+      tags:
+        - Classifications
+      x-asee-tags: []
+
+responses:
+  default-error-response:
+    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
+    
+parameters:
+  page-param:
+    name: page
+    in: query
+    description: Page index. For more information see general guidance on [paging and sorting]()
+    type: integer
+    default: 1
+    x-asee-common: true
+  page-size-param:
+    name: page-size
+    in: query
+    description: Number of items on a page. For more information see general guidance on [paging and sorting]()
+    required: false
+    type: integer
+    default: 10
+    x-asee-common: true    
+  sort-order-param:
+    description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]()
+    in: query
+    name: sort-order
+    type: string
+    default: asc
+    enum:
+    - asc
+    - desc
+    x-asee-common: true  
+  sort-by-param:  
+    description: Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]()
+    in: query
+    name: sort-by
+    type: string
+    x-asee-common: true      
+  include-param:
+    description: List of fields to include in response. For more information see general guidance on [response shaping]()
+    in: query
+    name: include
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+    x-asee-common: true      
+  trim-param:
+    description: List of fields to trim from response. For more information see general guidance on [response shaping]()
+    in: query
+    name: trim
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+    x-asee-common: true
+  ownership-type-param:    
+    name: ownership-type
+    in: query
+    description: ATM ownership type. Possible values are `bank-owned`,`partially-bank-owned` and `third-party-owned`.
+    required: false
+    enum: 
+      - bank-owned
+      - partially-bank-owned
+      - third-party-owned
+    type: string
+  atm-id-param:    
+    name: atm-id
+    in: path
+    description: ATM id.
+    required: true
+    type: string
+  branch-id-param:    
+    name: branch-id
+    in: path
+    description: Branch id.
+    required: true
+    type: string
+  facility-type-param:
+    description: Types of facility (`branch` or `atm`). If set, only facilities of these types will be returned. If not set, all facilities will be returned.
+    in: query
+    name: types
+    required: false
+    enum:
+      - branch
+      - atm
+    items:
+      type: string
+    type: array
+  capabilities-param:
+    description: "Select only facilities with certain capabilities. If not set, all facilities will be returned. For complete list of possible values see [capability-type]() classification."
+    in: query
+    name: capabilities
+    required: false
+    items:
+      type: string
+    type: array
+  latitude-param:
+    description: GPS latitude
+    in: query
+    name: latitude
+    required: false
+    format: double
+    type: number
+  longitude-param:
+    description: GPS longitude
+    in: query
+    name: longitude
+    required: false
+    format: double
+    type: number
+  search-radius-param:
+    description: Search radius from GPS coordinates in kilometers.
+    in: query
+    name: search-radius
+    required: false
+    format: double
+    type: number
+  place-name-param:
+    description: "Place name inside one country. If place name is set, place code is not required."
+    in: query
+    name: place-name
+    required: false
+    type: string
+  place-code-param:
+    description: "Unique code of each place inside one country.If place code is set, place name is not required."
+    in: query
+    name: place-code
+    required: false
+    type: string
+  street-code-param:
+    description: Unique code of each street inside one place. If street name is set, street code is not required.
+    in: query
+    name: street-code
+    required: false
+    type: string
+  street-name-param:
+    description: Street name. If street code is set, street name is not required.
+    in: query
+    name: street-name
+    required: false
+    type: string
+  street-number-param:
+    description: Street number.
+    in: query
+    name: street-number
+    required: true
+    type: string 
+  schema-id-param:
+    description: Schema id
+    in: path
+    name: schema-id
+    required: true
+    type: string 
+    
+definitions:
+  branch-list:
+    description: List of branches
+    allOf:
+    - $ref: "#/definitions/paged-list"
+    properties:
+      items:
+        type: array
+        items:
+          $ref: "#/definitions/branch"
+    type: object
+    example:
+      total-count: 2
+      page-size: 1
+      page-number: 1
+      total-pages: 1
+      items:
+      - id: 10073
+        name: BAPOKanal0
+        type: Branch
+        capabilities: [cash-withdrawal,cash-deposit]
+        address:
+          text: Bulevar Mihajla Pupina 1
+          street: Bulevar Mihajla Pupina
+          building: 1
+          door: 312
+          floor: 2
+          city: Beograd
+          place: 791067
+          place-name: Novi Beograd
+          country-code: SRB
+          country-name: Srbija
+          state: 
+          location:
+            latitude: 44.807112185659996
+            longitude: 20.429377555847164
+          working-hours:
+            - period-description: Radnim danom
+              working-time: 08-16h
+            - period-description: Subotom
+              working-time: 09-13h
+        phone-number: +(381) 011 123-4567
+        email: branch1@bank.com
+      - id: 10074
+        name: BAPOKanal1
+        type: Branch
+        capabilities: [cash-withdrawal,cash-deposit]
+        address:
+          text: Bulevar Milutina Milankovića 19G
+          street: Bulevar Milutina Milankovića
+          building: 19G
+          door: 6
+          floor: 1
+          city: Beograd
+          place: 791067
+          place-name: Novi Beograd
+          country-code: SRB
+          country-name: Srbija
+          state: 
+          location:
+            latitude: 44.8121815080194
+            longitude: 20.403070449829112
+          working-hours:
+            - period-description: Radnim danom
+              working-time: 08-16h
+            - period-description: Subotom
+              working-time: 09-13h
+        phone-number: +(381) 011 765-4778
+        email: branch2@bank.com
+  branch:
+    description: Branch detail information
+    properties:
+      id:
+        description: Facility Id - unique identifier for facility
+        format: int64
+        type: integer
+      name:
+        description: Facility name
+        type: string
+      type:
+        x-asee-compliance: This property is redundant. It is obvious that this object is branch. Should be removed.
+        description: Facility type (branch, atm).
+        enum:
+          - branch
+          - atm
+        type: string
+      capabilities:
+        description: List of facility capabilities. For complete list of possible values see [capability-type]() classification.
+        items:
+          type: string
+        type: array
+      address:
+        description: Facility address
+        "$ref": "#/definitions/address"
+      working-hours:
+        description: Working time for whole week
+        items:
+          "$ref": "#/definitions/working-hours"
+        type: array
+      phone-number:
+        description: Facility phone number
+        type: string
+      email:
+        description: Facility e-mail
+        type: string
+    type: object
+    example:
+      - id: 10073
+        name: BAPOKanal0
+        type: Branch
+        capabilities: [cash-withdrawal,cash-deposit]
+        address:
+          text: Bulevar Mihajla Pupina 1
+          street: Bulevar Mihajla Pupina
+          building: 1
+          door: 312
+          floor: 2
+          city: Beograd
+          place: 791067
+          place-name: Novi Beograd
+          country-code: SRB
+          country-name: Srbija
+          state: 
+          location:
+            latitude: 44.807112185659996
+            longitude: 20.429377555847164
+          working-hours:
+            - period-description: Radnim danom
+              working-time: 08-16h
+            - period-description: Subotom
+              working-time: 09-13h
+        phone-number: +(381) 011 123-4567
+        email: branch1@bank.com
+  address:
+    description: Detail address
+    properties:
+      text:
+        description: Address text
+        type: string
+      street:
+        description: Street name
+        type: string
+      building:
+        description: Street number
+        type: string
+      door:
+        description: Door number
+        type: string
+      floor:
+        description: Floor number
+        type: string
+      city:
+        description: City name
+        type: string
+      place:
+        description: Place code
+        type: string
+      place-name:
+        description: Place name
+        type: string
+      country-code:
+        description: Country code
+        type: string
+      country-name:
+        description: Country name
+        type: string
+      state:
+        description: State name
+        type: string
+      location:
+        description: Address location
+        "$ref": "#/definitions/location"
+    type: object
+  working-hours:
+    description: Working time, opening and closing time
+    properties:
+      period-description:
+        description: Period of week or specific day in week
+        type: string
+      working-time:
+        description: Working part of day. Can be period defined in hours or period defined as text.
+        type: string
+    type: object
+  location:
+    description: Data represent facility location (GPS coordinates)
+    properties:
+      latitude:
+        description: GPS latitude
+        format: double
+        type: number
+      longitude:
+        description: GPS longitude
+        format: double
+        type: number
+    required:
+    - latitude
+    - longitude
+    type: object
+  ATM-list:
+    description: List of ATMs
+    allOf:
+    - $ref: "#/definitions/paged-list"
+    properties:
+      items:
+        type: array
+        items:
+          $ref: "#/definitions/ATM"
+    type: object
+    example:
+        total-count: 2
+        page-size: 10
+        page: 1
+        total-pages: 1
+        sort-order: desc
+        sort-by: name
+        items:
+        -   ownership-type: bank-owned
+            id: 40733
+            name: Airport City
+            type: ATM
+            capabilities: [cash-withdrawal]
+            address:
+              text: Omladinskih brigada 90
+              street: Omladinskih brigada
+              building: '90'
+              door: 
+              floor: 
+              city: Beograd
+              place: '11070'
+              place-name: Novi Beograd
+              country-code: SRB
+              country-name: SRBIJA
+              state: 
+              location:
+                latitude: 44.8112911
+                longitude: 20.398722799999973
+            working-hours:
+            - period-description: Radnim danom
+              working-time: 08-16h
+            - period-description: Subotom
+              working-time: 09-13h
+            phone-number: 
+            email: 
+
+        -   ownership-type: bank-owned
+            id: 41740
+            name: Đeram
+            type: ATM
+            capabilities: [cash-withdrawal]
+            address:
+              text: Bulevar Kralja Aleksandra 168
+              street: Bulevar Kralja Aleksandra
+              building: '168'
+              door: 
+              floor: 
+              city: Beograd
+              place: '11060'
+              place-name: Beograd Palilula
+              country-code: SRB
+              country-name: SRBIJA
+              state: 
+              location:
+                latitude: 44.8059207
+                longitude: 20.47405279999998
+            working-hours:
+            - period-description: Radnim danom
+              working-time: 09-17h
+            - period-description: Subotom
+              working-time: 11-16h
+            phone-number: 
+            email:
+  ATM:
+    description: ATM information
+    properties:
+      ownership-type:
+        description: Ownership type for ATM
+        type: string
+        enum: 
+         - bank-owned
+         - partially-bank-owned
+         - third-party-owned
+      id:
+        description: Facility Id - unique identifier for facility
+        format: int64
+        type: integer
+      name:
+        description: Facility name
+        type: string
+      type:
+        description: Facility type (branch, atm).
+        x-asee-compliance: This property is redundant. It is obvious that this object is ATM. Should be removed.
+        enum:
+          - branch
+          - atm
+        type: string
+      capabilities:
+        description: List of facility capabilities. For complete list of possible values see [capability-type]() classification.
+        items:
+          type: string
+        type: array
+      address:
+        description: Facility address
+        "$ref": "#/definitions/address"
+      working-hours:
+        description: Working time for whole week
+        items:
+          "$ref": "#/definitions/working-hours"
+        type: array
+      phone-number:
+        description: Facility phone number
+        type: string
+      email:
+        description: Facility e-mail
+        type: string
+    type: object
+    example:
+        -   ownership-type: bank-owned
+            id: 41740
+            name: Đeram
+            type: ATM
+            capabilities: [cash-withdrawal]
+            address:
+              text: Bulevar Kralja Aleksandra 168
+              street: Bulevar Kralja Aleksandra
+              building: '168'
+              door: 
+              floor: 
+              city: Beograd
+              place: '11060'
+              place-name: Beograd Palilula
+              country-code: SRB
+              country-name: SRBIJA
+              state: 
+              location:
+                latitude: 44.8059207
+                longitude: 20.47405279999998
+            working-hours:
+            - period-description: Radnim danom
+              working-time: 09-17h
+            - period-description: Subotom
+              working-time: 11-16h
+            phone-number: 
+            email:  
+  facility-list:
+    description: List of facilities
+    allOf:
+    - $ref: "#/definitions/paged-list"
+    properties:
+      items:
+        type: array
+        items:
+          $ref: "#/definitions/facility"
+    type: object
+    example:
+      total-count: 4
+      page-size: 1
+      page-number: 1
+      total-pages: 1
+      items:
+      - id: 40733
+        name: Airport City
+        type: ATM
+        capabilities: [cash-withdrawal]
+        address:
+          text: Omladinskih brigada 90
+          street: Omladinskih brigada
+          building: '90'
+          door: 
+          floor: 
+          city: Beograd
+          place: '11070'
+          place-name: Novi Beograd
+          country-code: SRB
+          country-name: SRBIJA
+          state: 
+          location:
+            latitude: 44.8112911
+            longitude: 20.398722799999973
+        working-hours:
+        - period-description: Radnim danom
+          working-time: 08-16h
+        - period-description: Subotom
+          working-time: 09-13h
+        phone-number: 
+        email: 
+      - id: 41737
+        name: Banjica
+        type: ATM
+        capabilities: [cash-withdrawal]
+        address:
+          text: Paunova 24
+          street: Paunova
+          building: '24'
+          door: 
+          floor: 
+          city: Beograd
+          place: '11010'
+          place-name: Beograd Vozdovac
+          country-code: SRB
+          country-name: SRBIJA
+          state: 
+          location:
+            latitude: 44.7567628
+            longitude: 20.47650610000005
+        working-hours:
+        - period-description: Radnim danom
+          working-time: 08-17h
+        phone-number: 
+        email: 
+      - id: 40734
+        name: Banovo brdo
+        type: ATM
+        capabilities: [cash-withdrawal]
+        address:
+          text: Požeška 108a
+          street: Požeška
+          building: 108a
+          door: 
+          floor: 
+          city: Beograd
+          place: '11030'
+          place-name: Beograd Cukarica
+          country-code: SRB
+          country-name: SRBIJA
+          state: 
+          location:
+            latitude: 44.773886
+            longitude: 20.413765
+        working-hours: 
+        phone-number: 
+        email: 
+      - id: 10073
+        name: BAPOKanal0
+        type: Branch
+        capabilities: [cash-deposit,cash-withdrawal]
+        address:
+          text: Bulevar Mihajla Pupina 1
+          street: Bulevar Mihajla Pupina
+          building: 1
+          door: 312
+          floor: 2
+          city: Beograd
+          place: 791067
+          place-name: Novi Beograd
+          country-code: SRB
+          country-name: Srbija
+          state: 
+          location:
+            latitude: 44.807112185659996
+            longitude: 20.429377555847164
+          working-hours:
+            - period-description: Radnim danom
+              working-time: 08-16h
+            - period-description: Subotom
+              working-time: 09-13h
+        phone-number: +(381) 011 123-4567
+        email: branch1@bank.com
+  facility:
+    description: Basic information about Facility
+    properties:
+      id:
+        description: Facility Id - unique identifier for facility
+        format: int64
+        type: integer
+      name:
+        description: Facility name
+        type: string
+      type:
+        description: Facility type (branch, atm).
+        enum:
+          - branch
+          - atm
+        type: string
+      capabilities:
+        description: List of facility capabilities. For complete list of possible values see [capability-type]() classification.
+        items:
+          type: string
+        type: array
+      address:
+        description: Facility address
+        "$ref": "#/definitions/address"
+      working-hours:
+        description: Working time for whole week
+        items:
+          "$ref": "#/definitions/working-hours"
+        type: array
+      phone-number:
+        description: Facility phone number
+        type: string
+      email:
+        description: Facility e-mail
+        type: string
+    type: object
+  address-pac:
+    description: Provides information is address is valid and returns corresponding postal address code.
+    properties:
+      is-valid:
+        description: Shows whether address is valid or not
+        type: boolean
+      pac:
+        description: Postal Address Code (null is address is not valid)
+        type: string
+      description:
+        description: Property describes why address in not valid
+        type: string
+    type: object
+    example:
+    -  is-valid: true
+       pac: 116312
+       description: BEOGRAD-SAVSKI VENAC - MILOŠA SAVČIĆA(BRANKA ĐONOVIĆA)
+  paged-list:
+    description: List with support for paging
+    properties:
+      total-count:
+        description: Total number of items in collection
+        type: integer
+      page-size:
+        description: Size of the page
+        type: integer
+      page:
+        description: Index of current page
+        type: integer
+      total-pages:
+        description: Total number of pages of set size
+        type: integer
+      sort-order:
+        description: Sort order (`asc` or `desc`). Default is asc
+        type: string
+        enum:
+        - asc
+        - desc
+      sort-by:
+        description: Attribute of the collection item to sort by
+        type: string
+  classification-value: 
+    description: Classification value
+    example: TO DO
+    properties: 
+      code: 
+        description: Code of classification value.
+        type: string
+      literal: 
+        description: Literal.
+        type: string
+      description: 
+        description: Description.
+        type: string
+      id: 
+        description: Identifier of classification value.
+        type: string
+      parent-id: 
+        description: Parent classification value id.
+        type: string
+      ordinal: 
+        description: Ordinal number.
+        type: string      
+    type: object
+  classification-list:
+    description: List of classification shemas.
+    properties: 
+      items: 
+        description: List of all classification schemas.
+        items:
+          $ref: "#/definitions/classification"
+        type: array
+    type: object  
+  classification:
+    description: Classification schema used in API contracts.
+    example:
+      API: TO DO
+      description: TO DO
+      schema-id: TO DO
+      name: TO DO
+      values:
+        - code: '0'
+          literal: card-lost
+          description: Card lost and new one should be issued.
+          id: 
+          parent-id: 
+          ordinal: 
+        - code: '1'
+          literal: card-stolen
+          description: Card stollen and new one should be issued.
+          id: 
+          parent-id: 
+          ordinal: 
+        - code: '2'
+          literal: card-damadged
+          description: Card damadged and new one should be issued.
+          id: 
+          parent-id: 
+          ordinal: 
+        - code: '3'
+          literal: emboss-name-changing
+          description: Change emboss name.
+          id: 
+          parent-id: 
+          ordinal: 
+        - code: '4'
+          literal: pin-lost
+          description: PIN code lost and new one should be created.
+          id: 
+          parent-id: 
+          ordinal:
+    properties: 
+      API: 
+        description: Name of Api in which classification shema is used.
+        type: string
+      description: 
+        description: Shema description.
+        type: string
+      schema-id:
+        description: Unique identifier of the classification.
+        type: string
+      name: 
+        description: Name of shema.
+        type: string
+      values:
+        description: List of classification values.
+        items:
+          $ref: "#/definitions/classification-value"
+        type: array
+    type: object
