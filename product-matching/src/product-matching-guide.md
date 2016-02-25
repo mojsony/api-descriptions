@@ -27,7 +27,7 @@ Now that you've authenticated your app, you can call the Product Matching API wi
 
 API | URL Root
 --------|---------
-Customer Order | `https://api.asse.co/product-matching`
+Product Matching | `https://api.asse.co/product-matching`
 
 > **Note**: Throughout this documentation, only partial syntax such as: 
 `GET /current-account-products/{product-number}` is used for the sake of brevity. 
@@ -40,7 +40,6 @@ Following params are user to filer product catalog result:
 - `status` 	- Customer centric statuses to be shown. If set, only products of these statuses will be returned, if not - none will be returned.
 - `name`	- Name or part of the products name. If not set, all products will be returned.
 - `product-family` -  Name of product family. If set, only products that belongs to specified product family will be returned. If not set, all products will be returned.
-- `preferred-client-culture` -  Defines culture for certain columns of results.  If not set, default will be taken.
 - `channel-code` - Filter product catalog by product channel availability.
 - `page-number`	- Page index of result.
 - `page-size`	- Number of items on a page result.
@@ -48,7 +47,7 @@ Following params are user to filer product catalog result:
 - `sort-type`	- Attribute of the collection item to sort by.
 
 ```
-GET/products?status=coming-soon, already-used-by-client, not-used-by-client&page-number=1&page-size=100&kind=deposit, current-account, demand-deposit, term-deposit, finance-service, term-loan, credit-facility, product-access&channel-code=web&preferred-client-culture=en-US
+GET/products?status=coming-soon, already-used-by-client, not-used-by-client&page-number=1&page-size=100&kind=deposit, current-account, demand-deposit, term-deposit, finance-service, term-loan, credit-facility, product-access&channel-code=web
 ```
 
 You will get back `200 OK` status code and json representation with a list of products. 
@@ -87,20 +86,7 @@ You will get back `200 OK` status code and json representation with a list of pr
             }
          ],
          "is-recommended":false,
-         "campaign-code":null,
-         "navigations":[  
-            {  
-               "href":"sample",
-               "rel":"sample"
-            }
-         ],
-         "commands":[  
-            {  
-               "href":"sample",
-               "rel":"sample"
-            }
-         ],
-         "uri":"https://api.asse.co/product-matching/current-account-products/TMCY_0001"
+         "campaign-code":null
       }
    ]
 }
@@ -174,28 +160,7 @@ You will get back `200 OK` status code and json representation for fetched reque
          "name":"Dobrodošlica",
          "description":"Dobrodošlica"
       }
-   ],
-   "navigations":[  
-      {  
-         "href":"sample",
-         "rel":"sample"
-      },
-      {  
-         "href":"https://api.asse.co/product-matching/current-account-products/TMCY_0001/bundled-products",
-         "rel":"bundle-info"
-      },
-      {  
-         "href":"https://api.asse.co/product-matching/current-account-products/TMCY_0001/documentation",
-         "rel":"product-documentation"
-      }
-   ],
-   "commands":[  
-      {  
-         "href":"sample",
-         "rel":"sample"
-      }
-   ],
-   "uri":"sample"
+   ]
 }
 ```
 
@@ -217,24 +182,7 @@ You will get back `200 OK` status code and json representation for fetched reque
          "image": null,
          "is-optional":false,
          "minimal-number-of-instances":0,
-         "maximal-number-of-instances":0,
-         "navigations":[  
-            {  
-               "href":"sample",
-               "rel":"sample"
-            },
-            {  
-               "href":"https://api.asse.co/product-matching/products/VisaClassicDebit",
-               "rel":"sample"
-            }
-         ],
-         "commands":[  
-            {  
-               "href":"sample",
-               "rel":"sample"
-            }
-         ],
-         "uri":"sample"
+         "maximal-number-of-instances":0
       },
       {  
          "product-name":"Štednja po viđenju u domaćoj valuti",
@@ -244,27 +192,10 @@ You will get back `200 OK` status code and json representation for fetched reque
          "image":null,
          "is-optional":false,
          "minimal-number-of-instances":0,
-         "maximal-number-of-instances":0,
-         "navigations":[  
-            {  
-               "href":"sample",
-               "rel":"sample"
-            },
-            {  
-               "href":"https://api.asse.co/product-matching/products/DEP-avista-standard-rsd",
-               "rel":"sample"
-            }
-         ],
-         "commands":[  
-            {  
-               "href":"sample",
-               "rel":"sample"
-            }
-         ],
-         "uri":"sample"
+         "maximal-number-of-instances":0
       }
    ]
 }
 ```
 
-**Congratulations!** You have completed getting started tutorial on most common steps when working with Customer Order API. To learn more look at the reference documentation for [available operations](swagger-ui).
+**Congratulations!** You have completed getting started tutorial on most common steps when working with Product Matching API. To learn more look at the reference documentation for [available operations](swagger-ui).
