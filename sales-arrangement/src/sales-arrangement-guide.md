@@ -336,4 +336,6 @@ You will get back `200 OK` status code and json representation of arrangement-co
 }
 ```
 
+If you analyze this response you can see that complex structure of fees and interest rates is supported, with lower limits, upper limits and variations from standard product conditions. The purpose of separate presentation of these variations is price transparency - to show the customer why he got some discount and explain the scope in which it is valid. These variations are advanced concepts and are not supported by all back-end systems implementing this API.  
+
 **Congratulations!** You have completed getting started tutorial on most common steps when working with Content Management API. To learn more look at the reference documentation for [available operations](swagger-ui).
