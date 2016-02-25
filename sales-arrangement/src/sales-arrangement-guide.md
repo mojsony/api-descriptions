@@ -39,7 +39,7 @@ You can list arrangements at following endpoint:
 ```
 GET /arrangements
 ```
-You will get back `200 OK` status code and json representation with a list of arrangements. 
+You will receive `200 OK` status code and json representation with a list of arrangements. 
 
 ```json
 {
@@ -68,7 +68,7 @@ Arrangement details are accessible from arrangement list and also can be accesse
 GET /arrangements/0042201082794?include=parties, accounts
 ```
 
-You will get back `200 OK` status code and json representation with arrangement details. 
+You will receive `200 OK` status code and json representation with arrangement details. 
 
 ```json
 {
@@ -134,7 +134,7 @@ Installment plan is specific arrangement subresource which exists only for some 
 GET /arrangements/0042201082794/installment-plan?page-size=6&page-number=1
 ```
 
-You will get back `200 OK` status code and json representation with installment plan details. 
+You will receive `200 OK` status code and json representation with installment plan details. 
 
 ```json
 {
@@ -243,7 +243,7 @@ In this example, let's get all conditions:
 GET /arrangements/0042201082794/conditions
 ```
 
-You will get back `200 OK` status code and json representation of arrangement-conditions. 
+You will receive `200 OK` status code and json representation of arrangement-conditions. 
 
 ```json
 {
