@@ -27,96 +27,120 @@ Now that you've authenticated your app, you can call the Sales Arrangement API w
 
 API | URL Root
 --------|---------
-Content Management | `https://api.asse.co/content`
+Sales Arrangement | `https://api.asse.co/sales-arrangement`
 
 > **Note**: Throughout this documentation, only partial syntax such as: 
-`GET /dms/documents/{id}` is used for the sake of brevity. 
+`GET /arrangements/{id}` is used for the sake of brevity. 
 Prefix the path with the correct root URL in order to obtain the full resource path or URL.
 
-###3. Pick your repository
-Before you can store and retreive documents you need to pick correct repository. In most cases there will be two repositories, one for more offical documentation such as contracts and another for more relaxed content such as profile images.
-You can list available repositories at following endpoint:
+###3. Retrieve the list of arrangements for a customer
+Let's see the list of arrangements - products used by a customer. Note that the list returns only arrangements for which the party from calling context plays customer role. If you want to see arrangement in which calling party plays other roles, this should be specified by party-role-param. 
+You can list arrangements at following endpoint:
 ```
-GET /repositories
+GET /arrangements
 ```
-You will get back `200 OK` status code and json representation with a list of repository names. To access content in repository you will use `folders` and `documents` resources prefixed with repository name.
+You will get back `200 OK` status code and json representation with a list of arrangements. 
+
 ```json
 [
   {
-    "repository-id": 1,
-    "repository-name": "mchub"
+    "arrangement-number": "0000100002378",
+    "kind": "current-account",
+    "product-code": "RT-CA-STD-001",
+    "status": "effective"
   },
   {
-    "repository-id": 2,
-    "repository-name": "dms"
+    "arrangement-number": "0042201082794",
+    "kind": "term-loan",
+    "product-code": "RT-LN-CAR-002",
+    "status": "effective"
   }
 ]
 ```
 
 
-###4. Create folder to store some documents
-Let's assume that someone has created folder called `customers` in `dms` repository for you to store customer profile documents for each customer.
-To create folder you need to post `folder` metadata representation as json to following endpoint:
+###4. See arrangement details
+Arrangement details are accessible from arrangement list and also can be accessed from account list or from any context where we can found arrangement number. We will use include-param to include party-role and arrangement-account-info subresources (under parties and accounts properties). 
+We can access arrangement details at following endpoint:
 
 ```
-POST /dms/folders
+GET /arrangements/0042201082794?include=parties, accounts
 ```
 
-```json
-{
-  "kind": "folder", 
-  "name": "jabon0007",
-  "path": "customers", 
-  "folder-purpose": "customer-profile"
-}
-```
-You will get back `201 Created` status code and json representation with a created folder. Location header will contain URL for newly created folder.
-```
-Location: http://api.asse.co/content/dms/folders/ee48b17534c9
-```
+You will get back `200 OK` status code and json representation with arrangement details. 
 
 ```json
 {
-  "kind": "folder",
-  "name": "jabon0007",
-  "path": "customers",
-  "folder-purpose": "customer-profile",
-  "id": "ee48b17534c9",
-  "created-on": "2015-11-23T07:08:30.000Z", 
-  "created-by": "jabon007", 
-  "changed-on": "2015-11-23T07:08:30.000Z"
+  "arrangement-number": "0042201082794",
+  "kind": "term-loan",
+  "product-code": "RT-LN-CAR-002",
+  "status": "effective",
+  "contract-date": "2013-10-21T00:00:00",
+  "parties": [
+    {
+      "party-number": "IGNE002",
+      "party-name": "Milivoje Klafovic",
+      "role-kind": "customer",
+      "role-status": "current"
+    },
+    {
+      "party-number": "MRQW031",
+      "party-name": "Leopold Zec",
+      "role-kind": "guarantor",
+      "role-id": "G1",
+      "role-status": "current"
+    },
+    {
+      "party-number": "MRQW031",
+      "party-name": "Teodor Brkic",
+      "role-kind": "guarantor",
+      "role-id": "G2",
+      "role-status": "current"
+    }
+  ],
+  "accounts": [
+    {
+      "account-number": "0042201082794",
+      "role-kind": "primary-account"
+    },
+    {
+      "account-number": "0000100002378",
+      "role-kind": "settlement-account"
+    }
+  ],
+  "term":
+    {
+      "period": 4,
+      "unit-of-time": "Y"
+    },
+  "grace": 
+    {
+      "period": 3,
+      "unit-of-time": "M"
+    },
+  "maturity-date": "2017-10-21T00:00:00",
+  "initial-amount": 8000.00,
+  "primary-currency": "EUR",
+  "eapr": 9.79,
+  "napr": 9.0
 }
 ```
-To store documents you will need folder id or path.
-###4. Upload some documents to folder
-Now you are ready to upload your first document. You will need to post multipart/form-data representation with file pased in content-stream parameter.
+
+###5. View arrangement installment plan
+Installment plan is specific arrangement subresource which exists only for some kinds of arrangement - usually only for term loans and deposits. . 
+We can reach it at following endpoint:
 
 ```
-POST dms/folders/ee48b17534c9
-Content-Type: multipart/form-data
+GET /arrangements/0042201082794/installment-plan
+```
 
-content-stream: C:\users\james\documents\headshot.png
-name: headshot.png
-media-type: image/png
-filing-purpose: customer-picture
-```
-You will get back `201 Created` status code and json representation with a created document. Location header will contain URL for download.
+You will get back `200 OK` status code and json representation with installment plan details. 
 
-```
-Location: http://api.asse.co/content/dms/documents/mj20b12534r4
-```
 ```json
 {
-  "kind": "document",
-  "name": "headshot.png",
-  "path": "customers/jabon0007",
-  "filing-purpose": "customer-picture",   
-  "id": "mj20b12534r4",
-  "changed-on": "2015-10-20T23:22:10.000Z",
-  "created-on": "2015-11-23T07:08:30.000Z",
-  "created-by": "jabon0007"
 }
 ```
+
 ###5. List folder contents
 Now lets list the folder contents and verify that it contains on image.
 ```
