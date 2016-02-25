@@ -4,7 +4,7 @@ Sales Arrangement API gives you access to all durable arrangements customer has 
 
 Key Resources
 -------------
-Top-level resource is arrangement (arrangements) which has specializations by kind. Main subresources are arrangement-plan and conditions. 
+Top-level resource is arrangement (arrangements) which has specializations by kind. Main subresources are installment-plan and arrangement-conditions. 
 
 Resource | Description
 ----------- |-----------
