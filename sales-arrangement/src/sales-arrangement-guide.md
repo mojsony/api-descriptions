@@ -42,26 +42,27 @@ GET /arrangements
 You will get back `200 OK` status code and json representation with a list of arrangements. 
 
 ```json
-[
-  {
-    "arrangement-number": "0000100002378",
-    "kind": "current-account",
-    "product-code": "RT-CA-STD-001",
-    "status": "effective"
-  },
-  {
-    "arrangement-number": "0042201082794",
-    "kind": "term-loan",
-    "product-code": "RT-LN-CAR-002",
-    "status": "effective"
-  }
-]
+{
+  "items": [
+    {
+      "arrangement-number": "0000100002378",
+      "kind": "current-account",
+      "product-code": "RT-CA-STD-001",
+      "status": "effective"
+    },
+    {
+      "arrangement-number": "0042201082794",
+      "kind": "term-loan",
+      "product-code": "RT-LN-CAR-002",
+      "status": "effective"
+    }
+  ]
+}
 ```
 
 
 ###4. See arrangement details
-Arrangement details are accessible from arrangement list and also can be accessed from account list or from any context where we can found arrangement number. We will use include-param to include party-role and arrangement-account-info subresources (under parties and accounts properties). 
-We can access arrangement details at following endpoint:
+Arrangement details are accessible from arrangement list and also can be accessed from account list or from any context where we can found arrangement number. We will use include-param to include party-role and arrangement-account-info subresources (under parties and accounts properties): 
 
 ```
 GET /arrangements/0042201082794?include=parties, accounts
@@ -126,59 +127,213 @@ You will get back `200 OK` status code and json representation with arrangement 
 }
 ```
 
-###5. View arrangement installment plan
-Installment plan is specific arrangement subresource which exists only for some kinds of arrangement - usually only for term loans and deposits. . 
-We can reach it at following endpoint:
+###5. Retrieve arrangement installment plan
+Installment plan is specific arrangement subresource which exists only for some kinds of arrangement - usually only for term loans and deposits. We will use paging to get first 6 installment plan rows:
 
 ```
-GET /arrangements/0042201082794/installment-plan
+GET /arrangements/0042201082794/installment-plan?page-size=6&page-number=1
 ```
 
 You will get back `200 OK` status code and json representation with installment plan details. 
 
 ```json
 {
-}
-```
-
-###5. List folder contents
-Now lets list the folder contents and verify that it contains on image.
-```
-GET /dms/folders/ee48b17534c9
-```
-
-You will get back `200 OK` status code and json representation with a list of repository names. To access content in repository you will use `folders` and `documents` resources prefixed with repository name.
-```json
-{
   "items": [
     {
-      "kind": "document",
-      "name": "headshot.png",
-      "path": "customers/jabon0007",  
-      "id": "mj20b12534r4",
-      "changed-on": "2015-10-20T23:22:10.000Z",
-      "created-on": "2015-11-23T07:08:30.000Z",
-      "created-by": "jabon0007"
+      "ordinal": "0",
+      "date": "2013-10-21T00:00:00",
+      "activity-kind": "disbursement",
+      "description": "Loan disbursement and fee",
+      "disbursement": "8000.00",
+      "starting-balance": "0.00",
+      "principal-repayment": "0.00",
+      "interest-repayment": "0.00",
+      "annuity": "0.00",
+      "fee": "80.00",
+      "outstanding-balance": "8000.00",
+      "net-cash-flow": "-7920.00",
+      "discounted-net-cash-flow": "-7920.00"
+    },
+    {
+      "ordinal": "1",
+      "date": "2013-11-21T00:00:00",
+      "activity-kind": "interest-payment",
+      "description": "Interest payment",
+      "disbursement": "0.00",
+      "starting-balance": "8000.00",
+      "principal-repayment": "0.00",
+      "interest-repayment": "58.77",
+      "annuity": "58.77",
+      "fee": "0.00",
+      "outstanding-balance": "8000.00",
+      "net-cash-flow": "58.77",
+      "discounted-net-cash-flow": "58.31"
+    },
+    {
+      "ordinal": "2",
+      "date": "2013-12-21T00:00:00",
+      "activity-kind": "interest-payment",
+      "description": "Interest payment",
+      "disbursement": "0.00",
+      "starting-balance": "8000.00",
+      "principal-repayment": "0.00",
+      "interest-repayment": "56.87",
+      "annuity": "56.87",
+      "fee": "0.00",
+      "outstanding-balance": "8000.00",
+      "net-cash-flow": "56.87",
+      "discounted-net-cash-flow": "55.99"
+    },
+    {
+      "ordinal": "3",
+      "date": "2014-01-21T00:00:00",
+      "activity-kind": "interest-payment",
+      "description": "Interest payment",
+      "disbursement": "0.00",
+      "starting-balance": "8000.00",
+      "principal-repayment": "0.00",
+      "interest-repayment": "58.77",
+      "annuity": "58.77",
+      "fee": "0.00",
+      "outstanding-balance": "8000.00",
+      "net-cash-flow": "58.77",
+      "discounted-net-cash-flow": "57.40"
+    },
+    {
+      "ordinal": "4",
+      "date": "2014-02-21T00:00:00",
+      "activity-kind": "repayment",
+      "description": "Repayment (interest and principal)",
+      "disbursement": "0.00",
+      "starting-balance": "8000.00",
+      "principal-repayment": "149.99",
+      "interest-repayment": "58.77",
+      "annuity": "208.76",
+      "fee": "0.00",
+      "outstanding-balance": "7850.01",
+      "net-cash-flow": "208.76",
+      "discounted-net-cash-flow": "202.29"
+    },
+    {
+      "ordinal": "5",
+      "date": "2014-03-21T00:00:00",
+      "activity-kind": "repayment",
+      "description": "Repayment (interest and principal)",
+      "disbursement": "0.00",
+      "starting-balance": "7850.01",
+      "principal-repayment": "156.69",
+      "interest-repayment": "52.07",
+      "annuity": "208.76",
+      "fee": "0.00",
+      "outstanding-balance": "7693.32",
+      "net-cash-flow": "208.76",
+      "discounted-net-cash-flow": "200.84"
     }
-  ],
-  "total-count": 1, 
-  "page-size": 10,
-  "page": 1,
-  "total-pages": 1,
-  "sort-order": "asc", 
-  "sort-by": "created-on"  
+  ]
 }
 ```
-###6. Download the document
-Finally lets use that url we got back in step 4. and download the document and verify that it is indeed the same image.
-Just paste this in browser address bar:
+
+###6. Retrieve interest rates, fees and other conditions
+Now, let's get arrangement's interest rates, fees and other conditions. They come in the same package - arrangement-conditions aggergate. We can use trim parameter to exclude what we don't need. So, if we need only interest rates, we will use trim parameter to exclude other two lists - fees and other (?trim=fees, other). 
+
+In this example, let's get all conditions:  
+
 ```
-GET http://api.asse.co/content/dms/documents/mj20b12534r4
+GET /arrangements/0042201082794/conditions
 ```
-You will get back `200 OK` and binary content stream with appropriate Content Type and Content Disposition headers. Download will start immediately.
+
+You will get back `200 OK` status code and json representation of arrangement-conditions. 
+
+```json
+{
+  "fees": [
+    {
+      "title": "Origination fee",
+      "effective-date": "2013-10-21T00:00:00",
+      "kind": "origination-fee",
+      "percentage": "0.7",
+      "lower-limit": {
+        "amount": "50.00",
+        "code": "EUR"
+      }
+    },
+    {
+      "title": "Yearly management fee",
+      "effective-date": "2013-10-21T00:00:00",
+      "kind": "management-fee",
+      "percentage": "0.3",
+      "frequency": "yearly"
+    },
+    {
+      "title": "Early repayment fee",
+      "effective-date": "2013-10-21T00:00:00",
+      "kind": "early-repayment-fee",
+      "percentage": "1"
+    }
+  ],
+  "interest-rates": [
+    {
+      "title": "Regular interest",
+      "effective-date": "2013-10-21T00:00:00",
+      "kind": "regular-interest",
+      "is-compund": "true",
+      "calendar-basis": "Act-Act-ISDA",
+      "rate": {
+        "base-rate-id": "EURIBOR3M",
+        "base-rate-value": "1.28",
+        "spread-rate-value": "8.5"
+      },
+      "variations": [
+        {
+          "origin": "campaign",
+          "benefit-source-id": "THRILL2013",
+          "benefit-id": "DISC-023471",
+          "variation-description": "Campaign discount on interest rate",
+          "percentage": "-0.5"
+        },
+        {
+          "origin": "sales-discount",
+          "benefit-source-id": "AGENT-007",
+          "benefit-id": "DSCNT-23617",
+          "variation-description": "Seller discount",
+          "percentage": "-0.28"
+        }
+      ],
+      "calculated-rate": "9.0"
+    },
+    {
+      "title": "Penalty interest",
+      "effective-date": "2013-10-21T00:00:00",
+      "kind": "regular-interest",
+      "is-compund": "true",
+      "calendar-basis": "Act-Act-ISDA",
+      "rate": {
+        "base-rate-id": "LEGPNL",
+        "base-rate-value": "7.21",
+        "spread-rate-value": "5.0"
+      },
+      "lower-limit": {
+        "base-rate-id": "regular-interest",
+        "base-rate-value": "9.0"
+      },
+      "calculated-rate": "12.21"
+    }
+  ],
+  "other": [
+    {
+      "category": "collaterals",
+      "description": "Purchased vehicle"
+    },
+    {
+      "category": "collaterals",
+      "description": "Bills of exchange - 2x"
+    },
+    {
+      "category": "repayment",
+      "description": "Partial early repayment without term changes is possible without going through loan approval process again."
+    }
+  ]
+}
 ```
-Content-Type: image/png
-Content-Disposition: attachment; filename="headshot.png"
-``` 
 
 **Congratulations!** You have completed getting started tutorial on most common steps when working with Content Management API. To learn more look at the reference documentation for [available operations](swagger-ui).
