@@ -1,31 +1,29 @@
-![Folders](http://cdn.flaticon.com/png/64/98/98193.png)
-Content Management API v2
+Sales Arrangement API v2
 =========================
-Content Management API v2 provides access to documents stored in content management repositories. Any form of unstructured content (files) such as documents, templates and images can be organized into a folder structure that follows conventions understood by applications. API exposes operations to upload and download content and manipulate its metadata.
-   
+Sales Arrangement API gives you access to all durable arrangements customer has with financial institution such as current accounts, loans, deposits, card access arrangements, electronic access arrangements, etc. It also provides detailed arrangement information such as financial terms and conditions, party roles, installment plan, etc. It maps to BIAN Sales Product Agreement service domain.
+
 Key Resources
 -------------
-Content Management has three top level collection resources: repositories, folders and documents. Documents have additional content stream resource.
+Top-level resource is arrangement (arrangements) which has specializations by kind. Main subresources are arrangement-plan and conditions. 
 
 Resource | Description
 ----------- |-----------
-*repository*  | Represents a top level container for content. Behind API repository is always hosted on a single system such as full blown DMS or simplified DMS using file system and database store. Different repositories are often used to separate official correspondence such as contracts and legal documents from web content such as images and banners.
-*folder*      | Serves as the anchor for a collection of documents and child folders. The folder has an implicit hierarchical relationship with each document or other folder in its collection. A folder object does not have its own *content stream* and is not versionable. Folder structure and folder metadata attributes are used according to conventions expected by consuming applications.
-*document*    | Represents elementary information entity managed by the repository like contract, image or template. Depending on its kind, a document object may be discoverable by search query operations. Once document is uploaded it gets unique id provided by repository that can be used to get the content irrespective of folder structure. Document can also be located by concatenating folder path with document file name. Documents contain binary *content stream* and metadata attributes that follow application conventions. Documents can be versioned.
-*content stream* | A blob containing a binary stream of content. Each content stream has a MIME Media Type, as deﬁned by RFC2045 and RFC2046. A content stream’s attributes are represented as properties of the content stream’s containing document. There is no MIME type speciﬁc attribute or name directly associated with the content stream outside of the document object.
+*arrangement*  | Represents a deal/agreement between bank as product/service provider and its customer as a consumer of the same product. Non-product agreements are not covered by this resource. Specializations of arrangement are: current-account, demand-deposit, term-deposit, term-loan, overdraft-facility, credit-facility, credit-card-facility, card-access-arrangement, electronic-acess-arrangement, other-product-arrangement
+*installment-plan*      | A list of scheduled payments for entire arrangement lifecycle.
+*arrangement-conditions*    | Arrangement terms and conditions listed in three separate lists: fees, interest-rates and other. 
 
 Getting started tutorial
 ---------------
 To get started follow these steps:
 ###1. Authenticate your app
-Content Management API uses OAuth 2.0 for authentication. You get an access token that authenticates your app with a particular set of permissions for a user. You provide an access token through an HTTP header:
+Sales Arrangement API uses OAuth 2.0 for authentication. You get an access token that authenticates your app with a particular set of permissions for a user. You provide an access token through an HTTP header:
 ```
 Authorization: bearer {token}
 ```
 To obtain an access token and sign the user in, see [authentication]() section.
 
 ###2. URL Root
-Now that you've authenticated your app, you can call the Content Management API with your access token against the URL root below, combined with one of the root resources.  Content Management API URLs are relative to the following root unless otherwise noted.
+Now that you've authenticated your app, you can call the Sales Arrangement API with your access token against the URL root below, combined with one of the root resources.  Sales Arrangement API URLs are relative to the following root unless otherwise noted.
 
 API | URL Root
 --------|---------
