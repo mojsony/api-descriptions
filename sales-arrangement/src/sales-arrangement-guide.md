@@ -232,6 +232,7 @@ You will get back `200 OK` status code and json representation with installment 
   ]
 }
 ```
+If you analyze this response, you will note that it consists of fields requred for effective rate calculation (EAPR). This transparently shows all planned cash flows and their discounted values as required by regulations. 
 
 ###6. Retrieve interest rates, fees and other conditions
 Now, let's get arrangement's interest rates, fees and other conditions. They come in the same package - arrangement-conditions aggergate. We can use trim parameter to exclude what we don't need. So, if we need only interest rates, we will use trim parameter to exclude other two lists - fees and other (?trim=fees, other). 
@@ -337,5 +338,7 @@ You will get back `200 OK` status code and json representation of arrangement-co
 ```
 
 If you analyze this response you can see that complex structure of fees and interest rates is supported, with lower limits, upper limits and variations from standard product conditions. The purpose of separate presentation of these variations is price transparency - to show the customer why he got some discount and explain the scope in which it is valid. These variations are advanced concepts and are not supported by all back-end systems implementing this API.  
+
+Also, note that interest rates may be composed of base and spread rate, where base rate is variable part. So, if base rate exists, base-rate-value represents it's value at effective-date. Final calculated interest rate value at condition effective-date is in calculated-rate and it is sum of values of base rate, spread rate and all applicable variations. Condition effective-date is the date of contract, amendment or any change in condition definition. Note that this API deals with sales arrangement and doesn't deal with changes of base rate value during arrangement lifecycle. It cares only about condition definition and it's value in moment of definition. 
 
 **Congratulations!** You have completed getting started tutorial on most common steps when working with Content Management API. To learn more look at the reference documentation for [available operations](swagger-ui).
