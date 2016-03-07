@@ -1,0 +1,1058 @@
+swagger: '2.0'
+host: dev.aseeco-see.com
+basePath: /v1/dialog
+info:
+  description: |
+            Dialog API enables channel apllications methods for configuration and presenting content that is specific for them.
+            It enables applications repository to save generic payload for later use. 
+  title: Dialog API
+  version: beta
+tags:
+  - description: Working with configuration
+    name: Configuration
+  - description: Working with faq
+    name: FAQ
+  - description: Working with localizations
+    name: Localizations
+  - description: Working with storage items
+    name: StorageItems
+  - description: Working with tips
+    name: Tips
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /configuration/settings:
+    get:
+      operationId: ConfigurationSettings_GetList
+      parameters:
+        - $ref: '#/parameters/application-id-param'
+        - $ref: '#/parameters/category-id-query-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/configuration-settings'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Get list of channel configuration settings
+      tags:
+        - Configuration
+      x-asee-tags:
+        - Pageable
+        - Sortable
+  '/configuration/settings/{setting-id}':
+    get:
+      operationId: ConfigurationSettings_Get
+      parameters:
+        - $ref: '#/parameters/setting-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/configuration-setting'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Get channel configuration setting details
+      tags:
+        - Configuration
+      x-asee-tags: []
+  /configuration/system-messages:
+    get:
+      operationId: SystemMessages_GetList
+      parameters:
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/system-messages'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Get the list of system maintenance messages
+      tags:
+        - Configuration
+      x-asee-tags:
+        - Pageable
+        - Sortable
+  /faq:
+    get:
+      operationId: FAQs_GetList
+      parameters:
+        - $ref: '#/parameters/category-id-query-param'
+        - $ref: '#/parameters/application-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/faq-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Get list of frequently asked questions.
+      tags:
+        - FAQ
+      x-asee-tags: []
+  '/faq/{faq-id}':
+    get:
+      operationId: FAQs_Get
+      parameters:
+        - $ref: '#/parameters/faq-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/faq'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Get details of frequently asked questions.
+      tags:
+        - FAQ
+      x-asee-tags: []
+  /faq/categories:
+    get:
+      operationId: FAQCategories_GetList
+      parameters:
+        - $ref: '#/parameters/application-id-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/categories'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets frequently asked questions categories
+      tags:
+        - FAQ
+      x-asee-tags:
+        - Pageable
+        - Sortable
+  '/faq/categories/{category-id}':
+    get:
+      operationId: FAQCategories_Get
+      parameters:
+        - $ref: '#/parameters/faq-id-query-param'
+        - $ref: '#/parameters/category-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/category'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets frequently asked questions category details.
+      tags:
+        - FAQ
+      x-asee-tags: []
+  /localizations/languages:
+    get:
+      operationId: Languages_GetList
+      parameters:
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/languages'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Get list of supported languages
+      tags:
+        - Localizations
+      x-asee-tags:
+        - Pageable
+        - Sortable
+  /localizations:
+    get:
+      operationId: Localizations_GetList
+      parameters:
+        - $ref: '#/parameters/date-from-param'
+        - $ref: '#/parameters/date-to-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/localizations'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Get list of localizations.
+      tags:
+        - Localizations
+      x-asee-tags:
+        - Pageable
+        - Sortable
+  '/localizations/{localization-id}':
+    get:
+      operationId: Localizations_Get
+      parameters:
+        - $ref: '#/parameters/localization-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/localization'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets localization details.
+      tags:
+        - Localizations
+      x-asee-tags: []
+  /storage-items:
+    get:
+      operationId: StorageItems_GetList
+      parameters:
+        - $ref: '#/parameters/date-from-param'
+        - $ref: '#/parameters/date-to-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/storage-values'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Get the list of application storage items.
+      tags:
+        - StorageItems
+      x-asee-tags:
+        - Pageable
+        - Sortable
+    post:
+      operationId: StorageItems_Create
+      parameters:
+        - description: The set storage item command.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/set-storage-item-command'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Add new application storage item.
+      tags:
+        - StorageItems
+      x-asee-tags: []
+  '/storage-items/{item-id}':
+    delete:
+      operationId: StorageItems_Delete
+      parameters:
+        - $ref: '#/parameters/item-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Deletes the storage item.
+      tags:
+        - StorageItems
+      x-asee-tags: []
+    get:
+      operationId: StorageItems_Get
+      parameters:
+        - $ref: '#/parameters/item-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/storage-item'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Get the application storage item details.
+      tags:
+        - StorageItems
+      x-asee-tags: []
+    put:
+      operationId: StorageItems_Update
+      parameters:
+        - description: The set storage item command.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/set-storage-item-command'
+        - $ref: '#/parameters/item-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Updates the value of storage item.
+      tags:
+        - StorageItems
+      x-asee-tags: []
+  /tips:
+    get:
+      operationId: Tips_GetList
+      parameters:
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/tips'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets application page tips list
+      tags:
+        - Tips
+      x-asee-tags:
+        - Pageable
+        - Sortable
+  '/tips/{tip-id}':
+    get:
+      operationId: Tips_Get
+      parameters:
+        - $ref: '#/parameters/tip-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/tip'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Get tips details
+      tags:
+        - Tips
+      x-asee-tags: []
+parameters:
+  application-id-param:
+    description: Channel application identifier
+    in: query
+    name: application-id
+    required: true
+    format: int32
+    type: integer
+  category-id-param:
+    description: Category identifier
+    in: path
+    name: category-id
+    required: true
+    type: string
+  category-id-query-param:
+    description: Category identifier
+    in: query
+    name: category-id
+    required: true
+    type: string
+  page-size-param:
+    in: query
+    name: page-size
+    required: false
+    format: int32
+    type: integer
+  page-param:
+    in: query
+    name: page
+    required: false
+    format: int32
+    type: integer
+  sort-order-param:
+    description: ' ( Possible values: asc,desc )'
+    in: query
+    name: sort-order
+    required: false
+    enum:
+      - asc
+      - desc
+    type: string
+  sort-by-param:
+    in: query
+    name: sort-by
+    required: false
+    type: string
+  setting-id-param:
+    description: The setting identifier.
+    in: path
+    name: setting-id
+    required: true
+    type: string
+  faq-id-param:
+    description: The frequently asked question identifier.
+    in: path
+    name: faq-id
+    required: true
+    type: string
+  faq-id-query-param:
+    description: The frequently asked question identifier.
+    in: query
+    name: faq-id
+    required: true
+    type: string
+  date-from-param:
+    description: Gets or sets the date from.
+    in: query
+    name: date-from
+    required: false
+    format: date-time
+    type: string
+  date-to-param:
+    description: Gets or sets the date to.
+    in: query
+    name: date-to
+    required: false
+    format: date-time
+    type: string
+  localization-id-param:
+    description: Localization id
+    in: path
+    name: localization-id
+    required: true
+    type: string
+  item-id-param:
+    description: Application storage item identifier
+    in: path
+    name: item-id
+    required: true
+    type: string
+  tip-id-param:
+    description: Tip id
+    in: path
+    name: tip-id
+    required: true
+    type: string
+definitions:
+  configuration-settings:
+    description: ''
+    example:
+      configuration-settings:
+        - setting-id: SettingId
+          setting-group-id: SettingGroupId
+          kind: Kind
+          value: Value
+      navigations:
+        - href: Href
+          rel: Rel
+      commands:
+        - href: Href
+          rel: Rel
+      uri: Uri
+    properties:
+      configuration-settings:
+        description: List of configuration settings.
+        items:
+          $ref: '#/definitions/configuration-setting'
+        type: array
+      navigations:
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        type: string
+    type: object
+  configuration-setting:
+    description: Application configuration setting
+    example:
+      setting-id: SettingId
+      setting-group-id: SettingGroupId
+      kind: Kind
+      value: Value
+    properties:
+      setting-id:
+        description: Setting identifier.
+        type: string
+      setting-group-id:
+        description: Setting group identifier.
+        type: string
+      kind:
+        description: Setting kind.
+        type: string
+      value:
+        description: Setting value.
+        type: string
+    required:
+      - setting-id
+    type: object
+  link:
+    example:
+      href: Href
+      rel: Rel
+    properties:
+      href:
+        type: string
+      rel:
+        type: string
+    type: object
+  system-messages:
+    description: ''
+    example:
+      items:
+        - system-message-id: SystemMessageId
+          language-id: LanguageId
+          valid-from: '0001-01-01T00:00:00'
+          valid-to: '0001-01-01T00:00:00'
+      navigations:
+        - href: Href
+          rel: Rel
+      commands:
+        - href: Href
+          rel: Rel
+      uri: Uri
+    properties:
+      items:
+        description: Gets or sets the items.
+        items:
+          $ref: '#/definitions/system-message'
+        type: array
+      navigations:
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        type: string
+    type: object
+  system-message:
+    description: System message (maintainance info ...)
+    example:
+      system-message-id: SystemMessageId
+      language-id: LanguageId
+      valid-from: '0001-01-01T00:00:00'
+      valid-to: '0001-01-01T00:00:00'
+    properties:
+      system-message-id:
+        description: Gets or sets the system message identifier.
+        type: string
+      language-id:
+        description: Gets or sets the language identifier.
+        type: string
+      valid-from:
+        description: Gets or sets the valid from.
+        format: date-time
+        type: string
+      valid-to:
+        description: Gets or sets the valid to.
+        format: date-time
+        type: string
+    type: object
+  faq-list:
+    description: ''
+    example:
+      total-count: 0
+      page-size: 0
+      page-number: 0
+      total-pages: 0
+      faq-list:
+        - question-id: QuestionId
+          category-id: CategoryId
+          question: Question
+          answer: Answer
+      navigations:
+        - href: Href
+          rel: Rel
+      commands:
+        - href: Href
+          rel: Rel
+      uri: Uri
+    properties:
+      total-count:
+        description: Total count.
+        format: int32
+        type: integer
+      page-size:
+        description: Size of the page.
+        format: int32
+        type: integer
+      page-number:
+        description: Page number.
+        format: int32
+        type: integer
+      total-pages:
+        description: Total pages.
+        format: int32
+        type: integer
+      faq-list:
+        description: FAQ list.
+        items:
+          $ref: '#/definitions/faq'
+        type: array
+      navigations:
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        type: string
+    type: object
+  faq:
+    description: Frequently answered questions
+    example:
+      question-id: QuestionId
+      category-id: CategoryId
+      question: Question
+      answer: Answer
+    properties:
+      question-id:
+        description: Question identifier
+        type: string
+      category-id:
+        description: Category identifier
+        type: string
+      question:
+        description: Question text.
+        type: string
+      answer:
+        description: Answer text.
+        type: string
+    required:
+      - question-id
+      - category-id
+    type: object
+  categories:
+    description: List of frequently asked questions categories
+    example:
+      total-count: 0
+      page-size: 0
+      page-number: 0
+      total-pages: 0
+      categories:
+        - category-id: CategoryId
+          title: Title
+      navigations:
+        - href: Href
+          rel: Rel
+      commands:
+        - href: Href
+          rel: Rel
+      uri: Uri
+    properties:
+      total-count:
+        description: Total count.
+        format: int32
+        type: integer
+      page-size:
+        description: Size of the page.
+        format: int32
+        type: integer
+      page-number:
+        description: Page number.
+        format: int32
+        type: integer
+      total-pages:
+        description: Total pages.
+        format: int32
+        type: integer
+      categories:
+        description: Category list.
+        items:
+          $ref: '#/definitions/category'
+        type: array
+      navigations:
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        type: string
+    type: object
+  category:
+    description: Category
+    example:
+      category-id: CategoryId
+      title: Title
+    properties:
+      category-id:
+        description: Category identifier
+        type: string
+      title:
+        description: Category title
+        type: string
+    required:
+      - category-id
+    type: object
+  languages:
+    description: List of languages
+    example:
+      total-count: 0
+      page-size: 0
+      page-number: 0
+      total-pages: 0
+      languages:
+        - language-id: 0
+          culture: Culture
+          name: Name
+      navigations:
+        - href: Href
+          rel: Rel
+      commands:
+        - href: Href
+          rel: Rel
+      uri: Uri
+    properties:
+      total-count:
+        description: Total count.
+        format: int32
+        type: integer
+      page-size:
+        description: Size of the page.
+        format: int32
+        type: integer
+      page-number:
+        description: Page number.
+        format: int32
+        type: integer
+      total-pages:
+        description: Total pages.
+        format: int32
+        type: integer
+      languages:
+        description: Language list.
+        items:
+          $ref: '#/definitions/language'
+        type: array
+      navigations:
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        type: string
+    type: object
+  language:
+    description: Language
+    example:
+      language-id: 0
+      culture: Culture
+      name: Name
+    properties:
+      language-id:
+        description: Language identifier
+        format: int32
+        type: integer
+      culture:
+        description: Culture
+        type: string
+      name:
+        description: Name
+        type: string
+    required:
+      - language-id
+    type: object
+  localizations:
+    description: List of localizations
+    example:
+      total-count: 0
+      page-size: 0
+      page-number: 0
+      total-pages: 0
+      localizations:
+        - localization-id: 0
+          name: Name
+          localization-strings:
+            - localization-string-id: 0
+              key-id: 0
+              language-id: 0
+              value: Value
+      navigations:
+        - href: Href
+          rel: Rel
+      commands:
+        - href: Href
+          rel: Rel
+      uri: Uri
+    properties:
+      total-count:
+        description: Total count.
+        format: int32
+        type: integer
+      page-size:
+        description: Size of the page.
+        format: int32
+        type: integer
+      page-number:
+        description: Page number.
+        format: int32
+        type: integer
+      total-pages:
+        description: Total pages.
+        format: int32
+        type: integer
+      localizations:
+        description: Language list.
+        items:
+          $ref: '#/definitions/localization'
+        type: array
+      navigations:
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        type: string
+    type: object
+  localization:
+    description: Localization key
+    example:
+      localization-id: 0
+      name: Name
+      localization-strings:
+        - localization-string-id: 0
+          key-id: 0
+          language-id: 0
+          value: Value
+    properties:
+      localization-id:
+        description: Gets or sets the localization identifier.
+        format: int32
+        type: integer
+      name:
+        description: Name
+        type: string
+      localization-strings:
+        description: Localization strings
+        items:
+          $ref: '#/definitions/localization-string'
+        type: array
+    required:
+      - localization-id
+    type: object
+  localization-string:
+    description: Localization string
+    example:
+      localization-string-id: 0
+      key-id: 0
+      language-id: 0
+      value: Value
+    properties:
+      localization-string-id:
+        description: Localization string identifier
+        format: int32
+        type: integer
+      key-id:
+        description: Key identifier
+        format: int32
+        type: integer
+      language-id:
+        description: Language identifier
+        format: int32
+        type: integer
+      value:
+        description: Value
+        type: string
+    required:
+      - localization-string-id
+    type: object
+  storage-values:
+    description: ''
+    example:
+      total-count: 0
+      page-size: 0
+      page-number: 0
+      total-pages: 0
+      items:
+        - item-id: ItemId
+          value: Value
+          date-created: '0001-01-01T00:00:00'
+      navigations:
+        - href: Href
+          rel: Rel
+      commands:
+        - href: Href
+          rel: Rel
+      uri: Uri
+    properties:
+      total-count:
+        description: Total count.
+        format: int32
+        type: integer
+      page-size:
+        description: Size of the page.
+        format: int32
+        type: integer
+      page-number:
+        description: Page number.
+        format: int32
+        type: integer
+      total-pages:
+        description: Total pages.
+        format: int32
+        type: integer
+      items:
+        description: Storage items.
+        items:
+          $ref: '#/definitions/storage-item'
+        type: array
+      navigations:
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        type: string
+    type: object
+  storage-item:
+    description: Storage item
+    example:
+      item-id: ItemId
+      value: Value
+      date-created: '0001-01-01T00:00:00'
+    properties:
+      item-id:
+        description: Storage item unique identifier.
+        type: string
+      value:
+        description: Storage item value.
+        type: string
+      date-created:
+        description: Created date.
+        format: date-time
+        type: string
+      date-modified:
+        description: Modified date.
+        format: date-time
+        type: string
+    required:
+      - item-id
+      - value
+      - date-created
+    type: object
+  set-storage-item-command:
+    description: Command for setting storage item value
+    example:
+      value: Value
+    properties:
+      value:
+        description: Value of storage item.
+        type: string
+    required:
+      - value
+    type: object
+  command-result:
+    example:
+      id: Id
+      created-record-status: CreatedRecordStatus
+    properties:
+      id:
+        type: string
+      created-record-status:
+        type: string
+    type: object
+  tips:
+    description: List of application screen tips
+    example:
+      total-count: 0
+      page-size: 0
+      page-number: 0
+      total-pages: 0
+      tips:
+        - tip-id: TipId
+          service-code: ServiceCode
+          content: Content
+      navigations:
+        - href: Href
+          rel: Rel
+      commands:
+        - href: Href
+          rel: Rel
+      uri: Uri
+    properties:
+      total-count:
+        description: Total count.
+        format: int32
+        type: integer
+      page-size:
+        description: Size of the page.
+        format: int32
+        type: integer
+      page-number:
+        description: Page number.
+        format: int32
+        type: integer
+      total-pages:
+        description: Total pages.
+        format: int32
+        type: integer
+      tips:
+        description: Tip list.
+        items:
+          $ref: '#/definitions/tip'
+        type: array
+      navigations:
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        type: string
+    type: object
+  tip:
+    description: Application screen tip
+    example:
+      tip-id: TipId
+      service-code: ServiceCode
+      content: Content
+    properties:
+      tip-id:
+        description: Tip identifier
+        type: string
+      service-code:
+        description: Service code
+        type: string
+      content:
+        description: Content
+        type: string
+    required:
+      - tip-id
+    type: object
+responses:
+  default-error-response:
+    description: 'Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()'
+schemes:
+  - http

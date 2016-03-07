@@ -1,0 +1,1382 @@
+swagger: '2.0'
+info:
+  version: v1
+  title: Account Data API
+  description: "Account Data API provides simplified access to balance and histories of customer account arrangements. Beyond traditional access to account balances and transactions, more advanced capabilities such as full text search and geospatial information are available. When PFM feature is present transactions also have spending categories and customer assigned tags. Clients that have capabilities to store data locally can use sync optimized endpoints to transactions that occurred since last synchronization."
+  contact: 
+    name: Aleksandar Milosevic
+    url: http://dev.asseco-see.com/docs/
+    email: aca@asseco-see.rs
+host: dev.asseco-see.com
+basePath: /v1/account-data
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+tags:
+  - name: Accounts
+    description: Working with accounts
+  - name: Transactions
+    description: Working with transactions
+  - name: Balances
+    description: Working with balances
+  - name: Statements
+    description: Working with statements 
+  - name: Classifications
+    description: Working with classifications     
+
+paths:
+# ****************************************************#
+# ENDPOINTS SPECIFIC TO ACCOUNT DATA API              #
+# ****************************************************#
+  /accounts:
+    get:
+      summary: List customer accounts
+      description: Returns list of accounts based on supplied filters. Balances that are not returned by default can be optionally included.
+      operationId: Accounts_GetList
+      produces:
+      - application/json
+      tags:
+        - Accounts
+      x-asee-tags: []       
+      parameters:
+        - $ref: "#/parameters/accounts-param" 
+        - $ref: "#/parameters/balance-kinds-param"    
+        - $ref: "#/parameters/include-param" 
+        - $ref: "#/parameters/trim-param"             
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/accounts'
+        default:
+          $ref: '#/responses/default-error-response'
+  '/accounts/availability':
+    get:
+      description: |
+        Checks if account number preferred by customer is available for use. Response with http status code `200` means that number is available, while response with code `410` means that number is already used. 
+        > **Note**: No reservations are made with this call. Whoever gets to apply for account first will get the number. 
+      operationId: Accounts_CheckAvailability
+      parameters:
+        - name: preferred-number
+          type: string
+          in: query
+          description: cmd
+          required: true
+      responses:
+        200:
+          description: OK - Account is available
+        410:
+          description: Gone - Account is already used
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Check if account number is available
+      tags:
+        - Accounts
+      x-asee-tags: []
+  '/accounts/{account-number}/nickname':
+    put:
+      summary: Change account nickname    
+      description: |
+        Updates account nickname with new one set by customer as more appropriate.
+      operationId: Accounts_ChangeNickname
+      parameters:
+        - $ref: '#/parameters/account-number-param'      
+        - description: Command to change account nickname
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/change-account-nickname-command'
+
+      responses:
+        '200':
+          description: OK - The nickname was changed
+        default:
+          $ref: '#/responses/default-error-response'
+
+      tags:
+        - Accounts
+      x-asee-tags: []      
+  /transactions:
+    get:
+      summary: List customer transactions 
+      description: Returns paginated list of account transactions based on supplied filters. Default sort order is by transaction-time descending so newest transactions are on top.
+      operationId: Transactions_GetList       
+      produces:
+      - application/json
+      tags:
+        - Transactions
+      x-asee-tags:
+        - Shapeable
+        - Pageable
+        - Sortable
+      parameters:
+        - $ref: "#/parameters/accounts-param"
+        - $ref: "#/parameters/cards-param"
+        - $ref: '#/parameters/currencies-param'        
+        - $ref: "#/parameters/statuses-param"
+        - $ref: '#/parameters/direction-param'        
+        - $ref: '#/parameters/channels-param'          
+        - $ref: '#/parameters/kinds-param'
+        - $ref: '#/parameters/amount-low-param'
+        - $ref: '#/parameters/amount-high-param'
+        - $ref: '#/parameters/date-from-param'
+        - $ref: '#/parameters/date-to-param'
+        - $ref: "#/parameters/page-param"
+        - $ref: "#/parameters/page-size-param"
+        - $ref: "#/parameters/sort-by-param"
+        - $ref: "#/parameters/sort-order-param"
+        - $ref: "#/parameters/include-param" 
+        - $ref: "#/parameters/trim-param"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/transactions'
+        default:
+          $ref: '#/responses/default-error-response'
+  /transactions/{transaction-id}:
+    get:
+      summary: Get details of specific customer transaction 
+      description: Returns all available details about one specific transaction such as place where and why it was originated.
+      operationId: Transactions_Get  
+      produces:
+      - application/json
+      tags:
+        - Transactions
+      x-asee-tags:
+        - Shapeable
+      parameters:
+        - name: transaction-id
+          description: Unique identifier of the transaction in the core system
+          type: string
+          in: path
+          required: true
+        - $ref: "#/parameters/include-param" 
+        - $ref: "#/parameters/trim-param"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/transaction'
+        default:
+          $ref: '#/responses/default-error-response'          
+  /transactions/sync:
+    get:
+      summary: Sync latest customer transactions 
+      description: Returns list of transactions based on supplied filters. This endpoint supports incremental synchronization.
+      operationId: Transactions_Sync      
+      produces:
+      - application/json
+      tags:
+        - Transactions
+      x-asee-tags:
+        - Sync
+        - Shapeable
+      parameters:
+        - $ref: "#/parameters/accounts-param"           
+        - $ref: "#/parameters/sync-timestamp-param" 
+        - $ref: "#/parameters/include-param" 
+        - $ref: "#/parameters/trim-param"  
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/transactions'
+        default:
+          $ref: '#/responses/default-error-response'          
+  /transactions/search:
+    get:
+      summary: Search transactions accross all fields  
+      description: "Returns a list of transactions that match filters and search terms accross textual fields such as description, purpose, counterparty, reference. Default sort is by relevance and then by recency. For transactions tagget with geographic coordinates radius filter can be applied"
+      operationId: Transactions_Search       
+      produces:
+      - application/json
+      tags:
+        - Transactions
+      x-asee-tags:
+        - Searchable
+        - Geospatial
+        - Pageable
+        - Shapeable
+        - Sortable
+      parameters:
+        - $ref: "#/parameters/accounts-param"
+        - $ref: "#/parameters/cards-param"
+        - $ref: '#/parameters/search-query-param'  
+        - $ref: '#/parameters/search-fields-param'      
+        - $ref: '#/parameters/search-mode-param'
+        - $ref: '#/parameters/latitude-param'
+        - $ref: '#/parameters/longitude-param'
+        - $ref: '#/parameters/radius-param'        
+        - $ref: "#/parameters/include-param" 
+        - $ref: "#/parameters/trim-param"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/transactions'
+        default:
+          $ref: '#/responses/default-error-response'          
+  /statements:
+    get:
+      summary: List account statements 
+      description: Returns list of account statements for a given years. Statement transactions and balances are not included.
+      operationId: Statements_GetList          
+      produces:
+      - application/json
+      tags:
+        - Statements
+      x-asee-tags: []   
+      parameters:
+        - $ref: "#/parameters/accounts-param"
+        - $ref: '#/parameters/years-param'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/statements'
+        default:
+          $ref: '#/responses/default-error-response'
+  /statements/{statement-id}:
+    get:
+      summary: Get details for specific statement
+      description: Returns specific statement with all related details including list of transactions and balances reported in period covered by statement
+      operationId: Statements_Get          
+      produces:
+      - application/json
+      tags:
+        - Statements
+      x-asee-tags: []       
+      parameters:
+        - name: statement-id      
+          description: Unique identifier of specific account statement
+          in: path
+          required: true
+          type: string      
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/statement'
+        default:
+          $ref: '#/responses/default-error-response'             
+  /balances:
+    get:
+      summary: Inquire latest account balances 
+      description: Returns list of account balances based on supplied filters.
+      operationId: Balances_GetList       
+      tags:
+        - Balances
+      x-asee-tags: []
+      parameters:    
+        - $ref: '#/parameters/balance-kinds-param'
+        - $ref: "#/parameters/accounts-param"           
+        - $ref: "#/parameters/sync-timestamp-param" 
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/balances'
+        default:
+          $ref: '#/responses/default-error-response'
+
+
+# ****************************************************#
+# ENDPOINTS COMMON WITH OTHER APIs                    #
+# ****************************************************#
+
+  /classifications: 
+    get:
+      summary: List all classification schemas used by the API
+      description: Some fields and parameters have been restricted to a list of allowed lookup values maintained by the bank. This method lists all schemas used in this API.    
+      operationId: "Classifications_GetList"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/classification-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+        - Classifications
+
+  /classifications/{schema-id}:
+    get:
+      summary: List values allowed by given classification schema.
+      description: Returns all classification values for chosen classification.
+      operationId: Classifications_Get
+      parameters:
+        - $ref: '#/parameters/schema-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/classification'
+        default:
+          $ref: '#/responses/default-error-response'
+
+      tags:
+        - Classifications
+
+parameters:
+# ****************************************************#
+# PARAMETERS COMMON WITH OTHER APIs                   #
+# ****************************************************#
+  latitude-param:
+    description: Geographic latitude of the location of map center. Used for geospatial search of transactions that have been geocoded.
+    in: query
+    name: lat
+    required: false
+    format: double
+    type: number
+  longitude-param:
+    description: Geographic longitude of the location of map center. Used for geospatial search of transactions that have been geocoded.
+    in: query
+    name: long
+    required: false
+    format: double
+    type: number
+  radius-param:
+    description: Radius (in km) from location on map specified by latitude and longitude. Used for geospatial search of transactions that have been geocoded.
+    in: query
+    name: radius
+    required: false
+    format: double
+    type: number
+  search-query-param:
+    name: q
+    in: query
+    description: The text to search for. All searchable fields are searched by default unless search-fields is specified. When searching searchable fields, the search text itself is tokenized, so multiple terms can be separated by white space (e.g. `q=hello world`). 
+    required: true
+    type: string     
+  search-fields-param:
+    description: The list of comma-separated field names to search for the specified text. Target fields must be marked as searchable
+    in: query
+    name: search-fields
+    type: array
+    items:
+      type: string
+    collectionFormat: csv  
+  search-mode-param:
+    name: search-mode
+    in: query
+    description: Specifies whether any or all of the search terms must be matched in order to count the document as a match.
+    type: string   
+    enum:
+    - any
+    - all
+    required: false
+  schema-id-param:
+    name: schema-id
+    description: Identifier of classification schema
+    in: path
+    required: true
+    type: string
+  page-param:
+    name: page
+    in: query
+    description: Page index. For more information see general guidance on [paging](common-getstarted.html#paging)
+    type: integer
+    default: 1
+    x-asee-common: true
+  page-size-param:
+    name: page-size
+    in: query
+    description: Number of items on a page. For more information see general guidance on [paging](common-getstarted.html#paging)
+    required: false
+    type: integer
+    default: 10
+    x-asee-common: true    
+  sort-order-param:
+    description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [sorting](common-getstarted.html#sorting)
+    in: query
+    name: sort-order
+    type: string
+    default: asc
+    enum:
+    - asc
+    - desc
+    x-asee-common: true  
+  sort-by-param:  
+    description: Attribute of the collection item to sort by. For more information see general guidance on [sorting](common-getstarted.html#sorting)
+    in: query
+    name: sort-by
+    type: string
+    x-asee-common: true      
+  include-param:
+    description: List of fields to include in response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
+    in: query
+    name: include
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+    x-asee-common: true      
+  trim-param:
+    description: List of fields to trim from response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
+    in: query
+    name: trim
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+    x-asee-common: true
+  search-query-param:
+    name: q
+    in: query
+    description: The text to search for. All searchable fields are searched by default unless search-fields is specified. When searching searchable fields, the search text itself is tokenized, so multiple terms can be separated by white space (e.g. `q=hello world`). 
+    required: true
+    type: string  
+# ****************************************************#
+# PARAMETERS SPECIFIC FOR ACCOUNT DATA API            #
+# ****************************************************#
+  years-param:
+    description: "Years for which the statements are returned. If empty or not present current calendar year is assumed. Valid range is `1900-2100`. Example - `2014,2015`"
+    in: query
+    name: years
+    required: false
+    collectionFormat: csv
+    items:
+      type: integer
+      format: int32
+      minimum: 1900
+      maximum: 2100
+    type: array
+  kinds-param:    
+    name: kinds
+    description: "Optional list of transaction kinds of interest. Transaction kind is an enumeration that distinguishes between accounting transactions based on their effect on the customer accounts. Deposit (`dep`), Withdrawal (`wdw`), Payment (`pmt`), Fee (`fee`), Interest credit (`inc`), Reversal (`rev`), Adjustment (`adj`), Loan disbursement (`lnd`), Loan repayment (`lnr`), Foreign currency exchange (`fcx`), Account opening (`aop`), Account closing (`acl`)"
+    type: array
+    x-asee-enum: transaction-kind
+    collectionFormat: csv
+    in: query      
+    items:
+      type: string
+      enum:
+        - dep
+        - wdw
+        - pmt
+        - fee
+        - inc
+        - rev
+        - adj
+        - lnd
+        - lnr
+        - fcx
+        - aop
+        - acl 
+  balance-kinds-param:
+    name: balance-kinds
+    description: Optional list of balance kinds that are requested. If empty or not present, it is interpreted that all balances applicable for an account are requested.
+    type: array
+    items:
+      type: string
+    in: query
+    collectionFormat: csv
+    x-asee-enum: balance-kind
+    enum:
+      - available
+      - current
+      - expected
+      - blocked
+      - outstanding
+      - advance
+      - opening
+      - closing        
+  amount-low-param:
+    description: Lower limit of amount for matching transactions. Transactions with amount higher than this limit will be included in the result.
+    in: query
+    name: amount-low
+    required: false
+    format: double
+    type: number
+  amount-high-param:
+    description: Upper limit of amount for matching transactions. Transactions with amount lower than this limit will be included in the result.
+    in: query
+    name: amount-high
+    required: false
+    format: double
+    type: number
+  date-from-param:
+    description: Date and time of first transaction to be returned. By default T-30 calendar days.
+    in: query
+    name: date-from
+    required: false
+    format: date-time
+    type: string
+  date-to-param:
+    description: Date and time of last transaction. Default value is today.
+    in: query
+    name: date-to
+    required: false
+    format: date-time
+    type: string        
+  channels-param:
+    description: Optional list of channel codes where transactions were initiated. List of channel codes is available from [Reference API](reference.html)
+    name: channels
+    in: query
+    type: array
+    collectionFormat: csv    
+    items:
+      type: string
+  account-number-param:
+    description: Unique identifier of the account arrangement
+    in: path
+    name: account-number
+    required: true
+    type: string   
+  currencies-param:
+    description: Optional list of currencies of interest. Currencies are represented as `ISO 4217` aplha3 codes. If empty or not present all currencies are interpreted as interesting.
+    in: query
+    name: currencies
+    required: false
+    collectionFormat: csv
+    items:
+      type: string
+    type: array    
+  accounts-param:    
+    name: accounts
+    description: Mandatory list of accounts of interest
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+    in: query
+    required: true
+  cards-param:    
+    name: cards
+    description: Optional list of cards of interest. If empty or not present, it is interpreted as all cards are interesting.
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+    in: query 
+  statuses-param:    
+    name: statuses
+    description: Optional list of transaction statuses of interest. Status of transaction. Pending (`p`), Booked (`b`), Voided (`v`). If empty or not present, it is interpreted as all statuses are interesting.
+    type: array
+    collectionFormat: csv
+    in: query      
+    items:
+      type: string
+      enum:
+        - p
+        - b
+        - v  
+  direction-param:
+    description: Debit (`d`) for liabilities or credit (`c`) for assets
+    in: query
+    name: direction
+    required: false
+    type: string         
+    enum:
+      - d
+      - c
+  sync-timestamp-param:
+    name: sync-timestamp
+    description: Optional timestamp indicator for incremental synchronization. If supplied items that have been recorded or updated after it will be returned. If empty or not present, all items will be returned 
+    type: string
+    in: query
+
+responses:
+# ****************************************************#
+# RESPONSES COMMON WITH OTHER APIs                    #
+# ****************************************************#
+
+  default-error-response:
+    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling](common-getstarted.html#error-handling)    
+
+definitions:
+# ****************************************************#
+# MODELS COMMON WITH OTHER APIs                       #
+# ****************************************************#
+
+  classification-value: 
+    type: object
+    description: Classification value
+    properties: 
+      literal: 
+        description: Literal that uniquely identifies classification value 
+        type: string    
+      code: 
+        description: Optional numerical code of classification value
+        type: string
+      description: 
+        description: Description of classification value
+        type: string
+      parent-literal: 
+        description: Optional literal of parent classification value if schema is hierarchical
+        type: string     
+    example:
+      literal: billing
+      code: 2
+      description: Contact may be used to provide party with details of their liabilities to the bank
+  classification-list:
+    description: List of classification schemas
+    type: object    
+    properties: 
+      items: 
+        description: List of classification schemas
+        items:
+          $ref: "#/definitions/classification-info"
+        type: array
+    example:
+      - 
+        schema-id: filing-purpose
+        name: Filing Purpose
+        description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture
+      -
+        schema-id: folder-purpose
+        name: Folder Purpose
+        description: List of possible uses of a folder in business context.       
+  classification-info:  
+    description: Basic information on classification schema
+    properties:
+      schema-id:
+        type: string
+        description: Unique literal that identifies the classification schema. Always in `lowercase-dash` convention.
+      name: 
+        type: string
+        description: User friendly name of classification
+      description:
+        type: string
+        description: Description of a classification
+    example:
+      schema-id: filing-purpose
+      name: Filing Purpose
+      description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture   
+  classification:
+    type: object   
+    description: Classification schema details
+    properties:
+      schema-id:
+        type: string
+        description: Unique literal that identifies the classification schema. Always in `lowercase-dash` convention.
+      name: 
+        type: string
+        description: User friendly name of classification
+      description:
+        type: string
+        description: Description of a classification
+      values:
+        description: List of allowed classification values
+        type: array   
+        items:
+          $ref: "#/definitions/classification-value"
+    example:
+      schema-id: contact-purpose
+      name: Contact Purpose
+      description: List of possible uses of contact in business context. Commonly used filing purposes are billing, marketing
+      values:
+        - literal: billing
+          code: 1
+          description: Contact may be used to provide party with details of their liabilities to the bank
+        - literal: marketing
+          code: 2
+          description: Contact may be used to provide party with details of offers
+        - literal: reporting
+          code: 3
+          description: Contact may be used to provide party with reports on their account
+                          
+# ****************************************************#
+# MODELS SPECIFIC FOR ACCOUNT DATA API                #
+# ****************************************************#
+  change-account-nickname-command:
+    description: Change account nickname command.
+    example:
+      nickname: My primary account
+    properties:
+      nickname:
+        description: Account nickname.
+        type: string
+    required:
+      - nickname
+    type: object
+    
+  accounts:
+    type: array
+    description: List of accounts
+    items:
+      $ref: '#/definitions/account'
+    example:
+      - account-number: 00210102101
+        effective-date: 2016-01-01
+        status-date: 2016-01-01      
+        currency: EUR
+        status: open
+        posting-status: post-all
+        kind: demand-deposit  
+      - account-number: 00210102101
+        effective-date: 2016-01-01
+        status-date: 2016-01-01      
+        currency: RSD
+        status: open
+        posting-status: post-all
+        kind: current-account  
+       
+  account:
+    description: Record of transactions in specific types of arrangement, maintained by a bank party on behalf of one or more owning parties.
+    type: object
+    properties:
+      account-number:
+        description: Unique identifier of the account arrangement which is tracked. Used in communication with customer.
+        type: string
+      effective-date:
+        type: string
+        format: date
+        description: The date when account was first put to use
+      status-date:
+        type: string
+        format: date-time
+        description: The date when last status change occured - since current status is efective.
+      currency:
+        description: Currency in which balances are tracked for this account. ISO 4217 currency code.
+        type: string
+        maxLength: 3
+        minLength: 3
+      status:
+        type: string
+        enum:
+          - open
+          - opening
+          - closed
+          - closing
+          - archived
+      posting-status:
+        type: string
+        enum:
+          - not-postable
+          - no-further-drawings
+          - post-all
+          - debit-only
+          - credit-only    
+      kind:
+        description: Kind of account used for tracking. This determines balances that make sense.
+        type: string
+        enum:
+          - current-account
+          - demand-deposit-account
+          - term-deposit-account
+          - term-loan-account
+          - overdraft-account
+          - credit-facility-account
+          - credit-card-account
+          - investment-account
+      balances:
+        type: array
+        description: List of account balances
+        items:
+          $ref: '#/definitions/balance'
+    example:
+      account-number: 00210102101
+      effective-date: 2016-01-01
+      status-date: 2016-01-01
+      currency: EUR
+      status: open
+      posting-status: post-all
+      kind: current-account
+      balances:
+        - account-number: 00210102101
+          amount: 100.00
+          amount-local: 12283.50
+          currency: EUR
+          direction: d  
+          balance-kind: available
+          calculated: 2016-02-23T15:50:00    
+  statements:
+    type: array
+    description: List of statements
+    items:
+      $ref: '#/definitions/statement'
+    example:
+      - from-date: 2016-01-01
+        to-date: 2016-01-31
+        account-number: 00210102101
+        sequence-number: 26
+        generated: 2016-02-01T01:25:00
+        document: AS-0021000102101-26
+        total-credits: 1
+        total-debits: 3     
+        currency: EUR
+        opening-balance: 20.00
+        closing-balance: 180.00
+      - from-date: 2015-12-01
+        to-date: 2015-12-31
+        account-number: 00210102101
+        sequence-number: 25
+        generated: 2016-01-01T01:27:00
+        document: AS-0021000102101-25
+        total-credits: 2
+        total-debits: 5     
+        currency: EUR
+        opening-balance: 45.00
+        closing-balance: 20.00    
+  statement:
+    type: object
+    description: Report of entries booked against the account in specified period of time
+    properties:
+      from-date:
+        description: Date when period reported in the statement begins
+        type: string 
+        format: date
+      to-date:
+        description: Date when period reported in the statement ends
+        type: string 
+        format: date 
+      account-number:
+        description: Unique identifier of the account arrangement for which the statement is generated
+        type: string        
+      sequence-number:
+        description: Official sequence number of the statement incremented as the statements are generated
+        type: number
+      generated:
+        description: Date and time when statement was generated
+        type: string 
+        format: date-time
+      document:
+        description: Unique identifier of the statement document stored in DMS repository
+        type: string      
+      total-credits:
+        description: Total number of credit entries in the statement
+        type: number
+      total-debits:
+        description: Total number of debit entries in the statement
+        type: number        
+      currency:
+        description: Currency code.
+        type: string
+      opening-balance:
+        description: Booked balance at the start of reported period
+        type: number
+        format: double
+      closing-balance:
+        description: Booked balance at the start of reported period
+        type: number
+        format: double
+    example:
+      from-date: 2016-01-01
+      to-date: 2016-01-31
+      account-number: 00210102101
+      sequence-number: 26
+      generated: 2016-02-01T01:25:00
+      document: AS-0021000102101-26
+      total-credits: 1
+      total-debits: 3     
+      currency: EUR
+      opening-balance: 20.00
+      closing-balance: 180.00
+  balances:
+    type: array
+    description: List of balances
+    items:
+      $ref: '#/definitions/balance'
+    example:
+      - account-number: 00210102101
+        amount: 100.00
+        amount-local: 12283.50
+        currency: EUR
+        direction: d  
+        balance-kind: available
+        calculated: 2016-02-23T15:50:00
+      - account-number: 00210102101
+        amount: 100.00
+        amount-local: 12283.50
+        currency: EUR
+        direction: d  
+        balance-kind: current
+        calculated: 2016-02-23T11:25:00
+  balance:
+    type: object
+    description: Monetary value tracked on the account.
+    properties:
+      currency:
+        description: Currency code.
+        type: string
+      amount:
+        description: Balance ammount in account currency
+        format: double
+        type: number
+      amount-local:
+        description: Balance amount in local currency
+        format: double
+        type: number        
+      account-number:
+        description: Unique identifier of the account arrangement for which the balance is tracked.
+        type: string
+      direction:
+        description: Debit (`d`) for liabilities or credit (`c`) for assets
+        type: string
+        enum:
+          - d
+          - c      
+      balance-kind:
+        description: Enumeration that distinguishes between account balances according to their nature
+        type: string
+        enum:
+          - available
+          - current
+          - expected
+          - blocked
+          - outstanding
+          - advance
+          - opening
+          - closing
+      calculated:
+        description: Date and time when balance was calculated. Note that this is not the time when balance was requested, it is rather the time when last transaction affected the balance.
+        type: string 
+        format: date-time      
+    example:
+      account-number: 00210102101
+      amount: 100.00
+      amount-local: 12283.50
+      currency: EUR
+      direction: d  
+      balance-kind: available
+      calculated: 2016-02-23T11:25:00
+  media:
+    type: object  
+    description: URLs of images attached to transaction
+    properties:
+      image:
+        description: URL of transaction image
+        type: string
+        format: url        
+      party-image:
+        description: URL of image representing other party in transaction
+        type: string
+        format: url
+  pfm:
+    type: object  
+    description: Personal finance management categories and tags
+    required:
+      - category-id
+    properties:
+      category-id:
+        description: Stable identifier of user assigned category of the transaction such as clothes, cash etc.
+        type: string
+      category:
+        description: "User assigned category of the transaction such as clothes, cash etc."
+        type: string
+      tags:
+        description: User assigned tags of a transaction
+        type: array
+        items:
+          type: string
+      merchant:
+        description: Merchante name
+        type: string      
+      sic:
+        description: Standard industrial code (SIC) of the merchant
+        type: string      
+  coordinates:
+    type: object
+    required:
+      - lat
+      - long  
+    description: The geographic coordinates of a location
+    properties:
+      lat:
+        description: The latitude of a location. For example 37.42242
+        format: double
+        type: number
+      long:
+        description: The longitude of a location. For example -122.08585
+        format: double
+        type: number
+  address:
+    type: object   
+    description: Postal address
+    required:
+      - address-line
+      - locality
+    properties:
+      address-line:
+        description: Address line with street name and number
+        type: string
+      locality:
+        description: Populated place such as city, town or village
+        type: string
+      country:
+        description: ISO 3166-1 alpha-2 country code
+        type: string
+        maxLength: 2
+        minLength: 2  
+  transfer:
+    description: Additional details from transactins originated from a transfer
+    type: object
+    required:
+      - transfer-id
+      - origination-channel
+      - creditor-name     
+      - creditor-account  
+      - debtor-name     
+      - debtor-account     
+      - transfer-kind
+      - instructed-amount       
+    properties:
+      transfer-id:
+        description: Transfer identifier
+        type: string
+      origination-channel:
+        description: Channel used by the initiator of the transfer.. List of channel codes is available from [Reference API](reference-getstarted.html)
+        type: string           
+      creditor-name:
+        description: Name of the party that receives the money from debtor
+        type: string
+      creditor-address:
+        $ref: '#/definitions/address'          
+      creditor-account:
+        description: Creditor account number that is credited as a result of transfer
+        type: string
+      creditor-bank:
+        description: Bank that receives the money in name of creditor
+        type: string        
+      debtor-name:
+        description: Name of the party that sends the money to creditor
+        type: string
+      debtor-address:
+        $ref: '#/definitions/address'          
+      debtor-account:
+        description: Debtor account number that is debited as result of transfer
+        type: string
+      debtor-bank:
+        description: Bank that sends money in the name of debtor
+        type: string          
+      purpose:
+        description: Description of transfer purpose
+        type: string
+      purpose-code:
+        description: Purpose code as required by payment network rules
+        type: string   
+      mandate-id:
+        description: Identifier of mandate in direct debit transfers 
+        type: string         
+      transfer-kind:
+        description: Enumeration that distinguishes different kinds transfers.
+        enum:
+          - balance-transfer
+          - credit-transfer
+          - direct-debit
+          - cash-in-transfer
+          - cross-border-credit-transfer
+          - nonresident-credit
+          - peer-to-peer-transfer
+          - topup-transfer
+        type: string
+      debtor-reference:
+        description: Reference to a remittance information that can be interpretted by sending side
+        type: string
+      creditor-reference:
+        description: Reference to a remittance information that can be interpretted by receiving side
+        type: string
+      instructed-amount:
+        description: Amount instructed
+        $ref: '#/definitions/currency'
+    example:
+      transfer-id: 8661821617671
+      origination-channel: "web"         
+      creditor-name: "Asseco SEE d.o.o."
+      creditor-address:
+        address-line: "Milutina Milankovica 19g"
+        locality: "Beograd"
+        country: "RS"        
+      creditor-account: "160-75177167-22"    
+      debtor-name: "Elektrodistribucija JP."
+      debtor-address:
+        address-line: "Krunska 21"
+        locality: "Beograd"
+        country: "RS"        
+      debtor-account: "120-1123121-54"        
+      purpose: "Bezgotovinsko plaćanje roba i usluga"
+      purpose-code: "221"
+      transfer-kind: "credit-transfer"
+      debtor-reference: "97-12399123123-2"
+      instructed-amount:
+        amount: 12222.00
+        code: "RSD"
+  currency:
+    description: Currency amount and code.
+    required:
+      - code
+      - amount
+    example:
+      code: EUR
+      amount: 200
+    properties:
+      code:
+        description: Currency code.
+        type: string
+      amount:
+        description: Amount.
+        format: double
+        type: number
+    type: object
+  card-transaction:
+    description: Additional details for card network originated transactions
+    type: object
+    properties:
+      reference:
+        type: string
+        description: Merchant supplied reference for card originated transaction
+      transaction-id:
+        type: string
+        description: Transaction identifier assigned by card processing network
+      authorization:
+        type: string
+        description: Authorization number for card transaction        
+      pan:
+        type: string
+        description: Primary account number (PAN) printed on card. Also known as card number.
+      poi-id:
+        type: string
+        description: Identifier of point of interaction - ATM of PoS terminal id 
+      poi-kind:
+        description: Enumeration that distinguishes different kinds of card terminals
+        type: string
+        enum:
+          - atm
+          - pos
+          - vpos
+    required:          
+      - pan
+  branch-transaction:
+    description: Additional details for branch originated transactions
+    type: object
+    required:
+      - branch-code
+    properties:
+      branch-code:
+        type: string
+        description: Identifier of branch where transaction originated. List of branch codes is available from [Location API](location-getstarted.html)
+  standing-order:
+    description: Additional details for transactions originated from a standing order
+    type: object
+    required:
+      - order-id   
+    properties:
+      order-id:
+        type: string
+        description: Unique identifier of standing order 
+      friendly-name:
+        type: string
+        description: Friendly name of standing order set by customer
+  transactions:
+    type: array
+    description: List of transactions
+    items:
+      $ref: '#/definitions/transaction'  
+    example:
+      - account-number: 00210102101
+        transaction-id: 6525671616121
+        instruction-id: 6525671616121
+        statement-number: 26
+        source: brn
+        amount: 100.00
+        amount-local: 12283.50
+        currency: EUR
+        direction: d  
+        status: b
+        value-date: 2016-02-23
+        book-date: 2016-02-23
+        transaction-time: 2016-02-23T11:25:00
+        description: Branch cash withdrawal 
+        transaction-code: 212
+        transaction-kind: wdw
+        sync-timestamp: 26447476
+        branch:
+          branch-code: "2120"
+        coordinates:
+          lat: 44.807112185659996
+          long: 20.429377555847164
+        pfm:
+          category-id: 27
+          category: "Cash"
+        media:
+          image: /v1/conent/mchub/documents/mj20b12534r4
+      - account-number: 00210102101
+        transaction-id: 6525671614332
+        instruction-id: 8661821617671
+        statement-number: 26
+        source: pmt
+        amount: 12222.00
+        amount-local: 12222.00
+        currency: RSD
+        direction: d  
+        status: b
+        value-date: 2016-02-23
+        book-date: 2016-02-23
+        transaction-time: 2016-02-23T11:25:00
+        description: Credit transfer 
+        transaction-code: 212
+        transaction-kind: pmt
+        sync-timestamp: 26447476
+        coordinates:
+          lat: 44.807112185659996
+          long: 20.429377555847164
+        pfm:
+          category-id: 27
+          category: "Utilities"
+        media:
+          image: /v1/conent/mchub/documents/mj20b12534r4          
+        transfer:
+          transfer-id: 8661821617671
+          origination-channel: "web"         
+          creditor-name: "Asseco SEE d.o.o." 
+          creditor-account: "160-75177167-22"    
+          debtor-name: "Elektrodistribucija JP."      
+          debtor-account: "120-1123121-54"        
+          purpose: "Bezgotovinsko plaćanje roba i usluga"
+          purpose-code: "221"
+          transfer-kind: "credit-transfer"
+          debtor-reference: "97-12399123123-2"
+          instructed-amount:
+            amount: 12222.00
+            code: "RSD"                                                  
+  transaction:
+    description: Event that affected balance of interest to customers - principal, outstanding debt, advance, available
+    type: object   
+    required:
+      - account-number
+      - transaction-id
+      - statement-number
+      - source
+      - amount
+      - amount-local
+      - currency
+      - direction 
+      - status
+      - value-date
+      - book-date
+      - transaction-time
+      - description
+      - transaction-kind
+      - sync-timestamp    
+    properties:
+      account-number:
+        type: string
+        description: Unique identifier of account arrangement, unformatted.
+      transaction-id:
+        description: Unique identifier of the transaction in the core system
+        type: string
+      instruction-id:
+        description: Unique identifier of the instruction that initiated the transaction. Optional as some transactions are not result of customer instructions.
+        type: string
+      statement-number:
+        description: Identifier of the account statement where transaction was reported.
+        type: string
+      source:
+        description: Source of additional details of the transaction - Card transaction details (`crd`), Payment transfer details (`pmt`), Standing order details (`sto`), Branch transaction details (`brn`), Internal transaction details (`int`)
+        type: string
+        enum:
+          - crd
+          - pmt
+          - sto
+          - brn
+          - int
+      amount:
+        description: Net amount of the transaction that affected account balance. Transaction is linked to multiple entries whose cash flows affect balance.
+        type: number
+        format: double
+      direction:
+        description: Debit (`d`) or credit (`c`) transaction
+        type: string
+        enum:
+          - d
+          - c
+      status:
+        description: Status of transaction. Pending (`p`), Booked (`b`), Voided (`v`).
+        type: string
+        enum:
+          - p
+          - b
+          - v
+      amount-local:
+        description: Transaction amount in reporting currency (RSD for serbia)
+        type: number
+        format: double
+      currency:
+        description: ISO 3-Letter currency code of the account balance against which transaction is posted
+        type: string
+      value-date:
+        description: Date when the balance and interest are affected
+        type: string
+        format: date        
+      book-date:
+        description: Date when 
+        type: string 
+        format: date
+      transaction-time:
+        description: Date and time when transaction occured
+        type: string 
+        format: date-time      
+      description:
+        description: Text that describes transaction
+        type: string
+      transaction-code:
+        description: Classification explaining type of transaction in core system. For a list of possible values see [transaction-codes](accounting-classifications.html#transaction-codes) classification
+        type: string
+      transaction-kind:
+        description: Enumeration that distinguishes between accounting transactions based on their effect on the customer accounts. Deposit (`dep`), Withdrawal (`wdw`), Payment (`pmt`), Fee (`fee`), Interest credit (`inc`), Reversal (`rev`), Adjustment (`adj`), Loan disbursement (`lnd`), Loan repayment (`lnr`), Foreign currency exchange (`fcx`), Account opening (`aop`), Account closing (`acl`)
+        type: string
+        enum:
+          - dep
+          - wdw
+          - pmt
+          - fee
+          - inc
+          - rev
+          - adj
+          - lnd
+          - lnr
+          - fcx
+          - aop
+          - acl
+      sync-timestamp:
+        description: Monotonically increasing timestamp of transaction record used for incremental synchronization with client application
+        type: string
+      transfer:
+        $ref: '#/definitions/transfer'   
+      card:
+        $ref: '#/definitions/card-transaction'
+      branch:
+        $ref: '#/definitions/branch-transaction'      
+      standing-order:
+        $ref: '#/definitions/standing-order'         
+      coordinates:
+        $ref: '#/definitions/coordinates'
+      media:
+        $ref: '#/definitions/media'      
+      pfm:
+        $ref: '#/definitions/pfm'  
+    example:
+      account-number: 00210102101
+      transaction-id: 6525671616121
+      instruction-id: 6525671616121
+      statement-number: 26
+      source: brn
+      amount: 100.00
+      amount-local: 12283.50
+      currency: EUR
+      direction: d  
+      status: b
+      value-date: 2016-02-23
+      book-date: 2016-02-23
+      transaction-time: 2016-02-23T11:25:00
+      description: Branch cash withdrawal 
+      transaction-code: 212
+      transaction-kind: wdw
+      sync-timestamp: 26447476
+      branch:
+        branch-code: "2120"
+      coordinates:
+        lat: 44.807112185659996
+        long: 20.429377555847164
+      pfm:
+        category-id: 27
+        category: "Cash"
+      media:
+        image: /v1/conent/mchub/documents/mj20b12534r4
+        

@@ -1,0 +1,74 @@
+swagger: '2.0'
+host: dev.asseco-see.com
+basePath: /v1/authentication
+info:
+  description: |
+          Authentication API exposes [OpenID Connect Core 1.0](http://openid.net/specs/openid-connect-core-1_0.html) compatible endpoints for authentication using [ OAuth 2.0](http://tools.ietf.org/html/rfc6749) authorization framework
+  title: Authentication API
+  version: v1
+tags:
+  - description: Working with OpenID Connect endpoints
+    name: OpenID Connect
+         
+schemes:
+  - http
+  - https
+consumes:
+  - application/x-www-form-urlencoded
+produces:
+  - application/json
+paths:
+  /connect/authorize:
+    post:
+      summary: Authenticate user and authorize scopes
+      description: "Authorization endpoint defined in [OpenID Connect Core 1.0](http://openid.net/specs/openid-connect-core-1_0.html) spec"
+      operationId: OpenIDConnect_Authorize
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      responses:
+        '302':
+          description: "Found - For details of authentication response refer to [OpenID Connect Core 1.0](http://openid.net/specs/openid-connect-core-1_0.html) spec"
+        default:
+          $ref: '#/responses/oauth2-error-response'
+      tags:
+        - OpenID Connect
+      x-asee-tags: []
+  /connect/token:
+    post:
+      summary: Get access token and id token
+      description: "Token endpoint defined in [OpenID Connect Core 1.0](http://openid.net/specs/openid-connect-core-1_0.html) spec"
+      operationId: OpenIDConnect_IssueToken
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json      
+      responses:
+        '200':
+          description: "OK - For details of token response refer to [OpenID Connect Core 1.0](http://openid.net/specs/openid-connect-core-1_0.html) spec"
+        default:
+          $ref: '#/responses/oauth2-error-response'          
+      tags:
+        - OpenID Connect
+      x-asee-tags: []
+  /connect/userinfo:
+    get:
+      summary: Get UserInfo details
+      description: UserInfo endpoint as defined in OpenID
+      operationId: OpenIDConnect_GetUserInfo
+      produces:
+        - application/json      
+      responses:
+        '200':
+          description: OK - For details of UserInfo response refer to [OpenID Connect Core 1.0](http://openid.net/specs/openid-connect-core-1_0.html) spec
+        default: 
+          $ref: '#/responses/oauth2-error-response'          
+      tags:
+        - OpenID Connect
+      x-asee-tags: []  
+responses:
+  oauth2-error-response:
+    description: Refer to [OpenID Connect Core 1.0](http://openid.net/specs/openid-connect-core-1_0.html) specification for description of error responses
+parameters: {}
+definitions: {}

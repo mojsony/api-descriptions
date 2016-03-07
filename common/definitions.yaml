@@ -1,0 +1,83 @@
+definitions:
+  
+  command-result:
+    properties:
+      id:
+        type: string
+        readOnly: true
+      resource-status:
+        type: string
+        readOnly: true
+    example:
+      id: FS123212121
+      resource-status: created
+  validation-problem:
+    type: array
+    items:
+      type: object
+      properties:
+        field:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              error:
+                type: string
+              message:
+                type: string
+    example:
+      -  
+        field: phone-number
+        errors:
+          -
+            error: invalid-format
+            message: Format for this field is invalid
+          -
+            error: max-length
+            message: Content exceeds maximum alowed length 
+      - 
+        field: account-number
+        errors:
+          -
+            error: check-digit-invalid
+            message: Check digit is invalid for this field
+  
+  business-problem:
+    properties:
+      problem:
+        type: string
+      message:
+        type: string
+      details:
+        type: string
+    example:
+      problem: document-locked
+      message: Document you are trying to a is locked by another user.
+      details: User john.doe has locked the document.
+  
+  paged-list:
+    description: List with support for paging
+    properties:  
+      total-count:
+        description: Total number of items in collection
+        type: integer
+      page-size:
+        description: Size of the page
+        type: integer
+      page:
+        description: Index of current page
+        type: integer
+      total-pages:
+        description: Total number of pages of set size
+        type: integer
+      sort-order:
+        description: Sort order (`asc` or `desc`). Default is asc
+        type: string
+        enum:
+        - asc
+        - desc
+      sort-by:  
+        description: Attribute of the collection item to sort by
+        type: string

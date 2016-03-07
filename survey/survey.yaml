@@ -1,0 +1,361 @@
+swagger: '2.0'
+info:
+  version: v1
+  title: Survey API
+  description: >
+    Survey API gives you access to generated surveys for customer, post
+    captured response to survey and ability to generate surveys based on
+host: dev.asseco-see.com
+basePath: /v1/survey
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+tags:
+  - name: Templates
+    description: Working with survey templates
+  - name: Surveys
+    description: Working with survey responses
+paths:
+  /templates:
+    get:
+      summary: Operation returns list of surveys templates with basic survey information.
+      operationId: Templates_GetList
+      x-asee-tags:
+        - Sortable
+        - Pageable
+      tags:
+        - Templates
+      parameters:
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-number-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-type-param'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/survey-list'
+        default:
+          $ref: '#/responses/default-error-response'
+  '/templates/{template-id}':
+    get:
+      summary: Operation generates survey for specific customer based on surveys template id
+      operationId: Templates_Get
+      tags:
+        - Templates
+      parameters:
+        - $ref: '#/parameters/template-id-param'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/survey'
+        default:
+          $ref: '#/responses/default-error-response'
+  /surveys:
+    post:
+      summary: Operation captures survey response.
+      operationId: Surveys_Capture
+      tags:
+        - Surveys
+      parameters:
+        - description: Contains customer answers to survey.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/capture-survey-command'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/command-result'
+        '400':
+          $ref: '#/responses/validation-problem-response'
+        default:
+          $ref: '#/responses/default-error-response'
+  '/surveys/{survey-id}':
+    get:
+      summary: Operation returns details of completed survey with questions and answers
+      operationId: Surveys_Get
+      tags:
+        - Surveys
+      parameters:
+        - $ref: '#/parameters/survey-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/survey'
+        default:
+          $ref: '#/responses/default-error-response'
+parameters:
+  page-size-param:
+    name: page-size
+    in: query
+    description: Gets or sets the size of the page.
+    type: integer
+    format: int32
+    required: false
+  page-number-param:
+    name: page-number
+    in: query
+    description: Gets or sets the page number.
+    type: integer
+    format: int32
+  sort-order-param:
+    name: sort-order
+    in: query
+    required: false
+    description: Gets or sets the sort order - direction (ASC or DESC).
+    type: string
+  sort-type-param:
+    name: sort-type
+    in: query
+    required: false
+    description: Gets or sets the name of the column for sorting.
+    type: string
+  survey-id-param:
+    name: survey-id
+    in: path
+    description: Id of the survey
+    required: true
+    type: string
+  template-id-param:
+    name: template-id
+    in: path
+    description: Id of the survey template
+    required: true
+    type: string
+responses:
+  validation-problem-response:
+    description: 'Your request was not constructed properly. Response contains the list of validation errors for each invalid element of your request. For complete list of possible validation errors see [validation errors]() classification.'
+    schema:
+      $ref: '#/definitions/validation-problem'
+  default-error-response:
+    description: 'Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()'
+definitions:
+  capture-survey-command:
+    description: Response to survey with customer answers.
+    properties:
+      customer-number:
+        description: Customer number.
+        type: string
+      template-id:
+        description: Template identifier.
+        type: string
+      answers:
+        description: List of answers.
+        items:
+          $ref: '#/definitions/answer'
+        type: array
+    required:
+      - customer-number
+      - template-id
+    type: object
+  survey-list:
+    description: List of survey templates.
+    properties:
+      total-count:
+        description: Gets or sets the total count.
+        format: int32
+        type: integer
+      page-size:
+        description: Gets or sets the size of the page.
+        format: int32
+        type: integer
+      page-number:
+        description: Gets or sets the page number.
+        format: int32
+        type: integer
+      total-pages:
+        description: Gets or sets the total pages.
+        format: int32
+        type: integer
+      items:
+        description: List of surveys with basic survey information.
+        items:
+          $ref: '#/definitions/survey-info'
+        type: array
+    type: object
+  survey:
+    description: Definition of survey with questions and answers. Answers are filled-in if customer has already submitted survey.
+    properties:
+      survey-id:
+        description: Identifier of submitted survey. Empty if the client has not yet submitted survey.
+        type: string
+      date-created:
+        description: Date when survey was submitted. Empty if the client has not yet submitted survey.
+        format: date-time
+        type: string
+      info:
+        description: Basic survey info
+        $ref: '#/definitions/survey-info'
+      sections:
+        description: List of sections in survey.
+        items:
+          $ref: '#/definitions/survey-section'
+        type: array
+    type: object
+  survey-info:
+    description: Basic information about survey template.
+    properties:
+      template-id:
+        description: Uniquely identifies survey template
+        type: string
+      title:
+        description: Human readable name of the survey by which it is best recognized.
+        type: string
+      description:
+        description: A textual description of the survey
+        type: string
+      date-published:
+        description: Publication date
+        format: date-time
+        type: string
+    type: object
+  survey-section:
+    description: Survey section
+    properties:
+      section-id:
+        description: Survey section identifier.
+        type: string
+      order:
+        description: Section order in survey.
+        format: int32
+        type: integer
+      title:
+        description: Section title.
+        type: string
+      description:
+        description: Textual description about section.
+        type: string
+      questions:
+        description: List of questions.
+        items:
+          $ref: '#/definitions/question'
+        type: array
+    type: object
+  question:
+    description: Question
+    properties:
+      question-id:
+        description: Question identifier.
+        type: string
+      order:
+        description: Order of question in a survey.
+        format: int32
+        type: integer
+      title:
+        description: Question title.
+        type: string
+      description:
+        description: Textual description of the question.
+        type: string
+      kind:
+        x-asee-compliance: This should be related to enum, e.g. the one added below. Check the list of possible values.
+        description: Question kind.
+        enum:
+          - text
+          - numeric
+          - date
+          - bool
+          - options
+          - multiple-options
+          - currency
+          - unit-of-measure
+        type: string
+      possible-options:
+        x-asee-compliance: This should be the list of id-value pairs. I am not sure that this additionalProperties covers it well. Probably should be array type instead. Also, this list of values should be returned translated in the communication language set in customer profile.
+        additionalProperties:
+          type: string
+        description: Dictionary contains possible drop down values if question type is options, multiple-options, currency or unit-of-measure.
+        type: object
+      units-of-measure:
+        x-asee-compliance: This property is redundant and should be removed. List of values should be returned through question-options property and indicator that the field is of unit-of-measure type is returned through kind property.
+        description: 'Units of measure. Example for currency would be: USD, EUR, CHF. Example for length: km, m, cm'
+        items:
+          type: string
+        type: array
+      is-mandatory:
+        description: Is question required or mandatory
+        type: boolean
+      answer:
+        description: Answer
+        $ref: '#/definitions/answer'
+    type: object
+  answer:
+    description: Provides answer to survey question in corresponding type.
+    x-asee-compliance: The structure of this object is a bit awkward, but ok, I understand the problem. However, it would be nicer if instead of 6 there could be only one field, and the type of value stored in that field is already determined by kind of question.
+    properties:
+      question-id:
+        description: Question identifier.
+        type: string
+      text-value:
+        description: Contains answer if question type is text.
+        type: string
+      bool-value:
+        description: Contains answer if question type is bool.
+        type: boolean
+      numeric-value:
+        description: Contains answer if question type is numeric.
+        format: double
+        type: number
+      date-value:
+        description: Contains answer if question type is date.
+        format: date-time
+        type: string
+      unit-of-measure:
+        x-asee-compliance: This property is redundant and should be removed. Selected unit-of-measure should be returned through the selected-option property stated below.
+        description: Contains selected unit-of-measure.
+        type: string
+      selected-option:
+        x-asee-compliance: It is not enough to just return the id of selected option. Both id and value should be returned. Also, the value should be in communication language set in customer profile.
+        description: Contains answer if question type is options or multiple-options.
+        type: string
+    required:
+      - question-id
+    type: object
+  command-result:
+    description: ''
+    x-asee-compliance: Missing description of object, description of properties should be corrected.
+    properties:
+      id:
+        description: 'Gets or sets the id of created, updated or deleted entity.'
+        type: string
+      created-record-status:
+        description: 'Gets or sets the created, updated, deleted record status.'
+        type: string
+    type: object
+  validation-problem:
+    x-asee-compliance: Missing description of object and its properties.
+    type: array
+    items:
+      type: object
+      properties:
+        field:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              error:
+                type: string
+              message:
+                type: string
+    example:
+      - field: phone-number
+        errors:
+          - error: invalid-format
+            message: Format for this field is invalid
+          - error: max-length
+            message: Content exceeds maximum alowed length
+      - field: account-number
+        errors:
+          - error: check-digit-invalid
+            message: Check digit is invalid for this field

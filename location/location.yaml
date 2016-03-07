@@ -1,0 +1,881 @@
+swagger: '2.0'
+host: dev.asseco-see.com
+basePath: /v1/location
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+tags:
+  - name: Facilities
+    description: Working with bank's facilities
+  - name: Addresses
+    description: Working with addresses
+  - name: Streets
+    description: Working with streets
+  - name: Places
+    description: Working with places    
+  - name: Classifications
+    description: Working with classifications
+info:
+  description: | 
+    Location API provides information on bank's physical facilities and help work with structured addresses. For facilities you can get addresses, geographic coordinates and other location or relevant data like working hours. You can also find facilities located near place or geographic coordinates. Elements of structured addresses such as official listo of places and streets is available along with option to validate address and get postal address code that is used for optimized postal delivery.
+
+  title: Location API
+  version: v1
+paths:
+# ****************************************************#
+# ENDPOINTS SPECIFIC TO LOCATION API                  #
+# ****************************************************#
+  /facilities:
+    get:
+      summary: Query the list of bank facilities
+      description: "Query for facilities based on coordinates or place. Response incluides list of facilities matching filter criteria with information such as address, geographic coordinates, offered services and working hours."
+      operationId: Facilities_GetList
+      parameters:
+      - $ref: "#/parameters/facility-kinds-param"
+      - $ref: "#/parameters/services-param"
+      - $ref: "#/parameters/latitude-param"
+      - $ref: "#/parameters/longitude-param"
+      - $ref: "#/parameters/search-radius-param"
+      - $ref: "#/parameters/place-code-param"
+      - $ref: "#/parameters/sort-by-param"
+      - $ref: "#/parameters/sort-order-param"
+      - $ref: "#/parameters/include-param" 
+      - $ref: "#/parameters/trim-param"  
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/facilities'          
+        default:
+          $ref: '#/responses/default-error-response' 
+      tags:
+        - Facilities
+      x-asee-tags:
+        - Sortable
+        - Shapeable
+  /facilities/{facility-id}:
+    get:
+      summary: Get details on specific facility
+      description: "Response contains facility details such as address, geographic coordinates, offered services and working hours."
+      operationId: Facilities_Get
+      parameters:
+      - $ref: "#/parameters/facility-id-param"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/facility'          
+        default:
+          $ref: '#/responses/default-error-response' 
+      tags:
+        - Facilities
+    
+  /addresses/validate:
+    get:
+      summary: Validate postal address
+      description: Validates postal address specified through query params and returns postal address code and valid address that is matched    
+      operationId: Addresses_Validate
+      parameters:
+        - $ref: "#/parameters/place-name-param"
+        - $ref: "#/parameters/place-code-param"
+        - $ref: "#/parameters/street-code-param"
+        - $ref: "#/parameters/street-name-param"
+        - $ref: "#/parameters/street-number-param"
+      responses:
+        200:
+          description: Ok (address is valid)
+          schema:
+            $ref: '#/definitions/validated-address'
+        440:
+          description: |
+            Your request was well constructed but address is not valid.
+            - [invalid-address](location-problems.html)
+          schema:
+            $ref: '#/definitions/business-problem'            
+        default:
+          $ref: '#/responses/default-error-response' 
+      tags:
+      - Addresses
+
+  "/places":
+    get:
+      summary: Get list of places filtered place name or country code
+      description: Response contains information on populated place
+      tags:
+        - Places
+      x-asee-tags:
+        - Shapeable
+        - Sortable       
+      operationId: Places_GetList
+      parameters:
+      - description: Name of the place to match
+        in: query
+        name: place
+        required: false
+        type: string      
+      - description: ISO 3166-1 alpha-2 country code
+        in: query
+        name: country
+        required: false
+        type: string
+        minLength: 2
+        maxLength: 2
+      - "$ref": "#/parameters/sort-by-param"
+      - "$ref": "#/parameters/sort-order-param"
+      - "$ref": "#/parameters/include-param"
+      - "$ref": "#/parameters/trim-param"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/place-list' 
+        default:
+          $ref: '#/responses/default-error-response' 
+
+  "/streets":
+    get:
+      summary: Get list of streets filtered by place or street name
+      description: Response contains streets
+      tags:
+        - Streets
+      x-asee-tags:
+        - Shapeable
+        - Sortable
+      operationId: Streets_GetList
+      parameters:
+      - description: Part of or complete street name
+        in: query
+        name: street
+        required: false
+        type: string
+      - description: Place name
+        in: query
+        name: place
+        required: false
+        type: string           
+      - description: Place code. Every place has its own unique code within the country.
+        in: query
+        name: place-code
+        required: false
+        type: string
+      - description: Language preferred by the user as standard BCP47 language tag. Example `sr-Latn-RS` or `en-US`
+        in: header
+        name: Accept-Language
+        required: false
+        type: string        
+      - "$ref": "#/parameters/sort-by-param"
+      - "$ref": "#/parameters/sort-order-param"
+      - "$ref": "#/parameters/include-param"
+      - "$ref": "#/parameters/trim-param"
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/street-list' 
+        default:
+          $ref: '#/responses/default-error-response' 
+
+# ****************************************************#
+# ENDPOINTS COMMON WITH OTHER APIs                    #
+# ****************************************************#
+
+  /classifications: 
+    get:
+      summary: List all classification schemas used by the API
+      description: Some fields and parameters have been restricted to a list of allowed lookup values maintained by the bank. This method lists all schemas used in this API.    
+      operationId: "Classifications_GetList"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/classification-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+        - Classifications
+  /classifications/{schema-id}:
+    get:
+      summary: List values allowed by given classification schema.
+      description: Returns all classification values for chosen classification.
+      operationId: Classifications_Get
+      parameters:
+        - $ref: '#/parameters/schema-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/classification'
+        default:
+          $ref: '#/responses/default-error-response'
+
+      tags:
+        - Classifications
+responses:
+  default-error-response:
+    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()  
+parameters:
+# ****************************************************#
+# PARAMS COMMON WITH OTHER APIs                       #
+# ****************************************************#
+  # page-param:
+  #   name: page
+  #   in: query
+  #   description: Page index. For more information see general guidance on [paging and sorting]()
+  #   type: integer
+  #   default: 1
+  #   x-asee-common: true
+  # page-size-param:
+  #   name: page-size
+  #   in: query
+  #   description: Number of items on a page. For more information see general guidance on [paging and sorting]()
+  #   required: false
+  #   type: integer
+  #   default: 10
+  #   x-asee-common: true    
+  sort-order-param:
+    description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]()
+    in: query
+    name: sort-order
+    type: string
+    default: asc
+    enum:
+    - asc
+    - desc
+    x-asee-common: true  
+  sort-by-param:  
+    description: Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]()
+    in: query
+    name: sort-by
+    type: string
+    x-asee-common: true      
+  include-param:
+    description: List of fields to include in response. For more information see general guidance on [response shaping]()
+    in: query
+    name: include
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+    x-asee-common: true      
+  trim-param:
+    description: List of fields to trim from response. For more information see general guidance on [response shaping]()
+    in: query
+    name: trim
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+    x-asee-common: true
+    
+# ****************************************************#
+# PARAMS SPECIFIC TO LOCATION API                     #
+# ****************************************************#    
+  facility-id-param:
+    description: Unique identifier of bank's facility
+    in: path
+    name: facility-id
+    type: string
+    required: true
+  facility-kinds-param:
+    description: Kinds of facilities (`branch` or `atm`) to return. If empty or not present, all facilities will be returned.
+    in: query
+    name: kinds
+    required: false
+    enum:
+      - branch
+      - atm
+    items:
+      type: string
+    type: array
+  services-param:
+    description: "Return only facilities offering certain services. If empty or not present, all facilities will be returned. For complete list of possible values see [facility-services](location-classifications.html#facility-services) classification."
+    in: query
+    name: services
+    required: false
+    items:
+      type: string
+    type: array
+  latitude-param:
+    description: Geograpphic latitude of the location where facilities are searched
+    in: query
+    name: lat
+    required: false
+    format: double
+    type: number
+  longitude-param:
+    description: Geograpphic longitude of the location where facilities are searched
+    in: query
+    name: long
+    required: false
+    format: double
+    type: number
+  search-radius-param:
+    description: Search radius from geographic coordinates in kilometers
+    in: query
+    name: radius
+    required: false
+    format: double
+    type: number
+  place-name-param:
+    description: "Name of populated place within country. If place name is set, place code is not required."
+    in: query
+    name: place-name
+    required: false
+    type: string
+  place-code-param:
+    description: "Unique code of populated place within country"
+    in: query
+    name: place-code
+    required: false
+    type: string
+  street-code-param:
+    description: Unique code of each street inside one place. If street name is set, street code is not required.
+    in: query
+    name: street-code
+    required: false
+    type: string
+  street-name-param:
+    description: Street name. If street code is set, street name is not required.
+    in: query
+    name: street-name
+    required: false
+    type: string
+  street-number-param:
+    description: Street number.
+    in: query
+    name: street-number
+    required: true
+    type: string 
+  schema-id-param:
+    description: Schema id
+    in: path
+    name: schema-id
+    required: true
+    type: string 
+    
+definitions:
+  validated-address:
+    description: Postal address code and validated address
+    properties:
+      postal-address-code:
+        description: Postal Address Code 
+        type: string
+      address:
+        $ref: "#/definitions/address"
+    type: object
+    example:
+      postal-address-code: 191216
+      address:
+        formatted: Milutina Milankovića 19g, 11070 Novi Beograd, RS
+        street: Milutina Milankovića
+        street-number: 19g       
+        postal-code: 11070
+        locality: Novi Beograd
+        country: RS       
+  address:
+    type: object  
+    description: Postal address
+    properties:
+      formatted:
+        description: Formatted address text
+        type: string
+      street:
+        description: Street name
+        type: string
+      street-number:
+        description: Street number
+        type: string        
+      postal-code:
+        description: Postal code
+        type: string
+      locality:
+        description: Populated place such as city, town or village
+        type: string
+      country:
+        description: ISO 3166-1 alpha-2 country code
+        type: string
+        maxLength: 2
+        minLength: 2
+  availability:
+    description: Working time, opening and closing time
+    properties:
+      period:
+        description: Period of week or specific day in week
+        type: string
+      hours:
+        description: Working part of day. Can be period defined in hours or period defined as text.
+        type: string
+    type: object
+  coordinates:
+    type: object  
+    description: The geographic coordinates of a location
+    properties:
+      lat:
+        description: The latitude of a location. For example 37.42242
+        format: double
+        type: number
+      long:
+        description: The longitude of a location. For example -122.08585
+        format: double
+        type: number
+  facilities:
+    description: List of facilities
+    allOf:
+    - $ref: "#/definitions/paged-list"
+    properties:
+      items:
+        type: array
+        items:
+          $ref: "#/definitions/facility"
+    type: object
+    example:
+      total-count: 4
+      page-size: 1
+      page-number: 1
+      total-pages: 1
+      items:
+      - id: 40733
+        name: Airport City
+        type: ATM
+        capabilities: [cash-withdrawal]
+        address:
+          text: Omladinskih brigada 90
+          street: Omladinskih brigada
+          building: '90'
+          door: 
+          floor: 
+          city: Beograd
+          place: '11070'
+          place-name: Novi Beograd
+          country-code: RS
+          country-name: SRBIJA
+          location:
+            latitude: 44.8112911
+            longitude: 20.398722799999973
+        working-hours:
+        - period-description: Radnim danom
+          working-time: 08-16h
+        - period-description: Subotom
+          working-time: 09-13h
+        phone-number: 
+        email: 
+      - id: 41737
+        name: Banjica
+        type: ATM
+        capabilities: [cash-withdrawal]
+        address:
+          text: Paunova 24
+          street: Paunova
+          building: '24'
+          door: 
+          floor: 
+          city: Beograd
+          place: '11010'
+          place-name: Beograd Vozdovac
+          country-code: SRB
+          country-name: SRBIJA
+          state: 
+          location:
+            latitude: 44.7567628
+            longitude: 20.47650610000005
+        working-hours:
+        - period-description: Radnim danom
+          working-time: 08-17h
+        phone-number: 
+        email: 
+      - id: 40734
+        name: Banovo brdo
+        type: ATM
+        capabilities: [cash-withdrawal]
+        address:
+          text: Požeška 108a
+          street: Požeška
+          building: 108a
+          door: 
+          floor: 
+          city: Beograd
+          place: '11030'
+          place-name: Beograd Cukarica
+          country-code: SRB
+          country-name: SRBIJA
+          location:
+            latitude: 44.773886
+            longitude: 20.413765
+        working-hours: 
+        phone-number: 
+        email: 
+      - id: 10073
+        name: BAPOKanal0
+        type: Branch
+        capabilities: [cash-deposit,cash-withdrawal]
+        address:
+          text: Bulevar Mihajla Pupina 1
+          street: Bulevar Mihajla Pupina
+          building: 1
+          door: 312
+          floor: 2
+          city: Beograd
+          place: 791067
+          place-name: Novi Beograd
+          country-code: SRB
+          country-name: Srbija
+          state: 
+          location:
+            latitude: 44.807112185659996
+            longitude: 20.429377555847164
+          working-hours:
+            - period-description: Radnim danom
+              working-time: 08-16h
+            - period-description: Subotom
+              working-time: 09-13h
+        phone-number: +(381) 011 123-4567
+        email: branch1@bank.com
+  place:
+    type: object
+    description: Place basic information
+    required: 
+    - kind    
+    properties:
+      place-code:
+        description: "Place code. Every place has its own unique code inside one country."
+        type: string
+      name:
+        description: Place name
+        type: string
+      translated-name:
+        description: Place translation name
+        type: string
+      postal-code:
+        description: Place postal code
+        type: string
+      coordinates:
+        "$ref": "#/definitions/coordinates"
+      kind:
+        description: Place kinds
+        type: string
+      administrative-area:
+        description: Administrative area that place belongs to such as municipality
+        type: string
+      administrative-area-code:
+        description: Code that uniquely identifies administrative area
+        type: string
+      shipping-allowed:
+        description: Determines whether shiping is allowed to this place
+        type: boolean
+  facility:
+    type: object  
+    description: Basic information about Facility
+    discriminator: kind
+    required: 
+    - kind
+    properties:
+      id:
+        description: Facility Id - unique identifier of facility
+        format: int64
+        type: integer
+      name:
+        description: Facility name
+        type: string
+      kind:
+        description: Facility is either `branch` or `atm`.
+        enum:
+          - branch
+          - atm
+        type: string      
+      services:
+        description: List of services offered at facility. For complete list of possible values see [facility-services](location-classifications.html#facility-services) classification.
+        items:
+          type: string
+        type: array
+      address:
+        "$ref": "#/definitions/address"
+        readOnly: false
+      coordinates:
+        $ref: "#/definitions/coordinates"
+      availability:
+        description: Working time for whole week
+        items:
+          "$ref": "#/definitions/availability"
+        type: array
+        readOnly: false
+      phone-number:
+        description: Facility phone number
+        type: string
+        readOnly: false        
+      email:
+        description: Facility e-mail
+        type: string
+        readOnly: false
+
+  street-list:
+    description: List of street results
+    allOf:
+    - $ref: "#/definitions/paged-list"
+    properties:
+      items:
+        type: array
+        items:
+          $ref: "#/definitions/street"
+    type: object
+    example:
+      total-count: 74212
+      page-size: 3
+      page-number: 1
+      total-pages: 24738
+      items:
+      - name: "(E771 KNJAŽEVAC-SVRLJIG)-PONOR"
+        alternative-names:
+        - E771 KNJAŽEVAC-SVRLJIG-PONOR;PONOR-E771 KNJAŽEVAC-SVRLJIG;PUT KNJAŽEVAC - ZAJEČAR
+          - PONOR
+        code: '604509426'
+        place-name: PONOR
+        country-name: SRBIJA
+      - name: 10 ORAHOVAC-VELIKA HOČA
+        alternative-names: []
+        code: '731300046'
+        place-name: VELIKA HOČA
+        country-name: SRBIJA
+      - name: 21 MAJ
+        alternative-names: []
+        code: '111103553'
+        place-name: MALA VRBICA
+        country-name: SRBIJA
+                
+  place-list:
+    description: List of places results information
+    allOf:
+    - $ref: "#/definitions/paged-list"
+    properties:
+      items:
+        type: array
+        items:
+          $ref: "#/definitions/place"
+    type: object
+    example:
+      total-count: 6205
+      page-size: 3
+      page-number: 1
+      total-pages: 2069
+      items:
+      - code: '800015'
+        name: ADA
+        translation-name: 
+        postal-code: '24430'
+        gps-location: 
+        place-type: City
+        administrative-division-name: ADA
+        administrative-division-code: '80012'
+        ship-to-order-flag: 
+      - code: '804916'
+        name: ADAŠEVCI
+        translation-name: 
+        postal-code: '22240'
+        gps-location: 
+        place-type: City
+        administrative-division-name: ŠID
+        administrative-division-code: '80497'
+        ship-to-order-flag: 
+      - code: '909394'
+        name: ADE
+        translation-name: 
+        postal-code: '38211'
+        gps-location: 
+        place-type: Town
+        administrative-division-name: OBILIĆ
+        administrative-division-code: '90204'
+        ship-to-order-flag: true
+  street:
+    type: object
+    required:
+      - name
+    description: Street information
+    properties:
+      name:
+        description: Street name
+        type: string
+      alternative-names:
+        description: List of alternative names or former street names
+        items:
+          type: string
+        type: array
+      street-code:
+        description: Street code
+        type: string
+      place-name:
+        description: Name of place where street belongs.
+        type: string
+      country:
+        description: ISO 3166-1 alpha-2 country code
+        type: string
+        maxLength: 2
+        minLength: 2
+  place:
+    type: object
+    description: Place basic information
+    properties:
+      place-code:
+        description: "Place code. Every place has its own unique code inside one country."
+        type: string
+      name:
+        description: Place name
+        type: string
+      translated-name:
+        description: Place translation name
+        type: string
+      postal-code:
+        description: Place postal code
+        type: string
+      coordinates:
+        "$ref": "#/definitions/coordinates"
+      kind:
+        description: Place kinds
+        type: string
+      administrative-area:
+        description: Administrative area that place belongs to such as municipality
+        type: string
+      administrative-area-code:
+        description: Code that uniquely identifies administrative area
+        type: string
+      shipping-allowed:
+        description: Determines whether shiping is allowed to this place
+        type: boolean
+
+
+
+# ****************************************************#
+# MODELS COMMON WITH OTHER APIs                       #
+# ****************************************************#
+  business-problem:
+    description: Explanation of business rule that rejected request
+    properties:
+      problem:
+        type: string
+        description: Unique literal that identifies specific problem
+      message:
+        type: string
+        description: Message explaining the situation and optionaly remedies
+      details:
+        type: string
+        description: Optional details supplied for troubleshooting
+    example:
+      problem: invalid-address
+      message: Address you supplied is not valid
+      details: "Street 'asdaas' is not recognized" 
+  classification-value: 
+    type: object
+    description: Classification value
+    properties: 
+      literal: 
+        description: Literal that uniquely identifies classification value 
+        type: string    
+      code: 
+        description: Optional numerical code of classification value
+        type: string
+      description: 
+        description: Description of classification value
+        type: string
+      parent-literal: 
+        description: Optional literal of parent classification value if schema is hierarchical
+        type: string     
+    example:
+      literal: billing
+      code: 2
+      description: Contact may be used to provide party with details of their liabilities to the bank
+  classification-list:
+    description: List of classification schemas
+    type: object    
+    properties: 
+      items: 
+        description: List of classification schemas
+        items:
+          $ref: "#/definitions/classification-info"
+        type: array
+    example:
+      - 
+        schema-id: filing-purpose
+        name: Filing Purpose
+        description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture
+      -
+        schema-id: folder-purpose
+        name: Folder Purpose
+        description: List of possible uses of a folder in business context.       
+  classification-info:  
+    description: Basic information on classification schema
+    properties:
+      schema-id:
+        type: string
+        description: Unique literal that identifies the classification schema. Always in `lowercase-dash` convention.
+      name: 
+        type: string
+        description: User friendly name of classification
+      description:
+        type: string
+        description: Description of a classification
+    example:
+      schema-id: filing-purpose
+      name: Filing Purpose
+      description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture   
+  classification:
+    type: object   
+    description: Classification schema details
+    properties:
+      schema-id:
+        type: string
+        description: Unique literal that identifies the classification schema. Always in `lowercase-dash` convention.
+      name: 
+        type: string
+        description: User friendly name of classification
+      description:
+        type: string
+        description: Description of a classification
+      values:
+        description: List of allowed classification values
+        type: array   
+        items:
+          $ref: "#/definitions/classification-value"
+    example:
+      schema-id: contact-purpose
+      name: Contact Purpose
+      description: List of possible uses of contact in business context. Commonly used filing purposes are billing, marketing
+      values:
+        - literal: billing
+          code: 1
+          description: Contact may be used to provide party with details of their liabilities to the bank
+        - literal: marketing
+          code: 2
+          description: Contact may be used to provide party with details of offers
+        - literal: reporting
+          code: 3
+          description: Contact may be used to provide party with reports on their account
+  paged-list:
+    description: List with support for paging
+    required:
+      - total-count
+      - total-pages    
+    properties:
+      total-count:
+        description: Total number of items in collection
+        type: integer
+        readOnly: false
+      page-size:
+        description: Size of the page
+        type: integer
+      page:
+        description: Index of current page
+        type: integer
+      total-pages:
+        description: Total number of pages of set size
+        type: integer
+      sort-order:
+        description: Sort order (`asc` or `desc`). Default is asc
+        type: string
+        enum:
+        - asc
+        - desc
+      sort-by:
+        description: Attribute of the collection item to sort by
+        type: string

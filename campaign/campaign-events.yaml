@@ -1,0 +1,153 @@
+swagger: '2.0'
+info:
+  version: v1
+  title: Campaign API Events
+  description: Events published by Campaign API
+  contact: 
+    name: Mladen Milenkovic
+    url: http://dev.asseco-see.com/docs/
+    email: mladen.milenkovic@asseco-see.rs    
+
+paths: {}
+
+definitions:
+# ****************************************************#
+# EVENTS PUBLISHED BY CAMPSIGN API                    #
+# ****************************************************#
+
+  campaign-response-captured:
+    type: object
+    description: Customer response to campaign offer was captured
+    allOf:
+      - $ref: '#/definitions/event'
+      - type: object
+        properties:
+          channel-code:
+            description: Unique identifier of the channel. List of channels is available in [Reference API](reference-getstarted.html)
+            type: string
+          customer-number:
+            description: Unique identifier of customer.
+            type: string
+          campaign-code:
+            description: Unique identifier of campaign.
+            type: string        
+          source-uri:
+            description: Keeps information about point of access, which helps with the analysis of efficiency of the channels.
+            type: string
+          campaign-action:
+            type: string
+            description: Action that is recorded against campaign
+            enum:
+              - presented
+              - declined
+              - clicked
+              - form-filled
+              - accepted
+              - activated
+          header:
+            $ref: '#/definitions/header'
+
+  campaign-benefits-activated:
+    type: object
+    description: Campaign benefits for customer were activated
+    allOf:
+      - $ref: '#/definitions/event'
+      - type: object
+        properties:
+          customer-number:
+            description: Unique identifier of customer.
+            type: string
+          campaign-code:
+            description: Unique identifier of campaign.
+            type: string        
+          benefits:
+            description: Benefits activated for customer
+            properties:
+              items:
+                description: List of benefits.
+                items:
+                  $ref: '#/definitions/benefit'
+                type: array
+            type: object  
+          header:
+            $ref: '#/definitions/header'
+        example:
+          aggregate-id: 3e0f7ce312e5
+          aggregate-kind: account
+          kind: account-debited
+
+# ****************************************************#
+# EVENTS HEADER REDEFINED IN CAMPAIGN API             #
+# ****************************************************#
+  header:
+    required:
+      - kind  
+    properties:
+      aggregate-id:
+        type: string
+        description: Unique identifier of aggregate instance. For campaign it is campaign code
+      aggregate-kind:
+        type: string
+        description: Kind of resource (aggregate) that this event describes. In Campaign API it is  `campaign`
+        enum:
+          - campaign
+      version:
+        type: number
+        description: Version of the event payload. Events have new versions when we need to capture different information on event that still has the same nature. Version is integer that is incremented
+      kind:
+        type: string
+        description: Enumeration that distinguishes events in Campaign API according to their nature
+        enum:
+          - campaign-response-captured
+          - campaign-benefits-activated
+    example:
+      aggregate-id: 3e0f7ce312e5
+      aggregate-kind: account
+      kind: account-debited
+
+# ****************************************************#
+# MODELS COMMON TO ALL APIs                           #
+# ****************************************************#
+  event:
+    description: Base event model that ensures that every event instance is globaly identifiable and that it is timestamped 
+    type: object
+    properties:
+      occurred-on:
+        type: string
+        format: date-time
+        description: Time when an event occurred
+      id:
+        type: string
+        format: uuid
+        description: Unique identifier of event instance in UUID format
+    example:
+      occurred-on: '2015-11-19T13:21:01.000Z'
+      id: 736a07bd-809e-43bd-9ac1-20991a78f390
+
+ 
+
+# ****************************************************#
+# EVENTS PAYLOAD ELEMENTS IN CAMPAIGN API             #
+# ****************************************************#
+  benefit:
+    description: Contains information about campaign benefit. Benefit can bring some special terms on product which is subject of campaign, e.g. special interest rate, free transactions, fee discount.
+    properties:
+      campaign-code:
+        description: Unique identifier of the campaign that benefit belongs to.
+        type: string
+      benefit-code:
+        description: Unique identifier of the benefit.
+        type: string
+      benefit-value:
+        description: Value of the benefit (value of interest rate, number of months without fees on current account..)
+        type: string
+      customer-number:
+        description: Unique identifier of customer
+        type: string
+      is-condition-modification:
+        description: Defines if the benefit overrides product condition.
+        type: boolean
+      is-relative-modification:
+        description: Defines if the benefit provides absolute or relative modification to existing product condition.
+        type: boolean      
+    type: object

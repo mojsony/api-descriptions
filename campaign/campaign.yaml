@@ -1,0 +1,427 @@
+swagger: '2.0'
+info:
+  version: v1
+  title: Campaign API
+  description: |
+    Campaign API gives you ability to present customers with targetted offers, record their response and activate campaign benefits within campaign response workflow. 
+  contact: 
+    name: Mladen Milenkovic
+    url: http://dev.asseco-see.com/docs/
+    email: mladen.milenkovic@asseco-see.rs    
+host: dev.asseco-see.com
+basePath: /v1/campaign
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+tags:
+  - name: Campaigns
+    description: Working with campaigns
+  - name: Classifications
+    description: Working with classifications
+paths:
+  /campaigns/offers:
+    get:
+      description: Provides list of targetted offers for customer and appropriate resources optimized for presentation on specific channel
+      summary: Get targetted offers optimized for channel
+      operationId: Campaigns_Offers_GetList
+      parameters:
+        - $ref: '#/parameters/pan-param'
+        - $ref: '#/parameters/campaign-code-param'
+        - $ref: '#/parameters/channel-code-param'
+        - $ref: '#/parameters/customer-number-param'
+        - $ref: '#/parameters/product-code-param'
+        - $ref: '#/parameters/preferred-language-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+      tags:
+        - Campaigns
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/offer-list' 
+        default:
+          $ref: '#/responses/default-error-response'
+      x-asee-tags:
+        - Sortable
+  /campaigns/{campaign-code}/responses:        
+    post:
+      summary: Capture customer response to campaign offer
+      tags:
+        - Campaigns
+      operationId: Campaigns_CaptureResponse
+      parameters:
+      parameters:
+        - description: Unique identifier of the campaign
+          name: campaign-code
+          in: path
+          required: true
+          type: string        
+        - description: Parameters for adding customer to campaign.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/capture-campaign-response-command'
+      responses:
+        '200':
+          description: OK
+        default:
+            $ref: '#/responses/default-error-response'
+      x-asee-tags: []
+  /campaigns/{campaign-code}/benefits/activate:
+    post:
+      summary: Activates the benefit of the campaign, e.g. enables x free transactions on atm for the customer.
+      tags:
+        - Campaigns
+      operationId: Campaigns_Benefits_Activate
+      parameters:
+        - description: Unique identifier of the campaign
+          name: campaign-code
+          in: path
+          required: true
+          type: string
+        - description: Parameters for activation of campaign benefit.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/activate-benefits-command'
+      responses:
+        '200':
+          description: OK
+        default:
+            $ref: '#/responses/default-error-response'
+      x-asee-tags: []
+
+# ****************************************************#
+# ENDPOINTS COMMON WITH OTHER APIs                    #
+# ****************************************************#
+
+  /classifications: 
+    get:
+      summary: List all classification schemas used by the API
+      description: Some fields and parameters have been restricted to a list of allowed lookup values maintained by the bank. This method lists all schemas used in this API.    
+      operationId: "Classifications_GetList"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/classification-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+        - Classifications
+
+  /classifications/{schema-id}:
+    get:
+      summary: List values allowed by given classification schema.
+      description: Returns all classification values for chosen classification.
+      operationId: Classifications_Get
+      parameters:
+        - $ref: '#/parameters/schema-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/classification'
+        default:
+          $ref: '#/responses/default-error-response'
+
+      tags:
+        - Classifications
+
+parameters:
+# ****************************************************#
+# PARAMETERS COMMON WITH OTHER APIs                   #
+# ****************************************************#
+  schema-id-param:
+    name: schema-id
+    description: Identifier of classification schema
+    in: path
+    required: true
+    type: string
+# ****************************************************#
+# PARAMETERS SPECIFIC TO THIS API                     #
+# ****************************************************#
+  pan-param:
+    name: pan
+    in: query
+    description: Primary account number (PAN) from payment card that is used for off-us campaigns to identify the person who is not the client of the bank.
+    required: false
+    type: string
+  channel-code-param:
+    name: channel-code
+    in: query
+    description: Unique identifier of the channel. List of avaliable channels is provided by [Reference API](reference-getstarted.html).
+    type: string
+  customer-number-param:
+    description: Unique identifier of the customer
+    in: query
+    name: customer-number
+    required: false
+    type: string
+  campaign-code-param:
+    name: campaign-code
+    description: Unique identifier of the campaign
+    in: query
+    required: false
+    type: string 
+  product-code-param:
+    name: product-code
+    description: Unique identifier of the product
+    in: query
+    required: false
+    type: string
+  preferred-language-param:
+    name: preferred-language
+    description: Prefered language/culture of the customer.
+    in: query
+    required: false
+    type: string
+  sort-order-param:
+    description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]()
+    in: query
+    name: sort-order
+    type: string
+    default: asc
+    enum:
+    - asc
+    - desc
+    x-asee-common: true  
+  sort-by-param:  
+    description: Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]().
+    in: query
+    name: sort-by
+    type: string
+    required: false
+    x-asee-common: true
+definitions:
+# ****************************************************#
+# MODELS COMMON WITH OTHER APIs                       #
+# ****************************************************#
+  classification-value: 
+    type: object
+    description: Classification value
+    properties: 
+      literal: 
+        description: Literal that uniquely identifies classification value 
+        type: string    
+      code: 
+        description: Optional numerical code of classification value
+        type: string
+      description: 
+        description: Description of classification value
+        type: string
+      parent-literal: 
+        description: Optional literal of parent classification value if schema is hierarchical
+        type: string     
+    example:
+      literal: billing
+      code: 2
+      description: Contact may be used to provide party with details of their liabilities to the bank
+  classification-list:
+    description: List of classification schemas
+    type: object    
+    properties: 
+      items: 
+        description: List of classification schemas
+        items:
+          $ref: "#/definitions/classification-info"
+        type: array
+    example:
+      - 
+        schema-id: filing-purpose
+        name: Filing Purpose
+        description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture
+      -
+        schema-id: folder-purpose
+        name: Folder Purpose
+        description: List of possible uses of a folder in business context.       
+  classification-info:  
+    description: Basic information on classification schema
+    properties:
+      schema-id:
+        type: string
+        description: Unique literal that identifies the classification schema. Always in `lowercase-dash` convention.
+      name: 
+        type: string
+        description: User friendly name of classification
+      description:
+        type: string
+        description: Description of a classification
+    example:
+      schema-id: filing-purpose
+      name: Filing Purpose
+      description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture   
+  classification:
+    type: object   
+    description: Classification schema details
+    properties:
+      schema-id:
+        type: string
+        description: Unique literal that identifies the classification schema. Always in `lowercase-dash` convention.
+      name: 
+        type: string
+        description: User friendly name of classification
+      description:
+        type: string
+        description: Description of a classification
+      values:
+        description: List of allowed classification values
+        type: array   
+        items:
+          $ref: "#/definitions/classification-value"
+    example:
+      schema-id: contact-purpose
+      name: Contact Purpose
+      description: List of possible uses of contact in business context. Commonly used filing purposes are billing, marketing
+      values:
+        - literal: billing
+          code: 1
+          description: Contact may be used to provide party with details of their liabilities to the bank
+        - literal: marketing
+          code: 2
+          description: Contact may be used to provide party with details of offers
+        - literal: reporting
+          code: 3
+          description: Contact may be used to provide party with reports on their account
+# ****************************************************#
+# MODELS SPECIFIC FOR ACCOUNTING APIs                 #
+# ****************************************************#
+  offer:
+    description: 
+      Base campaign execution object that contains conditions of targetted  offer and also metadata to help visually represent offer to the client. 
+    properties:
+      campaign-code:
+        description: Unique identifier of the campaign. 
+        type: string
+      campaign-title:
+        description: Title of campaign offer.
+        type: string
+      campaign-description:
+        description: Detailed informations about campaign offer and related product benefits.
+        type: string
+      product-code:
+        description: Unique identifier of the product related to campaign offer.
+        type: string
+      campaign-priority:
+        x-asee-compliance: This was integer field, changed to enum.
+        description: Defines priority of the campaign offer. Based on this we define order of appearence for campaign offers.
+        type: string
+        enum:
+          - low
+          - medium
+          - high
+      resource:
+        $ref: '#/definitions/campaign-resource'
+      campaign-end-date:
+        description: Expiration date of campaign. After this date the campaign is no longer active, and will not be presented to customers.
+        format: date-time
+        type: string
+      channel-code:
+        description: Unique identifier of the channel. List of avaliable channels is provided by [Reference API](reference-getstarted.html).
+        type: string        
+    type: object      
+  offer-list:
+    description: List of campaign offers.
+    properties:
+      items:
+        description: List of campaign offer items.
+        items:
+          $ref: '#/definitions/offer'
+        type: array
+    type: object
+  benefit:
+    description: Contains information about campaign benefit. Benefit can bring some special terms on product which is subject of campaign, e.g. special interest rate, free transactions, fee discount.
+    properties:
+      campaign-code:
+        description: Unique identifier of the campaign that benefit belongs to.
+        type: string
+      benefit-code:
+        description: Unique identifier of the benefit.
+        type: string
+      benefit-value:
+        description: Value of the benefit (value of interest rate, number of months without fees on current account..)
+        type: string
+      customer-number:
+        description: Unique identifier of customer
+        type: string
+      is-condition-modification:
+        description: Defines if the benefit overrides product condition.
+        type: boolean
+      is-relative-modification:
+        description: Defines if the benefit provides absolute or relative modification to existing product condition.
+        type: boolean      
+    type: object
+  campaign-resource:
+    description: Media resource providing visual appearance of campaign offer. This may be banner image, animation, video, etc.
+    properties:
+      code:
+        description: Unique identifier of advertising resource. This resource defines visual representation of the campaign offer. 
+        type: string
+      media-uri:
+        description: Defines external uri that holds the advertising resource, i.e. visual representation of specific campaign offer.
+        type: string
+      content-type:
+        description: Media type according to RFC 4288
+        type: string
+      message-text: 
+        description: Marketing messsage that follows campaign offer and should be displayed together with advertising resource.
+        type: string         
+      language:
+        description: "Localization culture name of media resource. Combination ISO 639-1 two-letter language codes language, optional script name (`Latn`, `Cyrl`) and ISO 3166-1 alpha-2 two letter country codes. Examples: en-US, sr-latn-RS, mk-MK"
+        type: string
+      zone-kind:
+        description: Defines the kind of presentation zone in client application where advertising resource should be displayed. For complete list of possible values see [zone-kind](campaign-classifications.html) classification.
+        type: string
+      zone-code:
+        description: Defines Unique identifier of presentation zone in client application where advertising resource should be displayed.
+        type: string
+    type: object
+  activate-benefits-command:
+    description: Activates benefit that campaign provides (e.g. lower interest rate for credit limit)
+    type: object
+    properties: 
+      benefits:
+        description: Benefits to activate
+        properties:
+          items:
+            description: List of benefits.
+            items:
+              $ref: '#/definitions/benefit'
+            type: array
+        type: object  
+  capture-campaign-response-command:
+    type: object
+    description: Capturing response to campaign offer
+    properties:
+      channel-code:
+        description: Unique identifier of the channel. For complete list of possible values see [channel]() classification.
+        type: string
+      customer-number:
+        description: Unique identifier of customer.
+        type: string
+      campaign-code:
+        description: Unique identifier of campaign.
+        type: string        
+      source-uri:
+        description: Keeps information about point of access, which helps with the analysis of efficiency of the channels.
+        type: string
+      campaign-action:
+        type: string
+        description: Action that is recorded against campaign
+        enum:
+          - presented
+          - declined
+          - clicked
+          - form-filled
+          - accepted
+          - activated
+responses:
+  default-error-response:
+    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling](common-getstarted.html#error-handling)

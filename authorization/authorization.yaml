@@ -1,0 +1,682 @@
+swagger: '2.0'
+info:
+  description: |
+        Risk based authorization of customer initiated actions solved by elevated level of authentication and/or involvement of multiple authorizing parties.
+        Action authorizations are either explicitly requested by channel application or initiated by backend or multichannel modules during transaction and workflow processing.
+        With Authorization API you can:
+        - Initiate new authorization
+        - Check authorization status
+        - List pending authorizations
+        - Get mandates for authenticated user
+  title: Authorization API
+  version: v1
+host: dev.asseco-see.rs
+basePath: /authorization
+tags:
+  - description: Working with authorizations
+    name: Authorizations
+  - description: Working with mandates
+    name: Mandates
+  - description: Working with challenges
+    name: Challenges
+  - description: Working with OTP (One Time password)
+    name: OTP
+  - description: Working with tokens
+    name: Tokens
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /authorizations:
+    get:
+      description: Use this operation to list pending authorizations that authenticated user can verify.
+      operationId: Authorizations_GetList
+      parameters:
+        - $ref: '#/parameters/service-code-param'
+        - $ref: '#/parameters/async-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/authorizations-v2'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Get pending authorizations for authenticated user.
+      tags:
+        - Authorizations
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+    post:
+      description: "When \"async\" parameter is not provided, then the operation returns a response once the authentication process completes. 
+            If, however, your application provides this parameter with a value of \"true\", then operation will immediately return an authorization-id, and your application will need to subsequently check the status (and, eventually, result) of the authorization process."
+      operationId: Authorizations_Initiate
+      parameters:
+        - description: Payload from other action that is persisted for authorization.
+          in: body
+          name: cmd
+          required: true
+          schema: {}
+        - $ref: '#/parameters/service-code-param'
+        - $ref: '#/parameters/async-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/authorization-response-v2'
+        '440':
+          description: |
+             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+             - [max-attempts-reached] ()
+             - [locked-out] ()
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Initiates new authorization.
+      tags:
+        - Authorizations
+      x-asee-tags: []
+  '/authorizations/{authorization-id}/status':
+    get:
+      description: 'Use this operation to check the status of authorization that is being processed asynchronously. The /status endpoint "long-polls" for the next status update from the authorization process for a given action. That is to say, if no status update is available at the time the request is sent, it will wait until there is an update before returning a response.'
+      operationId: Authorizations_Get
+      parameters:
+        - $ref: '#/parameters/authorization-id-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/authorization-decision-v2'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Check authorization status.
+      tags:
+        - Authorizations
+      x-asee-tags:
+        - Shapeable
+  '/authorizations/{authorization-id}/verify':
+    post:
+      description: Use this operation to verify authorization with appropriate user credentials.
+      operationId: Authorizations_Check
+      parameters:
+        - description: Command for authorization verification.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/check-new-authorization-command-v2'
+        - $ref: '#/parameters/authorization-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/authorization-decision-v2'
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+            - [authorization-expired] ()
+            - [locked-out] ()
+            - [max-attempts-reached] ()
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Verify authorization.
+      tags:
+        - Authorizations
+      x-asee-tags: []
+  /challenges/initiate:
+    post:
+      operationId: ChallengeAuthorizations_Initiate
+      parameters:
+        - description: Generate challenge command.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/generate-challenge-cmd'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Object'
+      summary: Generate challenge for challenge-response authorization.
+      tags:
+        - Challenges
+      x-asee-tags: []
+  /mandates:
+    get:
+      description: Use this operation to list pending authorizations that authenticated user can verify.
+      operationId: Mandates_Get
+      parameters:
+        - $ref: '#/parameters/arrangement-id-param'
+        - $ref: '#/parameters/service-code-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/user-mandates-v2'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Get mandates for authenticated user.
+      tags:
+        - Mandates
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+  /otp/initiate:
+    post:
+      operationId: OTP_Initiate
+      parameters:
+        - description: Generate SMS OTP command.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/resend-otp-cmd'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Object'
+      summary: Generate One Time Password (OTP) to be used for processes that required it in validations.
+      tags:
+        - OTP
+      x-asee-tags: []
+  /orchestration-tokens:
+    post:
+      description: This token is used for orchestration requests
+      operationId: BulkTokens_Create
+      parameters:
+        - description: Generate orchestration token command.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/bulk-token-command-params'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Create orchestration tokens.
+      tags:
+        - Tokens
+      x-asee-tags: []
+parameters:
+  service-code-param:
+    description: Service code for this action
+    in: query
+    name: service-code
+    required: false
+    type: boolean
+  async-param:
+    description: Value indicating whether this request is asynchronous.
+    in: query
+    name: async
+    required: false
+    type: boolean
+  page-size-param:
+    in: query    
+    name: page-size
+    description: Number of items on a page. For more information see general guidance on [paging and sorting]()
+    required: false
+    format: int32
+    type: integer
+  page-param:
+    in: query
+    description: Page index. For more information see general guidance on [paging and sorting]()
+    name: page
+    required: false
+    format: int32
+    type: integer
+  sort-order-param:
+    description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]()
+    in: query
+    name: sort-order
+    required: false
+    enum:
+      - asc
+      - desc
+    type: string
+  sort-by-param:
+    in: query
+    name: sort-by
+    description: Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]()
+    required: false
+    type: string
+  include-param:
+    in: query
+    name: include
+    description: List of fields to include in response. For more information see general guidance on [response shaping]()
+    required: false
+    collectionFormat: csv
+    items:
+      type: string
+    type: array
+  trim-param:
+    in: query
+    name: trim
+    description: List of fields to trim from response. For more information see general guidance on [response shaping]()
+    required: false
+    collectionFormat: csv
+    items:
+      type: string
+    type: array
+  authorization-id-param:
+    description: Authorization id
+    in: path
+    name: authorization-id
+    required: true
+    type: string
+  arrangement-id-param:
+    description: Arrangement identifier.
+    in: query
+    name: arrangement-id
+    required: false
+    type: string
+definitions:
+  authorization-response-v2:
+    description: 'Authorization response after initiate command'
+    example:
+      authorization-id: 102304
+    properties:
+      authorization-id:
+        description: Authorization id.
+        type: string
+    type: object
+  business-problem:
+    example:
+      type: max-attempts-reached
+      title: Max authorization attempts has been reached
+      details: Max authorization attempts has been reached
+    properties:
+      type:
+        type: string
+      title:
+        type: string
+      details:
+        type: string
+    type: object
+  authorizations-v2:
+    description: 'List of authorizations'
+    example:
+      total-count: 1
+      page-size: 10
+      page-number: 1
+      total-pages: 1
+      authorizations:
+        - authorization-status: rejected
+      navigations:
+        - href: Href
+          rel: Rel
+      commands:
+        - href: Href
+          rel: Rel
+      uri: Uri
+    properties:
+      total-count:
+        description: Total count of accounts in the list.
+        format: int32
+        type: integer
+      page-size:
+        description: Page size is count of accounts contained in one page
+        format: int32
+        type: integer
+      page-number:
+        description: Page number of current page.
+        format: int32
+        type: integer
+      total-pages:
+        description: Total pages count calcuated based on count of accounts and page size.
+        format: int32
+        type: integer
+      authorizations:
+        description: Items is list of accounts.
+        items:
+          $ref: '#/definitions/authorization-v2'
+        type: array
+      navigations:
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        type: string
+    type: object
+  authorization-v2:
+    description: 'Authorization status'
+    example:
+      authorization-status: accepted
+    properties:
+      authorization-status:
+        description: Authorization status.
+        enum:
+          - accepted
+          - rejected
+        type: string
+    type: object
+  link:
+    example:
+      href: Href
+      rel: Rel
+    properties:
+      href:
+        type: string
+      rel:
+        type: string
+    type: object
+  authorization-decision-v2:
+    description: 'Status of authorization'
+    example:
+      authorization-status: rejected
+    properties:
+      authorization-status:
+        description: Authorization status.
+        enum:
+          - accepted
+          - rejected
+        type: string
+    type: object
+  check-new-authorization-command-v2:
+    description: Command for checking authorization
+    example:
+      authorization-id: 108910
+      authorization-kind: smt-otp
+      authorization-code: 789569
+    properties:
+      authorization-id:
+        description: Account number.
+        type: string
+      authorization-kind:
+        description: Authorization kind for this request.
+        enum:
+          - smt-otp
+          - challenge-response
+          - mac
+        type: string
+      authorization-code:
+        description: Value for authorization.
+        type: string
+    type: object
+  generate-challenge-cmd:
+    description: Command for generating challenge
+    example:
+      authorization-id: AuthorizationId
+    properties:
+      authorization-id:
+        description: Authorization Id
+        type: string
+    required:
+      - authorization-id
+    type: object
+  Object:
+    example: {}
+    properties: {}
+    type: object
+  user-mandates-v2:
+    description: List of user mandates
+    example:
+      mandates:
+        - id: 203978
+          kind: owner
+          service-code: initiate-credit-transfer
+          arrangements:
+            - arrangement-number: 0659963512
+              owner: Nikola
+              kind: savings
+              limit:
+                minimal-amount:
+                  code: EUR
+                  amount: 10
+                maximal-amount:
+                  code: EUR
+                  amount: 1000000
+                maximal-count: 0
+                minimal-count: 0
+          authentication-methods:
+            - limit:
+                minimal-amount:
+                  code: EUR
+                  amount: 10
+                maximal-amount:
+                  code: EUR
+                  amount: 10000000
+                maximal-count: 0
+                minimal-count: 10
+              method-identifier: sms-otp
+          limit:
+            minimal-amount:
+              code: Code
+              amount: 0
+            maximal-amount:
+              code: Code
+              amount: 0
+            maximal-count: 0
+            minimal-count: 0
+    properties:
+      mandates:
+        description: List of user mandates
+        items:
+          $ref: '#/definitions/mandate-v2'
+        type: array
+    type: object
+  mandate-v2:
+    description: 'User mandate. Specifies mandate details with rule limits'
+    example:
+      id: 2403000
+      kind: owner
+      service-code: initiate-credit-transfer
+      arrangements:
+        - arrangement-number: 0659963512
+          owner: Nikola
+          kind: savings
+          limit:
+            minimal-amount:
+              code: EUR
+              amount: 10
+            maximal-amount:
+              code: EUR
+              amount: 1000000
+            maximal-count: 0
+            minimal-count: 10
+      authentication-methods:
+        - limit:
+            minimal-amount:
+              code: EUR
+              amount: 10
+            maximal-amount:
+              code: EUR
+              amount: 10
+            maximal-count: 0
+            minimal-count: 100
+          method-identifier: sms-otp
+      limit:
+        minimal-amount:
+          code: EUR
+          amount: 10
+        maximal-amount:
+          code: EUR
+          amount: 1000000
+        maximal-count: 0
+        minimal-count: 10
+    properties:
+      id:
+        description: Mandate Identifier. Unique identifier
+        type: string
+      kind:
+        description: Kind.
+        type: string
+      service-code:
+        description: Service code.
+        type: string
+      arrangements:
+        description: The list of user arrangements.
+        items:
+          $ref: '#/definitions/arrangement-v2'
+        type: array
+      authentication-methods:
+        description: Authentication methods.
+        items:
+          $ref: '#/definitions/authentication-method-v2'
+        type: array
+      limit:
+        description: Limit.
+        $ref: '#/definitions/limit-v2'
+    type: object
+  arrangement-v2:
+    description: 'User arrangement'
+    example:
+      arrangement-number: 0569963512
+      owner: Nikola
+      kind: savings
+      limit:
+        minimal-amount:
+          code: EUR
+          amount: 10
+        maximal-amount:
+          code: EUR
+          amount: 1000000
+        maximal-count: 0
+        minimal-count: 1000
+    properties:
+      arrangement-number:
+        description: Arrangement number.
+        type: string
+      owner:
+        description: Owner.
+        type: string
+      kind:
+        description: Kind.
+        type: string
+      limit:
+        description: Limit.
+        $ref: '#/definitions/limit-v2'
+    type: object
+  authentication-method-v2:
+    description: 'Authentication method with rules'
+    example:
+      limit:
+        minimal-amount:
+          code: EUR
+          amount: 10
+        maximal-amount:
+          code: EUR
+          amount: 1000000
+        maximal-count: 0
+        minimal-count: 10
+      method-identifier: MethodIdentifier
+    properties:
+      limit:
+        description: Limit.
+        $ref: '#/definitions/limit-v2'
+      method-identifier:
+        description: Method identifier.
+        type: string
+    type: object
+  limit-v2:
+    description: 'Limit with minimal-maximal amount, and maximal-minimal count of oprations'
+    example:
+      minimal-amount:
+        code: EUR
+        amount: 10
+      maximal-amount:
+        code: EUR
+        amount: 1000000
+      maximal-count: 0
+      minimal-count: 100
+    properties:
+      minimal-amount:
+        description: Minimal amount.
+        $ref: '#/definitions/currency'
+      maximal-amount:
+        description: Maximal amount.
+        $ref: '#/definitions/currency'
+      maximal-count:
+        description: Maximal count.
+        format: int32
+        type: integer
+      minimal-count:
+        description: Minimal count.
+        format: int32
+        type: integer
+    type: object
+  currency:
+    example:
+      code: EUR
+      amount: 100
+    properties:
+      code:
+        type: string
+      amount:
+        format: double
+        type: number
+    type: object
+  resend-otp-cmd:
+    description: Command for resending OTP
+    example:
+      authorization-id: 300265
+    properties:
+      authorization-id:
+        description: Authorization Id
+        type: string
+    required:
+      - authorization-id
+    type: object
+  bulk-token-command-params:
+    description: Command for issuing authorization token for bulk operations that require multiple authorizations
+    example:
+      service-codes:
+        - initiate-credit-transfer
+      operations-count: 2
+    properties:
+      service-codes:
+        description: "Service's codes list for bulk authorization"
+        items:
+          type: string
+        type: array
+      operations-count:
+        description: Number of expected operations
+        format: int32
+        type: integer
+    required:
+      - service-codes
+    type: object
+  command-result:
+    example:
+      id: 20390808
+      created-record-status: created
+    properties:
+      id:
+        type: string
+      created-record-status:
+        type: string
+    type: object
+responses:
+  default-error-response:
+    description: 'Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()'
+schemes:
+  - http

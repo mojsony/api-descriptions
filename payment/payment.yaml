@@ -1,0 +1,6189 @@
+swagger: '2.0'
+host: dev.aseeco-see.com
+basePath: /v1/payment
+info:
+  description: |
+    Payment API gives you possibility to create, update, delete and execute balance, credit and cross-border transfers. For each type of transfer there are three types of resources you can use. 
+    Drafts for working with orders in process of preparation, archive for viewing processed orders and current for orders in process of execution.
+    Orders can be authorized using action authorization API. Orders can be created and issued depending on a mandate that customer has on source account.
+    Payment API gives you access to a repository of public and personal recipients and also gives you ability to create, update and delete order templates that can be used for fast creation of orders.
+    In process of creating orders recipients can be identified by their account or alias associated with recipient in customer’s recipient registry.
+    Aliases can be anything, from facebook identity, mobile phone number, e-mail address to a custom value defined by customer himself.
+  title: Payment API
+  version: v1
+schemes:
+  - http
+  - https  
+tags:
+  - description: Working with beneficiaries
+    name: Beneficiaries
+  - description: Working with classifications
+    name: Classifications
+  - description: Working with drafts
+    name: Drafts
+  - description: Working with templates
+    name: Templates
+  - description: Working with transfers
+    name: Transfers
+  - description: Working with working days
+    name: Working days
+  - description: Working with payments
+    name: Payments
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /public-beneficiaries:
+    get:
+      description: |
+        Shows list of public beneficiaries.
+        It is useful when it's required to see list of public associations whom is payed often.  
+      operationId: PublicBeneficiaries_GetList
+      parameters:
+        - $ref: '#/parameters/beneficiary-name-param'
+        - $ref: '#/parameters/beneficiary-address-param'
+        - $ref: '#/parameters/beneficiary-account-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/beneficiary-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Query beneficiaries from public registry.
+      tags:
+        - Beneficiaries
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+  /personal-beneficiaries:
+    get:
+      description: |
+        Shows list of personal beneficiaries.
+        It is useful when it's required to see list of persons whom is payed often.  
+      operationId: PersonalBeneficiaries_GetList
+      parameters:
+        - $ref: '#/parameters/beneficiary-name-param'
+        - $ref: '#/parameters/beneficiary-address-param'
+        - $ref: '#/parameters/beneficiary-account-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/beneficiary-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Query beneficiaries from personal registry.
+      tags:
+        - Beneficiaries
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+    post:
+      description: |
+        Creating new personal beneficiary.
+        It is useful when to have personal beneficiary for someone whom is payed often.    
+      operationId: PersonalBeneficiaries_Create
+      parameters:
+        - in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/create-personal-beneficiary-command'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Creates new personal beneficiary.
+      tags:
+        - Beneficiaries
+      x-asee-tags: []
+  '/personal-beneficiaries/{beneficiary-id}':
+    delete:
+      description: |
+        Deleting personal beneficiary.
+        It is useful when it's required to remove someone from personal beneficiaries list, because he/she is not in plan for future payments.  
+      operationId: PersonalBeneficiaries_Cancel
+      parameters:
+        - $ref: '#/parameters/beneficiary-id-param'
+      responses:
+        '204':
+          description: No Content
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Deletes personal beneficiary.
+      tags:
+        - Beneficiaries
+      x-asee-tags: []
+    get:
+      description: | 
+        It is useful when details info about one particular beneficiary is required.
+      operationId: PersonalBeneficiaries_Get
+      parameters:
+        - $ref: '#/parameters/beneficiary-id-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/beneficiary'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Get personal beneficiary details. 
+      tags:
+        - Beneficiaries
+      x-asee-tags:
+        - Shapeable
+    put:
+      description: |
+        Updating details about personal beneficiary.
+        It is useful when some changes are to be made on particular personal beneficiary.  
+      operationId: PersonalBeneficiaries_Update
+      parameters:
+        - description: Update beneficiary command.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/modify-personal-beneficiary-command'
+        - $ref: '#/parameters/beneficiary-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Updates personal beneficiary.
+      tags:
+        - Beneficiaries
+      x-asee-tags: []
+  /banks:
+    get:
+      description: |
+        Displays list of banks from which is possible to choose.
+        It is useful when searching other bank for some transfer.
+      operationId: Banks_GetList
+      parameters:
+        - $ref: '#/parameters/swift-code-param'
+        - $ref: '#/parameters/bank-name-param'
+        - $ref: '#/parameters/bank-country-param'
+        - $ref: '#/parameters/ino-or-domestic-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/bank-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Query list of banks.
+      tags:
+        - Classifications
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+  /purpose-codes:
+    get:
+      description: |
+        Displays purpose codes list.
+        It is useful when choosing purpose code for some transfer.  
+      operationId: PurposeCodes_GetList
+      parameters:
+        - $ref: '#/parameters/purpose-code-param'
+        - $ref: '#/parameters/direction-param'
+        - $ref: '#/parameters/residency-param'
+        - $ref: '#/parameters/payout-currency-param'
+        - $ref: '#/parameters/payout-method-param'
+        - $ref: '#/parameters/clearing-param'
+        - $ref: '#/parameters/cross-border-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/purpose-code-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets purpose codes list.
+      tags:
+        - Classifications
+      x-asee-tags:
+        - Pageable
+        - Sortable
+  '/classifications/{schema-id}':
+    get:
+      operationId: Classifications_Get
+      parameters:
+        - $ref: '#/parameters/schema-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/classification-value'
+            type: array
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Get classification values.
+      tags:
+        - Classifications
+      x-asee-tags: []
+  '/credit-transfer-drafts/{draft-id}':
+    delete:
+      description: |
+        Deletes credit transfer draft.
+        It is useful when draft is not necessary any more.
+      operationId: CreditTransferDrafts_Cancel
+      parameters:
+        - $ref: '#/parameters/draft-id-param'
+      responses:
+        '204':
+          description: No Content
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Delete credit transfer draft.
+      tags:
+        - Drafts
+      x-asee-tags: []
+    get:
+      description: |
+        Shows particular credit transfer draft details.
+        It is useful when it's required to view all properties of particular draft.
+      operationId: CreditTransferDrafts_Get
+      parameters:
+        - $ref: '#/parameters/draft-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/credit-transfer'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets selected credit transfer draft details.
+      tags:
+        - Drafts
+      x-asee-tags: []
+    put:
+      description: |
+        Updates credit transfer draft.
+        It is useful when some changes are required on particular draft.
+      operationId: CreditTransferDrafts_Update
+      parameters:
+        - description: Updates credit transfer draft.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/modify-credit-transfer-draft-command'
+        - $ref: '#/parameters/draft-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Updates credit transfer draft.
+      tags:
+        - Drafts
+      x-asee-tags: []
+  /credit-transfer-drafts:
+    post:
+      description: |
+        Creating new credit transfer draft.
+        It is useful to make draft for future credit transfers, because it's easier then to proceed them.  
+      operationId: CreditTransferDrafts_Create
+      parameters:
+        - description: Create credit transfer command for draft.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/create-credit-transfer-draft-command'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        '400':
+          description: |
+            Your request was not well constructed and does not pass validation check. 
+            Consider the following validation errors and look in to response for more details:
+            [transfer-draft-already-exists] ()
+          schema:
+            $ref: '#/definitions/validation-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Creates new credit transfer draft.
+      tags:
+        - Drafts
+      x-asee-tags: []
+  '/nonresident-credit-transfer-drafts/{draft-id}':
+    delete:
+      description: |
+        Deletes nonresident credit transfer draft.
+        It is useful when draft is not necessary any more.
+      operationId: NonresidentCreditTransferDrafts_Cancel
+      parameters:
+        - $ref: '#/parameters/draft-id-param'
+      responses:
+        '204':
+          description: No Content
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Deletes nonresident credit transfer draft.
+      tags:
+        - Drafts
+      x-asee-tags: []
+    get:
+      description: |
+        Shows particular nonresident credit transfer draft's details.
+        It is useful when it's is required to preview the draft.  
+      operationId: NonresidentCreditTransferDrafts_Get
+      parameters:
+        - $ref: '#/parameters/draft-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/cross-border-transfer'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Get selected nonresident credit transfer draft details.
+      tags:
+        - Drafts
+      x-asee-tags: []
+    put:
+      description: |
+        Updating nonresident credit transfer draft with new details.
+        It is useful when some modifications are required on the draft.
+      operationId: NonresidentCreditTransferDrafts_Update
+      parameters:
+        - description: Update nonresident credit transfer draft command
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/modify-nonresident-credit-transfer-draft-command'
+        - $ref: '#/parameters/draft-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Updates nonresident credit transfer draft.
+      tags:
+        - Drafts
+      x-asee-tags: []
+  '/balance-transfer-drafts/{draft-id}':
+    delete:
+      description: |
+        Deletes balance transfer draft.
+        It is useful when draft is not necessary any more.  
+      operationId: BalanceTransferDrafts_Cancel
+      parameters:
+        - $ref: '#/parameters/draft-id-param'
+      responses:
+        '204':
+          description: No Content
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Deletes balance transfer draft.
+      tags:
+        - Drafts
+      x-asee-tags: []
+    get:
+      description: |
+        Shows particular balance transfer draft's details.
+        It is useful when it's is required to preview the draft.   
+      operationId: BalanceTransferDrafts_Get
+      parameters:
+        - $ref: '#/parameters/draft-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/balance-transfer'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets balance transfer draft details.
+      tags:
+        - Drafts
+      x-asee-tags: []
+    put:
+      description: |
+        Updating balance transfer draft with new details.
+        It is useful when some modifications are required on the draft.  
+      operationId: BalanceTransferDrafts_Update
+      parameters:
+        - description: Initiate balance transfer draft command
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/modify-balance-transfer-draft-command'
+        - $ref: '#/parameters/draft-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Updates balance transfer draft.
+      tags:
+        - Drafts
+      x-asee-tags: []
+  '/cross-border-transfer-drafts/{draft-id}':
+    delete:
+      description: |
+        Deletes cross-border transfer draft.
+        It is useful when draft is not necessary any more.  
+      operationId: CrossBorderTransferDrafts_Cancel
+      parameters:
+        - $ref: '#/parameters/draft-id-param'
+      responses:
+        '204':
+          description: No Content
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Deletes cross-border transfer draft.
+      tags:
+        - Drafts
+      x-asee-tags: []
+    get:
+      description: |
+        Shows particular cross-border transfer draft's details.
+        It is useful when it's is required to preview the draft.   
+      operationId: CrossBorderTransferDrafts_Get
+      parameters:
+        - $ref: '#/parameters/draft-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/cross-border-transfer'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets cross-border transfer draft details.
+      tags:
+        - Drafts
+      x-asee-tags: []
+    put:
+      description: |
+        Updating cross-border transfer draft with new details.
+        It is useful when some modifications are required on the draft. 
+      operationId: CrossBorderTransferDrafts_Update
+      parameters:
+        - description: Update cross-border transfer draft command
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/modify-cross-border-transfer-draft-command'
+        - $ref: '#/parameters/draft-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Updates cross-border transfer draft.
+      tags:
+        - Drafts
+      x-asee-tags: []
+  /balance-transfer-drafts:
+    post:
+      description: |
+        Creating new balance transfer draft.
+        It is useful to make draft for future balance transfers, because it's easier then to proceed them.  
+      operationId: BalanceTransferDrafts_Create
+      parameters:
+        - description: Initiate balance transfer draft command
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/create-balance-transfer-draft-command'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        '400':
+          description: |
+            Your request was not well constructed and does not pass validation check. Consider the following validation errors and look in to response for more details:
+            [transfer-draft-already-exists] ()
+          schema:
+            $ref: '#/definitions/validation-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Creates new balance transfer draft.
+      tags:
+        - Drafts
+      x-asee-tags: []
+  /cross-border-transfer-drafts:
+    post:
+      description: |
+        Creating new cross-border transfer draft.
+        It is useful to make draft for future cross-border transfers, because it's easier then to proceed them.  
+      operationId: CrossBorderTransferDrafts_Create
+      parameters:
+        - description: Initiate cross-border transfer draft command
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/create-cross-border-transfer-draft-command'
+      responses:
+        '202':
+          description: Accepted
+          schema:
+            $ref: '#/definitions/command-result'
+        '400':
+          description: |
+            Your request was not well constructed and does not pass validation check. Consider the following validation errors and look in to response for more details:
+            [transfer-draft-already-exists] ()
+          schema:
+            $ref: '#/definitions/validation-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Creates new cross-border transfer draft.
+      tags:
+        - Drafts
+      x-asee-tags: []
+  /nonresident-credit-transfer-drafts:
+    post:
+      description: |
+        Creating new nonresident credit transfer draft.
+        It is useful to make draft for future nonresident credit transfers, because it's easier then to proceed them.  
+      operationId: NonresidentCreditTransferDrafts_Create
+      parameters:
+        - description: Initiate nonresident credit transfer draft command.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/create-nonresident-credit-transfer-draft-command'
+      responses:
+        '202':
+          description: Accepted
+          schema:
+            $ref: '#/definitions/command-result'
+        '400':
+          description: |
+            Your request was not well constructed and does not pass validation check. Consider the following validation errors and look in to response for more details:
+            [transfer-draft-already-exists] ()
+          schema:
+            $ref: '#/definitions/validation-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Creates new nonresident credit transfer draft.
+      tags:
+        - Drafts
+      x-asee-tags: []
+  '/p2p-transfer-drafts/{draft-id}':
+    delete:
+      description: |
+        Deletes person to person transfer draft.
+        It is useful when draft is not necessary any more.  
+      operationId: PersonToPersonTransferDrafts_Cancel
+      parameters:
+        - $ref: '#/parameters/draft-id-param'
+      responses:
+        '204':
+          description: No Content
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Deletes person to person transfer draft.
+      tags:
+        - Drafts
+      x-asee-tags: []
+    get:
+      description: |
+        Shows particular person to person transfer draft's details.
+        It is useful when it's is required to preview the draft.   
+      operationId: PersonToPersonTransferDrafts_Get
+      parameters:
+        - $ref: '#/parameters/draft-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/transfer'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets person to person transfer draft details.
+      tags:
+        - Drafts
+      x-asee-tags: []
+    put:
+      description: |
+        Updating person to person transfer draft with new details.
+        It is useful when some modifications are required on the draft.  
+      operationId: PersonToPersonTransferDrafts_Update
+      parameters:
+        - description: Initiate person to person transfer draft command
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/modify-p2p-transfer-draft-command'
+        - $ref: '#/parameters/draft-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Updates person to person transfer draft.
+      tags:
+        - Drafts
+      x-asee-tags: []
+  /p2p-transfer-drafts:
+    post:
+      description: |
+        Creating new person to person transfer draft.
+        It is useful to make draft for future person to person transfers, because it's easier then to proceed them.  
+      operationId: PersonToPersonTransferDrafts_Create
+      parameters:
+        - description: Initiate person to person transfer draft command.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/create-p2p-transfer-draft-command'
+      responses:
+        '202':
+          description: Accepted
+          schema:
+            $ref: '#/definitions/command-result'
+        '400':
+          description: |
+            Your request was not well constructed and does not pass validation check. Consider the following validation errors and look in to response for more details:
+            [transfer-draft-already-exists] ()
+          schema:
+            $ref: '#/definitions/validation-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Creates person to person transfer draft.
+      tags:
+        - Drafts
+      x-asee-tags: []
+  /bill-payments:
+    post:
+      description: |
+        Bill payment solution.
+        It is useful because it presents an easy way to pay some bill.  
+      operationId: BillPayments_Initiate
+      parameters:
+        - description: Initiate bill payment command.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/initiate-bill-payment-command'
+      responses:
+        '202':
+          description: Accepted
+          schema:
+            $ref: '#/definitions/command-result'
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+            [blocked-account] ()
+            [account-not-active] ()
+            [not-marked-for-verification] ()
+            [payment-date-not-set] ()
+            [insufficient-available-balance] ()
+            [funds-reservation-error] ()
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Initiates bill payment.
+      tags:
+        - Payments
+      x-asee-tags: []
+  /bill-payments/bulk:
+    post:
+      description: |
+        Bulk bills payment solution.
+        It is useful because makes easier to pay more bills.  
+      operationId: BillPayments_InitiateBulk
+      parameters:
+        - description: Initiate bills payments command.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/initiate-bulk-bill-payment-command'
+      responses:
+        '202':
+          description: Accepted
+          schema:
+            $ref: '#/definitions/bill-payment-result-list'
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+            [blocked-account] ()
+            [account-not-active] ()
+            [not-marked-for-verification] ()
+            [payment-date-not-set] ()
+            [insufficient-available-balance] ()
+            [funds-reservation-error] ()
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Initiates bulk bills payment.
+      tags:
+        - Payments
+      x-asee-tags: []
+  /templates:
+    get:
+      description: |
+        Displays list of made payment templates.
+        It is useful when it's required to see all payment templates or by some searched criteria.  
+      operationId: Templates_GetList
+      parameters:
+        - $ref: '#/parameters/beneficiary-name-param'
+        - $ref: '#/parameters/beneficiary-account-param'
+        - $ref: '#/parameters/amount-from-param'
+        - $ref: '#/parameters/amount-to-param'
+        - $ref: '#/parameters/currency-code-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/template-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Querying list of payment templates.
+      tags:
+        - Templates
+      x-asee-tags:
+        - Pageable
+        - Sortable
+    post:
+      description: |
+        Creating new payment template.
+        It is useful because it makes easier future similar payments.  
+      operationId: Templates_Create
+      parameters:
+        - description: Initiate to create payment template.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/create-template-command'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Creates new payment template.
+      tags:
+        - Templates
+      x-asee-tags: []
+  '/templates/{template-id}':
+    delete:
+      description: |
+        Deleting particular payment template.
+        It is useful when payment template is not necessary any more.
+      operationId: Templates_Cancel
+      parameters:
+        - $ref: '#/parameters/template-id-param'
+      responses:
+        '204':
+          description: No Content
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Deletes selected payment template.
+      tags:
+        - Templates
+      x-asee-tags: []
+    get:
+      description: |
+        Displays particular payment template with all it's details.  
+      operationId: Templates_Get
+      parameters:
+        - $ref: '#/parameters/template-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/template'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets payment template details.
+      tags:
+        - Templates
+      x-asee-tags: []
+    put:
+      description: |
+        Updating particular payment template.
+        It is useful when some changes are required on selected template.  
+      operationId: Templates_Update
+      parameters:
+        - description: Payment template.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/modify-template-command'
+        - $ref: '#/parameters/template-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Updates selected payment template.
+      tags:
+        - Templates
+      x-asee-tags: []
+  /transfers:
+    get:
+      description: |
+        Gets list of customer transfers. This list can be filtered by debtor, creditor, date range, ammount range,
+        kind... This is useful when is required to view list of transfers by searched criteria, or all transfers.
+      operationId: Transfers_GetList
+      parameters:
+        - $ref: '#/parameters/beneficiary-account-param'
+        - $ref: '#/parameters/transfer-kind-param'
+        - $ref: '#/parameters/transfer-status-param'
+        - $ref: '#/parameters/date-from-param'
+        - $ref: '#/parameters/date-to-param'
+        - $ref: '#/parameters/amount-from-param'
+        - $ref: '#/parameters/amount-to-param'
+        - $ref: '#/parameters/beneficiary-name-param'
+        - $ref: '#/parameters/value-date-from-param'
+        - $ref: '#/parameters/value-date-to-param'
+        - $ref: '#/parameters/currency-code-param'
+        - $ref: '#/parameters/description-param'
+        - $ref: '#/parameters/latitude-param'
+        - $ref: '#/parameters/longitude-param'
+        - $ref: '#/parameters/radius-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/transfer-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Querying transfers.
+      tags:
+        - Transfers
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+  '/transfers/{transfer-id}/status':
+    get:
+      description: |
+        Gets status for one specific transfer. 
+        It is useful when is required to see transfer status code, description and effective date of status.
+      operationId: Transfers_GetStatus
+      parameters:
+        - $ref: '#/parameters/transfer-id-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/transfer-status'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets transfer status.
+      tags:
+        - Transfers
+      x-asee-tags:
+        - Shapeable
+  '/transfers/{transfer-id}/history':
+    get:
+      description: |
+        Gets list of statuses which were assigned to the transfer.
+        It is useful when it's required to view all statuses in which the transfer was.
+      operationId: Transfers_GetHistory
+      parameters:
+        - $ref: '#/parameters/transfer-id-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/transfer-history'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets transfer statuses history.
+      tags:
+        - Transfers
+      x-asee-tags:
+        - Shapeable
+  '/transfers/{transfer-id}/picture':
+    get:
+      description: |
+        Gets the transfer picture.
+        This is useful when it's required to view transfer picture.
+      operationId: Transfers_GetPicture
+      parameters:
+        - $ref: '#/parameters/transfer-id-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/transfer-picture'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets transfer's picture.
+      tags:
+        - Transfers
+      x-asee-tags:
+        - Shapeable
+    put:
+      description: |
+        Set transfer picture or update new one instead of previous.
+        It is way to put picture, or change previous one, in order to mark specific transfer.
+      operationId: Transfers_UpdatePicture
+      parameters:
+        - description: Update transfer picture command.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/modify-transfer-picture-command'
+        - $ref: '#/parameters/transfer-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Updates transfer's picture.
+      tags:
+        - Transfers
+      x-asee-tags: []
+  '/transfers/{transfer-id}/geolocation':
+    put:
+      description: |
+        Set transfer geolocation or update new one instead of previous.
+        It is way to put location where transfer was made, or change previous one, in order to mark specific transfer.
+      operationId: Transfers_UpdateGeolocation
+      parameters:
+        - description: Update transfer geolocation command.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/modify-transfer-geolocation-command'
+        - $ref: '#/parameters/transfer-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Updates transfer's geolocation.
+      tags:
+        - Transfers
+      x-asee-tags: []
+  '/transfers/{transfer-id}/category':
+    put:
+      description: |
+        Sets or updates category of the transfer.
+        It is useful when join or change of category for the transfer is required.
+      operationId: Transfers_UpdateCategory
+      parameters:
+        - description: Update transfer category command.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/modify-transfer-category-command'
+        - $ref: '#/parameters/transfer-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Updates transfer's category.
+      tags:
+        - Transfers
+      x-asee-tags: []
+  '/balance-transfers/{transfer-id}':
+    get:
+      description: |
+        Gets particular balance transfer details.
+        It is useful when details about particular transfer are required to be seen.  
+      operationId: BalanceTransfers_Get
+      parameters:
+        - $ref: '#/parameters/transfer-id-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/balance-transfer'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets balance transfer's details.
+      tags:
+        - Transfers
+      x-asee-tags:
+        - Shapeable
+  /balance-transfers:
+    post:
+      description: |
+        Initiates new balance transfer.
+        It is step in processing new transfer.  
+      operationId: BalanceTransfers_Initiate
+      parameters:
+        - description: Initiate balance transfer command.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/initiate-balance-transfer-command'
+      responses:
+        '202':
+          description: Accepted
+          schema:
+            $ref: '#/definitions/command-result'
+        '400':
+          description: |
+            Your request was not well constructed and does not pass validation check. Consider the following validation errors and look in to response for more details:
+            [amount-negative-number] ()
+            [debtor-account-or-currency-not-valid] ()
+            [creditor-account-or-currency-not-valid] ()
+            [date-not-valid] ()
+          schema:
+            $ref: '#/definitions/validation-problem'
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+            [allowed-amount-exceeded] ()
+            [blocked-account] ()
+            [transfer-not-allowed] ()
+            [debtor-card-not-active] ()
+            [frequency-limit-exceeded] ()
+            [amount-above-limit] ()
+            [account-deposited] ()
+            [insufficient-available-balance] ()
+            [transaction-currency-not-allowed] ()
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Initiates balance transfer.
+      tags:
+        - Transfers
+      x-asee-tags: []
+  /balance-transfers/validate:
+    post:
+      description: |
+        Validates new balance transfer.
+        It is useful because it perform various checks before transfer is accomplished.  
+      operationId: BalanceTransfers_Validate
+      parameters:
+        - description: Validate credit transfer command.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/validate-balance-transfer-command'
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: |
+            Your request was not well constructed and does not pass validation check. Consider the following validation errors and look in to response for more details:
+            [debtor-account-or-currency-not-valid] ()
+            [creditor-account-or-currency-not-valid] ()
+            [date-not-valid] ()
+          schema:
+            $ref: '#/definitions/validation-problem'
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+            [allowed-amount-exceeded] ()
+            [transfer-not-allowed] ()
+            [blocked-account] ()
+            [transfer-not-allowed-accounts-types] ()
+            [debtor-card-not-active] ()
+            [frequency-limit-exceeded] ()
+            [amount-above-limit] ()
+            [account-deposited] ()
+            [insufficient-available-balance] ()
+            [transaction-currency-not-allowed] ()
+            [creditor-aml-check-failed] ()
+            [debtor-aml-check-failed] ()
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Validates balance transfer.
+      tags:
+        - Transfers
+      x-asee-tags: []
+  '/balance-transfers/{transfer-id}/cancel':
+    post:
+      description: |
+        Cancels balance transfer.
+        It is useful when transfer is required to be abandoned before it is achieved.    
+      operationId: BalanceTransfers_Cancel
+      parameters:
+        - $ref: '#/parameters/transfer-id-param'
+      responses:
+        '202':
+          description: Accepted
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Cancels balance transfer.
+      tags:
+        - Transfers
+      x-asee-tags: []
+  '/credit-transfers/{transfer-id}':
+    get:
+      description: |
+        Gets particular credit transfer details.
+        It is useful when details about particular transfer are required to be seen.    
+      operationId: CreditTransfers_Get
+      parameters:
+        - $ref: '#/parameters/transfer-id-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/credit-transfer'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets credit transfer's details.
+      tags:
+        - Transfers
+      x-asee-tags:
+        - Shapeable
+  /credit-transfers:
+    post:
+      description: |
+        Initiates new credit transfer.
+        It is step in processing new transfer.  
+      operationId: CreditTransfers_Initiate
+      parameters:
+        - description: initiate credit transfer command.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/initiate-credit-transfer-command'
+      responses:
+        '202':
+          description: Accepted
+          schema:
+            $ref: '#/definitions/command-result'
+        '400':
+          description: |
+            Your request was not well constructed and does not pass validation check. Consider the following validation errors and look in to response for more details:
+            [amount-negative-number] ()
+            [debtor-account-or-currency-not-valid] ()
+            [order-validation-failed] ()
+            [date-not-valid] ()
+          schema:
+            $ref: '#/definitions/validation-problem'
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+            [blocked-account] ()
+            [debtor-account-blocked] ()
+            [work-date-not-set] ()
+            [put-order-on-wait-error] ()
+            [debtor-card-not-active] ()
+            [frequency-limit-exceeded] ()
+            [amount-above-limit] ()
+            [payment-date-not-set] ()
+            [insufficient-available-balance] ()
+            [transaction-currency-not-allowed] ()
+            [debtor-account-deposited] ()
+            [immediate-executing-order-error] ()
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Initiates credit transfer.
+      tags:
+        - Transfers
+      x-asee-tags: []
+  /credit-transfers/validate:
+    post:
+      description: |
+        Validates new credit transfer.
+        It is useful because it perform various checks before transfer is accomplished.  
+      operationId: CreditTransfers_Validate
+      parameters:
+        - description: Validate credit transfer command.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/validate-credit-transfer-command'
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: |
+            Your request was not well constructed and does not pass validation check. Consider the following validation errors and look in to response for more details:
+            [debtor-account-or-currency-not-valid] ()
+            [date-not-valid] ()
+          schema:
+            $ref: '#/definitions/validation-problem'
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+            [frequency-limit-exceeded] ()
+            [work-date-not-set] ()
+            [blocked-account] ()
+            [payment-date-not-set] ()
+            [amount-above-limit] ()
+            [insufficient-available-balance] ()
+            [transaction-currency-not-allowed] ()
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Validates credit transfer.
+      tags:
+        - Transfers
+      x-asee-tags: []
+  '/credit-transfers/{transfer-id}/cancel':
+    post:
+      description: |
+        Cancels credit transfer.
+        It is useful when transfer is required to be abandoned before it is achieved.
+      operationId: CreditTransfers_Cancel
+      parameters:
+        - $ref: '#/parameters/transfer-id-param'
+      responses:
+        '202':
+          description: Accepted
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Cancels credit transfer.
+      tags:
+        - Transfers
+      x-asee-tags: []
+  '/cross-border-transfers/{transfer-id}':
+    get:
+      description: |
+        Gets particular cross-border transfer details.
+        It is useful when details about particular transfer are required to be seen.   
+      operationId: CrossBorderTransfers_Get
+      parameters:
+        - $ref: '#/parameters/transfer-id-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/cross-border-transfer'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets cross-border transfer's details.
+      tags:
+        - Transfers
+      x-asee-tags:
+        - Shapeable
+  /cross-border-transfers:
+    post:
+      description: |
+        Initiates new cross-border transfer.
+        It is step in processing new transfer.  
+      operationId: CrossBorderTransfers_Initiate
+      parameters:
+        - description: Initiate cross border transfer command.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/initiate-cross-border-transfer-command'
+      responses:
+        '202':
+          description: Accepted
+          schema:
+            $ref: '#/definitions/command-result'
+        '400':
+          description: |
+            Your request was not well constructed and does not pass validation check. Consider the following validation errors and look in to response for more details:
+            [amount-negative-number] ()
+            [currency-not-valid ] ()
+          schema:
+            $ref: '#/definitions/validation-problem'
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+            [order-reference-not-created] ()
+            [wrong-order-statistics] ()
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Initiates cross-border transfer.
+      tags:
+        - Transfers
+      x-asee-tags: []
+  /cross-border-transfers/validate:
+    post:
+      description: |
+        Validates new cross-border transfer.
+        It is useful because it perform various checks before transfer is accomplished.  
+      operationId: CrossBorderTransfers_Validate
+      parameters:
+        - description: Validate credit transfer command.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/validate-cross-border-transfer-command'
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: |
+            Your request was not well constructed and does not pass validation check. Consider the following validation errors and look in to response for more details:
+            [debtor-account-not-entered] ()
+            [creditor-name-not-entered] ()
+            [creditor-address-not-entered] ()
+            [creditor-city-not-entered] ()
+            [creditor-IBAN/account-not-entered] ()
+            [creditor-SWIFT-not-entered] ()
+            [creditor-SWIFT-not-valid] ()
+            [currency-not-entered] ()
+            [currency-not-valid] ()
+            [purpose-code-not-entered] ()
+            [purpose-code-not-valid] ()
+            [amount-not-entered] ()
+            [insufficient-balance] ()
+            [creditor-country-code-not-entered] ()
+            [creditor-country-code-not-valid] ()
+          schema:
+            $ref: '#/definitions/validation-problem'
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+            [frequency-limit-exceeded] ()
+            [amount-above-limit] ()
+            [creditor-aml-check-failed] ()
+            [debtor-aml-check-failed] ()
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Validates cross-border transfer.
+      tags:
+        - Transfers
+      x-asee-tags: []
+  '/cross-border-transfers/{transfer-id}/cancel':
+    post:
+      description: |
+        Cancels cross-border transfer.
+        It is useful when transfer is required to be abandoned before it is achieved.  
+      operationId: CrossBorderTransfers_Cancel
+      parameters:
+        - $ref: '#/parameters/transfer-id-param'
+      responses:
+        '202':
+          description: Accepted
+          schema:
+            $ref: '#/definitions/command-result'
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+            [transaction-already-canceled] ()
+            [transaction-already-in-processing] ()
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Cancels cross-border transfer.
+      tags:
+        - Transfers
+      x-asee-tags: []
+  /nonresident-credit-transfers:
+    post:
+      description: |
+        Initiates new nonresident credit transfer.
+        It is step in processing new transfer.  
+      operationId: NonresidentCreditTransfers_Initiate
+      parameters:
+        - description: Initiate nonresident credit transfer command
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/initiate-nonresident-credit-transfer-command'
+      responses:
+        '202':
+          description: Accepted
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Initiates nonresident's credit transfer.
+      tags:
+        - Transfers
+      x-asee-tags: []
+  /p2p-transfers:
+    post:
+      description: |
+        Initiates new person to person transfer.
+        It is step in processing new transfer.  
+      operationId: PersonToPersonTransfers_Initiate
+      parameters:
+        - description: Initiate person to person transfer command.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/initiate-p2p-transfer-command'
+      responses:
+        '202':
+          description: Accepted
+          schema:
+            $ref: '#/definitions/command-result'
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+            [insufficient-available-balance] ()
+            [frequency-limit-exceeded] ()
+            [amount-above-limit] ()
+            [authorization-code-error] ()
+            [reservation-error] ()
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Initiates person to person transfer.
+      tags:
+        - Transfers
+      x-asee-tags: []
+  /p2p-transfers/{transfer-id}/execute:
+    post:
+      description: |
+        Executes person to person transfer.
+        It is used to finaly confirm that transfer is ready to be executed after check procedures it successfully passed.  
+      operationId: PersonToPersonTransfers_Execute
+      parameters:
+        - $ref: '#/parameters/transfer-id-param'
+        - description: Execute person to person transfer command.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/execute-p2p-transfer-command'
+      responses:
+        '202':
+          description: Accepted
+          schema:
+            $ref: '#/definitions/command-result'
+        '400':
+          description: |
+            Your request was not well constructed and does not pass validation check. Consider the following validation errors and look in to response for more details:
+            [creditor-account-or-currency-not-valid] ()
+            [wrong-transaction-amount] ()
+            [transfer-canceled] ()
+          schema:
+            $ref: '#/definitions/validation-problem'
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+            [reservation-not-exists] ()
+            [transfer-not-allowed-for-nonresident] ()
+            [obligation-type-credit-not-defined] ()
+            [obligation-type-not-defined] ()
+            [event-not-defined] ()
+            [creditor-account-deposited] ()
+            [credit-event-not-defined] ()
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Executes person to person transfer.
+      tags:
+        - Transfers
+      x-asee-tags: []
+  /p2p-transfers/validate:
+    post:
+      description: |
+        Validates new person to person transfer.
+        It is useful because it perform various checks before transfer is accomplished.  
+      operationId: PersonToPersonTransfers_Validate
+      parameters:
+        - description: Validate person to person transfer command.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/validate-p2p-transfer-command'
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: |
+            Your request was not well constructed and does not pass validation check. Consider the following validation errors and look in to response for more details:
+            [amount-negative-number] ()
+          schema:
+            $ref: '#/definitions/validation-problem'
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+            [amount-above-limit] ()
+            [blocked-account] ()
+            [insufficient-available-balance] ()
+            [frequency-limit-exceeded] ()
+            [transfer-not-allowed] ()
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Validates person to person transfer.
+      tags:
+        - Transfers
+      x-asee-tags: []
+  '/p2p-transfers/{transfer-id}/cancel':
+    post:
+      description: |
+        Cancels person to person transfer.
+        It is useful when transfer is required to be abandoned before it is achieved.  
+      operationId: PersonToPersonTransfers_Cancel
+      parameters:
+        - $ref: '#/parameters/transfer-id-param'
+      responses:
+        '202':
+          description: Accepted
+          schema:
+            $ref: '#/definitions/command-result'
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+            [cancel-reservation-error] ()
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Cancels person to person transfer.
+      tags:
+        - Transfers
+      x-asee-tags: []
+  '/p2p-transfers/{transfer-id}':
+    get:
+      description: |
+        Gets particular person to person transfer details.
+        It is useful when details about particular transfer are required to be seen.   
+      operationId: PersonToPersonTransfers_Get
+      parameters:
+        - $ref: '#/parameters/transfer-id-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/transfer'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets person to person transfer's details.
+      tags:
+        - Transfers
+      x-asee-tags:
+        - Shapeable
+  /top-up-transfers:
+    post:
+      description: |
+        Initiates new top-up transfer.
+        It is step in processing new transfer.  
+      operationId: Top-upTransfers_Initiate
+      parameters:
+        - description: Initiate top-up transfer command.
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/initiate-top-up-transfer-command'
+      responses:
+        '202':
+          description: Accepted
+          schema:
+            $ref: '#/definitions/command-result'
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+            [pairing-reservations-error] ()
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Initiates top-up transfer.
+      tags:
+        - Transfers
+      x-asee-tags: []
+  '/top-up-transfers/{transfer-id}/cancel':
+    post:
+      description: |
+        Cancels top-up transfer.
+        It is useful when transfer is required to be abandoned before it is achieved.  
+      operationId: Top-upTransfers_Cancel
+      parameters:
+        - $ref: '#/parameters/transfer-id-param'
+      responses:
+        '202':
+          description: Accepted
+          schema:
+            $ref: '#/definitions/command-result'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Cancels top-up transfer.
+      tags:
+        - Transfers
+      x-asee-tags: []
+  '/top-up-transfers/{transfer-id}':
+    get:
+      description: |
+        Gets particular top-up transfer details.
+        It is useful when details about particular transfer are required to be seen.   
+      operationId: Top-upTransfers_Get
+      parameters:
+        - $ref: '#/parameters/transfer-id-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/transfer'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets top-up transfer's details.
+      tags:
+        - Transfers
+      x-asee-tags:
+        - Shapeable
+  /incomes:
+    get:
+      description: |
+        Displays list of incomes.
+        It is useful when only incomes are required to be seen. List can be filtered by various criteria as date-from and date-to.  
+      operationId: Incomes_GetList
+      parameters:
+        - $ref: '#/parameters/income-status-param'
+        - $ref: '#/parameters/value-date-from-param'
+        - $ref: '#/parameters/value-date-to-param'
+        - $ref: '#/parameters/currency-code-param'
+        - $ref: '#/parameters/sender-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/income-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Returns incomes.
+      tags:
+        - Transfers
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+  '/working-days/{date}':
+    get:
+      description: |
+        Shows next working day for sending date parameter.
+        It is useful when it's required to get info about next working day of a bank for some date in the middle of a holiday.     
+      operationId: WorkingDays_Get
+      parameters:
+        - $ref: '#/parameters/date-param'
+        - $ref: '#/parameters/next-param'
+        - $ref: '#/parameters/service-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/working-day'
+        default:
+          $ref: '#/responses/default-error-response'
+      summary: Gets next working day.
+      tags:
+        - Working days
+      x-asee-tags:
+        - Shapeable
+parameters:
+  beneficiary-name-param:
+    description: Name of the beneficiary.
+    in: query
+    name: name
+    required: false
+    type: string
+  beneficiary-address-param:
+    description: Address of the beneficiary.
+    in: query
+    name: address
+    required: false
+    type: string
+  beneficiary-account-param:
+    description: Beneficiary account number.
+    in: query
+    name: account
+    required: false
+    type: string
+  page-size-param:
+    description: Number of items on a page. For more information see general guidance on [paging and sorting]().
+    in: query
+    name: page-size
+    required: false
+    format: int32
+    type: integer
+  page-param:
+    description: Page index. For more information see general guidance on [paging and sorting]().
+    in: query
+    name: page
+    required: false
+    format: int32
+    type: integer
+  sort-order-param:
+    description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]()
+    in: query
+    name: sort-order
+    required: false
+    enum:
+      - asc
+      - desc
+    type: string
+  sort-by-param:
+    description: Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]().
+    in: query
+    name: sort-by
+    required: false
+    type: string
+  include-param:
+    description: 'List of fields to include in response. For more information see general guidance on [response shaping]()'
+    in: query
+    name: include
+    required: false
+    collectionFormat: csv
+    items:
+      type: string
+    type: array
+  trim-param:
+    description: 'List of fields to trim from response. For more information see general guidance on [response shaping]()'
+    in: query
+    name: trim
+    required: false
+    collectionFormat: csv
+    items:
+      type: string
+    type: array
+  beneficiary-id-param:
+    description: Beneficiary id
+    in: path
+    name: beneficiary-id
+    required: true
+    type: string
+  swift-code-param:
+    description: Bank swift code.
+    in: query
+    name: swift-code
+    required: false
+    type: string
+  bank-name-param:
+    description: Bank name.
+    in: query
+    name: bank-name
+    required: false
+    type: string
+  bank-country-param:
+    description: |
+      Country from which bank is.
+      For a complete list of possible values see [countries]() classification. 
+    in: query
+    name: bank-country
+    required: false
+    type: string
+  ino-or-domestic-param:
+    description: Ino or domestic bank.
+    in: query
+    name: ino-or-domestic
+    required: false
+    enum:
+      - cross-border
+      - domestic
+    type: string
+  purpose-code-param:
+    description: Purpose identifier.
+    in: query
+    name: purpose-code
+    required: false
+    type: string
+  direction-param:
+    description: 'Direction of transaction: pay-in, pay-out.'
+    in: query
+    name: direction
+    required: false
+    enum:
+      - credit
+      - debit
+    type: string
+  residency-param:
+    description: Indicator whether the customer is resident or non-resident.
+    in: query
+    name: residency
+    required: false
+    enum:
+      - resident
+      - non-resident
+    type: string
+  payout-currency-param:
+    description: Indicator whether the payout is made in domestic or foreign currency.
+    in: query
+    name: payout-currency
+    required: false
+    enum:
+      - domestic-currency
+      - foreign-currency
+    type: string
+  payout-method-param:
+    description: Indicates the method in which payout is made.
+    in: query
+    name: payout-method
+    required: false
+    enum:
+      - cash
+      - cheque
+    type: string
+  clearing-param:
+    description: Indicates whether the transaction goes through clearing or not.
+    in: query
+    name: clearing
+    required: false
+    type: boolean
+  cross-border-param:
+    description: Identifies if this is abroad or domestic transaction.
+    in: query
+    name: cross-border
+    required: false
+    type: boolean
+  schema-id-param:
+    description: Schema identifier.
+    in: path
+    name: schema-id
+    required: true
+    type: string
+  draft-id-param:
+    description: Draft identifier.
+    in: path
+    name: draft-id
+    required: true
+    type: string
+  amount-from-param:
+    description: Amount from.
+    in: query
+    name: amount-from
+    required: false
+    format: double
+    type: number
+  amount-to-param:
+    description: Amount to.
+    in: query
+    name: amount-to
+    required: false
+    format: double
+    type: number
+  currency-code-param:
+    description: |
+          Currency code.
+          For a complete list of possible values see [currencies]() classification.    
+    in: query
+    name: currency-code
+    required: false
+    type: string
+  template-id-param:
+    description: Template identifier.
+    in: path
+    name: template-id
+    required: true
+    type: string
+  transfer-kind-param:
+    description: Kind of the transfer.
+    in: query
+    name: transfer-kind
+    required: true
+    enum:
+      - balance
+      - credit
+      - cross-border
+      - p2p
+      - top-up
+      - all
+    type: string
+  transfer-status-param:
+    description: This parameter is used to filter the result by status of the transfer. Only transfers with specific status are returned.
+    in: query
+    name: list
+    required: false
+    enum:
+      - all
+      - pending
+      - future
+      - executed
+      - rejected
+      - canceled
+    type: string
+  date-from-param:
+    description: Filters transfers initiated after the specified date.
+    in: query
+    name: date-from
+    required: false
+    format: date-time
+    type: string
+  date-to-param:
+    description: Filters transfers initiated before the specified date.
+    in: query
+    name: date-to
+    required: false
+    format: date-time
+    type: string
+  value-date-from-param:
+    description: Filters transfers where value date is after the specified date.
+    in: query
+    name: value-date-from
+    required: false
+    format: date-time
+    type: string
+  value-date-to-param:
+    description: Filters transfers where value date is before the specified date.
+    in: query
+    name: value-date-to
+    required: false
+    format: date-time
+    type: string
+  description-param:
+    description: Filters transfers by description.
+    in: query
+    name: description
+    required: false
+    type: string
+  latitude-param:
+    description: 'Latitude. Filters transfers by geolocation. For this filter all three values should be provided: latitude, longitude, radius.'
+    in: query
+    name: latitude
+    required: false
+    format: float
+    type: number
+  longitude-param:
+    description: 'Longitude. Filters transfers by geolocation. For this filter all three values should be provided: latitude, longitude, radius.'
+    in: query
+    name: longitude
+    required: false
+    format: float
+    type: number
+  radius-param:
+    description: 'Radius. Filters transfers by geolocation. For this filter all three values should be provided: latitude, longitude, radius.'
+    in: query
+    name: radius
+    required: false
+    format: int32
+    type: integer
+  transfer-id-param:
+    description: Transfer identifier.
+    in: path
+    name: transfer-id
+    required: true
+    type: string
+  income-status-param:
+    description: Transfer status.
+    in: query
+    name: status
+    required: false
+    enum:
+      - pending
+      - credited
+      - in-process
+    type: string
+  sender-param:
+    description: Sender.
+    in: query
+    name: sender
+    required: false
+    type: string
+  date-param:
+    description: Date which is being checked in calendar of non-working days.
+    in: path
+    name: date
+    required: true
+    type: string
+  next-param:
+    description: Indicates if next working day should be returned (if specified date is the non-working one).
+    in: query
+    name: next
+    required: false
+    type: boolean
+  service-param:
+    description: Identifier of service for which working day is being checked.
+    in: query
+    name: service
+    required: false
+    type: string
+definitions:
+  beneficiary-list:
+    description: |
+      List of beneficiaries. Can be list of public beneficiaries, 
+      or list of users personal beneficiaries.
+    example:
+      total-count: -1
+      page-size: 10
+      page-number: 1
+      total-pages: 0
+      sort-order: desc
+      sort-by:
+      navigations:
+        - href: 
+          rel: first
+        - href: 
+          rel: previous
+        - href: 
+          rel: self
+    allOf: 
+    - $ref: '#/definitions/paged-list'
+    properties:
+      items:
+        description: Beneficiary list.
+        items:
+          $ref: '#/definitions/beneficiary'
+        type: array
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  beneficiary:
+    description: Single party which receives payments from user for some service.
+    example:
+      beneficiary-id: 8C408095-D0F5-4B96-AE26-3742079A99C9
+      name: Peter Nicolaus
+      nickname: Peete
+      address: Main boulevard 170
+      city: New York
+      country-code: CHE
+      trusted: false
+      accounts:
+        - account-number: 115-0000000050378-56
+          account-type: checking
+          currency-code: EUR
+          bank-name: Telenor bank
+          swift-code: AAAARSBG
+          country-code: CHE
+      identifiers:
+        - id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+          type: email
+      navigations:
+        - href:
+          rel: self
+      commands:
+        - href:
+          rel: self
+      uri: http://info.example.com
+    properties:
+      beneficiary-id:
+        description: Identifier.
+        type: string
+      name:
+        description: Name.
+        type: string
+      nickname:
+        description: Nickname.
+        type: string
+      address:
+        description: Address.
+        type: string
+      city:
+        description: City.
+        type: string
+      country:
+        description: |
+          Country of beneficiary.
+          For a complete list of possible values see [countries]() classification.
+        type: string
+      picture:
+        description: Picture.
+        type: string
+      trusted:
+        description: Whether beneficiary is trusted or not.
+        type: boolean
+      accounts:
+        description: Accounts.
+        items:
+          $ref: '#/definitions/account'
+        type: array
+      identifiers:
+        description: Identifiers.
+        items:
+          $ref: '#/definitions/party-identifier'
+        type: array
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  link:
+    example:
+      href: 
+      rel: Home
+    properties:
+      href:
+        description: URL of relevant info.
+        type: string
+      rel:
+        description: Text which when clicked sends on some info.
+        type: string
+    type: object
+  account:
+    description: Financial account maintained by a financial institution for a customer.
+    example:
+      account-number: 115-0000000050378-56
+      account-type: checking
+      currency-code: EUR
+      bank-name: Telenor bank
+      swift-code: AAAARSBG
+      country-code: CHE
+    properties:
+      account-number:
+        description: Account number.
+        type: string
+      account-type:
+        description: Type of the account.
+        enum:
+          - current-account
+          - demand-deposit
+          - term-deposit
+          - term-loan
+          - credit-facility
+        type: string
+      currency:
+        description: |
+          Currency codes that determine currencies. Currency codes are part of items in list of available currencies. 
+          For a complete list of possible values see [Currencies]() classification.
+        type: string
+      bank-name:
+        description: Name of the bank.
+        type: string
+      swift-code:
+        description: Swift code of creditor bank. Mostly used for foreign payments.
+        type: string
+      country-code:
+        description: Country of creditor bank. Mostly used for foreign payments.
+        type: string
+    type: object
+  party-identifier:
+    description: 'Unique identifier of party and it`s type'
+    example:
+      id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+      type: email
+    properties:
+      id:
+        description: Identifier value.
+        type: string
+      type:
+        description: Type of identifier.
+        enum:
+          - facebook
+          - google
+          - twitter
+          - phone-number
+          - email
+        type: string
+    required:
+      - id
+      - type
+    type: object
+  create-personal-beneficiary-command:
+    description: Command provides parameters for creating a personal beneficiary.   
+    example:
+      name: Peter Nicolaus
+      nickname: Peete
+      address: Main boulevard 170
+      city: Bucharest
+      country-code: ROU
+      trusted: true
+      accounts:
+        - account-number: 115-0000000050378-56
+          account-type: checking
+          currency-code: EUR
+          bank-name: Telenor bank
+          swift-code: AAAARSBG
+          country-code: CHE
+      identifiers:
+        - id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+          type: email
+      navigations:
+        - href:
+          rel: self
+      commands:
+        - href:
+          rel: self
+      uri: http://info.example.com
+    properties:
+      name:
+        description: Name.
+        type: string
+      nickname:
+        description: Nickname.
+        type: string
+      address:
+        description: Address.
+        type: string
+      city:
+        description: City.
+        type: string
+      country:
+        description: |
+          Country of beneficiary.
+          For a complete list of possible values see [countries]() classification.
+        type: string
+      picture:
+        description: Picture.
+        type: string
+      trusted:
+        description: Whether beneficiary is trusted or not.
+        type: boolean
+      accounts:
+        description: Accounts.
+        items:
+          $ref: '#/definitions/account'
+        type: array
+      identifiers:
+        description: Identifiers.
+        items:
+          $ref: '#/definitions/party-identifier'
+        type: array
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  modify-personal-beneficiary-command:
+    description: Command provides parameters for modification of existing personal beneficiary.
+    example:
+      name: Peter Nicolaus
+      nickname: Peete
+      address: Main boulevard 170
+      city: New York
+      country-code: CHE
+      trusted: false
+      accounts:
+        - account-number: 115-0000000050378-56
+          account-type: checking
+          currency-code: EUR
+          bank-name: Telenor bank
+          swift-code: AAAARSBG
+          country-code: CHE
+      identifiers:
+        - id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+          type: email
+      navigations:
+        - href:
+          rel: self
+      commands:
+        - href:
+          rel: self
+      uri: http://info.example.com
+    properties:
+      name:
+        description: Name.
+        type: string
+      nickname:
+        description: Nickname.
+        type: string
+      address:
+        description: Address.
+        type: string
+      city:
+        description: City.
+        type: string
+      country:
+        description: |
+          Country.
+          For a complete list of possible values see [countries]() classification.
+        type: string
+      picture:
+        description: Picture.
+        type: string
+      trusted:
+        description: Whether beneficiary is trusted or not.
+        type: boolean
+      accounts:
+        description: Accounts.
+        items:
+          $ref: '#/definitions/account'
+        type: array
+      identifiers:
+        description: Identifiers.
+        items:
+          $ref: '#/definitions/party-identifier'
+        type: array
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  bank-list:
+    description: List of banks.
+    example:
+      total-count: 104596
+      page-size: 10
+      page-number: 0
+      total-pages: 0
+      sort-order: desc
+      sort-by:
+      items:
+    allOf: 
+    - $ref: '#/definitions/paged-list'
+    properties:
+      items:
+        description: Bank list.
+        items:
+          $ref: '#/definitions/bank'
+        type: array
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  bank:
+    description: Info about bank.
+    example:
+      swift-code: AAAARSBG
+      bank-name: Telenor bank
+      bank-address: Main boulevard 45
+      bank-city: New York
+      country-code: CHE
+      bank-type: foreign
+    properties:
+      swift-code:
+        description: Bank swift code.
+        type: string
+      bank-name:
+        description: Bank name.
+        type: string
+      bank-address:
+        description: Bank address.
+        type: string
+      bank-city:
+        description: Bank city.
+        type: string
+      country:
+        description: |
+          Bank country code.
+          For a complete list of possible values see [countries]() classification.
+        type: string
+      bank-type:
+        description: Bank type
+        enum:
+          - domestic
+          - foreign
+        type: string
+    type: object
+  purpose-code-list:
+    description: List of purpose codes.
+    example:
+      total-count: -1
+      page-size: 10
+      page-number: 0
+      total-pages: 0
+      sort-order: desc
+      sort-by:
+      items:
+        - code: '102'
+          code-description: 'Descrease of deposit on account of nonresident in cash and in RSD.'
+          documents:
+            - invoice
+    allOf: 
+    - $ref: '#/definitions/paged-list'
+    properties:
+      items:
+        description: Purpose codes.
+        items:
+          $ref: '#/definitions/purpose-code'
+        type: array
+    type: object
+  purpose-code:
+    description: Purpose code for transfer.
+    example:
+      code: 289
+      code-description: Payment of citizen.
+      document-list: sample
+      code-type: 5
+    properties:
+      code:
+        description: Purpose code.
+        type: string
+      code-description:
+        description: Purpose description.
+        type: string
+      documents:
+        description: List of necessary documents.
+        items:
+          type: string
+        type: array
+      code-type:
+        description: Type of purpose code.
+        enum:
+          - TO DO
+        type: string
+    type: object
+  credit-transfer:
+    description: Credit transfer info.
+    example:
+      transfer-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+      creditor:
+        name: ''
+        address: ''
+        city: ''
+        country: ''
+      debtor:
+        name: ''
+        address: ''
+        city: ''
+        country: ''
+      creditor-account-number: 115-0000000055432-88
+      debtor-account-number: 115-0000000050378-56
+      payment-description: ordinary expense
+      purpose-code: 289
+      instrument-priority: 0
+      instrument-type: card
+      debtor-reference: 70045-000089/JV
+      creditor-reference: 70071-000004/JV
+      currency:
+        code: ''
+        amount: 0
+      value-date: '0001-01-01T00:00:00'
+      creditor-reference-model: 85
+      debtor-reference-model: 72
+      posted-date: '0001-01-01T00:00:00'
+      executed-date: '0001-01-01T00:00:00'
+      debit: false
+      status:
+        code: ''
+        description: ''
+        effective-date: '0001-01-01T00:00:00'
+      category: expenses
+      geolocation:
+        lat: ''
+        lon: ''
+        mapped-address: ''
+      navigations:
+        - href:
+          rel: self
+      commands:
+        - href:
+          rel: self
+      uri: http://info.example.com
+    properties:
+      transfer-id:
+        description: Transfer identifier.
+        type: string
+      creditor:
+        description: Name and address of the creditor.
+        $ref: '#/definitions/creditor'
+      debtor:
+        description: Name and address of the debtor.
+        $ref: '#/definitions/debtor'
+      creditor-account-number:
+        description: Creditor account number.
+        type: string
+      debtor-account-number:
+        description: Debtor account number.
+        type: string
+      payment-description:
+        description: Payment description.
+        type: string
+      purpose-code:
+        description: |
+          Purpose code.
+          For a complete list of possible values see [purpose-codes]() classification.
+        type: string
+      instrument-priority:
+        description: Instrument priority.
+        enum:
+          - ACH
+          - RTGS
+        type: string
+      instrument-type:
+        description: Type of the instrument.
+        enum:
+          - TO DO
+        type: string
+      debtor-reference:
+        description: Debtor reference.
+        type: string
+      creditor-reference:
+        description: Creditor reference.
+        type: string
+      currency:
+        description: Currency amount.
+        $ref: '#/definitions/currency'
+      value-date:
+        description: Value date.
+        format: date-time
+        type: string
+      creditor-reference-model:
+        description: Creditor reference model.
+        type: string
+      debtor-reference-model:
+        description: Debtor reference model.
+        type: string
+      posted-date:
+        description: Posted date.
+        format: date-time
+        type: string
+      executed-date:
+        description: Executed date.
+        format: date-time
+        type: string
+      direction:
+        description: Direction of transfer from customer's perspective (debit, credit).
+        enum:
+          - debit
+          - credit 
+        type: string
+      status:
+        description: Transfer status.
+        $ref: '#/definitions/transfer-status'
+      category:
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
+        type: string
+      picture:
+        description: Picture
+        type: string
+      geolocation:
+        description: Geolocation details
+        $ref: '#/definitions/geolocation'
+      beneficiary-picture:
+        description: Beneficiary picture
+        type: string
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    required:
+      - transfer-id
+      - creditor
+      - debtor
+      - creditor-account-number
+      - debtor-account-number
+      - payment-description
+      - purpose-code
+      - instrument-priority
+      - instrument-type
+      - debtor-reference
+      - creditor-reference
+      - currency
+      - value-date
+    type: object
+  creditor:
+    description: Party in transfer that recieves funds.
+    example:
+      name: Peter Nicolaus
+      address: Main boulevard 170
+      city: New York
+      country: CHE
+    properties:
+      name:
+        description: Name.
+        type: string
+      address:
+        description: Address.
+        type: string
+      city:
+        description: City.
+        type: string
+      country:
+        description: |
+          Country from which creditor is.
+          For a complete list of possible values see [countries]() classification. 
+        type: string
+    type: object
+  debtor:
+    description: Party in transfer that gives funds.
+    example:
+      name: George Ermou
+      address: Tadeousa Koscuska street no. 170
+      city: New York
+      country-code: CHE
+    properties:
+      name:
+        description: Name.
+        type: string
+      address:
+        description: Address.
+        type: string
+      city:
+        description: City.
+        type: string
+      country:
+        description: |
+          Country from which debtor is.
+          For a complete list of possible values see [countries]() classification. 
+        type: string
+    type: object
+  currency:
+    description: Currency amount and code.
+    example:
+      code: EUR
+      amount: 0
+    properties:
+      code:
+        description: Code of currency.
+        type: string
+      amount:
+        description: Amount.
+        format: double
+        type: number
+    type: object
+  transfer-status:
+    description: Status of the transfer.
+    example:
+      code: 3
+      description: Initiated
+      effective-date: '0001-01-01T00:00:00'
+    properties:
+      code:
+        description: Status code.
+        type: string
+      description:
+        description: Status description.
+        type: string
+      effective-date:
+        description: Status change date.
+        format: date-time
+        type: string
+    type: object
+  geolocation:
+    description: 'Geolocation details - Latitude, Longitude, Mapped address'
+    example:
+      lat: 46° 2167
+      lon: 6° 1500
+      mapped-address: George Washington street no. 109.
+    properties:
+      lat:
+        description: Geolocation latitude.
+        type: string
+      lon:
+        description: Geolocation longitude.
+        type: string
+      mapped-address:
+        description: Mapped address from GPS coordinates.
+        type: string
+    type: object
+  modify-credit-transfer-draft-command:
+    description: Command provides parameters for modifying existing credit transfer draft.
+    example:
+      creditor:
+        name: ''
+        address: ''
+        city: ''
+        country: ''
+      debtor:
+        name: ''
+        address: ''
+        city: ''
+        country: ''
+      creditor-account-number: 110-0000000076578-10
+      debtor-account-number: 115-0000000050378-56
+      payment-description: ordinary expense
+      purpose-code: 289
+      instrument-priority: 0
+      instrument-type: card
+      debtor-reference: 70098-000543/DM
+      creditor-reference: 70071-000004/JV
+      currency:
+        code: ''
+        amount: 0
+      creditor-reference-model: 85
+      debtor-reference-model: 72
+      category: expenses
+      geolocation:
+        lat: ''
+        lon: ''
+        mapped-address: ''
+    properties:
+      creditor:
+        description: Name and address of the creditor.
+        $ref: '#/definitions/creditor'
+      debtor:
+        description: Name and address of the debtor.
+        $ref: '#/definitions/debtor'
+      creditor-account-number:
+        description: Creditor account number.
+        type: string
+      debtor-account-number:
+        description: Debtor account number.
+        type: string
+      payment-description:
+        description: Payment description.
+        type: string
+      purpose-code:
+        description: |
+          Purpose code.
+          For a complete list of possible values see [purpose-codes]() classification.
+        type: string
+      instrument-priority:
+        description: Instrument priority.
+        enum:
+          - ACH
+          - RTGS
+        type: string
+      instrument-type:
+        description: Type of the instrument.
+        enum:
+          - TO DO
+        type: string
+      debtor-reference:
+        description: Debtor reference.
+        type: string
+      creditor-reference:
+        description: Creditor reference.
+        type: string
+      currency:
+        description: Currency amount.
+        $ref: '#/definitions/currency'
+      value-date:
+        description: Value date.
+        format: date-time
+        type: string
+      creditor-reference-model:
+        description: Creditor reference model.
+        type: string
+      debtor-reference-model:
+        description: Debtor reference model.
+        type: string
+      category:
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
+        type: string
+      picture:
+        description: Picture.
+        type: string
+      geolocation:
+        description: Geolocation details.
+        $ref: '#/definitions/geolocation'
+    required:
+      - creditor
+      - debtor
+      - creditor-account-number
+      - debtor-account-number
+      - payment-description
+      - purpose-code
+      - instrument-priority
+      - instrument-type
+      - currency
+      - value-date
+    type: object
+  create-credit-transfer-draft-command:
+    description: Command provides parameters for creating credit transfer draft.
+    example:
+      creditor:
+        name: ''
+        address: ''
+        city: ''
+        country: ''
+      debtor:
+        name: ''
+        address: ''
+        city: ''
+        country: ''
+      creditor-account-number: 110-0000000765378-24
+      debtor-account-number: 115-0000000050378-56
+      payment-description: ordinary expense
+      purpose-code: 289
+      instrument-priority: 0
+      instrument-type: card
+      debtor-reference: 92074-000035/ZM
+      creditor-reference: 70071-000004/JV
+      currency:
+        code: ''
+        amount: 0
+      creditor-reference-model: 85
+      debtor-reference-model: 72
+      category: expenses
+      geolocation:
+        lat: ''
+        lon: ''
+        mapped-address: ''
+    properties:
+      creditor:
+        description: Name and address of the creditor.
+        $ref: '#/definitions/creditor'
+      debtor:
+        description: Name and adreess of the debtor.
+        $ref: '#/definitions/debtor'
+      creditor-account-number:
+        description: Creditor account number.
+        type: string
+      debtor-account-number:
+        description: Debtor account number.
+        type: string
+      payment-description:
+        description: Payment description.
+        type: string
+      purpose-code:
+        description: |
+          Purpose code.
+          For a complete list of possible values see [purpose-codes]() classification.
+        type: string
+      instrument-priority:
+        description: Instrument priority.
+        enum:
+          - ACH
+          - RTGS
+        type: string
+      instrument-type:
+        description: Type of the instrument.
+        enum:
+          - TO DO
+        type: string
+      debtor-reference:
+        description: Debtor reference.
+        type: string
+      creditor-reference:
+        description: Creditor reference.
+        type: string
+      currency:
+        description: Currency amount.
+        $ref: '#/definitions/currency'
+      value-date:
+        description: Value date.
+        format: date-time
+        type: string
+      creditor-reference-model:
+        description: Creditor reference model.
+        type: string
+      debtor-reference-model:
+        description: Debtor reference model.
+        type: string
+      category:
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
+        type: string
+      picture:
+        description: Picture.
+        type: string
+      geolocation:
+        description: Geolocation details.
+        $ref: '#/definitions/geolocation'
+    required:
+      - creditor
+      - debtor
+      - creditor-account-number
+      - debtor-account-number
+      - payment-description
+      - purpose-code
+      - instrument-priority
+      - instrument-type
+      - currency
+      - value-date
+    type: object
+  initiate-credit-transfer-command:
+    description: Command provides parameters for initiating new credit transfer.
+    example:
+      creditor:
+        name: ''
+        address: ''
+        city: ''
+        country: ''
+      debtor:
+        name: ''
+        address: ''
+        city: ''
+        country: ''
+      creditor-account-number: 112-0000000446678-23
+      debtor-account-number: 115-0000000050378-56
+      payment-description: ordinary expense
+      purpose-code: 289
+      instrument-priority: 0
+      instrument-type: card
+      debtor-reference: 70043-000234/EE
+      creditor-reference: 70071-000004/JV
+      currency:
+        code: ''
+        amount: 0
+      creditor-reference-model: 85
+      debtor-reference-model: 72
+      category: expenses
+      geolocation:
+        lat: ''
+        lon: ''
+        mapped-address: ''
+    properties:
+      creditor:
+        description: Name and address of the creditor.
+        $ref: '#/definitions/creditor'
+      debtor:
+        description: Name and address of the debtor.
+        $ref: '#/definitions/debtor'
+      creditor-account-number:
+        description: Creditor account number.
+        type: string
+      debtor-account-number:
+        description: Debtor account number.
+        type: string
+      payment-description:
+        description: Payment description.
+        type: string
+      purpose-code:
+        description: |
+          Purpose code.
+          For a complete list of possible values see [purpose-codes]() classification.
+        type: string
+      instrument-priority:
+        description: Instrument priority.
+        enum:
+          - ACH
+          - RTGS
+        type: string
+      instrument-type:
+        description: Type of the instrument.
+        enum:
+          - TO DO
+        type: string
+      debtor-reference:
+        description: Debtor reference.
+        type: string
+      creditor-reference:
+        description: Creditor reference.
+        type: string
+      currency:
+        description: Currency amount.
+        $ref: '#/definitions/currency'
+      value-date:
+        description: Value date.
+        format: date-time
+        type: string
+      creditor-reference-model:
+        description: Creditor reference model.
+        type: string
+      debtor-reference-model:
+        description: Debtor reference model.
+        type: string
+      category:
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
+        type: string
+      picture:
+        description: Picture.
+        type: string
+      geolocation:
+        description: Geolocation details.
+        $ref: '#/definitions/geolocation'
+    required:
+      - creditor
+      - debtor
+      - creditor-account-number
+      - debtor-account-number
+      - payment-description
+      - purpose-code
+      - instrument-priority
+      - instrument-type
+      - currency
+      - value-date
+    type: object
+  cross-border-transfer:
+    description: Transfer with party from foreign country.
+    example:
+      transfer-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+      debtor:
+        name: ''
+        address: ''
+        city: ''
+        country: ''
+      creditor:
+        name: ''
+        address: ''
+        city: ''
+        country: ''
+      currency:
+        code: ''
+        amount: 0
+      local-currency:
+        code: ''
+        amount: 0
+      creditor-reference-model: 72
+      creditor-reference: 70071-000004/JV
+      charge: OUR
+      currency-rate: 0
+      destination-account:
+        account-number: ''
+        account-type: ''
+        currency-code: ''
+        bank-name: ''
+        swift-code: ''
+        country-code: ''
+      due-date: '0001-01-01T00:00:00'
+      debtor-reference-model: 72
+      debtor-reference: 70071-000004/JV
+      reference: 70071-000004/JV
+      source-account:
+        account-number: ''
+        account-type: ''
+        currency-code: ''
+        bank-name: ''
+        swift-code: ''
+        country-code: ''
+      value-date: '0001-01-01T00:00:00'
+      via-bank:
+        bank-name: ''
+        swift-code: ''
+        address:
+          street: ''
+          city: ''
+          country-name: ''
+          country-code: ''
+          zip-code: ''
+      creditor-bank:
+        bank-name: ''
+        swift-code: ''
+        address:
+          street: ''
+          city: ''
+          country-name: ''
+          country-code: ''
+          zip-code: ''
+      posted-date: '0001-01-01T00:00:00'
+      executed-date: '0001-01-01T00:00:00'
+      debit: false
+      status:
+        code: ''
+        description: ''
+        effective-date: '0001-01-01T00:00:00'
+      category: expenses
+      geolocation:
+        lat: ''
+        lon: ''
+        mapped-address: ''
+      residence-code: 07000006
+      bank-comment: Transfer to another country.
+      swift-created: false
+      navigations:
+        - href:
+          rel: self
+      commands:
+        - href:
+          rel: self
+      uri: http://info.example.com
+    properties:
+      transfer-id:
+        description: Transfer identifier.
+        type: string
+      debtor:
+        description: Name and address of the debtor.
+        $ref: '#/definitions/debtor'
+      creditor:
+        description: Name and address of the creditor.
+        $ref: '#/definitions/creditor'
+      currency:
+        description: Currency amount of transfer.
+        $ref: '#/definitions/currency'
+      local-currency:
+        description: Amount of transfer in local currency.
+        $ref: '#/definitions/currency'
+      creditor-reference-model:
+        description: Creditor reference model.
+        type: string
+      creditor-reference:
+        description: Creditor reference number.
+        type: string
+      charge:
+        description: The party that is charged for the transfer fee.
+        enum:
+          - debtor
+          - creditor
+          - shared
+        type: string
+      exchange-rate:
+        description: Currency exchange rate used for transaction.
+        format: double
+        type: number
+      creditor-account:
+        description: Destination account.
+        $ref: '#/definitions/account'
+      due-date:
+        description: Due date until which transfer should be executed.
+        format: date-time
+        type: string
+      debtor-reference-model:
+        description: Debtor reference model.
+        type: string
+      debtor-reference:
+        description: Debtor reference number.
+        type: string
+      attachments:
+        description: Order attachments.
+        items:
+          $ref: '#/definitions/attachment'
+        type: array
+      reference-number:
+        description: Reference number.
+        type: string
+      debtor-account:
+        description: Source account.
+        $ref: '#/definitions/account'
+      value-date:
+        description: Value date
+        format: date-time
+        type: string
+      intermediary-bank:
+        description: Correspondent bank for the payment.
+        $ref: '#/definitions/bank-info'
+      creditor-bank:
+        description: Creditor destination bank
+        $ref: '#/definitions/bank-info'
+      posted-date:
+        description: Date and time when the order was initiated.
+        format: date-time
+        type: string
+      executed-date:
+        description: Date and time when the order was executed.
+        format: date-time
+        type: string
+      direction:
+        description: Direction of transfer from customer's perspective (debit, credit).
+        enum:
+          - debit
+          - created 
+        type: string
+      status:
+        description: Transfer status.
+        $ref: '#/definitions/transfer-status'
+      category:
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
+        type: string
+      picture:
+        description: Picture.
+        type: string
+      geolocation:
+        description: Geolocation details.
+        $ref: '#/definitions/geolocation'
+      residence-code:
+        description: Residence code.
+        type: string
+      beneficiary-picture:
+        description: Beneficiary picture.
+        type: string
+      bank-comment:
+        description: Bank comment.
+        type: string
+      swift-created:
+        description: Swift created indicator.
+        type: boolean
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  bank-info:
+    description: Basic info about bank.
+    example:
+      bank-name: Telenor bank
+      swift-code: AAAARSBG
+      address:
+        street: ''
+        city: ''
+        country-name: ''
+        country-code: ''
+        zip-code: ''
+    properties:
+      bank-name:
+        description: Bank name.
+        type: string
+      swift-code:
+        description: Swift code.
+        type: string
+      address:
+        description: Address.
+        $ref: '#/definitions/address-info'
+    type: object
+  address-info:
+    description: Address info.
+    example:
+      street: Chemin Rieu 17
+      city: Geneve
+      country-name: Switzerland
+      country-code: CHE
+      zip-code: 43789
+    properties:
+      street:
+        description: Street.
+        type: string
+      city:
+        description: City.
+        type: string
+      country:
+        description: |
+          Country from which bank is.
+          For a complete list of possible values see [countries]() classification.
+        type: string
+      zip-code:
+        description: Zip code.
+        type: string
+    type: object
+  create-cross-border-transfer-draft-command:
+    description: Command provides parameters for creating cross-border transfer draft.
+    example:
+      debtor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      creditor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      debtor-account-number: 119-0000000053458-23
+      creditor-account-number: 115-0000000050378-56
+      amount:
+        code: ''
+        amount: 0
+      debtor-reference-model: 85
+      debtor-reference: 70071-000004/JV
+      charge: OUR
+      due-date: '0001-01-01T00:00:00'
+      creditor-reference-model: 72
+      creditor-reference: 70071-000004/JV
+      attachments:
+        - attachment-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+          attachment-name: Confirmation
+          attachment-type: pdf
+      via-bank:
+        bank-name: ''
+        swift-code: ''
+        address:
+          street: ''
+          city: ''
+          country-name: ''
+          country-code: ''
+          zip-code: ''
+      creditor-bank:
+        bank-name: ''
+        swift-code: ''
+        address:
+          street: ''
+          city: ''
+          country-name: ''
+          country-code: ''
+          zip-code: ''
+      category: expenses
+      geolocation:
+        lat: ''
+        lon: ''
+        mapped-address: ''
+      residence-code: 07000006
+      reference-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+    properties:
+      debtor:
+        description: Name and address of the debtor.
+        $ref: '#/definitions/debtor'
+      creditor:
+        description: Name and address of the creditor.
+        $ref: '#/definitions/creditor'
+      debtor-account-number:
+        description: Debtor account number.
+        type: string
+      creditor-account-number:
+        description: Creditor account number.
+        type: string
+      currency:
+        description: Currency amount of transfer.
+        $ref: '#/definitions/currency'
+      debtor-reference-model:
+        description: Debtor reference model.
+        type: string
+      debtor-reference:
+        description: Debtor reference number.
+        type: string
+      charge:
+        description: The party that is charged for the transfer fee.
+        enum:
+          - debtor
+          - creditor
+          - shared
+        type: string
+      due-date:
+        description: Due date until which transfer should be executed.
+        format: date-time
+        type: string
+      creditor-reference-model:
+        description: Creditor reference model.
+        type: string
+      creditor-reference:
+        description: Creditor reference number.
+        type: string
+      attachments:
+        description: order attachments
+        items:
+          $ref: '#/definitions/attachment'
+        type: array
+      intermediary-bank:
+        description: Correspondent bank for the payment.
+        $ref: '#/definitions/bank-info'
+      creditor-bank:
+        description: Creditor destination bank.
+        $ref: '#/definitions/bank-info'
+      category:
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
+        type: string
+      picture:
+        description: Picture.
+        type: string
+      geolocation:
+        description: Geolocation details.
+        $ref: '#/definitions/geolocation'
+      residence-code:
+        description: Residence code.
+        type: string
+      reference-number:
+        description: Reference identifier.
+        type: string
+    required:
+      - debtor
+      - creditor
+      - debtor-account-number
+      - creditor-account-number
+    type: object
+  modify-cross-border-transfer-draft-command:
+    description: Command provides parameters for modifying existing cross-border transfer draft.
+    example:
+      debtor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      creditor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      debtor-account-number: 119-0000000438778-24
+      creditor-account-number: 115-0000000050378-56
+      amount:
+        code: ''
+        amount: 0
+      debtor-reference-model: 85
+      debtor-reference: 30074-000089/YE
+      charge: OUR
+      due-date: '0001-01-01T00:00:00'
+      creditor-reference-model: 72
+      creditor-reference: 70071-000004/JV
+      attachments:
+        - attachment-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+          attachment-name: Confirmation
+          attachment-type: pdf
+      via-bank:
+        bank-name: ''
+        swift-code: ''
+        address:
+          street: ''
+          city: ''
+          country-name: ''
+          country-code: ''
+          zip-code: ''
+      creditor-bank:
+        bank-name: ''
+        swift-code: ''
+        address:
+          street: ''
+          city: ''
+          country-name: ''
+          country-code: ''
+          zip-code: ''
+      category: expenses
+      geolocation:
+        lat: ''
+        lon: ''
+        mapped-address: ''
+      residence-code: 07000006
+      reference-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+    properties:
+      debtor:
+        description: Name and address of the debtor.
+        $ref: '#/definitions/debtor'
+      creditor:
+        description: Name and address of the creditor.
+        $ref: '#/definitions/creditor'
+      debtor-account-number:
+        description: Debtor account number.
+        type: string
+      creditor-account-number:
+        description: Creditor account number.
+        type: string
+      currency:
+        description: Currency amount of transfer.
+        $ref: '#/definitions/currency'
+      debtor-reference-model:
+        description: Debtor reference model.
+        type: string
+      debtor-reference:
+        description: Debtor reference number.
+        type: string
+      charge:
+        description: The party that is charged for the transfer fee.
+        enum:
+          - debtor
+          - creditor
+          - shared
+        type: string
+      due-date:
+        description: Due date until which transfer should be executed.
+        format: date-time
+        type: string
+      creditor-reference-model:
+        description: Creditor reference model.
+        type: string
+      creditor-reference:
+        description: Creditor reference number.
+        type: string
+      attachments:
+        description: order attachments
+        items:
+          $ref: '#/definitions/attachment'
+        type: array
+      intermediary-bank:
+        description: Correspondent bank for the payment.
+        $ref: '#/definitions/bank-info'
+      creditor-bank:
+        description: Creditor destination bank.
+        $ref: '#/definitions/bank-info'
+      category:
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
+        type: string
+      picture:
+        description: Picture.
+        type: string
+      geolocation:
+        description: Geolocation details.
+        $ref: '#/definitions/geolocation'
+      residence-code:
+        description: Residence code.
+        type: string
+      reference-number:
+        description: Reference identifier.
+        type: string
+    required:
+      - debtor
+      - creditor
+      - debtor-account-number
+      - creditor-account-number
+    type: object
+  initiate-cross-border-transfer-command:
+    description: Command provides parameters for initiating new cross-border transfer.
+    example:
+      debtor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      creditor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      debtor-account-number: 114-0000000098778-67
+      creditor-account-number: 115-0000000050378-56
+      amount:
+        code: ''
+        amount: 0
+      debtor-reference-model: 85
+      debtor-reference: 30071-000109/VU
+      charge: OUR
+      due-date: '0001-01-01T00:00:00'
+      creditor-reference-model: 72
+      creditor-reference: 70071-000004/JV
+      attachments:
+        - attachment-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+          attachment-name: Confirmation
+          attachment-type: pdf
+      via-bank:
+        bank-name: ''
+        swift-code: ''
+        address:
+          street: ''
+          city: ''
+          country-name: ''
+          country-code: ''
+          zip-code: ''
+      creditor-bank:
+        bank-name: ''
+        swift-code: ''
+        address:
+          street: ''
+          city: ''
+          country-name: ''
+          country-code: ''
+          zip-code: ''
+      category: expenses
+      geolocation:
+        lat: ''
+        lon: ''
+        mapped-address: ''
+      residence-code: 07000006
+      reference-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+    properties:
+      debtor:
+        description: Name and address of the debtor.
+        $ref: '#/definitions/debtor'
+      creditor:
+        description: Name and address of the creditor.
+        $ref: '#/definitions/creditor'
+      debtor-account-number:
+        description: Debtor account number.
+        type: string
+      creditor-account-number:
+        description: Creditor account number.
+        type: string
+      currency:
+        description: Currency amount of transfer.
+        $ref: '#/definitions/currency'
+      debtor-reference-model:
+        description: Debtor reference model.
+        type: string
+      debtor-reference:
+        description: Debtor reference number.
+        type: string
+      charge:
+        description: The party that is charged for the transfer fee.
+        enum:
+          - ordering-customer
+          - shared
+          - beneficiary
+        type: string
+      due-date:
+        description: Due date until which transfer should be executed.
+        format: date-time
+        type: string
+      creditor-reference-model:
+        description: Creditor reference model.
+        type: string
+      creditor-reference:
+        description: Creditor reference number.
+        type: string
+      attachments:
+        description: Order attachments.
+        items:
+          $ref: '#/definitions/attachment'
+        type: array
+      intermediary-bank:
+        description: Correspondent bank for the payment.
+        $ref: '#/definitions/bank-info'
+      creditor-bank:
+        description: Creditor destination bank.
+        $ref: '#/definitions/bank-info'
+      category:
+        description: Category.
+        type: string
+      picture:
+        description: Picture.
+        type: string
+      geolocation:
+        description: Geolocation details.
+        $ref: '#/definitions/geolocation'
+      residence-code:
+        description: Residence code.
+        type: string
+      reference-number:
+        description: Reference identifier.
+        type: string
+    required:
+      - debtor
+      - creditor
+      - debtor-account-number
+      - creditor-account-number
+    type: object
+  create-nonresident-credit-transfer-draft-command:
+    description: Command provides parameters for creating new credit transfer draft for nonresident.
+    example:
+      debtor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      creditor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      debtor-account-number: 119-0000000053456-78
+      creditor-account-number: 115-0000000050378-56
+      amount:
+        code: ''
+        amount: 0
+      debtor-reference-model: 85
+      debtor-reference: 30063-000004/PO
+      charge: OUR
+      due-date: '0001-01-01T00:00:00'
+      creditor-reference-model: 72
+      creditor-reference: 70071-000004/JV
+      attachments:
+        - attachment-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+          attachment-name: Confirmation
+          attachment-type: pdf
+      via-bank:
+        bank-name: ''
+        swift-code: ''
+        address:
+          street: ''
+          city: ''
+          country-name: ''
+          country-code: ''
+          zip-code: ''
+      creditor-bank:
+        bank-name: ''
+        swift-code: ''
+        address:
+          street: ''
+          city: ''
+          country-name: ''
+          country-code: ''
+          zip-code: ''
+      category: expenses
+      geolocation:
+        lat: ''
+        lon: ''
+        mapped-address: ''
+      residence-code: 07000006
+      reference-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+    properties:
+      debtor:
+        description: Name and address of the debtor.
+        $ref: '#/definitions/debtor'
+      creditor:
+        description: Name and address of the creditor.
+        $ref: '#/definitions/creditor'
+      debtor-account-number:
+        description: Debtor account number.
+        type: string
+      creditor-account-number:
+        description: Creditor account number.
+        type: string
+      currency:
+        description: Currency amount.
+        $ref: '#/definitions/currency'
+      debtor-reference-model:
+        description: Debtor reference model.
+        type: string
+      debtor-reference:
+        description: Debtor reference number.
+        type: string
+      charge:
+        description: The party that is charged for the transfer fee.
+        enum:
+          - debtor
+          - creditor
+          - shared
+        type: string
+      due-date:
+        description: Due date until which transfer should be executed.
+        format: date-time
+        type: string
+      creditor-reference-model:
+        description: Creditor reference model.
+        type: string
+      creditor-reference:
+        description: Creditor reference number.
+        type: string
+      attachments:
+        description: Order attachments.
+        items:
+          $ref: '#/definitions/attachment'
+        type: array
+      intermediary-bank:
+        description: Correspondent bank for the payment.
+        $ref: '#/definitions/bank-info'
+      creditor-bank:
+        description: Creditor destination bank.
+        $ref: '#/definitions/bank-info'
+      category:
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
+        type: string
+      picture:
+        description: Picture.
+        type: string
+      geolocation:
+        description: Geolocation details
+        $ref: '#/definitions/geolocation'
+      residence-code:
+        description: Residence code.
+        type: string
+      reference-number:
+        description: Reference identifier.
+        type: string
+    required:
+      - debtor
+      - creditor
+      - debtor-account-number
+      - creditor-account-number
+    type: object
+  modify-nonresident-credit-transfer-draft-command:  
+    description: Command provides parameters for modifying existing credit transfer draft for nonresident.
+    example:
+      debtor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      creditor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      debtor-account-number: 112-0000000456978-47
+      creditor-account-number: 115-0000000050378-56
+      amount:
+        code: ''
+        amount: 0
+      debtor-reference-model: 85
+      debtor-reference: 90032-000342/IT
+      charge: OUR
+      due-date: '0001-01-01T00:00:00'
+      creditor-reference-model: 72
+      creditor-reference: 70071-000004/JV
+      attachments:
+        - attachment-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+          attachment-name: Confirmation
+          attachment-type: pdf
+      via-bank:
+        bank-name: ''
+        swift-code: ''
+        address:
+          street: ''
+          city: ''
+          country-name: ''
+          country-code: ''
+          zip-code: ''
+      creditor-bank:
+        bank-name: ''
+        swift-code: ''
+        address:
+          street: ''
+          city: ''
+          country-name: ''
+          country-code: ''
+          zip-code: ''
+      category: expenses
+      geolocation:
+        lat: ''
+        lon: ''
+        mapped-address: ''
+      residence-code: 07000006
+      reference-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+    properties:
+      debtor:
+        description: Name and address of the debtor.
+        $ref: '#/definitions/debtor'
+      creditor:
+        description: Name and address of the creditor.
+        $ref: '#/definitions/creditor'
+      debtor-account-number:
+        description: Debtor account number.
+        type: string
+      creditor-account-number:
+        description: Creditor account number.
+        type: string
+      currency:
+        description: Currency amount.
+        $ref: '#/definitions/currency'
+      debtor-reference-model:
+        description: Debtor reference model.
+        type: string
+      debtor-reference:
+        description: Debtor reference number.
+        type: string
+      charge:
+        description: The party that is charged for the transfer fee.
+        enum:
+          - debtor
+          - creditor
+          - shared
+        type: string
+      due-date:
+        description: Due date until which transfer should be executed.
+        format: date-time
+        type: string
+      creditor-reference-model:
+        description: Creditor reference model.
+        type: string
+      creditor-reference:
+        description: Creditor reference number.
+        type: string
+      attachments:
+        description: Order attachments.
+        items:
+          $ref: '#/definitions/attachment'
+        type: array
+      intermediary-bank:
+        description: Correspondent bank for the payment.
+        $ref: '#/definitions/bank-info'
+      creditor-bank:
+        description: Creditor destination bank.
+        $ref: '#/definitions/bank-info'
+      category:
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
+        type: string
+      picture:
+        description: Picture.
+        type: string
+      geolocation:
+        description: Geolocation details.
+        $ref: '#/definitions/geolocation'
+      residence-code:
+        description: Residence code.
+        type: string
+      reference-number:
+        description: Reference identifier.
+        type: string
+    required:
+      - debtor
+      - creditor
+      - debtor-account-number
+      - creditor-account-number
+    type: object
+  initiate-nonresident-credit-transfer-command:
+    description: Command provides parameters for initiating new credit transfer for nonresident.
+    example:
+      debtor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      creditor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      debtor-account-number: 112-0000000679078-23
+      creditor-account-number: 115-0000000050378-56
+      amount:
+        code: ''
+        amount: 0
+      debtor-reference-model: 85
+      debtor-reference: 70329-000342/JV
+      charge: OUR
+      due-date: '0001-01-01T00:00:00'
+      creditor-reference-model: 72
+      creditor-reference: 70071-000004/JV
+      attachments:
+        - attachment-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+          attachment-name: Confirmation
+          attachment-type: pdf
+      via-bank:
+        bank-name: ''
+        swift-code: ''
+        address:
+          street: ''
+          city: ''
+          country-name: ''
+          country-code: ''
+          zip-code: ''
+      creditor-bank:
+        bank-name: ''
+        swift-code: ''
+        address:
+          street: ''
+          city: ''
+          country-name: ''
+          country-code: ''
+          zip-code: ''
+      category: expenses
+      geolocation:
+        lat: ''
+        lon: ''
+        mapped-address: ''
+      residence-code: 07000006
+      reference-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+    properties:
+      debtor:
+        description: Name and address of the debtor.
+        $ref: '#/definitions/debtor'
+      creditor:
+        description: Name and address of the creditor.
+        $ref: '#/definitions/creditor'
+      debtor-account-number:
+        description: Debtor account number.
+        type: string
+      creditor-account-number:
+        description: Creditor account number.
+        type: string
+      currency:
+        description: Currency amount.
+        $ref: '#/definitions/currency'
+      debtor-reference-model:
+        description: Debtor reference model.
+        type: string
+      debtor-reference:
+        description: Debtor reference number.
+        type: string
+      charge:
+        description: The party that is charged for transaction fee.
+        enum:
+          - debtor
+          - creditor
+          - shared
+        type: string
+      due-date:
+        description: Due date until which transfer should be executed.
+        format: date-time
+        type: string
+      creditor-reference-model:
+        description: Creditor reference model.
+        type: string
+      creditor-reference:
+        description: Creditor reference number.
+        type: string
+      attachments:
+        description: Order attachments.
+        items:
+          $ref: '#/definitions/attachment'
+        type: array
+      intermediary-bank:
+        description: Correspondent bank for the payment.
+        $ref: '#/definitions/bank-info'
+      creditor-bank:
+        description: Creditor destination bank.
+        $ref: '#/definitions/bank-info'
+      category:
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
+        type: string
+      picture:
+        description: Picture.
+        type: string
+      geolocation:
+        description: Geolocation details.
+        $ref: '#/definitions/geolocation'
+      residence-code:
+        description: Residence code.
+        type: string
+      reference-number:
+        description: Reference identifier.
+        type: string
+    required:
+      - debtor
+      - creditor
+      - debtor-account-number
+      - creditor-account-number
+    type: object
+  attachment:
+    description: Attached file or document.
+    example:
+      id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+      attachment-name: Confirmation
+      attachment-type: pdf
+    properties:
+      attachment-id:
+        description: Attachment identifier.
+        type: string
+      attachment-name:
+        description: Attachment name.
+        type: string
+      attachment-type:
+        description: Attachment type.
+        enum:
+          - jpg
+          - jpeg
+          - txt
+          - doc
+          - docx
+          - pdf
+          - tiff
+          - bmp
+          - png
+          - xls
+          - xlsx
+        type: string
+      attachment-uri:
+        description: URI
+        type: string
+    type: object
+  balance-transfer:
+    description: Balance transfer details.
+    example:
+      id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+      creditor-account-number: 115-0000000050378-56
+      debtor-account-number: 115-0000000050378-56
+      instrument-type: card
+      currency:
+        code: ''
+        amount: 0
+      value-date: '0001-01-01T00:00:00'
+      posted-date: '0001-01-01T00:00:00'
+      executed-date: '0001-01-01T00:00:00'
+      debit: false
+      status:
+        code: ''
+        description: ''
+        effective-date: '0001-01-01T00:00:00'
+      category: expenses
+      geolocation:
+        lat: ''
+        lon: ''
+        mapped-address: ''
+      navigations:
+        - href:
+          rel: self
+      commands:
+        - href:
+          rel: self
+      uri: http://info.example.com
+    properties:
+      transfer-id:
+        description: Transfer identifier.
+        type: string
+      creditor-account-number:
+        description: Creditor account number.
+        type: string
+      debtor-account-number:
+        description: Debtor account number.
+        type: string
+      instrument-type:
+        description: Type of the instrument.
+        enum:
+          - TO DO
+        type: string
+      currency:
+        description: Currency amount.
+        $ref: '#/definitions/currency'
+      value-date:
+        description: Value date.
+        format: date-time
+        type: string
+      posted-date:
+        description: Date and time when the order was initiated.
+        format: date-time
+        type: string
+      executed-date:
+        description: Date and time when the order was executed.
+        format: date-time
+        type: string
+      direction:
+        description: Direction of transfer from customer's perspective (debit, credit).
+        enum:
+          - debit
+          - created 
+        type: string
+      status:
+        description: Transfer status.
+        $ref: '#/definitions/transfer-status'
+      category:
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
+        type: string
+      picture:
+        description: Picture.
+        type: string
+      geolocation:
+        description: Geolocation details.
+        $ref: '#/definitions/geolocation'
+      beneficiary-picture:
+        description: Beneficiary picture.
+        type: string
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    required:
+      - transfer-id
+      - creditor-account-number
+      - debtor-account-number
+      - instrument-type
+      - currency
+      - value-date
+    type: object
+  create-balance-transfer-draft-command:
+    description: Command provides parameters for creating new balance transfer draft.
+    example:
+      creditor-account-number: 119-0000000432178-48
+      creditor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      debtor-account-number: 115-0000000050378-56
+      debtor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      instrument-type: card
+      payment-description: ordinary expense
+      purpose-code: 289
+      currency:
+        code: ''
+        amount: 0
+      value-date: '0001-01-01T00:00:00'
+      category: expenses
+      geolocation:
+        lat: ''
+        lon: ''
+        mapped-address: ''
+    properties:
+      creditor-account-number:
+        description: Creditor account number.
+        type: string
+      debtor-account-number:
+        description: Debtor account number.
+        type: string
+      instrument-type:
+        description: Type of the instrument.
+        enum:
+          - TO DO
+        type: string
+      currency:
+        description: Currency amount.
+        $ref: '#/definitions/currency'
+      value-date:
+        description: Value date.
+        format: date-time
+        type: string
+      category:
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
+        type: string
+      picture:
+        description: Picture.
+        type: string
+      geolocation:
+        description: Geolocation details.
+        $ref: '#/definitions/geolocation'
+    required:
+      - creditor-account-number
+      - debtor-account-number
+      - instrument-type
+      - currency
+      - value-date
+    type: object
+  modify-balance-transfer-draft-command:
+    description: Command provides parameters for modifying existing balance transfer draft.
+    example:
+      creditor-account-number: 114-0000000050348-23
+      creditor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      debtor-account-number: 115-0000000050378-56
+      debtor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      instrument-type: card
+      payment-description: ordinary expense
+      purpose-code: 289
+      currency:
+        code: ''
+        amount: 0
+      value-date: '0001-01-01T00:00:00'
+      category: expenses
+      geolocation:
+        lat: ''
+        lon: ''
+        mapped-address: ''
+    properties:
+      creditor-account-number:
+        description: Creditor account number.
+        type: string
+      debtor-account-number:
+        description: Debtor account number.
+        type: string
+      instrument-type:
+        description: Type of the instrument.
+        enum:
+          - TO DO
+        type: string
+      currency:
+        description: Currency amount.
+        $ref: '#/definitions/currency'
+      value-date:
+        description: Value date.
+        format: date-time
+        type: string
+      category:
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
+        type: string
+      picture:
+        description: Picture.
+        type: string
+      geolocation:
+        description: Geolocation details.
+        $ref: '#/definitions/geolocation'
+    required:
+      - creditor-account-number
+      - debtor-account-number
+      - instrument-type
+      - currency
+      - value-date
+    type: object
+  initiate-balance-transfer-command:
+    description: Command provides parameters for initiating new balance transfer.
+    example:
+      creditor-account-number: 118-0000000023478-48
+      creditor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      debtor-account-number: 115-0000000050378-56
+      debtor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      instrument-type: card
+      payment-description: ordinary expense
+      purpose-code: 289
+      currency:
+        code: ''
+        amount: 0
+      value-date: '0001-01-01T00:00:00'
+      category: expenses
+      geolocation:
+        lat: ''
+        lon: ''
+        mapped-address: ''
+    properties:
+      creditor-account-number:
+        description: Creditor account number.
+        type: string
+      debtor-account-number:
+        description: Debtor account number.
+        type: string
+      instrument-type:
+        description: Type of the instrument.
+        enum:
+          - TO DO
+        type: string
+      currency:
+        description: Currency amount.
+        $ref: '#/definitions/currency'
+      value-date:
+        description: Value date.
+        format: date-time
+        type: string
+      category:
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
+        type: string
+      picture:
+        description: Picture.
+        type: string
+      geolocation:
+        description: Geolocation details.
+        $ref: '#/definitions/geolocation'
+    required:
+      - creditor-account-number
+      - debtor-account-number
+      - instrument-type
+      - currency
+      - value-date
+    type: object
+  transfer:
+    description: Transfer details.
+    example:
+      transfer-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+      creditor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      debtor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      creditor-account-number: 119-0000000234578-78
+      debtor-account-number: 115-0000000050378-56
+      payment-description: ordinary expense
+      transfer-type: credit
+      currency:
+        code: ''
+        amount: 0
+      value-date: '0001-01-01T00:00:00'
+      posted-date: '0001-01-01T00:00:00'
+      executed-date: '0001-01-01T00:00:00'
+      debit: false
+      status:
+        code: ''
+        description: ''
+        effective-date: '0001-01-01T00:00:00'
+      category: expenses
+      geolocation:
+        lat: ''
+        lon: ''
+        mapped-address: ''
+      navigations:
+        - href:
+          rel: self
+      commands:
+        - href:
+          rel: self
+      uri: http://info.example.com
+    properties:
+      transfer-id:
+        description: Transfer identifier.
+        type: string
+      creditor:
+        description: Name and address of the creditor.
+        $ref: '#/definitions/creditor'
+      debtor:
+        description: Name and address of the debtor.
+        $ref: '#/definitions/debtor'
+      creditor-account-number:
+        description: Creditor account number.
+        type: string
+      debtor-account-number:
+        description: Debtor account number.
+        type: string
+      payment-description:
+        description: Payment description.
+        type: string
+      transfer-type:
+        description: Type of the transfer.
+        enum:
+          - balance
+          - credit
+          - cross-border
+          - nonresident-credit
+          - p2p
+          - topup
+        type: string
+      currency:
+        description: Currency amount.
+        $ref: '#/definitions/currency'
+      value-date:
+        description: Value date.
+        format: date-time
+        type: string
+      posted-date:
+        description: Date and time when the order was initiated.
+        format: date-time
+        type: string
+      executed-date:
+        description: Date and time when the order was executed.
+        format: date-time
+        type: string
+      direction:
+        description: Direction of transfer from customer's perspective (debit, credit).
+        enum:
+          - debit
+          - created 
+        type: string
+      status:
+        description: Transfer status.
+        $ref: '#/definitions/transfer-status'
+      category:
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
+        type: string
+      picture:
+        description: Picture.
+        type: string
+      geolocation:
+        description: Geolocation details.
+        $ref: '#/definitions/geolocation'
+      beneficiary-picture:
+        description: Beneficiary picture.
+        type: string
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    required:
+      - transfer-id
+      - creditor
+      - debtor
+      - creditor-account-number
+      - debtor-account-number
+      - payment-description
+      - transfer-type
+      - currency
+      - value-date
+    type: object
+  create-p2p-transfer-draft-command:
+    description: Command provides parameters for creating new person to person transfer draft.
+    example:
+      debtor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      creditor-name: Maria Sharapova
+      debtor-account-number: 115-0000000050378-56
+      recipient-address: marias@yahoo.com
+      recipient-address-kind: e-mail
+      amount:
+        code: ''
+        amount: 0
+      due-date: '0001-01-01T00:00:00'
+      notes: My notes to explain transfer.
+      category: expenses
+      geolocation:
+        lat: ''
+        lon: ''
+        mapped-address: ''
+    properties:
+      debtor:
+        description: Name and address of the debtor.
+        $ref: '#/definitions/debtor'
+      creditor-name:
+        description: Name of the creditor.
+        type: string
+      debtor-account-number:
+        description: Debtor account number.
+        type: string
+      recipient-address:
+        description: Recipient address.
+        type: string
+      recipient-address-kind:
+        description: Recipient address kind.
+        enum:
+          - e-mail
+          - msisdn
+          - facebook
+        type: string
+      currency:
+        description: Currency amount.
+        $ref: '#/definitions/currency'
+      due-date:
+        description: Due date until which transfer should be executed.
+        format: date-time
+        type: string
+      notes:
+        description: Message sent with the payment.
+        type: string
+      category:
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
+        type: string
+      picture:
+        description: Picture.
+        type: string
+      geolocation:
+        description: Geolocation details.
+        $ref: '#/definitions/geolocation'
+    required:
+      - debtor
+      - debtor-account-number
+      - recipient-address
+      - recipient-address-kind
+    type: object
+  modify-p2p-transfer-draft-command:
+    description: Command provides parameters for modifying existing person to person transfer draft.
+    example:
+      debtor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      creditor-name: Maria Sharapova
+      debtor-account-number: 115-0000000050378-56
+      recipient-address: marias@yahoo.com
+      recipient-address-kind: e-mail
+      amount:
+        code: ''
+        amount: 0
+      due-date: '0001-01-01T00:00:00'
+      notes: My notes to explain transfer.
+      category: expenses
+      geolocation:
+        lat: ''
+        lon: ''
+        mapped-address: ''
+    properties:
+      debtor:
+        description: Name and address of the debtor.
+        $ref: '#/definitions/debtor'
+      creditor-name:
+        description: Name of the creditor.
+        type: string
+      debtor-account-number:
+        description: Debtor account number.
+        type: string
+      recipient-address:
+        description: Recipient address.
+        type: string
+      recipient-address-kind:
+        description: Recipient address kind.
+        enum:
+          - e-mail
+          - msisdn
+          - facebook
+        type: string
+      currency:
+        description: Currency amount.
+        $ref: '#/definitions/currency'
+      due-date:
+        description: Due date until which transfer should be executed.
+        format: date-time
+        type: string
+      notes:
+        description: Message sent with the payment.
+        type: string
+      category:
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
+        type: string
+      picture:
+        description: Picture.
+        type: string
+      geolocation:
+        description: Geolocation details.
+        $ref: '#/definitions/geolocation'
+    required:
+      - debtor
+      - debtor-account-number
+      - recipient-address
+      - recipient-address-kind
+    type: object
+  initiate-p2p-transfer-command:
+    description: Command provides parameters for initiating new person to person transfer.
+    example:
+      debtor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      creditor-name: Maria Sharapova
+      debtor-account-number: 115-0000000050378-56
+      recipient-address: marias@yahoo.com
+      recipient-address-kind: e-mail
+      amount:
+        code: ''
+        amount: 0
+      due-date: '0001-01-01T00:00:00'
+      notes: My notes to explain transfer.
+      category: expenses
+      geolocation:
+        lat: ''
+        lon: ''
+        mapped-address: ''
+    properties:
+      debtor:
+        description: Name and address of the debtor.
+        $ref: '#/definitions/debtor'
+      creditor-name:
+        description: Name of the creditor.
+        type: string
+      debtor-account-number:
+        description: Debtor account number.
+        type: string
+      recipient-address:
+        description: Recipient address.
+        type: string
+      recipient-address-kind:
+        description: Recipient address kind.
+        enum:
+          - e-mail
+          - msisdn
+          - facebook
+        type: string
+      currency:
+        description: Currency amount.
+        $ref: '#/definitions/currency'
+      due-date:
+        description: Due date until which transfer should be executed.
+        format: date-time
+        type: string
+      notes:
+        description: Message sent with the payment.
+        type: string
+      category:
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
+        type: string
+      picture:
+        description: Picture.
+        type: string
+      geolocation:
+        description: Geolocation details
+        $ref: '#/definitions/geolocation'
+    required:
+      - debtor
+      - debtor-account-number
+      - recipient-address
+      - recipient-address-kind
+    type: object
+  initiate-bill-payment-command:
+    description: Command provides parameters for initiating bill payment.
+    example:
+      bill-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+      category: expenses
+      geolocation:
+        lat: ''
+        lon: ''
+        mapped-address: ''
+    properties:
+      bill-id:
+        description: Bill identifier.
+        type: string
+      category:
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
+        type: string
+      picture:
+        description: Picture.
+        type: string
+      geolocation:
+        description: Geolocation details.
+        $ref: '#/definitions/geolocation'
+    required:
+      - bill-id
+    type: object
+  initiate-bulk-bill-payment-command:
+    description: Command provides parameters for initiating bulk bill payment.
+    example:
+      items:
+        - bill-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+          category: expenses
+          geolocation:
+            lat: ''
+            lon: ''
+            mapped-address: ''
+    properties:
+      items:
+        description: List of initiate bill presentment payments.
+        items:
+          $ref: '#/definitions/initiate-bill-payment-command'
+        type: array
+    type: object
+  create-template-command:
+    description: Command provides parameters for creating new template.
+    example:
+      name: Template for heating bill payment.
+      creditor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      debtor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      creditor-account-number: 114-0000000078978-78
+      debtor-account-number: 115-0000000050378-56
+      payment-description: Ordinary expense.
+      purpose-code: 289
+      instrument-priority: 0
+      instrument-type: card
+      debtor-reference: 40032-000348/UV
+      creditor-reference: 70071-000004/JV
+      creditor-bank:
+        bank-name: ''
+        swift-code: ''
+        address: ''
+        city: ''
+        country-code: ''
+      currency:
+        code: ''
+        amount: 0
+      creditor-reference-model: 85
+      debtor-reference-model: 72
+      category: expenses
+      confirmation-email: sandras@gmail.com
+      charges-option: sample
+      geolocation:
+        lat: ''
+        lon: ''
+        mapped-address: ''
+      attachments:
+        - attachment-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+          attachment-name: Scanned bill for heating payment.
+          attachment-type: pdf
+      navigations:
+        - href:
+          rel: self
+      commands:
+        - href:
+          rel: self
+      uri: http://info.example.com
+    properties:
+      name:
+        description: Template name.
+        type: string
+      creditor:
+        description: Name and address of the creditor.
+        $ref: '#/definitions/creditor'
+      debtor:
+        description: Name and address of the debtor.
+        $ref: '#/definitions/debtor'
+      creditor-account-number:
+        description: Creditor account number.
+        type: string
+      debtor-account-number:
+        description: Debtor account number.
+        type: string
+      payment-description:
+        description: Payment description.
+        type: string
+      purpose-code:
+        description: |
+          Purpose code.
+          For a complete list of possible values see [purpose-codes]() classification.
+        type: string
+      instrument-priority:
+        description: Instrument priority.
+        enum:
+          - ACH
+          - RTGS
+        type: string
+      instrument-type:
+        description: Type of the instrument.
+        enum:
+          - TO DO
+        type: string
+      debtor-reference:
+        description: Debtor reference number.
+        type: string
+      creditor-reference:
+        description: Creditor reference number.
+        type: string
+      creditor-bank:
+        description: Creditor bank details. Used for foreign payments.
+        $ref: '#/definitions/bank-info'
+      currency:
+        description: Currency amount.
+        $ref: '#/definitions/currency'
+      creditor-reference-model:
+        description: Creditor reference model.
+        type: string
+      debtor-reference-model:
+        description: Debtor reference model.
+        type: string
+      category:
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
+        type: string
+      picture:
+        description: Picture.
+        type: string
+      confirmation-email:
+        description: E-mail address to which confirmation message should be sent after the transfer is successfully executed.
+        type: string
+      charge:
+        description: The party that is charged for the transfer fee. Used for foreign currency payments.
+        enum:
+          - debtor
+          - creditor
+          - shared
+        type: string
+      geolocation:
+        description: Geolocation details.
+        $ref: '#/definitions/geolocation'
+      attachments:
+        description: Order attachments.
+        items:
+          $ref: '#/definitions/attachment'
+        type: array
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    required:
+      - name
+      - creditor
+      - debtor
+      - creditor-account-number
+      - debtor-account-number
+      - payment-description
+      - purpose-code
+      - currency
+      - attachments
+    type: object
+  modify-template-command:
+    description: Command provides parameters for modifying existing template.
+    example:
+      name: Template for heating bill payment.
+      creditor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      debtor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      creditor-account-number: 118-0000000454378-89
+      debtor-account-number: 115-0000000050378-56
+      payment-description: ordinary expense
+      purpose-code: 289
+      instrument-priority: 0
+      instrument-type: card
+      debtor-reference: 90032-000234/PL
+      creditor-reference: 70071-000004/JV
+      creditor-bank:
+        bank-name: ''
+        swift-code: ''
+        address: ''
+        city: ''
+        country-code: ''
+      currency:
+        code: ''
+        amount: 0
+      creditor-reference-model: 85
+      debtor-reference-model: 72
+      category: expenses
+      confirmation-email: sandras@gmail.com
+      charges-option: sample
+      geolocation:
+        lat: ''
+        lon: ''
+        mapped-address: ''
+      attachments:
+        - attachment-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+          attachment-name: Scanned bill for heating payment.
+          attachment-type: pdf
+      navigations:
+        - href:
+          rel: self
+      commands:
+        - href:
+          rel: self
+      uri: http://info.example.com
+    properties:
+      name:
+        description: Template name.
+        type: string
+      creditor:
+        description: Name and address of the creditor.
+        $ref: '#/definitions/creditor'
+      debtor:
+        description: Name and address of the debtor.
+        $ref: '#/definitions/debtor'
+      creditor-account-number:
+        description: Creditor account number.
+        type: string
+      debtor-account-number:
+        description: Debtor account number.
+        type: string
+      payment-description:
+        description: Payment description.
+        type: string
+      purpose-code:
+        description: |
+          Purpose code.
+          For a complete list of possible values see [purpose-codes]() classification.
+        type: string
+      instrument-priority:
+        description: Instrument priority.
+        enum:
+          - ACH
+          - RTGS
+        type: string
+      instrument-type:
+        description: Type of the instrument.
+        enum:
+          - TO DO
+        type: string
+      debtor-reference:
+        description: Debtor reference number.
+        type: string
+      creditor-reference:
+        description: Creditor reference number.
+        type: string
+      creditor-bank:
+        description: Creditor bank details. Used for foreign payments.
+        $ref: '#/definitions/bank-info'
+      currency:
+        description: Currency amount.
+        $ref: '#/definitions/currency'
+      creditor-reference-model:
+        description: Creditor reference model.
+        type: string
+      debtor-reference-model:
+        description: Debtor reference model.
+        type: string
+      category:
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
+        type: string
+      picture:
+        description: Picture.
+        type: string
+      confirmation-email:
+        description: E-mail address to which confirmation message should be sent after the transfer is successfully executed.
+        type: string
+      charge:
+        description: The party that is charged for the transfer fee. Used for foreign currency payments.
+        enum:
+          - debtor
+          - creditor
+          - shared
+        type: string
+      geolocation:
+        description: Geolocation details.
+        $ref: '#/definitions/geolocation'
+      attachments:
+        description: Order attachments.
+        items:
+          $ref: '#/definitions/attachment'
+        type: array
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    required:
+      - name
+      - creditor
+      - debtor
+      - creditor-account-number
+      - debtor-account-number
+      - payment-description
+      - purpose-code
+      - currency
+      - attachments
+    type: object
+  bill-payment-result-list:
+    description: Bill payments Results
+    example:
+      items:
+        - result:
+            id: ''
+            created-record-status: ''
+          bill-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+    properties:
+      items:
+        description: Collection of bill payment results.
+        items:
+          $ref: '#/definitions/bill-payment-result'
+        type: array
+      success-count:
+        description: Success count of total bills count.
+        format: int32
+        type: integer
+      failure-count:
+        description: Failure count of total bills count.
+        format: int32
+        type: integer
+    type: object
+  bill-payment-result:
+    description: Result of bill payment
+    example:
+      result:
+        id: ''
+        created-record-status: ''
+      bill-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+    properties:
+      result:
+        description: Result of bill payment.
+        $ref: '#/definitions/command-result'
+      bill-id:
+        description: Bill identifier.
+        type: string
+    type: object
+  template-list:
+    description: List of templates.
+    example:
+      total-count: 0
+      page-size: 0
+      page-number: 0
+      total-pages: 0
+      sort-order: desc
+      sort-by:
+      items:
+        - template-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+          name: For bill payment at National electrical power supply company.
+          creditor:
+            name: ''
+            address: ''
+            city: ''
+            country-code: ''
+          debtor:
+            name: ''
+            address: ''
+            city: ''
+            country-code: ''
+          creditor-account-number: 112-0000000456278-78
+          debtor-account-number: 115-0000000050378-56
+          payment-description: ordinary expense
+          purpose-code: 289
+          instrument-priority: 0
+          instrument-type: card
+          debtor-reference: 90034-000032/UI
+          creditor-reference: 70071-000004/JV
+          creditor-bank:
+            bank-name: ''
+            swift-code: ''
+            address: ''
+            city: ''
+            country-code: ''
+          currency:
+            code: ''
+            amount: 0
+          creditor-reference-model: 85
+          debtor-reference-model: 72
+          date-created: '0001-01-01T00:00:00'
+          date-updated: '0001-01-01T00:00:00'
+          category: expenses
+          confirmation-email: sandras@gmail.com
+          charges-option: sample
+          geolocation:
+            lat: ''
+            lon: ''
+            mapped-address: ''
+          attachments:
+            - attachment-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+              attachment-name: Form of bill payment.
+              attachment-type: pdf
+          navigations:
+            - href:
+              rel: self
+          commands:
+            - href:
+              rel: self
+          uri: http://info.example.com
+      navigations:
+        - href:
+          rel: self
+      commands:
+        - href:
+          rel: self
+      uri: http://info.example.com
+    allOf: 
+    - $ref: '#/definitions/paged-list'
+    properties:
+      items:
+        description: Payment template list.
+        items:
+          $ref: '#/definitions/template'
+        type: array
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  template:
+    description: Template details.
+    example:
+      template-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+      name: Template for heating bill payment.
+      creditor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      debtor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      creditor-account-number: 114-0000000098078-23
+      debtor-account-number: 115-0000000050378-56
+      payment-description: ordinary expense
+      purpose-code: 289
+      instrument-priority: 0
+      instrument-type: card
+      debtor-reference: 70078-000085/EU
+      creditor-reference: 70071-000004/JV
+      creditor-bank:
+        bank-name: ''
+        swift-code: ''
+        address: ''
+        city: ''
+        country-code: ''
+      currency:
+        code: ''
+        amount: 0
+      creditor-reference-model: 85
+      debtor-reference-model: 72
+      date-created: '0001-01-01T00:00:00'
+      date-updated: '0001-01-01T00:00:00'
+      category: expenses
+      confirmation-email: sandras@gmail.com
+      charges-option: sample
+      geolocation:
+        lat: ''
+        lon: ''
+        mapped-address: ''
+      attachments:
+        - attachment-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+          attachment-name: Scanned bill for heating payment.
+          attachment-type: pdf
+      navigations:
+        - href:
+          rel: self
+      commands:
+        - href:
+          rel: self
+      uri: http://info.example.com
+    properties:
+      template-id:
+        description: template identifier.
+        type: string
+      name:
+        description: Template name.
+        type: string
+      creditor:
+        description: Name and address of the creditor.
+        $ref: '#/definitions/creditor'
+      debtor:
+        description: Name and address of the debtor.
+        $ref: '#/definitions/debtor'
+      creditor-account-number:
+        description: Creditor account number.
+        type: string
+      debtor-account-number:
+        description: Debtor account number.
+        type: string
+      payment-description:
+        description: Payment description.
+        type: string
+      purpose-code:
+        description: |
+          Purpose code.
+          For a complete list of possible values see [purpose-codes]() classification.
+        type: string
+      instrument-priority:
+        description: Instrument priority.
+        enum:
+          - ACH
+          - RTGS
+        type: string
+      instrument-type:
+        description: Type of the instrument.
+        enum:
+          - TO DO
+        type: string
+      debtor-reference:
+        description: Debtor reference.
+        type: string
+      creditor-reference:
+        description: Creditor reference.
+        type: string
+      creditor-bank:
+        description: Creditor bank details. Used for foreign payments.
+        $ref: '#/definitions/bank-info'
+      currency:
+        description: Currency amount.
+        $ref: '#/definitions/currency'
+      creditor-reference-model:
+        description: Creditor reference model.
+        type: string
+      debtor-reference-model:
+        description: Debtor reference model.
+        type: string
+      date-created:
+        description: Date and time when template was created.
+        format: date-time
+        type: string
+      date-updated:
+        description: Date and time when template was last updated.
+        format: date-time
+        type: string
+      category:
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
+        type: string
+      picture:
+        description: Picture.
+        type: string
+      confirmation-email:
+        description: E-mail address to which confirmation message should be sent after the transfer is successfully executed.
+        type: string
+      charge:
+        description: The party that is charged for the transfer fee. Used for foreign currency payments.
+        enum:
+          - debtor
+          - creditor
+          - shared
+        type: string
+      geolocation:
+        description: Geolocation details.
+        $ref: '#/definitions/geolocation'
+      attachments:
+        description: Order attachments.
+        items:
+          $ref: '#/definitions/attachment'
+        type: array
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    required:
+      - name
+      - creditor
+      - debtor
+      - creditor-account-number
+      - debtor-account-number
+      - payment-description
+      - purpose-code
+      - currency
+      - attachments
+    type: object
+  transfer-list:
+    description: List of transfers.
+    example:
+      total-count: 0
+      page-size: 0
+      page-number: 0
+      total-pages: 0
+      sort-order: desc
+      sort-by:
+      items:
+    allOf: 
+    - $ref: '#/definitions/paged-list'
+    properties:
+      items:
+        description: Transfer list.
+        items:
+          $ref: '#/definitions/transfer'
+        type: array
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  transfer-history:
+    description: Statuses history of a transfer.
+    example:
+      transaction-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+      items:
+        - customer-info:
+            customer-id: ''
+            name: ''
+          status:
+            code: ''
+            description: ''
+            effective-date: '0001-01-01T00:00:00'
+    properties:
+      transaction-id:
+        description: transaction identifier.
+        type: string
+      items:
+        description: Transfer status history list.
+        items:
+          $ref: '#/definitions/transfer-history-item'
+        type: array
+    type: object
+  transfer-history-item:
+    description: One status of transfer from it's history.
+    example:
+      customer-info:
+        customer-id: ''
+        name: ''
+      status:
+        code: ''
+        description: ''
+        effective-date: '0001-01-01T00:00:00'
+    properties:
+      customer-info:
+        description: Customer information.
+        $ref: '#/definitions/customer-info'
+      status:
+        description: Transfer status.
+        $ref: '#/definitions/transfer-status'
+    type: object
+  customer-info:
+    description: Details about customer.
+    example:
+      customer-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+      name: Peter Nicolaus
+    properties:
+      customer-number:
+        description: Customer identifier.
+        type: string
+      customer-name:
+        description: Name of the customer.
+        type: string
+    type: object
+  transfer-picture:
+    description: Transfer picture.
+    example: {}
+    properties:
+      picture:
+        description: Picture.
+        type: string
+    type: object
+  modify-transfer-picture-command:
+    description: Command provides parameters for change picture of transfer.
+    example: {}
+    properties:
+      picture:
+        description: Transfer picture
+        type: string
+    type: object
+  modify-transfer-geolocation-command:
+    description: Command provides parameters for modifying geolocation of transfer.
+    example:
+      geolocation:
+        lat: ''
+        lon: ''
+        mapped-address: ''
+    properties:
+      geolocation:
+        description: Geolocation.
+        $ref: '#/definitions/geolocation'
+    type: object
+  modify-transfer-category-command:
+    description: Command provides parameters for changing category of transfer.
+    example:
+      category: expenses
+    properties:
+      category:
+        description: Category.
+        type: string
+    type: object
+  validate-balance-transfer-command:
+    description: Command provides parameters for validating balance transfer.
+    example:
+      creditor-account-number: 112-00000000432378-56
+      debtor-account-number: 115-0000000050378-56
+      instrument-type: card
+      currency:
+        code: ''
+        amount: 0
+      value-date: '0001-01-01T00:00:00'
+    properties:
+      creditor-account-number:
+        description: Creditor account number.
+        type: string
+      debtor-account-number:
+        description: Debtor account number.
+        type: string
+      instrument-type:
+        description: Type of the instrument.
+        enum:
+          - TO DO
+        type: string
+      currency:
+        description: Currency amount.
+        $ref: '#/definitions/currency'
+      value-date:
+        description: Value date.
+        format: date-time
+        type: string
+    required:
+      - creditor-account-number
+      - debtor-account-number
+      - instrument-type
+      - currency
+      - value-date
+    type: object
+  validate-credit-transfer-command:
+    description: Command provides parameters for validating credit transfer.
+    example:
+      creditor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      debtor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      creditor-account-number: 119-0000000098768-29
+      debtor-account-number: 115-0000000050378-56
+      payment-description: ordinary expense
+      purpose-code: 289
+      instrument-priority: 0
+      instrument-type: card
+      debtor-reference: 90086-000964/JT
+      creditor-reference: 70071-000004/JV
+      currency:
+        code: ''
+        amount: 0
+      creditor-reference-model: 85
+      debtor-reference-model: 72
+    properties:
+      creditor:
+        description: Name and address of the creditor.
+        $ref: '#/definitions/creditor'
+      debtor:
+        description: Name and address of the debtor.
+        $ref: '#/definitions/debtor'
+      creditor-account-number:
+        description: Creditor account number.
+        type: string
+      debtor-account-number:
+        description: Debtor account number.
+        type: string
+      payment-description:
+        description: Payment description.
+        type: string
+      purpose-code:
+        description: |
+          Purpose code.
+          For a complete list of possible values see [purpose-codes]() classification.
+        type: string
+      instrument-priority:
+        description: Instrument priority.
+        enum:
+          - ACH
+          - RTGS
+        type: string
+      instrument-type:
+        description: Type of the instrument.
+        enum:
+          - TO DO
+        type: string
+      debtor-reference:
+        description: Debtor reference.
+        type: string
+      creditor-reference:
+        description: Creditor reference.
+        type: string
+      currency:
+        description: Currency amount.
+        $ref: '#/definitions/currency'
+      value-date:
+        description: Value date.
+        format: date-time
+        type: string
+      creditor-reference-model:
+        description: Creditor reference model.
+        type: string
+      debtor-reference-model:
+        description: Debtor reference model.
+        type: string
+    required:
+      - creditor
+      - debtor
+      - creditor-account-number
+      - debtor-account-number
+      - payment-description
+      - purpose-code
+      - instrument-priority
+      - instrument-type
+      - currency
+      - value-date
+    type: object
+  validate-cross-border-transfer-command:
+    description: Command provides parameters for validating cross-border transfer.
+    example:
+      creditor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      debtor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      creditor-account-number: 118-0000000054378-34
+      debtor-account-number: 115-0000000050378-56
+      amount:
+        code: ''
+        amount: 0
+      debtor-reference-model: 85
+      debtor-reference: 90056-000390/JT
+      charge: OUR
+      due-date: '0001-01-01T00:00:00'
+      creditor-reference-model: 72
+      creditor-reference: 70071-000004/JV
+      via-bank:
+        bank-name: ''
+        swift-code: ''
+        address:
+          street: ''
+          city: ''
+          country-name: ''
+          country-code: ''
+          zip-code: ''
+      creditor-bank:
+        bank-name: ''
+        swift-code: ''
+        address:
+          street: ''
+          city: ''
+          country-name: ''
+          country-code: ''
+          zip-code: ''
+    properties:
+      creditor:
+        description: Name and address of the creditor.
+        $ref: '#/definitions/creditor'
+      debtor:
+        description: Name and address of the debtor.
+        $ref: '#/definitions/debtor'
+      creditor-account-number:
+        description: Creditor account number.
+        type: string
+      debtor-account-number:
+        description: Debtor account number.
+        type: string
+      currency:
+        description: Currency amount.
+        $ref: '#/definitions/currency'
+      debtor-reference-model:
+        description: Debtor reference model.
+        type: string
+      debtor-reference:
+        description: Debtor reference number.
+        type: string
+      charge:
+        description: The party that is charged for the transfer fee. Used for foreign currency payments.
+        enum:
+          - debtor
+          - creditor
+          - shared
+        type: string
+      due-date:
+        description: Due date until which transfer should be executed.
+        format: date-time
+        type: string
+      creditor-reference-model:
+        description: Creditor reference model.
+        type: string
+      creditor-reference:
+        description: Creditor reference number.
+        type: string
+      intermediary-bank:
+        description: Correspondent bank for the payment.
+        $ref: '#/definitions/bank-info'
+      creditor-bank:
+        description: Creditor destination bank.
+        $ref: '#/definitions/bank-info'
+    required:
+      - creditor
+      - debtor
+      - creditor-account-number
+      - debtor-account-number
+    type: object
+  execute-p2p-transfer-command:
+    description: Command provides parameters for executing person to person transfer.
+    example:
+      creditor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      creditor-account-number: 115-0000000050378-56
+      marketing-consent: false
+      amount:
+        code: ''
+        amount: 0
+      collection-method: sample
+      atm-code: sample
+    properties:
+      creditor:
+        description: Name and addres of the creditor.
+        $ref: '#/definitions/creditor'
+      creditor-account-number:
+        description: Creditor account number.
+        type: string
+      marketing-consent:
+        description: Consent of the recipient to receive marketing messages from the bank.
+        type: boolean
+      currency:
+        description: Currency amount.
+        $ref: '#/definitions/currency'
+      collection-method:
+        description: Specifies the type of p2p transfer realization.
+        enum:
+          - internal
+          - external
+          - atm
+        type: string
+      collection-code:
+        description: Collection code. It must match the one generated by the system when P2P was initiated.
+        type: string
+    required:
+      - creditor
+      - creditor-account-number
+    type: object
+  validate-p2p-transfer-command:
+    description: Command provides parameters for validating person to person transfer.
+    example:
+      debtor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      debtor-account-number: 115-0000000050378-56
+      recipient-address: marias@yahoo.com
+      recipient-address-kind: e-mail
+      amount:
+        code: ''
+        amount: 0
+      due-date: '0001-01-01T00:00:00'
+      notes: My notes to explain transfer.
+    properties:
+      debtor:
+        description: Name and address of the debtor.
+        $ref: '#/definitions/debtor'
+      debtor-account-number:
+        description: Debtor account number.
+        type: string
+      recipient-address:
+        description: Recipient address.
+        type: string
+      recipient-address-kind:
+        description: Recipient address kind.
+        enum:
+          - e-mail
+          - msisdn
+          - facebook
+        type: string
+      currency:
+        description: Currency amount.
+        $ref: '#/definitions/currency'
+      due-date:
+        description: Due date until which transfer should be executed.
+        format: date-time
+        type: string
+      notes:
+        description: Message sent with the payment.
+        type: string
+    required:
+      - debtor
+      - debtor-account-number
+      - recipient-address
+      - recipient-address-kind
+    type: object
+  initiate-top-up-transfer-command:
+    description: Command provides parameters for initiating topup transfer.
+    example:
+      debtor:
+        name: ''
+        address: ''
+        city: ''
+        country-code: ''
+      debtor-account-number: 115-0000000050378-56
+      operator-code: 232 07  
+      phone-number: +49-89-636-48018
+      amount:
+        code: ''
+        amount: 0
+      geolocation:
+        lat: ''
+        lon: ''
+        mapped-address: ''
+    properties:
+      debtor:
+        description: Name and address of the debtor.
+        $ref: '#/definitions/debtor'
+      debtor-account-number:
+        description: Debtor account number.
+        type: string
+      operator-code:
+        description: Code of the mobile operator.
+        type: string
+      phone-number:
+        description: Phone number.
+        type: string
+      currency:
+        description: Currency amount.
+        $ref: '#/definitions/currency'
+      geolocation:
+        description: Geolocation details.
+        $ref: '#/definitions/geolocation'
+    required:
+      - debtor
+      - debtor-account-number
+      - operator-code
+      - phone-number
+    type: object
+  income-list:
+    description: List of incomes.
+    example:
+      total-count: 0
+      page-size: 0
+      page-number: 0
+      total-pages: 0
+      sort-order: desc
+      sort-by:
+      items:
+        - beneficiary:
+            account-number: ''
+            account-type: ''
+            currency-code: ''
+            bank-name: ''
+            swift-code: ''
+            country-code: ''
+          nominal-amount:
+            code: ''
+            amount: 0
+          ordering-customer: Melinda Jones
+          purpose: monthly transfer
+          reference-number: 70071-000004/JV
+          sender-bank:
+            swift-code: ''
+            bank-name: ''
+            bank-address: ''
+            bank-city: ''
+            country-code: ''
+            bank-type: ''
+          status: pending
+          value-date: '0001-01-01T00:00:00'
+          category: expenses
+          geolocation:
+            lat: ''
+            lon: ''
+            mapped-address: ''
+          attachments:
+            - attachment-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+              attachment-name: Confirmation
+              attachment-type: pdf
+      navigations:
+        - href:
+          rel: self
+      commands:
+        - href:
+          rel: self
+      uri: http://info.example.com
+    allOf: 
+    - $ref: '#/definitions/paged-list'
+    properties:
+      items:
+        description: Income list.
+        items:
+          $ref: '#/definitions/income'
+        type: array
+      navigations:
+        description: Links to related resources.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      commands:
+        description: Available commands in current context.
+        items:
+          $ref: '#/definitions/link'
+        type: array
+      uri:
+        description: URI
+        type: string
+    type: object
+  income:
+    description: Income details.
+    example:
+      beneficiary:
+        account-number: ''
+        account-type: ''
+        currency-code: ''
+        bank-name: ''
+        swift-code: ''
+        country-code: ''
+      nominal-amount:
+        code: ''
+        amount: 0
+      ordering-customer: Melinda Jones
+      purpose: monthly transfer
+      reference-number: 70071-000004/JV
+      sender-bank:
+        swift-code: ''
+        bank-name: ''
+        bank-address: ''
+        bank-city: ''
+        country-code: ''
+        bank-type: ''
+      status: pending
+      value-date: '0001-01-01T00:00:00'
+      category: salary
+      geolocation:
+        lat: ''
+        lon: ''
+        mapped-address: ''
+      attachments:
+        - attachment-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+          attachment-name: Confirmation
+          attachment-type: pdf
+    properties:
+      creditor-account:
+        description: Beneficiary's account information.
+        $ref: '#/definitions/account'
+      currency:
+        description: Currency amount.
+        $ref: '#/definitions/currency'
+      debtor:
+        description: Ordering person.
+        $ref: '#/definitions/debtor'
+      purpose:
+        description: Purpose.
+        type: string
+      reference-number:
+        description: Reference number.
+        type: string
+      debtor-bank:
+        description: Information about debtor's bank.
+        $ref: '#/definitions/bank'
+      status:
+        description: Status.
+        enum:
+          - pending
+          - credited
+          - in-process
+        type: string
+      value-date:
+        description: Value date.
+        format: date-time
+        type: string
+      category:
+        description: |
+          Category.
+          For a complete list of possible values see [categories]() classification.
+        type: string
+      picture:
+        description: Picture.
+        type: string
+      geolocation:
+        description: Geolocation details.
+        $ref: '#/definitions/geolocation'
+      attachments:
+        description: Attachments.
+        items:
+          $ref: '#/definitions/attachment'
+        type: array
+    type: object
+  working-day:
+    description: Get date of next working day during holdays.
+    example:
+      date: '0001-01-01T00:00:00'
+    properties:
+      date:
+        description: Date.
+        format: date-time
+        type: string
+    type: object
+  classification-value:
+    description: Classification value.
+    example:
+      code: '01'
+      literal: archived lists
+      description: Type of transactions.
+      id: sd542680-8bfc-4602-9b55-a6cf5hu81890
+      parent-id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+      ordinal: list-types
+    properties:
+      code:
+        description: Code of classification value.
+        type: string
+      literal:
+        description: Short name for classification value.
+        type: string
+      description:
+        description: Description of classification value.
+        type: string
+      id:
+        description: Unique identifier of classification value.
+        type: string
+      parent-id:
+        description: Unique identifier of parent classification value.
+        type: string
+      ordinal:
+        description: Ordinal of classification value.
+        type: string
+    type: object
+  command-result:
+    description: Object returned typically when request for something new or some change is sent.
+    example:
+      id: 26b22680-8bfc-4602-9b55-a6c0ce6a1558
+      resource-status: created
+    properties:
+      id:
+        description: Unique identifier.
+        type: string
+        readOnly: true
+      resource-status:
+        description: Status result of sent command.
+        type: string
+        readOnly: true
+  validation-problem:
+    description: Got when request that is sent have some errors.
+    example:
+      error: entry-parameters-not-valid
+      message: Parameters You have entered are not valid.
+    properties:
+      error:
+        description: Error literal.
+        type: string
+      message:
+        description: Displayed message.
+        type: string
+    type: object
+  business-problem:
+    description: When request is well formed but some business policy doesn't allow it to be executed, busieness-problem describes taht situation.
+    example:
+      type: Business policy problem.
+      title: Insufficient funds
+      details: Raised when funds are not sufficient for withdrawal.
+    properties:
+      type:
+        description: Type of error that is clasified as business policy violation problem.
+        type: string
+      title:
+        description: Short description.
+        type: string
+      details:
+        description: Detailed description of particular problem.
+        type: string
+    type: object
+  paged-list:
+    description: List with support for paging and sorting.
+    example:
+      total-count: 12
+      page-size: 10
+      page: 1
+      total-pages: 2
+      sort-order: desc
+      sort-by: 
+    properties:  
+      total-count:
+        description: Total number of items in collection
+        type: integer
+      page-size:
+        description: Size of the page
+        type: integer
+      page:
+        description: Index of current page
+        type: integer
+      total-pages:
+        description: Total number of pages of set size
+        type: integer
+      sort-order:
+        description: Sort order (`asc` or `desc`). Default is asc
+        type: string
+        enum:
+        - asc
+        - desc
+      sort-by:  
+        description: Attribute of the collection item to sort by
+        type: string
+    type: object     
+responses:
+  default-error-response:
+    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
+

@@ -1,0 +1,413 @@
+swagger: '2.0'
+info:
+  version: v1
+  title: Accounting API Events
+  description: Events published by Accounting API
+  contact: 
+    name: Aleksandar Milosevic
+    url: http://dev.asseco-see.com/docs/
+    email: aca@asseco-see.rs
+
+
+paths: {}
+
+definitions:
+# ****************************************************#
+# EVENTS PUBLISHED BY ACCOUNTING API                  #
+# ****************************************************#
+
+  account-credited:
+    type: object
+    description: Account was credited and the balance increased
+    allOf:
+      - $ref: '#/definitions/event'
+      - type: object
+        properties:
+          transaction:
+            $ref: '#/definitions/transaction'
+          header:
+            $ref: '#/definitions/header'
+  account-debited:
+    type: object
+    description: Account was debited and the balance decreased
+    allOf:
+      - $ref: '#/definitions/event'
+      - type: object
+        properties:
+          transaction:
+            $ref: '#/definitions/transaction'
+          header:
+            $ref: '#/definitions/header'
+  account-openned:
+    type: object
+    description: Account was openned and put to use
+    allOf:
+      - $ref: '#/definitions/event'
+      - type: object
+        properties:
+          account:
+            $ref: '#/definitions/account'
+          header:
+            $ref: '#/definitions/header'
+  account-closed:
+    type: object
+    description: Account was closed and is no longer in use
+    allOf:
+      - $ref: '#/definitions/event'
+      - type: object
+        properties:
+          account:
+            $ref: '#/definitions/account'
+          header:
+            $ref: '#/definitions/header'
+  account-blocked:
+    type: object
+    description: Account was blocked and its use is restricted
+    allOf:
+      - $ref: '#/definitions/event'
+      - type: object
+        properties:
+          account:
+            $ref: '#/definitions/account'
+          header:
+            $ref: '#/definitions/header'            
+  account-unblocked:
+    type: object
+    description: Account was unblocked and its use restriction removed
+    allOf:
+      - $ref: '#/definitions/event'
+      - type: object
+        properties:
+          account:
+            $ref: '#/definitions/account'
+          header:
+            $ref: '#/definitions/header'              
+  pending-transaction-booked:
+    type: object
+    description: Pending transaction was booked
+    allOf:
+      - $ref: '#/definitions/event'
+      - type: object
+        properties:
+          account:
+            $ref: '#/definitions/transaction'
+          header:
+            $ref: '#/definitions/header'
+  pending-transaction-canceled:
+    type: object
+    description: Pending transaction was canceled
+    allOf:
+      - $ref: '#/definitions/event'
+      - type: object
+        properties:
+          account:
+            $ref: '#/definitions/transaction'
+          header:
+            $ref: '#/definitions/header'
+  transaction-voided:
+    type: object
+    description: Transaction was voided and no longer affects balance
+    allOf:
+      - $ref: '#/definitions/event'
+      - type: object
+        properties:
+          account:
+            $ref: '#/definitions/transaction'
+          header:
+            $ref: '#/definitions/header'
+  statement-generated:
+    type: object
+    description: Transaction was voided and no longer affects balance
+    allOf:
+      - $ref: '#/definitions/event'
+      - type: object
+        properties:
+          account:
+            $ref: '#/definitions/statement'
+          header:
+            $ref: '#/definitions/header'            
+
+# ****************************************************#
+# EVENTS HEADER REDEFINED IN ACCOUNTING API           #
+# ****************************************************#
+  header:
+    required:
+      - kind  
+    properties:
+      aggregate-id:
+        type: string
+        description: Unique identifier of aggregate instance. For account it is account number
+      aggregate-kind:
+        type: string
+        description: Kind of resource (aggregate) that this event describes. In accounting it is  `account`
+        enum:
+          - account
+      version:
+        type: number
+        description: Version of the event payload. Events have new versions when we need to capture different information on event that still has the same nature. Version is integer that is incremented
+      kind:
+        type: string
+        description: Enumeration that distinguishes events in accounting according to their nature
+        enum:
+          - account-credited
+          - account-debited
+          - account-openned
+          - account-closed
+          - account-blocked
+          - account-unblocked
+          - pending-transaction-booked
+          - pending-transaction-canceled
+          - transaction-voided
+          - statement-generated
+    example:
+      aggregate-id: 3e0f7ce312e5
+      aggregate-kind: account
+      kind: account-debited
+
+# ****************************************************#
+# MODELS COMMON TO ALL APIs                           #
+# ****************************************************#
+  event:
+    description: Base event model that ensures that every event instance is globaly identifiable and that it is timestamped 
+    type: object
+    properties:
+      occurred-on:
+        type: string
+        format: date-time
+        description: Time when an event occurred
+      id:
+        type: string
+        format: uuid
+        description: Unique identifier of event instance in UUID format
+    example:
+      occurred-on: '2015-11-19T13:21:01.000Z'
+      id: 736a07bd-809e-43bd-9ac1-20991a78f390
+
+ 
+
+# ****************************************************#
+# EVENTS PAYLOAD ELEMENTS IN ACCOUNTING API           #
+# ****************************************************#
+  account:
+    description: Record of transactions in specific types of arrangement, maintained by a bank party on behalf of one or more owning parties.
+    type: object
+    properties:
+      account-number:
+        description: Unique identifier of the account arrangement which is tracked. Used in communication with customer.
+        type: string
+      effective-date:
+        type: string
+        format: date
+        description: The date when account was first put to use
+      status-date:
+        type: string
+        format: date-time
+        description: The date when last status change occured - since current status is efective.
+      currency:
+        description: Currency in which balances are tracked for this account. ISO 4217 currency code.
+        type: string
+        maxLength: 3
+        minLength: 3
+      status:
+        type: string
+        enum:
+          - open
+          - opening
+          - closed
+          - closing
+          - archived
+      posting-status:
+        type: string
+        enum:
+          - not-postable
+          - no-further-drawings
+          - post-all
+          - debit-only
+          - credit-only    
+      kind:
+        description: Kind of account used for tracking. This determines balances that make sense.
+        type: string
+        enum:
+          - current-account
+          - demand-deposit-account
+          - term-deposit-account
+          - term-loan-account
+          - overdraft-account
+          - credit-facility-account
+          - credit-card-account
+          - investment-account
+      sync-timestamp:
+        description: Monotonically increasing timestamp of account record used for incremental synchronization with client application
+        type: string
+    example:
+      account-number: 00210102101
+      effective-date: 2016-01-01
+      status-date: 2016-01-01
+      currency: EUR
+      status: open
+      posting-status: post-all
+      kind: current-account  
+      sync-timestamp: 26447476
+  statement:
+    type: object
+    description: Report of entries booked against the account in specified period of time
+    properties:
+      from-date:
+        description: Date when period reported in the statement begins
+        type: string 
+        format: date
+      to-date:
+        description: Date when period reported in the statement ends
+        type: string 
+        format: date 
+      account-number:
+        description: Unique identifier of the account arrangement for which the statement is generated
+        type: string        
+      sequence-number:
+        description: Official sequence number of the statement incremented as the statements are generated
+        type: number
+      generated:
+        description: Date and time when statement was generated
+        type: string 
+        format: date-time
+      document:
+        description: Unique identifier of the statement document stored in DMS repository
+        type: string      
+      total-credits:
+        description: Total number of credit entries in the statement
+        type: number
+      total-debits:
+        description: Total number of debit entries in the statement
+        type: number        
+      currency:
+        description: Currency code.
+        type: string
+      opening-balance:
+        description: Booked balance at the start of reported period
+        type: number
+        format: double
+      closing-balance:
+        description: Booked balance at the start of reported period
+        type: number
+        format: double
+      sync-timestamp:
+        description: Monotonically increasing timestamp of statement record used for incremental synchronization with client application
+        type: string
+    example:
+      from-date: 2016-01-01
+      to-date: 2016-01-31
+      account-number: 00210102101
+      sequence-number: 26
+      generated: 2016-02-01T01:25:00
+      document: AS-0021000102101-26
+      total-credits: 1
+      total-debits: 3     
+      currency: EUR
+      opening-balance: 20.00
+      closing-balance: 180.00
+      sync-timestamp: 26447476
+  transaction:
+    description: Transaction that affected balance of interest to customers - principal, outstanding debt, advance, available
+    type: object
+    properties:
+      account-number:
+        type: string
+        description: Unique identifier of account arrangement, unformatted.
+      transaction-id:
+        description: Unique identifier of the transaction in the core system
+        type: string
+      instruction-id:
+        description: Unique identifier of the customer instruction that initiated the transaction. Optional as some transactions are not result of customer instructions.
+        type: string
+      statement-number:
+        description: Identifier of the account statement where transaction was reported.
+        type: string
+      source:
+        description: Source of additional details of the transaction - Card transaction details (`crd`), Payment details (`pmt`), Standing order details (`sto`), Branch transaction details (`brn`), Internal transaction details (`int`)
+        type: string
+        enum:
+          - crd
+          - pmt
+          - sto
+          - brn
+          - int
+      amount:
+        description: Net amount of the transaction that affected account balance. Transaction is linked to multiple entries whose cash flows affect balance.
+        type: number
+        format: double
+      direction:
+        description: Debit (`d`) or credit (`c`) transaction
+        type: string
+        enum:
+          - d
+          - c
+      status:
+        description: Status of transaction. Pending (`p`), Booked (`b`), Voided (`v`).
+        type: string
+        enum:
+          - p
+          - b
+          - v
+      amount-local:
+        description: Transaction amount in reporting currency (RSD for serbia)
+        type: number
+        format: double
+      currency:
+        description: ISO 3-Letter currency code of the account balance against which transaction is posted
+        type: string
+      value-date:
+        description: Date when the balance and interest are affected
+        type: string
+        format: date        
+      book-date:
+        description: Date when 
+        type: string 
+        format: date
+      transaction-time:
+        description: Date and time when transaction occured
+        type: string 
+        format: date-time      
+      description:
+        description: Text that describes transaction
+        type: string
+      transaction-code:
+        description: Classification explaining type of transaction in core system. For a list of possible values see [transaction-codes](accounting-classifications.html#transaction-codes) classification
+        type: string
+      transaction-kind:
+        description: Enumeration that distinguishes between accounting transactions based on their effect on the customer accounts. Deposit (`dep`), Withdrawal (`wdw`), Payment (`pmt`), Fee (`fee`), Interest credit (`inc`), Reversal (`rev`), Adjustment (`adj`), Loan disbursement (`lnd`), Loan repayment (`lnr`), Foreign currency exchange (`fcx`), Account opening (`aop`), Account closing (`acl`)
+        type: string
+        enum:
+          - dep
+          - wdw
+          - pmt
+          - fee
+          - inc
+          - rev
+          - adj
+          - lnd
+          - lnr
+          - fcx
+          - aop
+          - acl
+      sync-timestamp:
+        description: Monotonically increasing timestamp of transaction record used for incremental synchronization with client application
+        type: string
+    example:
+      account-number: 00210102101
+      transaction-id: 6525671616121
+      instruction-id: 6525671616121
+      statement-number: 26
+      source: brn
+      amount: 100.00
+      amount-local: 12283.50
+      currency: EUR
+      direction: d  
+      status: b
+      value-date: 2016-02-23
+      book-date: 2016-02-23
+      transaction-time: 2016-02-23T11:25:00
+      description: Branch cash withdrawal 
+      transaction-code: 212
+      transaction-kind: wdw
+      sync-timestamp: 26447476
+            
