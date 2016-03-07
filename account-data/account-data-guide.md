@@ -7,7 +7,7 @@ Key Resources
 Account Data API has four top-level collection resources: accounts, transactions, balances and statements. 
 
 Resource | Description
------------ |-----------
+----------- |----------
 *account*  | Represents a record of transactions, posting entries and balances for specific types of product arrangements (account arrangements), maintained by a bank party on behalf of one or more owning parties.
 *transaction*   | Represents a recorded change on monetary positions (balances) of interest to customers and bank - principal, outstanding debt, advance, available. Change recorded as transaction is sometimes effect of processing  instruction that bank receives from customers or payment networks, but it can also be result of internally initiated bank's processes.
 *balance*    | Represent a monetary value tracked on the account. Different kinds of balances are calculated according to banks policy by summing posting entries. 
