@@ -11,33 +11,22 @@ Organization of source files
 |   ...
 │   
 └───/{api-name}
-    |
-    ├───/src
     │   {api-name}.yaml
     │   {api-name}-events.yaml
     │   {api-name}-guide.md
     │   {api-name}-problems.md	
     │   {api-name}-classifications.md
     |   {api-name}-validations.md (optional)
-    │   
-    └───/swagger (generated)
-    │   problems.json
-    │   models.json
-    │   parameters.json    
 │   
 └───/common
-    |
-    ├───/src
     │   responses.yaml
     │   models.yaml
     │   parameters.yaml
+    |   paths.yaml
     |   general-guide.md
     │   common-validations.md
     │   
-    └───/swagger
-    │   responses.json
-    │   models.json
-    │   parameters.json
+
 ```
 Swagger files
 ---------------------------------
@@ -52,8 +41,9 @@ Swagger files are machine readable descriptions that conform to Swagger 2.0 sche
 | file | description |
 |------|-------------|
 |`responses.yaml` | Description of responses that are commonly used in many APIs. Examples are `validation-problem-response` and `default-response` |
-|`models.yaml` | Description of models that are comonly used in many APIs. Examples are `currency` and `paged-list` |
+|`definitions.yaml` | Description of models that are comonly used in many APIs. Examples are `currency` and `paged-list` |
 |`parameters.yaml` | Description of parameters that are comonly used in many APIs. Examples are `sort-by` and `trim` |
+|`paths.yaml` | Description of paths that are comonly used in many APIs. Examples are `/classifications` and `/classifications/{schema-id}` |
 
 Markdown files
 ---------------------------------
