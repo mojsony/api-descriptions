@@ -1,11 +1,14 @@
-![API](http://www.onedesk.com/wordpress/wp-content/uploads/2012/10/API-128x128.png) 
+![API](http://www.onedesk.com/wordpress/wp-content/uploads/2012/10/API-128x128.png)
 Documentation for ASEE public APIs
 ==================================
-> Both documentation and guidelines are livinig documents open for contribution. Please ask any questions, dillemas, suggestions as github issues on this repository so others can benefit from recorded answers and discussion.
+> **IMPORTANT**: See the published version of this content on [documentation site](http://dev.asseco-see.com/docs)
+
+
 
 API Definition and Documentation Guidelines
 ---------------------------------
 Be sure to check both [definition guidelines](definition-guidelines.md) and [documentation guidelines](documentation-guidelines.md) before you start writing specifications and documentation.
+> Both documentation and guidelines are livinig documents open for contribution. Please ask any questions, dillemas, suggestions as github issues on this repository so others can benefit from recorded answers and discussion.
 
 Writing Style
 -------------
