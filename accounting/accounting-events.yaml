@@ -2,13 +2,18 @@ swagger: '2.0'
 info:
   version: v1
   title: Accounting API Events
-  description: Events published by Accounting API
-  contact: 
+  description: 'Events described here tell you what happens to **accounts** and **transactions** of customer account arrangements. To learn more about general approach to event processing see [How to work with events](common-getstarted.html#events).'
+  contact:
     name: Aleksandar Milosevic
-    url: http://dev.asseco-see.com/docs/
-    email: aca@asseco-see.rs
-
-
+    url: http://dev.asseco-see.com/docs/accounting-getstarted.html
+    email: aca@see.asseco.com
+host: bankapi.net
+basePath: /v1/accounting
+schemes:
+  - http
+  - https
+produces:
+  - application/json
 paths: {}
 
 definitions:
@@ -209,6 +214,7 @@ definitions:
         maxLength: 3
         minLength: 3
       status:
+        description: For a list of possible values see [account-statuses](accounting-classifications.html#account-statuses) classification.
         type: string
         enum:
           - open
@@ -217,6 +223,7 @@ definitions:
           - closing
           - archived
       posting-status:
+	    description: For a list of possible values see [account-posting-statuses](accounting-classifications.html#account-posting-statuses) classification.
         type: string
         enum:
           - not-postable
@@ -225,7 +232,9 @@ definitions:
           - debit-only
           - credit-only    
       kind:
-        description: Kind of account used for tracking. This determines balances that make sense.
+        description: |
+          Kind of account used for tracking. This determines balances that make sense.
+          For a list of possible values see [account-kinds](accounting-classifications.html#account-kinds) classification.
         type: string
         enum:
           - current-account
@@ -323,7 +332,9 @@ definitions:
         description: Identifier of the account statement where transaction was reported.
         type: string
       source:
-        description: Source of additional details of the transaction - Card transaction details (`crd`), Payment details (`pmt`), Standing order details (`sto`), Branch transaction details (`brn`), Internal transaction details (`int`)
+        description: |
+          Source of additional details of the transaction - Card transaction details (`crd`), Payment details (`pmt`), Standing order details (`sto`), Branch transaction details (`brn`), Internal transaction details (`int`)
+          For a list of possible values see [transaction-sources](accounting-classifications.html#transaction-sources) classification.
         type: string
         enum:
           - crd
@@ -342,7 +353,9 @@ definitions:
           - d
           - c
       status:
-        description: Status of transaction. Pending (`p`), Booked (`b`), Voided (`v`).
+        description: |
+          Status of transaction. Pending (`p`), Booked (`b`), Voided (`v`).
+          For a list of possible values see [transaction-statuses](accounting-classifications.html#transaction-statuses) classification.
         type: string
         enum:
           - p
@@ -374,7 +387,9 @@ definitions:
         description: Classification explaining type of transaction in core system. For a list of possible values see [transaction-codes](accounting-classifications.html#transaction-codes) classification
         type: string
       transaction-kind:
-        description: Enumeration that distinguishes between accounting transactions based on their effect on the customer accounts. Deposit (`dep`), Withdrawal (`wdw`), Payment (`pmt`), Fee (`fee`), Interest credit (`inc`), Reversal (`rev`), Adjustment (`adj`), Loan disbursement (`lnd`), Loan repayment (`lnr`), Foreign currency exchange (`fcx`), Account opening (`aop`), Account closing (`acl`)
+        description: |
+          Enumeration that distinguishes between accounting transactions based on their effect on the customer accounts. Deposit (`dep`), Withdrawal (`wdw`), Payment (`pmt`), Fee (`fee`), Interest credit (`inc`), Reversal (`rev`), Adjustment (`adj`), Loan disbursement (`lnd`), Loan repayment (`lnr`), Foreign currency exchange (`fcx`), Account openning (`aop`), Account closing (`acl`)
+          For a list of possible values see [transaction-kinds](accounting-classifications.html#transaction-kinds) classification.
         type: string
         enum:
           - dep
@@ -410,4 +425,3 @@ definitions:
       transaction-code: 212
       transaction-kind: wdw
       sync-timestamp: 26447476
-            
