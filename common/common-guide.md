@@ -193,6 +193,10 @@ Events are used to publish the fact that something happened to interested subscr
 
 Each event publsihed by API is uniquely identified by its name. Events happen in a lifecycle of a resource that is classified by `aggregate-kind` and identified by `aggregate-id`. 
 
+Bulk optimization
+-----------------
+When API endpoint is optimized for bulk reads and bulk writes their payload contract is flattened and default content type is `text/csv` and http compression is used by default. This minimizes network traffic and simplifies processing at other end.
+
 
 Commonly used query parameters
 -----------------------
@@ -236,7 +240,10 @@ GET correspondence/communications?sort-by=status&sort-order=desc HTTP/1.1
 |`sort-order`|string enum: `asc`, `desc`| Ascending or descending order. Default order `asc` is used when parameter is not supplied |
 
 ###Shaping
-When an endpoint supports shaping of responses to GET requests you can supply shaping control query parameters `trim` and `include` and expect specified fields in the response payload. If endpoint supports shaping, scalar fields in a response model object are returned by default while nested objects and arrays are returned according to sensible defaults specified in documentation. 
+When an endpoint supports shaping of responses to GET requests you can supply shaping control query parameters `trim` and `include` and expect only specified set of fields in the response payload. 
+If you do not specify fields to include or trim, response will contain fields returned by default according to reference documentation. You can remove default set of returned fields by using `trim=*` and then add only fields you need with include. Reverse also applies so you can start from full set of fields with `include=*` and then remove only fields you don't need with trim.
+
+If endpoint supports shaping, scalar fields in a response model object are returned by default while nested objects and arrays are returned according to sensible defaults specified in documentation.
 
 ```http
 GET correspondence/communications?include=history&trim=history.description HTTP/1.1
@@ -245,6 +252,10 @@ GET correspondence/communications?include=history&trim=history.description HTTP/
 |-|-|-|
 |`trim`|string format:`csv`| Comma separated list of fields to trim from response. Field names must be supplied on lowercase dash naming convention. Nested fields are accesed with dot notation. |
 |`include`|string format:`csv`| Comma separated list of fields to include in response. Field names must be supplied on lowercase dash naming convention. Nested fields are accesed with dot notation.  |
+
+###Synchronization
+When a collection resource supports incremental synchronization you can supply `sync-timestamp` as query parameter and expect only collection items that were added, changed or deleted since point in time represented by timestamp. Each collection item will have a `sync-timestamp` field so API consumer is responsible to keep track of latest synchronization timestamp processed for specific collection. Synchronization timestamp can have any implementation and format as long as it is guaranteed to be monotonicaly increasing with every change.
+
 
 ###Filtering
 Many collection resources accept a list of predefined optional query parameters that filter returned results. Parameters are combined with a logical AND. Unless otherwise specified parameters that filter text will assume case-insensitive match. When parameter contains multiple values, unless otherwise specified, result is matched on any of the supplied values.
