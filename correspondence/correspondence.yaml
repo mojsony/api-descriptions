@@ -22,6 +22,8 @@ tags:
     name: Communications
   - description: Working with templates
     name: Templates
+  - description: Working with mailbox
+    name: Mailbox    
 paths:
   /communications:
     get:
@@ -566,8 +568,6 @@ definitions:
           - application/pdf
           - application/msword          
           - application/vnd.ms-excel
-          - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
-          - application/vnd.openxmlformats-officedocument.wordprocessingml.document
         type: string
       name:
         description: Attachment name

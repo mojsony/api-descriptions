@@ -196,8 +196,8 @@ Each event publsihed by API is uniquely identified by its name. Events happen in
 
 Commonly used query parameters
 -----------------------
-###Paging
-When a collection resource supports paging of results you can supply paging control parameters and expect a paging related fields in response payload.
+###Pagination
+When a collection resource supports pagination of results you can supply pagination control parameters and expect pagination related fields in response payload.
 ```http
 GET correspondence/communications?page=1&page-size=5 HTTP/1.1
 ```

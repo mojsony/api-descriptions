@@ -1,16 +1,18 @@
 <span class="icon"></span> Correspondence API Guide
 =========================
-Correspondence API handles the automated generation of batches of pre-formatted correspondence, typically integrating customer/product specific data in correspondence templates for variable aspects of content. Channel applications can use this API to deliver alerts, reminders, advices, past due notices, announcements, campaign offers, statements and other arrangement reports. 
+Correspondence API handles the automated generation of batches of pre-formatted correspondence, typically integrating customer/product specific data in correspondence templates for variable aspects of content. Channel applications can use this API to deliver alerts, reminders, advices, past due notices, announcements, campaign offers, statements and other arrangement reports. Correspondence API also offers rendering of documents in .pdf and .docx formats from predefined templates and supplied data. For self-service applications such as mobile or web, Correspondence API offers virtual mailbox for private exchange of messages between bank and customer.
+
+> ##THIS API GUIDE IS UNDER CONSTRUCTION. COME BACK SOON.
    
 Key Resources
 -------------
-Correspondence has three top level collection resources: communications,  communication summaries and documents. 
+Correspondence has three top level collection resources: communications,  templates and mailbox. 
 
 Resource | Description
 ----------- |-----------
-*communications*  | Contains methods for getting and setting various data about communication. A communication can use any contact-medium such as a telephone call, a letter, a fax, an e-mail, electronic message, a meeting, etc. It may have occurred or be planned to occur in the future. In each case, a discrete occurrence of a communication is identifiable. 
-*communication summaries*   |  Contains method for getting data about communication delivery status.
-*templates*    | Correspondence templates user to render documents. 
+*communications*  | Represent messages communicated to customers over any contact-medium such as a telephone call, a letter, a fax, an e-mail, electronic message, a meeting, etc. It may have occurred or be planned to occur in the future. In each case, a discrete occurrence of a communication is identifiable. 
+*mailbox*   |  Virtual customer mailbox for self-service applications such as mobile and web.
+*templates*    | Correspondence templates used to render document such as agreements and offers in pdf and word format. 
 
 Getting started tutorial
 ---------------
