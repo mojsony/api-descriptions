@@ -179,7 +179,7 @@ parameters:
     type: string
   preferred-language-param:
     name: preferred-language
-    description: Prefered language/culture of the customer.
+    description:  "Prefered language and culture of the customer. Value is a unique name for each culture, based on RFC 4646. List of available cultures is maitained by [Refefence API](reference-getstarted.html) Examples: en-US, sr-latn-RS, mk-MK"
     in: query
     required: false
     type: string
@@ -374,7 +374,7 @@ definitions:
         description: Marketing messsage that follows campaign offer and should be displayed together with advertising resource.
         type: string         
       language:
-        description: "Localization culture name of media resource. Combination ISO 639-1 two-letter language codes language, optional script name (`Latn`, `Cyrl`) and ISO 3166-1 alpha-2 two letter country codes. Examples: en-US, sr-latn-RS, mk-MK"
+        description:  "Language and culture to which campaign resource is localized. Value is a unique name for each culture, based on RFC 4646. List of available cultures is maitained by [Refefence API](reference-getstarted.html) Examples: en-US, sr-latn-RS, mk-MK"
         type: string
       zone-kind:
         description: Defines the kind of presentation zone in client application where advertising resource should be displayed. For complete list of possible values see [zone-kind](campaign-classifications.html) classification.
