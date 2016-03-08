@@ -84,6 +84,13 @@ Different changes of APIs can have different impact on your client. Your impleme
 | Enumerations | New enumeration; New enumeration literal; Changing descriptions or translations | Removing enumeration literal; Forcing enumeration on previously unrestricted field |
 | Classifications | New classification; New classification value; Removing classification value; Changing descriptions or translations; Renaming classification literal | Forcing classification on previously unrestricted field |
 
+Enumerations and classifications
+--------------------------------
+String parameters and fields in API contracts can be restricted to predefined list of acceptable  literals and codes. **Enumerations** represent closed set of values that developers who consume API can refer to in their implementation and expect to be stable across different implementations. **Classifications**, on the other hand, are open set of values that may be extended and changed over time and across different implementations. Developers refering to specific classification literals in their code must expect changes over time and across different implementations.
+Enumeration values are part of contract, while classification values are not.
+
+> By convention name of enumeration or classification is plural as it describes set of values. Literal name is in *kebab case*, while title is in *title case*. For example, classification with title: `Transaction Codes` by convention has literal name `transaction-codes`.
+Enumerations values are explained with `literal` and `description`, while classification values also have optional short mnemonic or numeric `code` that uniquely identifies classification value.
 
 Error handling
 --------------

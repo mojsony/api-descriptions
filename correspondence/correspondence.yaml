@@ -3,9 +3,9 @@ info:
   version: v1
   title: Correspondence API
   description: |
-    Correspondence API handles the automated generation of batches of pre-formatted correspondence, typically integrating customer/product specific data in correspondence templates for variable aspects of content. Channel applications can use this API to deliver alerts, reminders, advices, past due notices, announcements, campaign offers, statements and other arrangement reports.
+    Correspondence API handles the automated generation of batches of pre-formatted correspondence, typically integrating customer/product specific data in correspondence templates for variable aspects of content. Channel applications can use this API to deliver alerts, reminders, advices, past due notices, announcements, campaign offers, statements and other arrangement reports. Correspondence API also offers rendering of documents in .pdf and .docx formats from predefined templates and supplied data. For self-service applications such as mobile or web, Correspondence API offers virtual mailbox for private exchange of messages between bank and customer.
   contact: 
-    name: Jovica Filpovic
+    name: Jovica Filipovic
     url: http://dev.asseco-see.com/docs/
     email: jovica.filipovic@asseco-see.rs          
 host: dev.asseco-see.com
@@ -20,25 +20,19 @@ produces:
 tags:
   - description: Working with communications
     name: Communications
-  - description: Working with documents
-    name: Documents
-  - description: Working with communication summaries
-    name: Communication summaries
+  - description: Working with templates
+    name: Templates
 paths:
   /communications:
     get:
-      summary: Get the list of communications that are no longer waiting for delivery.
+      summary: Get the list of communications for delivery
+      description: Response contains list of communications that match filters.
       tags:
         - Communications
       operationId: Communications_GetList
       parameters:
-        - $ref: '#/parameters/start-time-param'
-        - $ref: '#/parameters/end-time-param'
         - $ref: '#/parameters/contact-medium-param'
-        - $ref: '#/parameters/status-param'
-        - $ref: '#/parameters/search-text-param'
-        - $ref: '#/parameters/customer-number-param'
-        - $ref: '#/parameters/conversation-type-param'
+        - $ref: '#/parameters/delivery-statuses-param'
         - $ref: '#/parameters/page-size-param'
         - $ref: '#/parameters/page-number-param'
         - $ref: '#/parameters/sort-order-param'
@@ -54,44 +48,46 @@ paths:
         - Pageable
         - Sortable
     post:
-      summary: Initiates the communication delivery.
+      summary: Schedule communication for delivery
       tags:
         - Communications
-      operationId: Communications_Create
+      operationId: Communications_Initiate
       parameters:
-        - description: The initiate communication delivery command.
+        - description: The initiate delivery command.
           in: body
           name: cmd
           required: true
           schema:
             $ref: '#/definitions/initiate-communication-command'
       responses:
-        '200':
-          description: OK
+        '201':
+          description: Communication initiated
           schema:
-            $ref: '#/definitions/command-result'
+            $ref: '#/definitions/resource-created-result'
+          headers:
+            Location:
+              description: URI where communication details can be obtained
+              type: string
+              format: uri            
         default:
             $ref: '#/responses/default-error-response'
       x-asee-tags: []
-  /communications/{communication-id}/status:
-    put:
-      summary: Update communication status.
+  /communications/statuses:
+    post:
+      summary: Update delivery statuses of multiple communications
       tags:
         - Communications
-      operationId: Communications_UpdateStatus
+      operationId: Communications_UpdateStatuses
       parameters:
-        - $ref: '#/parameters/communication-id-param'
         - name: cmd
           in: body
-          description: Update communication command.
+          description: Update delivery statuses command
           required: true
           schema:
-            $ref: '#/definitions/update-communication-status-command'
+            $ref: '#/definitions/update-delivery-statuses-command'
       responses:
         '200':
           description: Communication status updated
-          schema:
-            $ref: '#/definitions/command-result'
         default:
           $ref: '#/responses/default-error-response'
       x-asee-tags: []
@@ -111,55 +107,141 @@ paths:
         default:
             $ref: '#/responses/default-error-response'
       x-asee-tags: []
-  /communication-summaries:
-    get:
-      summary: Gets the communication delivery status.
-      tags:
-        - Communication summaries
-      operationId: CommunicationSummaries_GetList
-      parameters:
-        - $ref: '#/parameters/contact-medium-param'
-        - $ref: '#/parameters/status-param'
-        - $ref: '#/parameters/customer-number-param'
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/communication-summary-list'
-        default:
-            $ref: '#/responses/default-error-response'
-      x-asee-tags: []
-  /documents:
+  /templates/render:
     post:
-      summary: Renders the document based on specified template.
+      summary: Render formatted content based on template
       tags:
-        - Documents
-      operationId: Documents_Create
+        - Templates
+      operationId: Templates_Render
       parameters:
         - description: Renders document.
           in: body
           name: cmd
           required: true
           schema:
-            $ref: '#/definitions/create-document-command'
+            $ref: '#/definitions/render-content-command'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              description: "Standard http header field that indicates the media type of the body content sent to the recipient. Example: `application/pdf`"
+              type: string
+            Content-Disposition:
+              description: "Standard http header field that conveys additional information about how to process the response payload, and  also can be used to attach additional metadata, such as the filename to use when saving the response payload locally. Example: `inline;filename=offer.pdf`. For more details see [RFC6266](https://tools.ietf.org/html/rfc6266)"
+              type: string
+          schema:
+            type: file          
+        default:
+            $ref: '#/responses/default-error-response'
+      x-asee-tags: []
+  /me/messages:
+    get:
+      summary: Get mailbox messages for authenticated user
+      tags:
+        - Mailbox
+      operationId: Mailbox_Messages_GetList
+      parameters:
+        - $ref: '#/parameters/from-time-param'
+        - $ref: '#/parameters/to-time-param'
+        - $ref: '#/parameters/mailbox-statuses-param'
+        - $ref: '#/parameters/customer-number-param'
+        - $ref: '#/parameters/message-categories-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-number-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+        - $ref: '#/parameters/trim-param'
+        - $ref: '#/parameters/include-param'        
       responses:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/document'
+            $ref: '#/definitions/mailbox-message-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+  /me/messages/{message-id}:
+    post:
+      summary: Get specific message
+      tags:
+        - Mailbox
+      operationId: Mailbox_Messages_Get
+      parameters:
+        - $ref: '#/parameters/message-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/mailbox-message'          
+        default:
+          $ref: '#/responses/default-error-response'        
+  /me/messages/summary:
+    get:
+      summary: Get mailbox summary for authenticated user
+      tags:
+        - Communications
+      operationId: Mailbox_Messages_Summary_Get
+      parameters:
+        - $ref: '#/parameters/mailbox-statuses-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/mailbox-summary'
         default:
             $ref: '#/responses/default-error-response'
-      x-asee-tags: []
+      x-asee-tags: []   
+  /me/messages/{message-id}/mark-as-read:
+    post:
+      summary: Mark message as read
+      tags:
+        - Mailbox
+      operationId: Mailbox_Messages_MarkAsRead
+      parameters:
+        - $ref: '#/parameters/message-id-param'
+        - name: cmd
+          in: body
+          description: Mark as read command
+          required: true
+          schema:
+            $ref: '#/definitions/mark-as-read-command'        
+      responses:
+        '200':
+          description: OK
+        default:
+          $ref: '#/responses/default-error-response'
+  /me/messages/archive:
+    post:
+      summary: Archive mailbox messages
+      tags:
+        - Mailbox
+      operationId: Mailbox_Messages_Archive
+      parameters:
+        - name: cmd
+          in: body
+          description: Archive messages command
+          required: true
+          schema:
+            $ref: '#/definitions/archive-messages-command'        
+      responses:
+        '200':
+          description: OK
+        default:
+          $ref: '#/responses/default-error-response'
 parameters:
-  start-time-param:
-    name: start-time
+  from-time-param:
+    name: from-time
     in: query
     description: Time of the first communication to be returned.
     type: string
     required: false
     format: date-time  
-  end-time-param:
-    name: end-time
+  to-time-param:
+    name: to-time
     in: query
     description: Date of last transaction. Default value is today.   
     type: string
@@ -176,6 +258,24 @@ parameters:
       - email
       - virtual-inbox
       - sms 
+  include-param:
+    description: List of fields to include in response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
+    in: query
+    name: include
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+    x-asee-common: true      
+  trim-param:
+    description: List of fields to trim from response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
+    in: query
+    name: trim
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+    x-asee-common: true      
   page-size-param:
     name: page-size
     in: query
@@ -209,10 +309,10 @@ parameters:
     name: sort-by
     type: string
     required: false
-  status-param:
+  delivery-statuses-param:
     description: Delivery status of the communication.
     in: query
-    name: status
+    name: statuses
     required: true
     collectionFormat: csv
     enum:
@@ -224,22 +324,29 @@ parameters:
     items:
       type: string
     type: array
-  search-text-param:
-    description: Search text
+  mailbox-statuses-param:
+    description: Mailbox status of the communication
     in: query
-    name: search-text
-    required: false
-    type: string
+    name: statuses
+    required: true
+    collectionFormat: csv
+    enum:
+      - received
+      - read
+      - archived
+    items:
+      type: string
+    type: array    
   customer-number-param:
     description: Customer number
     in: query
     name: customer-number
     required: true
     type: string
-  conversation-type-param:
-    description: Unique product code
+  message-categories-param:
+    description: "Categories that group similar messages. See [Message Category](correspondence-classifications.md#message-category) classification"
     in: query
-    name: conversation-type
+    name: categories
     required: false
     collectionFormat: csv
     items:
@@ -251,6 +358,12 @@ parameters:
     name: communication-id
     required: true
     type: string
+  message-id-param:
+    description: The unique identifier of the mailbox message
+    in: path
+    name: message-id
+    required: true
+    type: string    
 definitions:
   communication-list:
     description: List of communications.
@@ -287,7 +400,6 @@ definitions:
           - sent
           - delivered
           - failed
-          - archived
         type: string
       sent:
         description: Time and date when communication was sent.
@@ -297,11 +409,8 @@ definitions:
         description: The expiration time and date. Date and time until communication is valid.
         format: date-time
         type: string
-      data:
-        description: The data containing the XML document to load.
-        type: string
-      message-type:
-        description: Type of message.
+      message-kind:
+        description: Unique kind of notification. See [Message Kind](correspondence-classifications.md#message-kind)
         type: string
       priority:
         description: Priority of the message.
@@ -310,19 +419,13 @@ definitions:
           - medium
           - low
         type: string
-      reference-number:
-        description: Provider reference number.
-        type: string
       retry-count:
         description: The number of retries to send a message.
         format: int32
         type: integer
       message:
         description: Message to be sent.
-        $ref: '#/definitions/message'
-      conversation-type:
-        description: Unique product code
-        type: string
+        $ref: '#/definitions/formatted-message'
     type: object
   contact:
     description: Information about contact.
@@ -353,7 +456,59 @@ definitions:
       uri:
         type: string
     type: object
-  message:
+  mailbox-message-list:
+    description: List of mailbox messages
+    allOf: 
+    - $ref: '#/definitions/paged-list'
+    properties:
+      items:
+        description: Mailbox message
+        items:
+          $ref: '#/definitions/mailbox-message'
+        type: array
+    type: object    
+  mailbox-message:
+    type: object  
+    description: "Message in users virtual mailbox"
+    properties:
+      message-id:
+        description: Unique identifier of mailbox message
+        type: string
+      customer-number:
+        description: Unique identifier of the customer receipient
+        type: string
+      received:
+        description:  Time and date when message was received
+        format: date-time
+        type: string
+      status:
+        description: Status of the mailbox message
+        enum:
+          - received
+          - archived
+        type: string
+      mailbox-folder:
+        type: string
+      message-kind:
+        description: Unique kind of notification. See [Message Kind](correspondence-classifications.md#message-kind)
+        type: string
+      urgency:
+        description: Urgency of the message.
+        enum:
+          - urgent
+          - normal
+        type: string
+      message:
+        description: Message content in mailbox
+        $ref: '#/definitions/formatted-message'
+      message-category:
+        description: "Category that groups similar messages. See [Message Category](correspondence-classifications.md#message-category) "
+        type: string
+      has-attachments:
+        type: boolean
+      is-read:
+        type: boolean
+  formatted-message:
     description: Message consisting of a subject, body and attachments.
     properties:
       title:
@@ -365,7 +520,7 @@ definitions:
       attachments:
         description: Content sent along with message, consists of a type of file, name and content.
         items:
-          $ref: '#/definitions/message-attachment'
+          $ref: '#/definitions/attachment'
         type: array
     type: object
   contact-preference:
@@ -393,34 +548,90 @@ definitions:
       content-type:
         description: Message content type.
         enum:
-          - html
-          - text
+          - text/html
+          - text/plain
         type: string
       content:
         description: The content of a message.
         type: string
     type: object
-  message-attachment:
+  attachment:
     description: Content sent along with message, consists of a type of file, name and content.
     properties:
       content-type:
         description: The type of content that is sent as an attachment.
         enum:
-          - pdf
-          - excel
-          - word
-          - png
-          - jpg
+          - image/png
+          - image/jpg        
+          - application/pdf
+          - application/msword          
+          - application/vnd.ms-excel
+          - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+          - application/vnd.openxmlformats-officedocument.wordprocessingml.document
         type: string
       name:
-        description: Attachment name.
+        description: Attachment name
         type: string
-      content:
-        description: Content of attachment.
+      content-url:
+        description: URL where content of attachment is available
         type: string
+        format: uri
     type: object
-  update-communication-status-command:
-    description: Update communication status command.
+  update-delivery-statuses-command:
+    description: Update communication status command
+    properties:
+      updates:
+        type: array
+        items:
+          $ref: "#/definitions/communication-status"
+  communication-status:
+    type: object
+    required:
+      - id
+      - status
+    properties:
+      id:
+        type: string
+        format: uuid
+      status:
+        description: Updated delivery status of the communication
+        enum:
+          - retrieved
+          - sent
+          - delivered
+          - failed
+        type: string
+      reason:
+        description: Optional. Reason that explains why communication status changed
+        type: string
+  archive-messages-command:
+    type: object
+    description: Archive messages command
+    properties:
+      older-than:
+        description: Date before which messages will be archived. Default is mesages older than 90 days. Combines with `archive-unread` and `folders` fields.  
+        type: string
+        format: date
+      archive-unread:
+        description: Wheather to archive unread messages. Combines with `before-date` and `folders` fields.       
+        type: boolean
+        default: false
+      folders:
+        description: Specific folders to archive. If present and not empty, it combines with `before-date` and `archive-unread`      
+        type: array
+        items:
+          type: string
+          enum:
+            - inbox
+            - sent
+      message-ids:
+        description: Specific messages to archive. If present and not empty, it takes precedence and other command fields such as `before-date`, `folders`, `archive-unread` will be ignorred.
+        type: array
+        items:
+          type: string
+          format: uuid
+  mark-as-read-command:
+    description: Mark as read command
     properties:
       status-code:
         description: Delivery status of the communication.
@@ -436,31 +647,24 @@ definitions:
         type: string
     required:
       - status-code
-    type: object
-  command-result:
-    description: Command result
-    properties:
-      id:
-        description: Id of created, updated or deleted entity.
-        type: string
-      created-record-status:
-        description: The created, updated, deleted record status.
-        type: string
-    type: object
+    type: object    
+  resource-created-result:
+    description: Unique identifier of newly created resource that can be used in future inquires and commands
+    type: string
   initiate-communication-command:
     description: The initiate communication delivery command.
     properties:
       contact:
         description: Contact information.
         $ref: '#/definitions/contact'
-      message-type:
-        description: Unique code of the message.
+      message-kind:
+        description: Unique kind of the message.
         type: string
       data:
         description: Formated or unformated data
         type: string
       template:
-        description: The name of template.
+        description: The name of template
         type: string
       to-channel:
         description: The channel on wich communication is sent to.
@@ -483,39 +687,30 @@ definitions:
         format: date-time
         type: string
     type: object
-  communication-summary-list:
-    description: List of communication summaries.
+  mailbox-summary:
+    description: Summary of mailbox items
     properties:
+      total-count:
+        type: integer
+        format: int32
       items:
-        description: List of communication summary items. 
+        description: List of mailbox summary items 
         items:
-          $ref: '#/definitions/communication-summary'
+          $ref: '#/definitions/status-count'
         type: array
     type: object
-  communication-summary:
-    description: Communication summary item contains total count, status and count of communications for each priority.
+  status-count:
+    description: Summary item contains total count and count of messages for each status
     properties:
       status:
-        description: The status of communication.
+        description: The status of mailbox mnessage.
         type: string
-      total-count:
+      count:
         description: Total number of all communications.
         format: int32
         type: integer
-      high-count:
-        description: Count of unread communications with high priority.
-        format: int32
-        type: integer
-      medium-count:
-        description: Count of unread communications with medium priority.
-        format: int32
-        type: integer
-      low-count:
-        description: Count of unread communications with medium priority.
-        format: int32
-        type: integer
     type: object
-  create-document-command:
+  render-content-command:
     description: The request for rendering of document.
     properties:
       data:
@@ -534,13 +729,6 @@ definitions:
     required:
       - format-type
       - template
-    type: object
-  document:
-    description: Document content
-    properties:
-      data:
-        description: Binary content of rendered document.
-        type: string
     type: object
   paged-list:
     description: List with support for paging and sorting.
@@ -569,5 +757,3 @@ definitions:
 responses:
   default-error-response:
     description: 'Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()'
-schemes:
-  - http

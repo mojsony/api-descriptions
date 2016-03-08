@@ -1,4 +1,3 @@
-
 <span class="icon"></span>Content API Guide 
 ======================
 Content API provides access to documents stored in content management repositories. Any form of unstructured content (files) such as documents, templates and images can be organized into a folder structure that follows conventions understood by applications. Content API exposes operations to upload and download content and manipulate its metadata.

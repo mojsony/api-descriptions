@@ -265,7 +265,8 @@ paths:
           in: formData
           description: |
             Comma separated list of MIME Media Types that describes format of the docuements content streams as deﬁned by RFC2045 and RFC2046.
-            Commonly used media type examples are image/png, image/jpg, application/pdf and application/msword. Complete list can be found at [IANA Media Types](http://www.iana.org/assignments/media-types/media-types.xhtml).
+            Commonly used media type examples are image/png, image/jpg, application/pdf and application/msword.
+            Complete list can be found at [IANA Media Types](http://www.iana.org/assignments/media-types/media-types.xhtml).
           required: true
           type: array
           items:
@@ -608,7 +609,6 @@ paths:
       tags:
         - Classifications
       x-asee-tags: []
-
 responses:
   resource-created-response:
     description: Resource was created successfuly

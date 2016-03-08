@@ -1,12 +1,17 @@
 swagger: '2.0'
 info:
-  version: beta
+  version: v1
   title: Content Management Events
   description: 'Events described here tell you what happens to **documents** and **folders** in content respository. To learn more about general approach to event processing see [How to work with events]().'
+  contact:
+    name: Aleksandar Milosevic
+    url: http://dev.asseco-see.com/docs/content-getstarted.html
+    email: aca@see.asseco.com
 host: playground.apistudio.io
-basePath: /try/86501cfa-c99e-4d69-8236-d9fcf41bba7d
+basePath: /v1/content
 schemes:
   - http
+  - https
 produces:
   - application/json
 paths:
@@ -49,7 +54,7 @@ paths:
         '200':
           description: Event payload
           schema:
-            $ref: '#/definitions/document-deleted'            
+            $ref: '#/definitions/document-deleted'
   /folder-created:
     get:
       summary: A new folder was created
@@ -89,7 +94,7 @@ paths:
         '200':
           description: Event payload
           schema:
-            $ref: '#/definitions/folder-deleted'            
+            $ref: '#/definitions/folder-deleted'
 definitions:
   event:
     x-asse-comment: Event is redefined within each API to provide more specific examples and documentation
@@ -107,7 +112,7 @@ definitions:
           - document-deleted
           - folder-created
           - dolder-moved
-          - folder-deleted        
+          - folder-deleted
       occurred-on:
         type: string
         format: date-time
