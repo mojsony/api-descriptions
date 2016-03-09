@@ -3,11 +3,11 @@ info:
   version: v1
   title: Arrangement API
   description: |
-    Arrangement API gives you access to all long running arrangements customer has with financial institution such as current accounts, loans, deposits, card access arrangements, electronic access arrangements, etc. It also provides detailed arrangement information such as financial terms and conditions, party roles, installment plan, etc. 
-  contact: 
+    Arrangement API gives you access to all long running arrangements customer has with financial institution such as current accounts, loans, deposits, card access arrangements, electronic access arrangements, etc. It also provides detailed arrangement information such as financial terms and conditions, party roles, installment plan, etc.
+  contact:
     name: Slobodan Amidzic
     url: http://dev.asseco-see.com/docs/
-    email: sloba@asseco-see.rs    
+    email: sloba@asseco-see.rs
 host: dev.asseco-see.com
 basePath: /v1/arrangement
 schemes:
@@ -19,7 +19,7 @@ produces:
 tags:
   -
     name: Arrangements
-    description: Working with sales arrangements 
+    description: Working with sales arrangements
   -
     name: Installment Plans
     description: Working with installment plans as sub-resources of sales arrangements
@@ -78,7 +78,7 @@ paths:
           $ref: '#/responses/default-error-response'
   /arrangements/{arrangement-number}/installment-plan:
     get:
-      summary: Retrieves installment plan for the arrangement with given arrangement-number. 
+      summary: Retrieves installment plan for the arrangement with given arrangement-number.
       tags:
         - Installment Plans
       x-asee-tags:
@@ -100,7 +100,7 @@ paths:
           $ref: '#/responses/default-error-response'
   /arrangements/{arrangement-number}/conditions:
     get:
-      summary: Retrieves terms and conditions for the arrangement with given arrangement-number. 
+      summary: Retrieves terms and conditions for the arrangement with given arrangement-number.
       tags:
         - Conditions
       x-asee-tags:
@@ -120,7 +120,7 @@ paths:
 responses:
   validation-problem-response:
     description: Your request was not constructed properly. Response contains the list of validation errors for each invalid element of your request. For complete list of possible validation errors see [validation](common-getstarted.html#validation) section of the guide.
-    schema: 
+    schema:
       $ref: '#/definitions/validation-problem'
   default-error-response:
     description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling](common-getstarted.html#error-handling)
@@ -139,7 +139,7 @@ parameters:
     required: false
     type: integer
     default: 10
-    x-asee-common: true    
+    x-asee-common: true
   sort-order-param:
     description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]()
     in: query
@@ -149,8 +149,8 @@ parameters:
     enum:
     - asc
     - desc
-    x-asee-common: true  
-  sort-by-param:  
+    x-asee-common: true
+  sort-by-param:
     description: Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]()
     in: query
     name: sort-by
@@ -164,7 +164,7 @@ parameters:
     items:
       type: string
     collectionFormat: csv
-    x-asee-common: true      
+    x-asee-common: true
   trim-param:
     description: List of fields to trim from response. For more information see general guidance on [response shaping]()
     in: query
@@ -183,7 +183,9 @@ parameters:
   kind-param:
     name: kinds
     in: query
-    description: Selection of arrangement kinds for filtering arrangement list
+    description: |
+      Selection of arrangement kinds for filtering arrangement list
+      For a list of possible values see [arrangement-kind-param](arrangement-classifications.html#arrangement-kinds) classification.
     required: false
     type: array
     items:
@@ -203,7 +205,9 @@ parameters:
   party-role-param:
     name: role-kinds
     in: query
-    description: Selection of party roles used to filter arrangement list in order to show only those arrangements in which party from calling context plays one of the selected roles. If no roles are specified, only customer role is considered by default. 
+    description: |
+      Selection of party roles used to filter arrangement list in order to show only those arrangements in which party from calling context plays one of the selected roles. If no roles are specified, only customer role is considered by default.
+      For a list of possible values see [arrangement-party-roles](arrangement-classifications.html#arrangement-party-roles) classification.
     required: false
     type: array
     items:
@@ -218,7 +222,9 @@ parameters:
   arrangement-status-param:
     name: statuses
     in: query
-    description: Selection of arrangement statuses for filtering arrangement list. If no selection is specified, then only accepted, effective and suspended arrangements should be returned.
+    description: |
+      Selection of arrangement statuses for filtering arrangement list. If no selection is specified, then only accepted, effective and suspended arrangements should be returned.
+      For a list of possible values see [arrangement-status-param](arrangement-classifications.html#arrangement-statuses) classification.
     required: false
     type: array
     items:
@@ -254,7 +260,7 @@ definitions:
               message:
                 type: string
     example:
-      -  
+      -
         field: phone-number
         errors:
           -
@@ -262,8 +268,8 @@ definitions:
             message: Format for this field is invalid
           -
             error: max-length
-            message: Content exceeds maximum alowed length 
-      - 
+            message: Content exceeds maximum alowed length
+      -
         field: account-number
         errors:
           -
@@ -271,7 +277,7 @@ definitions:
             message: Check digit is invalid for this field
   paged-list:
     description: List with support for paging
-    properties:  
+    properties:
       total-count:
         description: Total number of items in collection
         type: integer
@@ -290,7 +296,7 @@ definitions:
         enum:
         - asc
         - desc
-      sort-by:  
+      sort-by:
         description: Attribute of the collection item to sort by
         type: string
   currency-amount:
@@ -334,7 +340,9 @@ definitions:
         description: The name of the Party that plays the role
       role-kind:
         type: string
-        description: The type of the role
+        description: |
+          The type of the role
+          For a list of possible values see [arrangement-party-roles](arrangement-classifications.html#arrangement-party-roles) classification.
         enum:
         - customer
         - authorized-person
@@ -348,7 +356,7 @@ definitions:
       role-status:
         type: string
         description: Current status of the role
-        enum: 
+        enum:
           - current
           - former
         default: current
@@ -370,12 +378,14 @@ definitions:
     description: Reference to related account
     type: object
     properties:
-      account-number: 
+      account-number:
         type: string
         description: Unique identifier of the account
       role-kind:
         type: string
-        description: The role account plays in context of the arrangement
+        description: |
+          The role account plays in context of the arrangement
+          For a list of possible values see [arrangement-account-role-kinds](arrangement-classifications.html#arrangement-account-role-kinds) classification.
         default: primary-account
         enum:
         - primary-account
@@ -389,7 +399,7 @@ definitions:
     description: Basic arrangement information
     type: object
     discriminator: kind
-    required: 
+    required:
     - arrangement-number
     - kind
     - product-code
@@ -400,7 +410,9 @@ definitions:
         description: The unique identifier of an arrangement. For account arrangements, this should be the same as primary account number. The only reason for difference are situations when single account covers multiple products.
       kind:
         type: string
-        description: Primary classification of arrangements according to product type.
+        description: |
+          Primary classification of arrangements according to product type.
+          For a list of possible values see [arrangement-kinds](arrangement-classifications.html#arrangement-kinds) classification.
         enum:
         - current-account
         - demand-deposit
@@ -423,7 +435,9 @@ definitions:
         description: Reference to arrangement's bundle master arrangement, usually current account. Only when the arrangement is sold as part of bundle.
       status:
         type: string
-        description: Current status of arrangement as the position of the arrangement within a life-cycle model which consist of a number of states (statuses). The first lifecycle status considered here is accepted - when customer accepts the offer. Eerlier statuses which exist during offer phase are not included. 
+        description: |
+          Current status of arrangement as the position of the arrangement within a life-cycle model which consist of a number of states (statuses). The first lifecycle status considered here is accepted - when customer accepts the offer. Eerlier statuses which exist during offer phase are not included.
+          For a list of possible values see [arrangement-statuses](arrangement-classifications.html#arrangement-statuses) classification.
         enum:
         - accepted
         - effective
@@ -445,7 +459,7 @@ definitions:
         items:
           $ref: '#/definitions/arrangement-party-role'
       accounts:
-        description: List of references to accounts that play some roles in context of the arrangement. Should not be populated unless explicitely specified in include-param. 
+        description: List of references to accounts that play some roles in context of the arrangement. Should not be populated unless explicitely specified in include-param.
         type: array
         items:
           $ref: '#/definitions/arrangement-account-info'
@@ -466,13 +480,13 @@ definitions:
           party-number: IGNE002
           party-name: Milivoje Klafovic
           role-kind: customer
-          role-status: current          
+          role-status: current
         -
           party-number: MRQW031
           party-name: Leopold Zec
           role-kind: guarantor
           role-id: G1
-          role-status: current          
+          role-status: current
         -
           party-number: MRQW031
           party-name: Teodor Brkic
@@ -508,18 +522,18 @@ definitions:
           items:
             $ref: '#/definitions/arrangement'
     example:
-      - 
+      -
         arrangement-number: 0000100002378
         kind: current-account
         product-code: RT-CA-STD-001
         status: effective
-      - 
+      -
         arrangement-number: 0042201082794
         kind: term-loan
         product-code: RT-LN-CAR-002
         status: effective
   installment-plan-row:
-    description: Scheduled payment - row in installment plan. 
+    description: Scheduled payment - row in installment plan.
     type: object
     properties:
       ordinal:
@@ -539,10 +553,12 @@ definitions:
         - fee-payment
         - cash-collateral-pledging
         - cash-collateral-release
-        description: Classification which can be used by software to recognize the meaning of the activity that triggers the payment. For example, in combination with product type it can be used at front end as a resource id for row description translation into selected culture. Grouping multiple activities into single row is allowed, and then most appropriate classification should be used. For example, disbursement activity may include downpayment, fee-payment, and cash-collateral-pledging. Also repayment activity may include interest-payment, fee-payment, and cash-collateral-release. For deposit products, disbursement activity-kind is used to describe depositing activity, while repayment is used to describe withdrawal. 
-      description: 
+        description: |
+          Classification which can be used by software to recognize the meaning of the activity that triggers the payment. For example, in combination with product type it can be used at front end as a resource id for row description translation into selected culture. Grouping multiple activities into single row is allowed, and then most appropriate classification should be used. For example, disbursement activity may include downpayment, fee-payment, and cash-collateral-pledging. Also repayment activity may include interest-payment, fee-payment, and cash-collateral-release. For deposit products, disbursement activity-kind is used to describe depositing activity, while repayment is used to describe withdrawal.
+          For a list of possible values see [installment-activity-kinds](arrangement-classifications.html#installment-activity-kinds) classification.
+      description:
         type: string
-        description: Description of the activity that triggers the payment. Should be translated in selected culture and front-end applications should use it as is. If description is not provided, front-end applications should use activity-kind to get appropriate description in selected culture. 
+        description: Description of the activity that triggers the payment. Should be translated in selected culture and front-end applications should use it as is. If description is not provided, front-end applications should use activity-kind to get appropriate description in selected culture.
       disbursement:
         type: number
         format: double
@@ -551,10 +567,10 @@ definitions:
         type: number
         format: double
         description: Principal balance before payment
-      principal-repayment: 
+      principal-repayment:
         type: number
         format: double
-        description: Principal amount to be repayed. 
+        description: Principal amount to be repayed.
       interest-repayment:
         type: number
         format: double
@@ -582,7 +598,7 @@ definitions:
       deferred-payment:
         type: number
         format: double
-        description: Part of payment that is being delayed for some future date. If such defferal exists, then the same amount must be deducted from principal repayment. 
+        description: Part of payment that is being delayed for some future date. If such defferal exists, then the same amount must be deducted from principal repayment.
       deferred-payment-installment:
         type: number
         format: double
@@ -704,19 +720,21 @@ definitions:
         - collective-benefit
         - relationship-benefit
         - sales-discount
-        description: The origin of the variation.
+        description: |
+          The origin of the variation.
+          For a list of possible values see [price-variation-origin](arrangement-classifications.html#price-variation-origin) classification.
       benefit-source-id:
         type: string
-        description: If applicable, the identifier of the benefit source. For example, collective benefit for employees of a company should refer to the company id, campaign benefits to campaign id, etc. 
+        description: If applicable, the identifier of the benefit source. For example, collective benefit for employees of a company should refer to the company id, campaign benefits to campaign id, etc.
       benefit-id:
         type: string
         description: If applicable, the id of benefit that was reason for derogation
       variation-description:
         type: string
-        description: Freetext description of the condition under which this variation is applicable. Should be culture sensitive. 
+        description: Freetext description of the condition under which this variation is applicable. Should be culture sensitive.
       applicability-expression:
         type: string
-        description: Optionally, formal textual expression that can be parsed and consumed by other systems. For example, Balance within (500, 1000], Reached term within [3M, ...), Currency in {EUR, USD}, Channel in {Branch, Agencies/Post Office}, Valid in period (..., 2016-12-31], Valid during {Grace period, Promotional period}, etc. Expressions can be negated using NOT operator and combined using AND and OR operators. 
+        description: Optionally, formal textual expression that can be parsed and consumed by other systems. For example, Balance within (500, 1000], Reached term within [3M, ...), Currency in {EUR, USD}, Channel in {Branch, Agencies/Post Office}, Valid in period (..., 2016-12-31], Valid during {Grace period, Promotional period}, etc. Expressions can be negated using NOT operator and combined using AND and OR operators.
       percentage:
         type: number
         format: double
@@ -738,19 +756,19 @@ definitions:
   pricing-condition:
     description: Detailed information about arrangement price - interest rate or fee condition
     type: object
-    properties: 
+    properties:
       title:
         type: string
-        description: The title of the condition.  Should be culture-sensitive. 
-      effective-date: 
+        description: The title of the condition.  Should be culture-sensitive.
+      effective-date:
         type: string
         format: date-time
-        description: The date from which interest rate is valid. 
+        description: The date from which interest rate is valid.
       currencies:
         type: array
-        items: 
+        items:
           type: string
-        description: The list of currencies for which the price is applicable. Currencies must be identified by ISO 4217 alphanumerical code (EUR, USD).  Empty list means that the price is applicable to all arrangement currencies. 
+        description: The list of currencies for which the price is applicable. Currencies must be identified by ISO 4217 alphanumerical code (EUR, USD).  Empty list means that the price is applicable to all arrangement currencies.
   interest-rate:
     description: Interest rate definition with base and spread.
     properties:
@@ -777,7 +795,9 @@ definitions:
           - regular-interest
           - penalty-interest
           - early-withdrawal-interest
-          description: Classification of interest rates due to their purpose. Note that penalty interest applies to loans while early withdrawal interest applies to deposits.
+          description: |
+            Classification of interest rates due to their purpose. Note that penalty interest applies to loans while early withdrawal interest applies to deposits.
+            For a list of possible values see [interest-rate-kinds](arrangement-classifications.html#interest-rate-kinds) classification.
         is-compound:
           type: boolean
           description: If true, interest calculation method is compound, else it is simle.
@@ -796,30 +816,30 @@ definitions:
           - Act-364
           - Act-365-L
           - Act-Act-AFB
-          description: Day count convention used for interest calculation. 
+          description: Day count convention used for interest calculation.
           default: Act-Act-ISDA
         rate:
           $ref: '#/definitions/interest-rate'
         variations:
           type: array
-          items: 
+          items:
             $ref: '#/definitions/interest-rate-variation'
         lower-limit:
           $ref: '#/definitions/interest-rate'
         lower-limit-variations:
           type: array
-          items: 
+          items:
             $ref: '#/definitions/interest-rate-variation'
         upper-limit:
           $ref: '#/definitions/interest-rate'
         upper-limit-variations:
           type: array
-          items: 
+          items:
             $ref: '#/definitions/interest-rate-variation'
         calculated-rate:
           type: number
           format: double
-          description: Total calculated rate value at effective-date. Sum of base rate, spread rate and variations. 
+          description: Total calculated rate value at effective-date. Sum of base rate, spread rate and variations.
   fee-condition:
     description: Detailed fee information.
     allOf:
@@ -836,13 +856,15 @@ definitions:
           - service-fee
           - expense
           - other
-          description: Classification of fees due to their purpose. Note that early repayment fee applies to loans while early withdrawal fee applies to deposits.
+          description: |
+            Classification of fees due to their purpose. Note that early repayment fee applies to loans while early withdrawal fee applies to deposits.
+            For a list of possible values see [fee-condition-kinds](arrangement-classifications.html#fee-condition-kinds) classification.
         service-code:
           type: string
           description: The code of the service to which fee applies, in case that kind is service fee.
         service-description:
           type: string
-          description: The description of the service to which fee applies, in case that kind is service fee. Should be culture-sensitive. 
+          description: The description of the service to which fee applies, in case that kind is service fee. Should be culture-sensitive.
         percentage:
           type: number
           format: double
@@ -861,7 +883,7 @@ definitions:
           $ref: '#/definitions/currency-amount'
           description: Upper limit applied after fee calculation
         frequency:
-          description: Fee calculation frequency. Service fees, expenses and origination-fee are usually event-triggered. 
+          description: Fee calculation frequency. Service fees, expenses and origination-fee are usually event-triggered.
           type: string
           enum:
           - event-triggered
@@ -871,10 +893,12 @@ definitions:
           - yearly
           default: event-triggered
   general-condition:
-    description: General, freetext terms and conditions defining 
+    description: General, freetext terms and conditions defining
     properties:
       category:
-        description: Categoty which can be used for grouping conditions
+        description: |
+          Categoty which can be used for grouping conditions
+          For a list of possible values see [general-condition-categories](arrangement-classifications.html#general-condition-categories) classification.
         type: string
         enum:
         - general
@@ -893,11 +917,11 @@ definitions:
         description: A reference to related contract section (by section title), if applicable.
     example:
       category: withdrawal
-      description: Partial or complete early withdrawal is allowed, with notice period of 2 working days, or 5 working days for amounts above 5000 EUR. A vista interest rate will be applied to withdrawn amount. 
+      description: Partial or complete early withdrawal is allowed, with notice period of 2 working days, or 5 working days for amounts above 5000 EUR. A vista interest rate will be applied to withdrawn amount.
   arrangement-conditions:
     description: Arrangement terms and conditions
     properties:
-      fees: 
+      fees:
         description: List of arrangement fee conditions. Should not be populated unless explicitely specified in include-param.
         type: array
         items:
@@ -905,10 +929,10 @@ definitions:
       interest-rates:
         description: List of arrangement interest conditions. Should not be populated unless explicitely specified in include-param.
         type: array
-        items: 
+        items:
           $ref: '#/definitions/interest-rate-condition'
       other:
-        description: List of general terms and conditions. 
+        description: List of general terms and conditions.
         type: array
         items:
           $ref: '#/definitions/general-condition'
@@ -940,7 +964,7 @@ definitions:
           kind: regular-interest
           is-compund: true
           calendar-basis: Act-Act-ISDA
-          rate: 
+          rate:
             base-rate-id: EURIBOR3M
             base-rate-value: 1.28
             spread-rate-value: 8.5
@@ -964,7 +988,7 @@ definitions:
           kind: regular-interest
           is-compund: true
           calendar-basis: Act-Act-ISDA
-          rate: 
+          rate:
             base-rate-id: LEGPNL
             base-rate-value: 7.21
             spread-rate-value: 5.0
@@ -975,13 +999,13 @@ definitions:
       other:
         -
           category: collaterals
-          description: Purchased vehicle 
+          description: Purchased vehicle
         -
           category: collaterals
           description: Bills of exchange - 2x
         -
           category: repayment
-          description: Partial early repayment without term changes is possible without going through loan approval process again. 
+          description: Partial early repayment without term changes is possible without going through loan approval process again.
   account-arrangement:
     description: Detailed information for account arrangements such as loans and deposits
     allOf:
@@ -990,12 +1014,12 @@ definitions:
       properties:
         currencies:
           type: array
-          items: 
+          items:
             type: string
-          description: The list of allowed arrangement currencies. Currencies must be identified by ISO 4217 alphanumerical code (EUR, USD). If empty, then primary currency is considered to be only allowed. 
+          description: The list of allowed arrangement currencies. Currencies must be identified by ISO 4217 alphanumerical code (EUR, USD). If empty, then primary currency is considered to be only allowed.
         primary-currency:
           type: string
-          description: For single currency arrangement, this is one and only currency. For multicurrency arrangements, primary currency is the the currency that is most common and that is used as representative example for APR calculation and other purposes. 
+          description: For single currency arrangement, this is one and only currency. For multicurrency arrangements, primary currency is the the currency that is most common and that is used as representative example for APR calculation and other purposes.
         eapr:
           type: number
           format: double
@@ -1015,9 +1039,9 @@ definitions:
       properties:
         overdraft:
           type: string
-          description: Reference to overdraft facility arrangement, if one exists 
+          description: Reference to overdraft facility arrangement, if one exists
   savings-plan:
-    description: Defines regular periodic deposits in addition to initial deposit amount. 
+    description: Defines regular periodic deposits in addition to initial deposit amount.
     properties:
       iteration:
         $ref: '#/definitions/time-period'
@@ -1034,7 +1058,7 @@ definitions:
       properties:
         savings-plan:
           $ref: '#/definitions/savings-plan'
-          description: Defines regular periodic deposits in addition to initial deposit amount. 
+          description: Defines regular periodic deposits in addition to initial deposit amount.
   term-deposit:
     description: Term deposit arrangement
     allOf:
@@ -1057,10 +1081,10 @@ definitions:
           description: Defines whether rollover is not allowed, allowed on request, or automatic.
         max-rollovers:
           type: integer
-          description: Limits the number of rollovers if rollover is allowed. 
+          description: Limits the number of rollovers if rollover is allowed.
         rollover-count:
           type: integer
-          description: Actual number of performed rollovers. 
+          description: Actual number of performed rollovers.
         next-maturity-date:
           type: string
           format: date-time
@@ -1071,7 +1095,7 @@ definitions:
           description: Initial amount, in primary currency
         savings-plan:
           $ref: '#/definitions/savings-plan'
-          description: Defines regular periodic deposits in addition to initial deposit amount. 
+          description: Defines regular periodic deposits in addition to initial deposit amount.
   term-loan:
     description: Term loan arrangement
     allOf:
@@ -1151,8 +1175,8 @@ definitions:
           description: Percentage of total debt that can be revolved
   card-info:
     description: Basic card information, without phisical item details
-    properties: 
-      card-number: 
+    properties:
+      card-number:
         type: string
         description: Masked card number
       kind:
@@ -1161,7 +1185,7 @@ definitions:
         - primary
         - additional
         description: Primary or additional
-      holder-id: 
+      holder-id:
         type: string
         description: Cardholder customer number
       holder-name:
@@ -1184,7 +1208,7 @@ definitions:
           format: double
           description: The name of card brand
         cards:
-          description: The list of active issued cards 
+          description: The list of active issued cards
           type: array
           items:
             $ref: '#/definitions/card-info'
