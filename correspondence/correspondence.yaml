@@ -4,10 +4,10 @@ info:
   title: Correspondence API
   description: |
     Correspondence API handles the automated generation of batches of pre-formatted correspondence, typically integrating customer/product specific data in correspondence templates for variable aspects of content. Channel applications can use this API to deliver alerts, reminders, advices, past due notices, announcements, campaign offers, statements and other arrangement reports. Correspondence API also offers rendering of documents in .pdf and .docx formats from predefined templates and supplied data. For self-service applications such as mobile or web, Correspondence API offers virtual mailbox for private exchange of messages between bank and customer.
-  contact: 
+  contact:
     name: Jovica Filipovic
     url: http://dev.asseco-see.com/docs/
-    email: jovica.filipovic@asseco-see.rs          
+    email: jovica.filipovic@asseco-see.rs
 host: dev.asseco-see.com
 basePath: /v1/correspondence
 schemes:
@@ -23,7 +23,7 @@ tags:
   - description: Working with templates
     name: Templates
   - description: Working with mailbox
-    name: Mailbox    
+    name: Mailbox
 paths:
   /communications:
     get:
@@ -70,7 +70,7 @@ paths:
             Location:
               description: URI where communication details can be obtained
               type: string
-              format: uri            
+              format: uri
         default:
             $ref: '#/responses/default-error-response'
       x-asee-tags: []
@@ -133,7 +133,7 @@ paths:
               description: "Standard http header field that conveys additional information about how to process the response payload, and  also can be used to attach additional metadata, such as the filename to use when saving the response payload locally. Example: `inline;filename=offer.pdf`. For more details see [RFC6266](https://tools.ietf.org/html/rfc6266)"
               type: string
           schema:
-            type: file          
+            type: file
         default:
             $ref: '#/responses/default-error-response'
       x-asee-tags: []
@@ -154,7 +154,7 @@ paths:
         - $ref: '#/parameters/sort-order-param'
         - $ref: '#/parameters/sort-by-param'
         - $ref: '#/parameters/trim-param'
-        - $ref: '#/parameters/include-param'        
+        - $ref: '#/parameters/include-param'
       responses:
         '200':
           description: OK
@@ -178,9 +178,9 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/mailbox-message'          
+            $ref: '#/definitions/mailbox-message'
         default:
-          $ref: '#/responses/default-error-response'        
+          $ref: '#/responses/default-error-response'
   /me/messages/summary:
     get:
       summary: Get mailbox summary for authenticated user
@@ -196,7 +196,7 @@ paths:
             $ref: '#/definitions/mailbox-summary'
         default:
             $ref: '#/responses/default-error-response'
-      x-asee-tags: []   
+      x-asee-tags: []
   /me/messages/{message-id}/mark-as-read:
     post:
       summary: Mark message as read
@@ -210,7 +210,7 @@ paths:
           description: Mark as read command
           required: true
           schema:
-            $ref: '#/definitions/mark-as-read-command'        
+            $ref: '#/definitions/mark-as-read-command'
       responses:
         '200':
           description: OK
@@ -228,7 +228,7 @@ paths:
           description: Archive messages command
           required: true
           schema:
-            $ref: '#/definitions/archive-messages-command'        
+            $ref: '#/definitions/archive-messages-command'
       responses:
         '200':
           description: OK
@@ -241,25 +241,27 @@ parameters:
     description: Time of the first communication to be returned.
     type: string
     required: false
-    format: date-time  
+    format: date-time
   to-time-param:
     name: to-time
     in: query
-    description: Date of last transaction. Default value is today.   
+    description: Date of last transaction. Default value is today.
     type: string
     required: false
     format: date-time
   contact-medium-param:
     name: contact-medium
     in: query
-    description: Contact medium designated for the delivery of the communication
+    description: |
+      Contact medium designated for the delivery of the communication
+      For a list of possible values see [contact-medium](correspondence-classifications.html#contact-medium) classification.
     type: string
     required: true
     enum:
       - smartphone-push
       - email
       - virtual-inbox
-      - sms 
+      - sms
   include-param:
     description: List of fields to include in response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
     in: query
@@ -268,7 +270,7 @@ parameters:
     items:
       type: string
     collectionFormat: csv
-    x-asee-common: true      
+    x-asee-common: true
   trim-param:
     description: List of fields to trim from response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
     in: query
@@ -277,7 +279,7 @@ parameters:
     items:
       type: string
     collectionFormat: csv
-    x-asee-common: true      
+    x-asee-common: true
   page-size-param:
     name: page-size
     in: query
@@ -286,7 +288,7 @@ parameters:
     format: int32
     type: integer
     default: 10
-    x-asee-common: true 
+    x-asee-common: true
   page-number-param:
     in: query
     name: page
@@ -304,8 +306,8 @@ parameters:
     enum:
     - asc
     - desc
-    x-asee-common: true  
-  sort-by-param:  
+    x-asee-common: true
+  sort-by-param:
     description: Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]().
     in: query
     name: sort-by
@@ -338,7 +340,7 @@ parameters:
       - archived
     items:
       type: string
-    type: array    
+    type: array
   customer-number-param:
     description: Customer number
     in: query
@@ -365,11 +367,11 @@ parameters:
     in: path
     name: message-id
     required: true
-    type: string    
+    type: string
 definitions:
   communication-list:
     description: List of communications.
-    allOf: 
+    allOf:
     - $ref: '#/definitions/paged-list'
     properties:
       items:
@@ -433,7 +435,9 @@ definitions:
     description: Information about contact.
     properties:
       usage:
-        description: 'Provides the context of use for this contact information. Possible values are:'
+        description: |
+          Provides the context of use for this contact information.
+          For a list of possible values see [contact-usage](correspondence-classifications.html#contact-usage) classification.
         enum:
           - seasonal
           - assistant
@@ -460,7 +464,7 @@ definitions:
     type: object
   mailbox-message-list:
     description: List of mailbox messages
-    allOf: 
+    allOf:
     - $ref: '#/definitions/paged-list'
     properties:
       items:
@@ -468,9 +472,9 @@ definitions:
         items:
           $ref: '#/definitions/mailbox-message'
         type: array
-    type: object    
+    type: object
   mailbox-message:
-    type: object  
+    type: object
     description: "Message in users virtual mailbox"
     properties:
       message-id:
@@ -529,7 +533,7 @@ definitions:
     description: Contact preferences including preferred language and list of services that customer wishes or doesn't wish to receive information for.
     properties:
       preferred-language:
-        description: The language in which customer wants to receive information. 
+        description: The language in which customer wants to receive information.
         type: string
       opt-ins:
         description: List of services that customer wishes to receive information for.
@@ -564,9 +568,9 @@ definitions:
         description: The type of content that is sent as an attachment.
         enum:
           - image/png
-          - image/jpg        
+          - image/jpg
           - application/pdf
-          - application/msword          
+          - application/msword
           - application/vnd.ms-excel
         type: string
       name:
@@ -609,15 +613,15 @@ definitions:
     description: Archive messages command
     properties:
       older-than:
-        description: Date before which messages will be archived. Default is mesages older than 90 days. Combines with `archive-unread` and `folders` fields.  
+        description: Date before which messages will be archived. Default is mesages older than 90 days. Combines with `archive-unread` and `folders` fields.
         type: string
         format: date
       archive-unread:
-        description: Wheather to archive unread messages. Combines with `before-date` and `folders` fields.       
+        description: Wheather to archive unread messages. Combines with `before-date` and `folders` fields.
         type: boolean
         default: false
       folders:
-        description: Specific folders to archive. If present and not empty, it combines with `before-date` and `archive-unread`      
+        description: Specific folders to archive. If present and not empty, it combines with `before-date` and `archive-unread`
         type: array
         items:
           type: string
@@ -647,7 +651,7 @@ definitions:
         type: string
     required:
       - status-code
-    type: object    
+    type: object
   resource-created-result:
     description: Unique identifier of newly created resource that can be used in future inquires and commands
     type: string
@@ -694,7 +698,7 @@ definitions:
         type: integer
         format: int32
       items:
-        description: List of mailbox summary items 
+        description: List of mailbox summary items
         items:
           $ref: '#/definitions/status-count'
         type: array
@@ -732,7 +736,7 @@ definitions:
     type: object
   paged-list:
     description: List with support for paging and sorting.
-    properties:  
+    properties:
       total-count:
         description: Total number of items in collection.
         type: integer
@@ -751,7 +755,7 @@ definitions:
         enum:
         - asc
         - desc
-      sort-by:  
+      sort-by:
         description: Attribute of the collection item to sort by.
         type: string
 responses:

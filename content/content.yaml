@@ -67,7 +67,6 @@ paths:
       tags:
         - Folders
       x-asee-tags:
-        - Shapeable
         - Sortable
         - Pageable
       operationId: Folders_GetContentsByPath
@@ -576,10 +575,10 @@ paths:
             $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
-  /classifications: 
+  /classifications:
     get:
       summary: List all classification schemas used in the API
-      description: Some fields and parameters have been restricted to a list of allowed lookup values maintained by the bank. This method lists all schemas used in this API.    
+      description: Some fields and parameters have been restricted to a list of allowed lookup values maintained by the bank. This method lists all schemas used in this API.
       operationId: "Classifications_GetList"
       responses:
         '200':

@@ -1,8 +1,8 @@
-   
-Possible problems
+Possible Correspondence API Problems
 =================
 
-Currently there are no specific problems for Correspondence API. To learn more see general guidance on [error handling]().
+To learn more see general guidance on [error handling](common-getstarted.html#error-handling).
+Range of problem codes for this API is `51000 - 51199`.
 
-Literal                          | Code   | Description
----------------------------------|--------|-----------------------------------------
+>>Currently there are no specific problems for
+>>Correspondence API. To learn more see general guidance on [error handling]().

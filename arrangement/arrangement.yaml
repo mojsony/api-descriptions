@@ -207,7 +207,7 @@ parameters:
     in: query
     description: |
       Selection of party roles used to filter arrangement list in order to show only those arrangements in which party from calling context plays one of the selected roles. If no roles are specified, only customer role is considered by default.
-      For a list of possible values see [arrangement-party-roles](arrangement-classifications.html#arrangement-party-roles) classification.
+      For a list of possible values see [role-kinds](arrangement-classifications.html#role-kinds) classification.
     required: false
     type: array
     items:
