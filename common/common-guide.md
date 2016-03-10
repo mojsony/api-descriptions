@@ -193,10 +193,9 @@ Events are used to publish the fact that something happened to interested subscr
 
 Each event publsihed by API is uniquely identified by its name. Events happen in a lifecycle of a resource that is classified by `aggregate-kind` and identified by `aggregate-id`. 
 
-Bulk optimization
+Bulk optimizations
 -----------------
-When API endpoint is optimized for bulk reads and bulk writes their payload contract is flattened and default content type is `text/csv` and http compression is used by default. This minimizes network traffic and simplifies processing at other end.
-
+When API endpoint is optimized for bulk reads and bulk writes you can expect that their payload contract is flattened, default content type to be `text/csv` and http compression to be used by default. This minimizes network traffic and simplifies processing at other end.
 
 Commonly used query parameters
 -----------------------
