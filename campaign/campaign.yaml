@@ -3,11 +3,11 @@ info:
   version: v1
   title: Campaign API
   description: |
-    Campaign API gives you ability to present customers with targetted offers, record their response and activate campaign benefits within campaign response workflow. 
-  contact: 
+    Campaign API gives you ability to present customers with targetted offers, record their response and activate campaign benefits within campaign response workflow.
+  contact:
     name: Mladen Milenkovic
     url: http://dev.asseco-see.com/docs/
-    email: mladen.milenkovic@asseco-see.rs    
+    email: mladen.milenkovic@asseco-see.rs
 host: dev.asseco-see.com
 basePath: /v1/campaign
 schemes:
@@ -43,12 +43,12 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/offer-list' 
+            $ref: '#/definitions/offer-list'
         default:
           $ref: '#/responses/default-error-response'
       x-asee-tags:
         - Sortable
-  /campaigns/{campaign-code}/responses:        
+  /campaigns/{campaign-code}/responses:
     post:
       summary: Capture customer response to campaign offer
       tags:
@@ -60,7 +60,7 @@ paths:
           name: campaign-code
           in: path
           required: true
-          type: string        
+          type: string
         - description: Parameters for adding customer to campaign.
           in: body
           name: cmd
@@ -102,10 +102,10 @@ paths:
 # ENDPOINTS COMMON WITH OTHER APIs                    #
 # ****************************************************#
 
-  /classifications: 
+  /classifications:
     get:
       summary: List all classification schemas used by the API
-      description: Some fields and parameters have been restricted to a list of allowed lookup values maintained by the bank. This method lists all schemas used in this API.    
+      description: Some fields and parameters have been restricted to a list of allowed lookup values maintained by the bank. This method lists all schemas used in this API.
       operationId: "Classifications_GetList"
       responses:
         '200':
@@ -170,7 +170,7 @@ parameters:
     description: Unique identifier of the campaign
     in: query
     required: false
-    type: string 
+    type: string
   product-code-param:
     name: product-code
     description: Unique identifier of the product
@@ -192,8 +192,8 @@ parameters:
     enum:
     - asc
     - desc
-    x-asee-common: true  
-  sort-by-param:  
+    x-asee-common: true
+  sort-by-param:
     description: Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]().
     in: query
     name: sort-by
@@ -204,51 +204,51 @@ definitions:
 # ****************************************************#
 # MODELS COMMON WITH OTHER APIs                       #
 # ****************************************************#
-  classification-value: 
+  classification-value:
     type: object
     description: Classification value
-    properties: 
-      literal: 
-        description: Literal that uniquely identifies classification value 
-        type: string    
-      code: 
+    properties:
+      literal:
+        description: Literal that uniquely identifies classification value
+        type: string
+      code:
         description: Optional numerical code of classification value
         type: string
-      description: 
+      description:
         description: Description of classification value
         type: string
-      parent-literal: 
+      parent-literal:
         description: Optional literal of parent classification value if schema is hierarchical
-        type: string     
+        type: string
     example:
       literal: billing
       code: 2
       description: Contact may be used to provide party with details of their liabilities to the bank
   classification-list:
     description: List of classification schemas
-    type: object    
-    properties: 
-      items: 
+    type: object
+    properties:
+      items:
         description: List of classification schemas
         items:
           $ref: "#/definitions/classification-info"
         type: array
     example:
-      - 
+      -
         schema-id: filing-purpose
         name: Filing Purpose
         description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture
       -
         schema-id: folder-purpose
         name: Folder Purpose
-        description: List of possible uses of a folder in business context.       
-  classification-info:  
+        description: List of possible uses of a folder in business context.
+  classification-info:
     description: Basic information on classification schema
     properties:
       schema-id:
         type: string
         description: Unique literal that identifies the classification schema. Always in `lowercase-dash` convention.
-      name: 
+      name:
         type: string
         description: User friendly name of classification
       description:
@@ -257,15 +257,15 @@ definitions:
     example:
       schema-id: filing-purpose
       name: Filing Purpose
-      description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture   
+      description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture
   classification:
-    type: object   
+    type: object
     description: Classification schema details
     properties:
       schema-id:
         type: string
         description: Unique literal that identifies the classification schema. Always in `lowercase-dash` convention.
-      name: 
+      name:
         type: string
         description: User friendly name of classification
       description:
@@ -273,7 +273,7 @@ definitions:
         description: Description of a classification
       values:
         description: List of allowed classification values
-        type: array   
+        type: array
         items:
           $ref: "#/definitions/classification-value"
     example:
@@ -294,11 +294,11 @@ definitions:
 # MODELS SPECIFIC FOR ACCOUNTING APIs                 #
 # ****************************************************#
   offer:
-    description: 
-      Base campaign execution object that contains conditions of targetted  offer and also metadata to help visually represent offer to the client. 
+    description:
+      Base campaign execution object that contains conditions of targetted  offer and also metadata to help visually represent offer to the client.
     properties:
       campaign-code:
-        description: Unique identifier of the campaign. 
+        description: Unique identifier of the campaign.
         type: string
       campaign-title:
         description: Title of campaign offer.
@@ -311,7 +311,9 @@ definitions:
         type: string
       campaign-priority:
         x-asee-compliance: This was integer field, changed to enum.
-        description: Defines priority of the campaign offer. Based on this we define order of appearence for campaign offers.
+        description: |
+          Defines priority of the campaign offer. Based on this we define order of appearence for campaign offers.
+          For a list of possible values see [campaign-priority](campaign-classifications.html#campaign-priority) classification.
         type: string
         enum:
           - low
@@ -325,8 +327,8 @@ definitions:
         type: string
       channel-code:
         description: Unique identifier of the channel. List of avaliable channels is provided by [Reference API](reference-getstarted.html).
-        type: string        
-    type: object      
+        type: string
+    type: object
   offer-list:
     description: List of campaign offers.
     properties:
@@ -356,13 +358,13 @@ definitions:
         type: boolean
       is-relative-modification:
         description: Defines if the benefit provides absolute or relative modification to existing product condition.
-        type: boolean      
+        type: boolean
     type: object
   campaign-resource:
     description: Media resource providing visual appearance of campaign offer. This may be banner image, animation, video, etc.
     properties:
       code:
-        description: Unique identifier of advertising resource. This resource defines visual representation of the campaign offer. 
+        description: Unique identifier of advertising resource. This resource defines visual representation of the campaign offer.
         type: string
       media-uri:
         description: Defines external uri that holds the advertising resource, i.e. visual representation of specific campaign offer.
@@ -370,9 +372,9 @@ definitions:
       content-type:
         description: Media type according to RFC 4288
         type: string
-      message-text: 
+      message-text:
         description: Marketing messsage that follows campaign offer and should be displayed together with advertising resource.
-        type: string         
+        type: string
       language:
         description:  "Language and culture to which campaign resource is localized. Value is a unique name for each culture, based on RFC 4646. List of available cultures is maitained by [Refefence API](reference-getstarted.html) Examples: en-US, sr-latn-RS, mk-MK"
         type: string
@@ -386,7 +388,7 @@ definitions:
   activate-benefits-command:
     description: Activates benefit that campaign provides (e.g. lower interest rate for credit limit)
     type: object
-    properties: 
+    properties:
       benefits:
         description: Benefits to activate
         properties:
@@ -395,7 +397,7 @@ definitions:
             items:
               $ref: '#/definitions/benefit'
             type: array
-        type: object  
+        type: object
   capture-campaign-response-command:
     type: object
     description: Capturing response to campaign offer
@@ -408,13 +410,15 @@ definitions:
         type: string
       campaign-code:
         description: Unique identifier of campaign.
-        type: string        
+        type: string
       source-uri:
         description: Keeps information about point of access, which helps with the analysis of efficiency of the channels.
         type: string
       campaign-action:
         type: string
-        description: Action that is recorded against campaign
+        description: |
+          Action that is recorded against campaign
+          For a list of possible values see [campaign-action](campaign-classifications.html#campaign-action) classification.
         enum:
           - presented
           - declined

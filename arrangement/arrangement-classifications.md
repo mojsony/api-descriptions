@@ -19,7 +19,7 @@ Enumeration that distinguishes between kinds of arrangement.
 |electronic-access-arrangement| Electronic Access Arrangement|
 |other-product-arrangement| Other Product Arrangement|
 
-Arrangement Party Roles
+Role Kinds
 ---
 
 Enumeration that distinguishes between role kinds of the party related to

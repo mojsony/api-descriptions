@@ -3,7 +3,9 @@ Campaign API Classifications
 
 Zone Kinds
 ---------
-Classification explains in which presentation zone on client application marketing resource should be displayed.
+
+Classification explains in which presentation zone on client application
+marketing resource should be displayed.
 
 Literal              | Code  | Description
 ---------------------|-------|----------------------------------
@@ -20,7 +22,8 @@ Campaign API Enumerations
 Campaign Action
 --------------
 
-Enumeration that distinguishes between kinds of possible actions in response to campaign offer.
+Enumeration that distinguishes between kinds of possible actions in
+response to campaign offer.
 
 Literal       | Description
 --------------|--------------
