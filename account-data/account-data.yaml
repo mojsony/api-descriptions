@@ -135,7 +135,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: '#/definitions/transactions'
+            $ref: '#/definitions/paged-transactions'
         default:
           $ref: '#/responses/default-error-response'
   /transactions/{transaction-id}:
@@ -218,7 +218,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: '#/definitions/transactions'
+            $ref: '#/definitions/paged-transactions'
         default:
           $ref: '#/responses/default-error-response'          
   /statements:
@@ -593,7 +593,30 @@ definitions:
 # ****************************************************#
 # MODELS COMMON WITH OTHER APIs                       #
 # ****************************************************#
-
+  paged-list:
+    description: List with support for paging
+    properties:  
+      total-count:
+        description: Total number of items in collection
+        type: integer
+      page-size:
+        description: Size of the page
+        type: integer
+      page:
+        description: Index of current page
+        type: integer
+      total-pages:
+        description: Total number of pages of set size
+        type: integer
+      sort-order:
+        description: Sort order (`asc` or `desc`). Default is asc
+        type: string
+        enum:
+        - asc
+        - desc
+      sort-by:  
+        description: Attribute of the collection item to sort by
+        type: string
   classification-value: 
     type: object
     description: Classification value
@@ -1073,7 +1096,6 @@ definitions:
         description: Reference to a remittance information that can be interpretted by receiving side
         type: string
       instructed-amount:
-        description: Amount instructed
         $ref: '#/definitions/currency'
     example:
       transfer-id: 8661821617671
@@ -1163,6 +1185,13 @@ definitions:
       friendly-name:
         type: string
         description: Friendly name of standing order set by customer
+  paged-transactions:
+    type: object
+    allOf: 
+    - $ref: '#/definitions/paged-list'  
+    properties:
+      transactions:
+        $ref: '#/definitions/transactions'
   transactions:
     type: array
     description: List of transactions
@@ -1379,4 +1408,3 @@ definitions:
         category: "Cash"
       media:
         image: /v1/conent/mchub/documents/mj20b12534r4
-        
