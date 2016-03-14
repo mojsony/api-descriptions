@@ -457,12 +457,14 @@ definitions:
         items:
           type: string
         type: array
+        collectionFormat: csv
       opt-outs:
         description: List of services for which the customer does not want to receive notifications anymore.
         x-asee-compliance: Should be related to some classification.
         items:
           type: string
         type: array
+        collectionFormat: csv
       uri:
         description: URI
         type: string
@@ -1127,6 +1129,7 @@ definitions:
         items:
           type: string
         type: array
+        collectionFormat: csv
       issuing-date:
         description: Issuing date of document.
         format: date-time
@@ -1212,6 +1215,7 @@ parameters:
     items:
       type: string
     type: array
+    collectionFormat: csv
   exclude-field-list-param:
     description: Gets or sets the field names.
     in: query
@@ -1220,6 +1224,7 @@ parameters:
     items:
       type: string
     type: array
+    collectionFormat: csv
   category-param:
     description: 'Category of contact (e.g. phone, mobile, email, postal-address,...). If set, only contacts of these kinds will be returned. If not set, all contacts will be returned.'
     in: query
@@ -1228,6 +1233,7 @@ parameters:
     items:
       type: string
     type: array
+    collectionFormat: csv
   usage-param:
     description: 'Usage of contact (e.g. seasonal, assistant, work, home, default, business, legal,...). If set, only contacts of these usage will be returned. If not set, all contacts will be returned.'
     in: query
@@ -1236,6 +1242,7 @@ parameters:
     items:
       type: string
     type: array
+    collectionFormat: csv
   page-size-param:
     description: Gets or sets the size of the page.
     in: query

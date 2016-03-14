@@ -242,6 +242,7 @@ parameters:
     items:
       type: string
     type: array
+    collectionFormat: csv
   exclude-field-list-param:
     description: Gets or sets the field names.
     in: query
@@ -250,6 +251,7 @@ parameters:
     items:
       type: string
     type: array
+    collectionFormat: csv
   search-category-param:
     description: 'Category of search parameter. For complete list of possible values see [search-category]() classification.'
     in: query
@@ -356,6 +358,7 @@ definitions:
         items:
           type: string
         type: array
+        collectionFormat: csv
     type: object
   authorization-method:
     x-asee-compliance: 'This object should be merged with `authorization-limit` object below. No need for two separate objects.'
@@ -692,12 +695,14 @@ definitions:
         items:
           type: string
         type: array
+        collectionFormat: csv
       opt-outs:
         description: List of services for which the customer does not want to receive notifications anymore.
         x-asee-compliance: Should be related to some classification.
         items:
           type: string
         type: array
+        collectionFormat: csv
     type: object
   individual-profile:
     description: Customer profile
