@@ -376,7 +376,7 @@ definitions:
         x-asee-compliance: This was integer field, changed to enum.
         description: |
           Defines priority of the campaign offer. Based on this we define order of appearence for campaign offers.
-          For a list of possible values see [campaign-priority](campaign-classifications.html#campaign-priority) classification.
+          For a list of possible values see [campaign-priority](campaign-classifications.html#campaign-priority) enumeration.
         type: string
         enum:
           - low
@@ -481,7 +481,7 @@ definitions:
         type: string
         description: |
           Action that is recorded against campaign
-          For a list of possible values see [campaign-action](campaign-classifications.html#campaign-action) classification.
+          For a list of possible values see [campaign-action](campaign-classifications.html#campaign-action) enumeration.
         enum:
           - presented
           - declined

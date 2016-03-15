@@ -214,7 +214,7 @@ definitions:
         maxLength: 3
         minLength: 3
       status:
-        description: For a list of possible values see [account-statuses](accounting-classifications.html#account-statuses) classification.
+        description: For a list of possible values see [account-statuses](accounting-classifications.html#account-statuses) enumeration.
         type: string
         enum:
           - open
@@ -223,7 +223,7 @@ definitions:
           - closing
           - archived
       posting-status:
-	    description: For a list of possible values see [account-posting-statuses](accounting-classifications.html#account-posting-statuses) classification.
+	    description: For a list of possible values see [account-posting-statuses](accounting-classifications.html#account-posting-statuses) enumeration.
         type: string
         enum:
           - not-postable
@@ -234,7 +234,7 @@ definitions:
       kind:
         description: |
           Kind of account used for tracking. This determines balances that make sense.
-          For a list of possible values see [account-kinds](accounting-classifications.html#account-kinds) classification.
+          For a list of possible values see [account-kinds](accounting-classifications.html#account-kinds) enumeration.
         type: string
         enum:
           - current-account
@@ -334,7 +334,7 @@ definitions:
       source:
         description: |
           Source of additional details of the transaction - Card transaction details (`crd`), Payment details (`pmt`), Standing order details (`sto`), Branch transaction details (`brn`), Internal transaction details (`int`)
-          For a list of possible values see [transaction-sources](accounting-classifications.html#transaction-sources) classification.
+          For a list of possible values see [transaction-sources](accounting-classifications.html#transaction-sources) enumeration.
         type: string
         enum:
           - crd
@@ -355,7 +355,7 @@ definitions:
       status:
         description: |
           Status of transaction. Pending (`p`), Booked (`b`), Voided (`v`).
-          For a list of possible values see [transaction-statuses](accounting-classifications.html#transaction-statuses) classification.
+          For a list of possible values see [transaction-statuses](accounting-classifications.html#transaction-statuses) enumeration.
         type: string
         enum:
           - p
@@ -389,7 +389,7 @@ definitions:
       transaction-kind:
         description: |
           Enumeration that distinguishes between accounting transactions based on their effect on the customer accounts. Deposit (`dep`), Withdrawal (`wdw`), Payment (`pmt`), Fee (`fee`), Interest credit (`inc`), Reversal (`rev`), Adjustment (`adj`), Loan disbursement (`lnd`), Loan repayment (`lnr`), Foreign currency exchange (`fcx`), Account openning (`aop`), Account closing (`acl`)
-          For a list of possible values see [transaction-kinds](accounting-classifications.html#transaction-kinds) classification.
+          For a list of possible values see [transaction-kinds](accounting-classifications.html#transaction-kinds) enumeration.
         type: string
         enum:
           - dep

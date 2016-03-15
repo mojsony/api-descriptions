@@ -117,6 +117,45 @@ paths:
             $ref: '#/definitions/arrangement-conditions'
         default:
           $ref: '#/responses/default-error-response'
+
+
+# ****************************************************#
+# ENDPOINTS COMMON WITH OTHER APIs                    #
+# ****************************************************#
+
+  /classifications:
+    get:
+      summary: List all classification schemas used by the API
+      description: Some fields and parameters have been restricted to a list of allowed lookup values maintained by the bank. This method lists all schemas used in this API.
+      operationId: "Classifications_GetList"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/classification-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+        - Classifications
+
+  /classifications/{schema-id}:
+    get:
+      summary: List values allowed by given classification schema.
+      description: Returns all classification values for chosen classification.
+      operationId: Classifications_Get
+      parameters:
+        - $ref: '#/parameters/schema-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/classification'
+        default:
+          $ref: '#/responses/default-error-response'
+
+      tags:
+        - Classifications
+
 responses:
   validation-problem-response:
     description: Your request was not constructed properly. Response contains the list of validation errors for each invalid element of your request. For complete list of possible validation errors see [validation](common-getstarted.html#validation) section of the guide.
@@ -185,7 +224,7 @@ parameters:
     in: query
     description: |
       Selection of arrangement kinds for filtering arrangement list
-      For a list of possible values see [arrangement-kind-param](arrangement-classifications.html#arrangement-kinds) classification.
+      For a list of possible values see [arrangement-kind-param](arrangement-classifications.html#arrangement-kinds) enumeration.
     required: false
     type: array
     collectionFormat: csv
@@ -208,7 +247,7 @@ parameters:
     in: query
     description: |
       Selection of party roles used to filter arrangement list in order to show only those arrangements in which party from calling context plays one of the selected roles. If no roles are specified, only customer role is considered by default.
-      For a list of possible values see [role-kinds](arrangement-classifications.html#role-kinds) classification.
+      For a list of possible values see [role-kinds](arrangement-classifications.html#role-kinds) enumeration.
     required: false
     type: array
     items:
@@ -226,7 +265,7 @@ parameters:
     in: query
     description: |
       Selection of arrangement statuses for filtering arrangement list. If no selection is specified, then only accepted, effective and suspended arrangements should be returned.
-      For a list of possible values see [arrangement-status-param](arrangement-classifications.html#arrangement-statuses) classification.
+      For a list of possible values see [arrangement-status-param](arrangement-classifications.html#arrangement-statuses) enumeration.
     required: false
     type: array
     collectionFormat: csv
@@ -346,7 +385,7 @@ definitions:
         type: string
         description: |
           The type of the role
-          For a list of possible values see [arrangement-party-roles](arrangement-classifications.html#arrangement-party-roles) classification.
+          For a list of possible values see [arrangement-party-roles](arrangement-classifications.html#arrangement-party-roles) enumeration.
         enum:
         - customer
         - authorized-person
@@ -389,7 +428,7 @@ definitions:
         type: string
         description: |
           The role account plays in context of the arrangement
-          For a list of possible values see [arrangement-account-role-kinds](arrangement-classifications.html#arrangement-account-role-kinds) classification.
+          For a list of possible values see [arrangement-account-role-kinds](arrangement-classifications.html#arrangement-account-role-kinds) enumeration.
         default: primary-account
         enum:
         - primary-account
@@ -416,7 +455,7 @@ definitions:
         type: string
         description: |
           Primary classification of arrangements according to product type.
-          For a list of possible values see [arrangement-kinds](arrangement-classifications.html#arrangement-kinds) classification.
+          For a list of possible values see [arrangement-kinds](arrangement-classifications.html#arrangement-kinds) enumeration.
         enum:
         - current-account
         - demand-deposit
@@ -441,7 +480,7 @@ definitions:
         type: string
         description: |
           Current status of arrangement as the position of the arrangement within a life-cycle model which consist of a number of states (statuses). The first lifecycle status considered here is accepted - when customer accepts the offer. Eerlier statuses which exist during offer phase are not included.
-          For a list of possible values see [arrangement-statuses](arrangement-classifications.html#arrangement-statuses) classification.
+          For a list of possible values see [arrangement-statuses](arrangement-classifications.html#arrangement-statuses) enumeration.
         enum:
         - accepted
         - effective
@@ -726,7 +765,7 @@ definitions:
         - sales-discount
         description: |
           The origin of the variation.
-          For a list of possible values see [price-variation-origin](arrangement-classifications.html#price-variation-origin) classification.
+          For a list of possible values see [price-variation-origin](arrangement-classifications.html#price-variation-origin) enumeration.
       benefit-source-id:
         type: string
         description: If applicable, the identifier of the benefit source. For example, collective benefit for employees of a company should refer to the company id, campaign benefits to campaign id, etc.
@@ -802,7 +841,7 @@ definitions:
           - early-withdrawal-interest
           description: |
             Classification of interest rates due to their purpose. Note that penalty interest applies to loans while early withdrawal interest applies to deposits.
-            For a list of possible values see [interest-rate-kinds](arrangement-classifications.html#interest-rate-kinds) classification.
+            For a list of possible values see [interest-rate-kinds](arrangement-classifications.html#interest-rate-kinds) enumeration.
         is-compound:
           type: boolean
           description: If true, interest calculation method is compound, else it is simle.
@@ -863,7 +902,7 @@ definitions:
           - other
           description: |
             Classification of fees due to their purpose. Note that early repayment fee applies to loans while early withdrawal fee applies to deposits.
-            For a list of possible values see [fee-condition-kinds](arrangement-classifications.html#fee-condition-kinds) classification.
+            For a list of possible values see [fee-condition-kinds](arrangement-classifications.html#fee-condition-kinds) enumeration.
         service-code:
           type: string
           description: The code of the service to which fee applies, in case that kind is service fee.
@@ -903,7 +942,7 @@ definitions:
       category:
         description: |
           Categoty which can be used for grouping conditions
-          For a list of possible values see [general-condition-categories](arrangement-classifications.html#general-condition-categories) classification.
+          For a list of possible values see [general-condition-categories](arrangement-classifications.html#general-condition-categories) enumeration.
         type: string
         enum:
         - general

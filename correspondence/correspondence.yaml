@@ -254,7 +254,7 @@ parameters:
     in: query
     description: |
       Contact medium designated for the delivery of the communication
-      For a list of possible values see [contact-medium](correspondence-classifications.html#contact-medium) classification.
+      For a list of possible values see [contact-medium](correspondence-classifications.html#contact-medium) enumeration.
     type: string
     required: true
     enum:
@@ -437,7 +437,7 @@ definitions:
       usage:
         description: |
           Provides the context of use for this contact information.
-          For a list of possible values see [contact-usage](correspondence-classifications.html#contact-usage) classification.
+          For a list of possible values see [contact-usage](correspondence-classifications.html#contact-usage) enumeration.
         enum:
           - seasonal
           - assistant

@@ -12,8 +12,8 @@ Literal 				      | Code 	| Description
 cash-withdrawal |	CWDL	| Cash Withdrawal
 cash-deposit |	CDPT	| Cash Deposit
 cross-border-cash-withdrawal 	| XBCW | Cross-Border Cash Withdrawal
-pos-payment-debit-card | 	POSD 	| 	Point-of-Sale (POS) Payment  - Debit Card	
-pos-payment-credit-card | POSC | Credit Card Payment 
+pos-payment-debit-card | 	POSD 	| 	Point-of-Sale (POS) Payment  - Debit Card
+pos-payment-credit-card | POSC | Credit Card Payment
 cross-border-credit-card-payment | XBCP | Cross Border Credit Card Payment
 smart-card-payment |	SMRT	| Smart-Card Payment
 ... | ... |...
@@ -132,4 +132,29 @@ sto|Standing order details
 brn|Branch transaction details
 int|Internal transaction details
 
+Transfer Kinds
+--------------
 
+Enumeration that distinguishes between possible transaction kinds.
+
+Literal           | Description
+------------------------|------------------------
+balance-transfer|Balance transfer
+credit-transfer|Credit Transfer
+direct-debit|Direct Debit
+cash-in-transfer|Cash-In Transfer
+cross-border-credit-transfer|Cross-Border Credit Transfer
+nonresident-credit|Non-resident Credit
+peer-to-peer-transfer|Peer-To-Peer Transfer
+topup-transfer|Topup Transfer
+
+POI Kinds
+--------------
+
+Enumeration that distinguishes between possible point of interaction kinds.
+
+Literal           | Description
+------------------------|------------------------
+atm|ATM
+pos|POS
+vpos|VPOS
