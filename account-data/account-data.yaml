@@ -1260,6 +1260,15 @@ definitions:
     properties:
       transactions:
         $ref: '#/definitions/transactions'
+    x-asee-trimmed:
+      - transactions.exchange
+      - transactions.transfer
+      - transactions.card
+      - transactions.branch
+      - transactions.standing-order
+      - transactions.coordinates
+      - transactions.media
+      - transactions.pfm
   transactions:
     type: array
     description: List of transactions
@@ -1335,22 +1344,6 @@ definitions:
   transaction:
     description: Event that affected balance of interest to customers - principal, outstanding debt, advance, available
     type: object
-    required:
-      - account-number
-      - transaction-id
-      - statement-number
-      - source
-      - amount
-      - amount-local
-      - currency
-      - direction
-      - status
-      - value-date
-      - book-date
-      - transaction-time
-      - description
-      - transaction-kind
-      - sync-timestamp
     properties:
       account-number:
         type: string
