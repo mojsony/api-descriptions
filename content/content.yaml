@@ -504,7 +504,7 @@ paths:
       summary: Update document metadata
       tags:
         - Documents
-      operationId: Document_UpdateMetadata
+      operationId: Documents_UpdateMetadata
       parameters:
         - $ref: "#/parameters/repository-name"
         - $ref: "#/parameters/document-id-param"
@@ -612,7 +612,7 @@ responses:
   resource-created-response:
     description: Resource was created successfuly
     schema:
-      $ref: "#/definitions/resource-created-response"
+      $ref: "#/definitions/resource-created-result"
   validation-problem-response:
     description: Your request was not constructed properly. Response contains the list of validation errors for each invalid element of your request. To learn more see general guidance on [validation](common-getstarted.html#validation).
     schema:
@@ -746,19 +746,9 @@ definitions:
 # DEFINITIONS OF MODELS COMMON WITH OTHER APIs        #
 # ****************************************************#
 
-  resource-created-response:
-    properties:
-      id:
-        type: string
-        readOnly: true
-        description: Unique identifier of resource that was created as a result of the request
-      resource-status:
-        type: string
-        description: Lifecycle status (if applicable) of the resource
-        readOnly: true
-    example:
-      id: FS123212121
-      resource-status: created
+  resource-created-result:
+    description: Unique identifier of newly created resource that can be used in future inquires and commands
+    type: string
   validation-problem:
     type: array
     items:

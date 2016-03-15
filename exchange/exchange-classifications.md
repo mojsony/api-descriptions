@@ -1,29 +1,19 @@
-Classifications
+Exchange API Classifications
 ===============
 
-Currency Code
-------------- 
-This classification contains codes for currencies. For example for European currency Euro € has code EUR. 
-
-Literal 				   | Code  | Description
----------------------------|-------|------------------------
-`EUR`	    			   | 00001 | Euro
-`USD`				       | 00002 | American Dollar
-`CHF`	                   | 00003 | Switzerland Franc
-`JPY`		               | 00004 | Japanese Yen
-`AED`		               | 00005 | Emirati Dirham
-`RSD`					   | 00006 | Serbian Dinar
-
-
-List Type
+Exchange List Kind
 --------- 
-This classification contains codes of different types of exchange rates.
+The classification lists different kinds of exchange rate lists according to use intended by list publisher.
 
-Literal 				   | Code  | Description
+Literal 				           | Code  | Description
 ---------------------------|-------|------------------------------------------------
-cash-effective             | 00001 | Exchange rate for cash effective buy and sell.
-online-transactions        | 00002 | Exchange rate for online transactions.
-bank-employees             | 00003 | Exchange rate for employees of the bank.
-vip-clients                | 00004 | Exchange rate for VIP clients.
-loans-disbursment          | 00005 | Exchange rate for loan disbursment.
-loans-repayment            | 00006 | Exchange rate for loan repayment.
+cb-cash                    | 00001 | Central bank exchange rates for cash 
+cb-forex                   | 00002 | Central bank exchange rate for foreign exchange
+cash                       | 00003 | Exchange rates for cash 
+forex                      | 00004 | Exchange rates for foreign exchange
+bank-employees             | 00005 | Exchange rates for bank employees
+vip-clients                | 00006 | Exchange rates for VIP clients
+loan-disbursement          | 00007 | Exchange rates for loan disbursement
+loan-repayment             | 00008 | Exchange rates for loan repayment.
+loan-repayment             | 00009 | Exchange rates for loan repayment.
+

@@ -1,10 +1,11 @@
 <span class="icon"></span>Reference API Guide
 =========================
-Reference API gives you access to a repository of registries maintained by the financial institution.
-With Reference API you can:
-        - Get the list of countries
-        - Get the list of currencies 
-        - Get the list of channels 
+Reference API gives you access to a repository of registries maintained by the financial institution. 
+    With Reference API you can:
+      - Get the list of countries
+      - Get the list of currencies
+      - Get the list of channels
+      - Get the list of banks
    
 Key Resources
 -------------

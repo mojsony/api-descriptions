@@ -1,16 +1,20 @@
 <span class="icon"></span>Exchange API Guide 
 ======================
-Exchange API provides access to data regarding to exchange between currencies
+Exchange API provides endpoints to initiate and track currency exchange orders, get one-time tailored offers for specific exchange deals and get latest and historic exchange rates and lists for reference and calculations. 
    
+   
+> ##THIS API GUIDE IS UNDER CONSTRUCTION. COME BACK SOON.
+
 Key Resources
 -------------
-Exchange API has three top level collection resources: transactions, offers and rates.
+Exchange API has four top-level resources: orders, offers, rates and lists.
 
 Resource | Description
 ----------- |-----------
-*transactions*  | Contains methods for getting data about transactions for the user, and making new transactions.
-*offers* | Contains method for currency exchange offer. 
-*rates* | Contains methods for currency exchange rates on the specific date and for history.
+*orders*  | Exchange orders to buy or sell foreign currency
+*offers* | One time offers of tailored rates for specific deals based on amount and customer standing in bank
+*rates* | Currency exchange rates 
+*lists* | Latest and historical lists of exchange rates published by bank and central bank
 
 
 Getting started tutorial

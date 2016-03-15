@@ -1009,6 +1009,9 @@ definitions:
         description: The longitude of a location. For example -122.08585
         format: double
         type: number
+      mapped-address:
+        description: Address of location specified with coordinates
+        type: string        
   address:
     type: object   
     description: Postal address
@@ -1185,6 +1188,53 @@ definitions:
       friendly-name:
         type: string
         description: Friendly name of standing order set by customer
+  exchange-order:
+    description: Additional details for currency exchange orderstransactions originated from a standing order
+    type: object
+    required:
+      - order-id
+      - customer-id      
+      - debited-account
+      - credited-account
+      - foreign-currency
+      - direction    
+      - status
+      - status-date
+    properties:
+      order-id:
+        type: string
+        description: Unique identifier of currency exchange order
+      customer-id:
+        description: Identifier of the customer who initiated the currency exchange order
+        type: string
+      debited-account:
+        description: Identifier (account number) of account debited in currency exchange
+        type: string
+      credited-account:
+        description: Identifier (account number) of account credited in currency exchange
+        type: string      
+      foreign-currency:
+        $ref: '#/definitions/currency'
+      direction:
+        description: Kind of currency exchange offer that is requested. Offer to `purchase` or `sell` foreign currency from the perspective of bank. 
+        enum:        
+          - purchase
+          - sell
+        type: string
+      offer-id:
+        description: Unique identifier of currency exchange offer
+        type: string        
+      status:
+        description: Enumeration that explain possible statuses of exchange order
+        type: string
+        enum:
+          - pending
+          - executed
+          - rejected
+      status-date:
+        description: Executed date
+        format: date-time
+        type: string   
   paged-transactions:
     type: object
     allOf: 
@@ -1366,6 +1416,8 @@ definitions:
       sync-timestamp:
         description: Monotonically increasing timestamp of transaction record used for incremental synchronization with client application
         type: string
+      exchange:
+        $ref: '#/definitions/exchange-order'          
       transfer:
         $ref: '#/definitions/transfer'   
       card:

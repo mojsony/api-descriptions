@@ -22,9 +22,12 @@ tags:
 info:
   description: | 
     Location API provides information on bank's physical facilities and help work with structured addresses. For facilities you can get addresses, geographic coordinates and other location or relevant data like working hours. You can also find facilities located near place or geographic coordinates. Elements of structured addresses such as official listo of places and streets is available along with option to validate address and get postal address code that is used for optimized postal delivery.
-
   title: Location API
   version: v1
+  contact:
+    name: Natasa Tssic
+    url: http://dev.asseco-see.com/docs/
+    email: natasa.tasic@asseco-see.rs    
 paths:
 # ****************************************************#
 # ENDPOINTS SPECIFIC TO LOCATION API                  #

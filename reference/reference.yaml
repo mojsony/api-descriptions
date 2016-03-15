@@ -1,16 +1,19 @@
 swagger: '2.0'
 info:
-  description: | 
-    Reference data API gives you access to a repository of registries maintained by the financial institution. 
-    With reference data API you can:
+  description: Reference API gives you access to a repository of registries maintained by the financial institution. 
+    With Reference API you can:
       - Get the list of countries
       - Get the list of currencies
       - Get the list of channels
-
+      - Get the list of banks
   title: Reference API
   version: v1
-host: dev.asseco-see.rs
-basePath: /reference
+  contact:
+    name: Natasa Tssic
+    url: http://dev.asseco-see.com/docs/
+    email: natasa.tasic@asseco-see.rs  
+host: dev.asseco-see.com
+basePath: /v1/reference
 schemes:
   - http
 consumes:
@@ -91,23 +94,50 @@ paths:
             $ref: '#/definitions/channel-list' 
         default:
           $ref: '#/responses/default-error-response' 
-
-parameters:
-  # page-param:
-  #   name: page
-  #   in: query
-  #   description: Page index. For more information see general guidance on [paging](common-getstarted.html#paging)
-  #   type: integer
-  #   default: 1
-  #   x-asee-common: true
-  # page-size-param:
-  #   name: page-size
-  #   in: query
-  #   description: Number of items on a page. For more information see general guidance on [paging](common-getstarted.html#paging)
-  #   required: false
-  #   type: integer
-  #   default: 10
-  #   x-asee-common: true    
+  /banks:
+    get:
+      summary: Get list of banks
+      operationId: Banks_GetList
+      parameters:
+        - $ref: '#/parameters/swift-code-param'
+        - $ref: '#/parameters/bank-name-param'
+        - $ref: '#/parameters/bank-country-param'
+        - $ref: '#/parameters/residency-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/bank-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+        - Banks
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+parameters: 
+  page-param:
+    name: page
+    in: query
+    description: Page index. For more information see general guidance on [paging](common-getstarted.html#paging)
+    type: integer
+    default: 1
+    x-asee-common: true
+  page-size-param:
+    name: page-size
+    in: query
+    description: Number of items on a page. For more information see general guidance on [paging](common-getstarted.html#paging)
+    required: false
+    type: integer
+    default: 10
+    x-asee-common: true       
   sort-order-param:
     description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [sorting](common-getstarted.html#sorting)
     in: query
@@ -142,7 +172,33 @@ parameters:
       type: string
     collectionFormat: csv
     x-asee-common: true
-
+  swift-code-param:
+    description: Bank swift code
+    in: query
+    name: swift-code
+    required: false
+    type: string
+  bank-name-param:
+    description: Bank name
+    in: query
+    name: name
+    required: false
+    type: string
+  bank-country-param:
+    description: "ISO3166 2 letter code of country. List of countries is maintained by [Reference API](reference-getstarted.html)." 
+    in: query
+    name: country
+    required: false
+    type: string
+  residency-param:
+    description: Foreign or domestic bank
+    in: query
+    name: residency
+    required: false
+    enum:
+      - domestic
+      - foreign
+    type: string
 definitions:
   paged-list:
     description: List with support for paging
@@ -345,7 +401,42 @@ definitions:
         description: Property defines whether currency can be converted into gold or another currency.
         type: boolean
     type: object
-
+  bank-list:
+    description: List of banks
+    allOf: 
+    - $ref: '#/definitions/paged-list'
+    properties:
+      items:
+        description: Bank list.
+        items:
+          $ref: '#/definitions/bank'
+        type: array
+    type: object
+  bank:
+    description: Info about bank
+    properties:
+      swift-code:
+        description: Bank swift code
+        type: string
+      bank-name:
+        description: Bank name
+        type: string
+      bank-address:
+        description: Bank address
+        type: string
+      bank-city:
+        description: Bank city
+        type: string
+      country:
+        description: "ISO 3166-1 2 letter country code"
+        type: string
+      residency:
+        description: Bank residency status
+        enum:
+          - domestic
+          - foreign
+        type: string
+    type: object
 responses:
   default-error-response:
     description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()

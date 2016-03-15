@@ -1,16 +1,28 @@
 definitions:
-  
-  command-result:
-    properties:
-      id:
-        type: string
-        readOnly: true
-      resource-status:
-        type: string
-        readOnly: true
+  currency:
+    description: Currency amount and code
+    type: object  
+    required:
+      - amount    
+      - code      
     example:
-      id: FS123212121
-      resource-status: created
+      amount: 200.00    
+      code: EUR
+    properties:
+      amount:
+        description: Amount
+        format: double
+        type: number    
+      code:
+        description: ISO 4217 3 letter currency code
+        type: string
+        minLength: 3
+        maxLength: 3
+
+  resource-created-result:
+    description: Unique identifier of newly created resource that can be used in future inquires and commands
+    type: string
+      
   validation-problem:
     type: array
     items:
@@ -45,17 +57,22 @@ definitions:
             message: Check digit is invalid for this field
   
   business-problem:
+    description: Details on specific problem that prevented processing after successfull validation
+    type: object 
     properties:
       problem:
+        description: Unique literal that identifies specific problem 
         type: string
       message:
+        description: Message explaining the situation and optionaly remedies
         type: string
       details:
+        description: Optional details supplied for troubleshooting
         type: string
     example:
       problem: document-locked
-      message: Document you are trying to a is locked by another user.
-      details: User john.doe has locked the document.
+      message: Document you are trying to access is locked by another user
+      details: User john.doe has locked the document
   
   paged-list:
     description: List with support for paging

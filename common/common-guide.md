@@ -166,7 +166,7 @@ Validation errors:
 |`combination-required` | Parameter must be used with other parameters that were not supplied |
 
 ### 440 - Business problem
-Business problems may be returned for request with verbs that affesct state (POST, PUT, PATCH, DELETE) in situations when request is formally valid, business rule or policy does not allow processing and none of the standard HTTP status codes explaines the situation well enough. 
+Business problems may be returned for request with verbs that affect state (POST, PUT, PATCH, DELETE) in situations when request is formally valid, business rule or policy does not allow processing and none of the standard HTTP status codes explaines the situation well enough. 
 
 Each problem is uniquely identified by stable literal and numeric code that is used to map to backend system implementations. APIs document their domain specific problems in a `Problems` page of their documentation. In documentation for specific API request, when 440 response is possible, documentation lists possible problems.
 
@@ -183,7 +183,7 @@ Elements of problem model:
 | Property Name	| Type/Format |	Description  |
 |-|-|-|
 |`problem`|string| Unique literal that identifies specific problem |
-|`message`|string| Message explaining the situation and optionaly remedies.  |
+|`message`|string| Message explaining the situation and optionaly remedies |
 |`details`|string| Optional details supplied for troubleshooting |
 
 
@@ -196,6 +196,46 @@ Each event publsihed by API is uniquely identified by its name. Events happen in
 Bulk optimizations
 -----------------
 When API endpoint is optimized for bulk reads and bulk writes you can expect that their payload contract is flattened, default content type to be `text/csv` and http compression to be used by default. This minimizes network traffic and simplifies processing at other end.
+
+Commonly used string formats
+----------------------
+###Date and time
+For point in time values we use `date-time` defined by RFC3339, and `date` format defined by RFC3339 as `full-date`. 
+
+Here are some  examples of well formatted `date` and `date-time`: 
+
+    1985-04-12                This `date` represents April 12th, 1985
+    1985-04-12T23:20:50.52    This represents 20 min and 50.52 sec after 23h on April 12th, 1985 in local time
+    1996-12-19T16:39:57+01:00 This represents 39 min and 57 sec after 16h on December 19th, 1996 (CET)
+    1985-04-12T23:20:50.52Z   This represents 20 min and 50.52 sec after 23h on April 12th, 1985 in UTC
+
+Format specified in RFC3339:
+```
+   date-fullyear   = 4DIGIT
+   date-month      = 2DIGIT  ; 01-12
+   date-mday       = 2DIGIT  ; 01-28, 01-29, 01-30, 01-31 based on
+                             ; month/year
+   time-hour       = 2DIGIT  ; 00-23
+   time-minute     = 2DIGIT  ; 00-59
+   time-second     = 2DIGIT  ; 00-58, 00-59, 00-60 based on leap second
+                             ; rules
+   time-secfrac    = "." 1*DIGIT
+   time-numoffset  = ("+" / "-") time-hour ":" time-minute
+   time-offset     = "Z" / time-numoffset
+
+   partial-time    = time-hour ":" time-minute ":" time-second
+                     [time-secfrac]
+   full-date       = date-fullyear "-" date-month "-" date-mday
+   full-time       = partial-time time-offset
+
+   date-time       = full-date "T" full-time
+```
+
+###Currency code
+For currency codes we use 3 letter code from ISO 4217. Examples are `USD`, `GBP`, `CHF`
+
+###Country code
+For country codes we use 2 letter code from ISO 3166-1. Examples are `US`, `UK`, `CH`
 
 Commonly used query parameters
 -----------------------

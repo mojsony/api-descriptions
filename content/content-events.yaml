@@ -7,6 +7,8 @@ info:
     name: Aleksandar Milosevic
     url: http://dev.asseco-see.com/docs/content-getstarted.html
     email: aca@see.asseco.com
+# host: playground.apistudio.io
+# basePath: /try/d9049250-72f2-405c-b012-6c5d5a8249f5
 host: playground.apistudio.io
 basePath: /v1/content
 schemes:
@@ -15,89 +17,18 @@ schemes:
 produces:
   - application/json
 paths:
-  /document-filed:
+  /events:
     get:
-      summary: A new document has been filed to repository
-      tags:
-        - Documents
+      summary: Dummy operation to help generate event definitions
+      operationId: GetEvents
       responses:
         '200':
-          description: Event payload
+          description: OK
           schema:
-            $ref: '#/definitions/document-filed'
-  /document-moved:
-    get:
-      summary: A document was moved to different folder
-      tags:
-        - Documents
-      responses:
-        '200':
-          description: Event payload
-          schema:
-            $ref: '#/definitions/document-moved'
-  /document-updated:
-    get:
-      summary: Document properties were updated
-      tags:
-        - Documents
-      responses:
-        '200':
-          description: Event payload
-          schema:
-            $ref: '#/definitions/document-updated'
-  /document-deleted:
-    get:
-      summary: A document was deleted
-      tags:
-        - Documents
-      responses:
-        '200':
-          description: Event payload
-          schema:
-            $ref: '#/definitions/document-deleted'
-  /folder-created:
-    get:
-      summary: A new folder was created
-      tags:
-        - Folders
-      responses:
-        '200':
-          description: Event payload
-          schema:
-            $ref: '#/definitions/folder-created'
-  /folder-moved:
-    get:
-      summary: A folder was moved to different parent folder
-      tags:
-        - Folders
-      responses:
-        '200':
-          description: Event payload
-          schema:
-            $ref: '#/definitions/folder-moved'
-  /folder-updated:
-    get:
-      summary: Folder properties were updated
-      tags:
-        - Folders
-      responses:
-        '200':
-          description: Event payload
-          schema:
-            $ref: '#/definitions/folder-updated'
-  /folder-deleted:
-    get:
-      summary: A folder was deleted
-      tags:
-        - Folders
-      responses:
-        '200':
-          description: Event payload
-          schema:
-            $ref: '#/definitions/folder-deleted'
+            $ref: '#/definitions/event'
 definitions:
   event:
-    x-asse-comment: Event is redefined within each API to provide more specific examples and documentation
+    description: Event base model is redefined within each API to provide list of kinds
     type: object
     discriminator: kind
     required:
@@ -130,6 +61,13 @@ definitions:
         enum:
           - document
           - folder
+    example:
+      kind: document-filed
+      occurred-on: '2015-11-19T13:21:01.000Z'
+      id: 736a07bd-809e-43bd-9ac1-20991a78f390
+      aggregate-id: 3e0f7ce312e5
+      aggregate-kind: document
+      file-name: photo.jpg          
   document-filed:
     type: object
     description: A new document has been filed to repository
@@ -178,17 +116,10 @@ definitions:
             type: string
           file-name:
             type: string
-          updates:
+          changes:
             type: array
             items:
-              type: object
-              properties:
-                name:
-                  type: string
-                old:
-                  type: string
-                new:
-                  type: string
+              $ref: '#/definitions/change'
     example:
       kind: document-properties-updated
       id: 736a07bd-809e-43bd-9ac1-20991a78f390
@@ -259,17 +190,10 @@ definitions:
         properties:
           path:
             type: string
-          updates:
+          changes:
             type: array
             items:
-              type: object
-              properties:
-                name:
-                  type: string
-                old:
-                  type: string
-                new:
-                  type: string
+              $ref: '#/definitions/change' 
     example:
       kind: folder-updated
       id: 736a07bd-809e-43bd-9ac1-20991a78f390
@@ -283,6 +207,15 @@ definitions:
         - name: thumbnail
           old: 'no'
           new: 'yes'
+  change:
+    type: object
+    properties:
+      name:
+        type: string
+      old:
+        type: string
+      new:
+        type: string            
   folder-deleted:
     type: object
     description: A folder was deleted

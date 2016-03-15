@@ -72,6 +72,13 @@ paths:
           description: OK
         default:
             $ref: '#/responses/default-error-response'
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+            
+            - [campaign-expired](campaign-problems.html)
+          schema:
+            $ref: '#/definitions/business-problem'                       
       x-asee-tags: []
   /campaigns/{campaign-code}/benefits/activate:
     post:
@@ -96,6 +103,13 @@ paths:
           description: OK
         default:
             $ref: '#/responses/default-error-response'
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+            
+            - [benefit-already-activated](campaign-problems.html)
+          schema:
+            $ref: '#/definitions/business-problem'            
       x-asee-tags: []
 
 # ****************************************************#
@@ -204,6 +218,55 @@ definitions:
 # ****************************************************#
 # MODELS COMMON WITH OTHER APIs                       #
 # ****************************************************#
+  validation-problem:
+    type: array
+    items:
+      type: object
+      properties:
+        field:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              error:
+                type: string
+              message:
+                type: string
+    example:
+      -  
+        field: phone-number
+        errors:
+          -
+            error: invalid-format
+            message: Format for this field is invalid
+          -
+            error: max-length
+            message: Content exceeds maximum alowed length 
+      - 
+        field: account-number
+        errors:
+          -
+            error: check-digit-invalid
+            message: Check digit is invalid for this field
+  business-problem:
+    description: Details on specific problem that prevented processing after successfull validation
+    type: object 
+    properties:
+      problem:
+        description: Unique literal that identifies specific problem 
+        type: string
+      message:
+        description: Message explaining the situation and optionaly remedies
+        type: string
+      details:
+        description: Optional details supplied for troubleshooting
+        type: string
+    example:
+      problem: document-locked
+      message: Document you are trying to manipulate is locked by another user
+      details: User john.doe has locked the document
   classification-value:
     type: object
     description: Classification value
