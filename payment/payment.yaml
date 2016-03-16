@@ -3,7 +3,7 @@ host: dev.aseeco-see.com
 basePath: /v1/payment
 info:
   description: |
-    Payment API gives you possibility to create, update, delete and execute balance, credit and cross-border transfers. For each type of transfer there are three types of resources you can use. 
+    Payment API gives you possibility to create, update, delete and execute balance, credit and cross-border transfers. For each type of transfer there are three types of resources you can use.
     Drafts for working with orders in process of preparation, archive for viewing processed orders and current for orders in process of execution.
     Orders can be authorized using action authorization API. Orders can be created and issued depending on a mandate that customer has on source account.
     Payment API gives you access to a repository of public and personal recipients and also gives you ability to create, update and delete order templates that can be used for fast creation of orders.
@@ -14,10 +14,10 @@ info:
   contact:
     name: Nikola Stojanovic
     url: http://dev.asseco-see.com/docs/
-    email: nikola.stojanovic@asseco-see.rs  
+    email: nikola.stojanovic@asseco-see.rs
 schemes:
   - http
-  - https  
+  - https
 tags:
   - description: Working with beneficiaries
     name: Beneficiaries
@@ -28,9 +28,9 @@ tags:
   - description: Working with working days
     name: Working days
   - description: Working with purpose codes
-    name: Purpose codes    
+    name: Purpose codes
   - description: Working with classifications
-    name: Classifications    
+    name: Classifications
 consumes:
   - application/json
 produces:
@@ -40,7 +40,7 @@ paths:
     get:
       description: |
         Shows list of public beneficiaries.
-        It is useful when it's required to see list of public associations whom is payed often.  
+        It is useful when it's required to see list of public associations whom is payed often.
       operationId: PublicBeneficiaries_GetList
       parameters:
         - $ref: '#/parameters/beneficiary-name-param'
@@ -70,7 +70,7 @@ paths:
     get:
       description: |
         Shows list of personal beneficiaries.
-        It is useful when it's required to see list of persons whom is payed often.  
+        It is useful when it's required to see list of persons whom is payed often.
       operationId: PersonalBeneficiaries_GetList
       parameters:
         - $ref: '#/parameters/beneficiary-name-param'
@@ -99,7 +99,7 @@ paths:
     post:
       description: |
         Creating new personal beneficiary.
-        It is useful when to have personal beneficiary for someone whom is payed often.    
+        It is useful when to have personal beneficiary for someone whom is payed often.
       operationId: PersonalBeneficiaries_Create
       parameters:
         - in: body
@@ -122,7 +122,7 @@ paths:
     delete:
       description: |
         Deleting personal beneficiary.
-        It is useful when it's required to remove someone from personal beneficiaries list, because he/she is not in plan for future payments.  
+        It is useful when it's required to remove someone from personal beneficiaries list, because he/she is not in plan for future payments.
       operationId: PersonalBeneficiaries_Cancel
       parameters:
         - $ref: '#/parameters/beneficiary-id-param'
@@ -136,7 +136,7 @@ paths:
         - Beneficiaries
       x-asee-tags: []
     get:
-      description: | 
+      description: |
         It is useful when details info about one particular beneficiary is required.
       operationId: PersonalBeneficiaries_Get
       parameters:
@@ -150,7 +150,7 @@ paths:
             $ref: '#/definitions/beneficiary'
         default:
           $ref: '#/responses/default-error-response'
-      summary: Get personal beneficiary details. 
+      summary: Get personal beneficiary details.
       tags:
         - Beneficiaries
       x-asee-tags:
@@ -158,7 +158,7 @@ paths:
     put:
       description: |
         Updating details about personal beneficiary.
-        It is useful when some changes are to be made on particular personal beneficiary.  
+        It is useful when some changes are to be made on particular personal beneficiary.
       operationId: PersonalBeneficiaries_Update
       parameters:
         - description: Update beneficiary command.
@@ -183,7 +183,7 @@ paths:
     get:
       description: |
         Displays list of made payment templates.
-        It is useful when it's required to see all payment templates or by some searched criteria.  
+        It is useful when it's required to see all payment templates or by some searched criteria.
       operationId: Drafts_GetList
       parameters:
         - $ref: '#/parameters/beneficiary-name-param'
@@ -211,7 +211,7 @@ paths:
     post:
       description: |
         Creating new payment template.
-        It is useful because it makes easier future similar payments.  
+        It is useful because it makes easier future similar payments.
       operationId: Drafts_Create
       parameters:
         - description: Initiate to create payment template.
@@ -249,7 +249,7 @@ paths:
       x-asee-tags: []
     get:
       description: |
-        Response contains particular transfer draft or template with all it's details  
+        Response contains particular transfer draft or template with all it's details
       operationId: Drafts_Get
       parameters:
         - $ref: '#/parameters/draft-id-param'
@@ -267,7 +267,7 @@ paths:
     put:
       description: |
         Updating particular payment template.
-        It is useful when some changes are required on selected template.  
+        It is useful when some changes are required on selected template.
       operationId: Drafts_Modify
       parameters:
         - description: Draft to modify
@@ -332,7 +332,7 @@ paths:
     get:
       description: |
         Gets particular transfer details.
-        It is useful when details about particular transfer are required to be seen.  
+        It is useful when details about particular transfer are required to be seen.
       operationId: Transfers_Get
       parameters:
         - $ref: '#/parameters/transfer-id-param'
@@ -349,7 +349,7 @@ paths:
       tags:
         - Transfers
       x-asee-tags:
-        - Shapeable        
+        - Shapeable
   '/transfers/{transfer-id}/cancel':
     post:
       description: Cancels transfer. It is useful when transfer is abandoned before it is executed.
@@ -366,7 +366,7 @@ paths:
       summary: Cancels transfer
       tags:
         - Transfers
-      x-asee-tags: []        
+      x-asee-tags: []
   '/transfers/{transfer-id}/image':
     put:
       summary: Set transfer's image url
@@ -390,7 +390,7 @@ paths:
       x-asee-tags: []
   '/transfers/{transfer-id}/geolocation':
     put:
-      summary: Set transfer's geolocation    
+      summary: Set transfer's geolocation
       description: Set transfer geolocation or update new one instead of previous. It is way to put location where transfer was made, or change previous one, in order to mark specific transfer
       operationId: Transfers_SetGeolocation
       parameters:
@@ -413,7 +413,7 @@ paths:
     post:
       description: |
         Initiates new balance transfer.
-        It is step in processing new transfer.  
+        It is step in processing new transfer.
       operationId: BalanceTransfers_Initiate
       parameters:
         - description: Initiate balance transfer command.
@@ -429,8 +429,8 @@ paths:
             $ref: '#/definitions/resource-created-result'
         '440':
           description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
-            
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+
             [allowed-amount-exceeded](payment-problems.html)
             [blocked-account](payment-problems.html)
             [transfer-not-allowed](payment-problems.html)
@@ -443,7 +443,7 @@ paths:
             [amount-negative-number](payment-problems.html)
             [debtor-account-or-currency-not-valid](payment-problems.html)
             [creditor-account-or-currency-not-valid](payment-problems.html)
-            [date-not-valid](payment-problems.html)            
+            [date-not-valid](payment-problems.html)
           schema:
             $ref: '#/definitions/business-problem'
         default:
@@ -456,7 +456,7 @@ paths:
     post:
       description: |
         Validates new balance transfer.
-        It is useful because it perform various checks before transfer is accomplished.  
+        It is useful because it perform various checks before transfer is accomplished.
       operationId: BalanceTransfers_Validate
       parameters:
         - description: Validate credit transfer command.
@@ -470,8 +470,8 @@ paths:
           description: Accepted
         '440':
           description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
-            
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+
             [allowed-amount-exceeded](payment-problems.html)
             [transfer-not-allowed](payment-problems.html)
             [blocked-account](payment-problems.html)
@@ -486,7 +486,7 @@ paths:
             [debtor-aml-check-failed](payment-problems.html)
             [debtor-account-or-currency-not-valid](payment-problems.html)
             [creditor-account-or-currency-not-valid](payment-problems.html)
-            [date-not-valid](payment-problems.html)            
+            [date-not-valid](payment-problems.html)
           schema:
             $ref: '#/definitions/business-problem'
         default:
@@ -499,7 +499,7 @@ paths:
     post:
       description: |
         Initiates new credit transfer.
-        It is step in processing new transfer.  
+        It is step in processing new transfer.
       operationId: CreditTransfers_Initiate
       parameters:
         - description: initiate credit transfer command.
@@ -516,7 +516,7 @@ paths:
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-            
+
             [blocked-account](payment-problems.html)
             [debtor-account-blocked](payment-problems.html)
             [work-date-not-set](payment-problems.html)
@@ -532,7 +532,7 @@ paths:
             [amount-negative-number](payment-problems.html)
             [debtor-account-or-currency-not-valid](payment-problems.html)
             [order-validation-failed](payment-problems.html)
-            [date-not-valid](payment-problems.html)            
+            [date-not-valid](payment-problems.html)
           schema:
             $ref: '#/definitions/business-problem'
         default:
@@ -545,7 +545,7 @@ paths:
     post:
       description: |
         Validates new credit transfer.
-        It is useful because it perform various checks before transfer is accomplished.  
+        It is useful because it perform various checks before transfer is accomplished.
       operationId: CreditTransfers_Validate
       parameters:
         - description: Validate credit transfer command.
@@ -559,8 +559,8 @@ paths:
           description: Accepted
         '440':
           description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
-            
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+
             [frequency-limit-exceeded](payment-problems.html)
             [work-date-not-set](payment-problems.html)
             [blocked-account](payment-problems.html)
@@ -569,7 +569,7 @@ paths:
             [insufficient-available-balance](payment-problems.html)
             [transaction-currency-not-allowed](payment-problems.html)
             [debtor-account-or-currency-not-valid](payment-problems.html)
-            [date-not-valid](payment-problems.html)            
+            [date-not-valid](payment-problems.html)
           schema:
             $ref: '#/definitions/business-problem'
         default:
@@ -582,7 +582,7 @@ paths:
     post:
       description: |
         Initiates new cross-border transfer.
-        It is step in processing new transfer.  
+        It is step in processing new transfer.
       operationId: CrossBorderTransfers_Initiate
       parameters:
         - description: Initiate cross border transfer command.
@@ -598,12 +598,12 @@ paths:
             $ref: '#/definitions/resource-created-result'
         '440':
           description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
-            
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+
             [order-reference-not-created](payment-problems.html)
             [wrong-order-statistics](payment-problems.html)
             [amount-negative-number](payment-problems.html)
-            [currency-not-valid ](payment-problems.html)            
+            [currency-not-valid ](payment-problems.html)
           schema:
             $ref: '#/definitions/business-problem'
         default:
@@ -616,7 +616,7 @@ paths:
     post:
       description: |
         Validates new cross-border transfer.
-        It is useful because it perform various checks before transfer is accomplished.  
+        It is useful because it perform various checks before transfer is accomplished.
       operationId: CrossBorderTransfers_Validate
       parameters:
         - description: Validate credit transfer command.
@@ -630,8 +630,8 @@ paths:
           description: Accepted
         '440':
           description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
-            
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+
             [frequency-limit-exceeded](payment-problems.html)
             [amount-above-limit](payment-problems.html)
             [creditor-aml-check-failed](payment-problems.html)
@@ -650,7 +650,7 @@ paths:
             [amount-not-entered](payment-problems.html)
             [insufficient-balance](payment-problems.html)
             [creditor-country-code-not-entered](payment-problems.html)
-            [creditor-country-code-not-valid](payment-problems.html)            
+            [creditor-country-code-not-valid](payment-problems.html)
           schema:
             $ref: '#/definitions/business-problem'
         default:
@@ -663,7 +663,7 @@ paths:
     post:
       description: |
         Initiates new nonresident transfer.
-        It is step in processing new transfer.  
+        It is step in processing new transfer.
       operationId: NonresidentCreditTransfers_Initiate
       parameters:
         - description: Instruction to initiate nonresident transfer
@@ -687,7 +687,7 @@ paths:
     post:
       description: |
         Initiates new person to person transfer.
-        It is step in processing new transfer.  
+        It is step in processing new transfer.
       operationId: PersonToPersonTransfers_Initiate
       parameters:
         - description: Initiate person to person transfer command.
@@ -703,8 +703,8 @@ paths:
             $ref: '#/definitions/resource-created-result'
         '440':
           description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
-            
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+
             [insufficient-available-balance](payment-problems.html)
             [frequency-limit-exceeded](payment-problems.html)
             [amount-above-limit](payment-problems.html)
@@ -722,7 +722,7 @@ paths:
     post:
       description: |
         Executes person to person transfer.
-        It is used to finaly confirm that transfer is ready to be executed after check procedures it successfully passed.  
+        It is used to finaly confirm that transfer is ready to be executed after check procedures it successfully passed.
       operationId: PersonToPersonTransfers_Execute
       parameters:
         - $ref: '#/parameters/transfer-id-param'
@@ -739,8 +739,8 @@ paths:
             $ref: '#/definitions/resource-created-result'
         '440':
           description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
-            
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+
             [reservation-not-exists](payment-problems.html)
             [transfer-not-allowed-for-nonresident](payment-problems.html)
             [obligation-type-credit-not-defined](payment-problems.html)
@@ -763,7 +763,7 @@ paths:
     post:
       description: |
         Validates new person to person transfer.
-        It is useful because it perform various checks before transfer is accomplished.  
+        It is useful because it perform various checks before transfer is accomplished.
       operationId: PersonToPersonTransfers_Validate
       parameters:
         - description: Validate person to person transfer command.
@@ -777,8 +777,8 @@ paths:
           description: Accepted
         '440':
           description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
-            
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+
             [amount-above-limit](payment-problems.html)
             [blocked-account](payment-problems.html)
             [insufficient-available-balance](payment-problems.html)
@@ -796,7 +796,7 @@ paths:
     post:
       description: |
         Initiates new top-up transfer.
-        It is step in processing new transfer.  
+        It is step in processing new transfer.
       operationId: Top-upTransfers_Initiate
       parameters:
         - description: Initiate top-up transfer command.
@@ -812,8 +812,8 @@ paths:
             $ref: '#/definitions/resource-created-result'
         '440':
           description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
-            
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+
             [pairing-reservations-error](payment-problems.html)
           schema:
             $ref: '#/definitions/business-problem'
@@ -827,10 +827,10 @@ paths:
     post:
       description: |
         Bill payment solution.
-        It is useful because it presents an easy way to pay some bill.  
+        It is useful because it presents an easy way to pay some bill.
       operationId: BillPayments_Initiate
       parameters:
-        - description: Instruction with details to initiate bill payment 
+        - description: Instruction with details to initiate bill payment
           in: body
           name: cmd
           required: true
@@ -843,8 +843,8 @@ paths:
             $ref: '#/definitions/resource-created-result'
         '440':
           description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
-            
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+
             [blocked-account](payment-problems.html)
             [account-not-active](payment-problems.html)
             [not-marked-for-verification](payment-problems.html)
@@ -861,8 +861,8 @@ paths:
       x-asee-tags: []
   '/transfers/incoming':
     get:
-      summary: List incoming cross-border transfers 
-      description: Response contains list of incomming cross-border transfers. List can be filtered by various criteria as date-from and date-to.  
+      summary: List incoming cross-border transfers
+      description: Response contains list of incomming cross-border transfers. List can be filtered by various criteria as date-from and date-to.
       operationId: IncomingTransfers_GetList
       parameters:
         - $ref: '#/parameters/income-status-param'
@@ -891,7 +891,7 @@ paths:
         - Shapeable
   '/working-days/{date}':
     get:
-      description: Response contains next working day relative to day passed in as parameter. It is useful when it's required to get info about next working day of a bank for some date in the middle of a holiday.     
+      description: Response contains next working day relative to day passed in as parameter. It is useful when it's required to get info about next working day of a bank for some date in the middle of a holiday.
       operationId: WorkingDays_GetNext
       parameters:
         - $ref: '#/parameters/date-param'
@@ -915,7 +915,7 @@ paths:
     get:
       description: |
         Displays purpose codes list.
-        It is useful when choosing purpose code for some transfer.  
+        It is useful when choosing purpose code for some transfer.
       operationId: PurposeCodes_GetList
       parameters:
         - $ref: '#/parameters/purpose-code-param'
@@ -941,15 +941,15 @@ paths:
         - Purpose codes
       x-asee-tags:
         - Pageable
-        - Sortable        
+        - Sortable
 # ****************************************************#
 # ENDPOINTS COMMON WITH OTHER APIs                    #
 # ****************************************************#
 
-  /classifications: 
+  /classifications:
     get:
       summary: List all classification schemas used by the API
-      description: Some fields and parameters have been restricted to a list of allowed lookup values maintained by the bank. This method lists all schemas used in this API.    
+      description: Some fields and parameters have been restricted to a list of allowed lookup values maintained by the bank. This method lists all schemas used in this API.
       operationId: "Classifications_GetList"
       responses:
         '200':
@@ -999,7 +999,7 @@ parameters:
     required: false
     type: integer
     default: 10
-    x-asee-common: true    
+    x-asee-common: true
   sort-order-param:
     description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [sorting](common-getstarted.html#sorting)
     in: query
@@ -1009,13 +1009,13 @@ parameters:
     enum:
     - asc
     - desc
-    x-asee-common: true  
-  sort-by-param:  
+    x-asee-common: true
+  sort-by-param:
     description: Attribute of the collection item to sort by. For more information see general guidance on [sorting](common-getstarted.html#sorting)
     in: query
     name: sort-by
     type: string
-    x-asee-common: true      
+    x-asee-common: true
   include-param:
     description: List of fields to include in response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
     in: query
@@ -1024,7 +1024,7 @@ parameters:
     items:
       type: string
     collectionFormat: csv
-    x-asee-common: true      
+    x-asee-common: true
   trim-param:
     description: List of fields to trim from response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
     in: query
@@ -1033,10 +1033,10 @@ parameters:
     items:
       type: string
     collectionFormat: csv
-    x-asee-common: true        
-    
-    
-    
+    x-asee-common: true
+
+
+
   beneficiary-name-param:
     description: Name of the beneficiary.
     in: query
@@ -1095,7 +1095,9 @@ parameters:
       - foreign-currency
     type: string
   payout-method-param:
-    description: Indicates the method in which payout is made.
+    description: |
+      Indicates the method in which payout is made.
+      For a list of possible values see [payout-methods](payment-classifications.html#payout-methods) enumeration.
     in: query
     name: payout-method
     required: false
@@ -1160,7 +1162,9 @@ parameters:
       - all
     type: string
   transfer-statuses-param:
-    description: This parameter is used to filter the result by status of the transfer. Only transfers with specific status are returned.
+    description: |
+      This parameter is used to filter the result by status of the transfer. Only transfers with specific status are returned.
+      For a list of possible values see [transfer-statuses](payment-classifications.html#transfer-statuses) enumeration.
     in: query
     name: list
     required: false
@@ -1174,7 +1178,7 @@ parameters:
     items:
       type: string
   date-from-param:
-    description: Filters transfers initiated after the specified date. 
+    description: Filters transfers initiated after the specified date.
     in: query
     name: date-from
     required: false
@@ -1183,16 +1187,16 @@ parameters:
     minLength: 10
     maxLength: 10
   date-to-param:
-    description: Filters transfers initiated before the specified date. 
+    description: Filters transfers initiated before the specified date.
     in: query
     name: date-to
     required: false
     format: date
     type: string
     minLength: 10
-    maxLength: 10    
+    maxLength: 10
   value-date-from-param:
-    description: Filters transfers where value date is after the specified date. 
+    description: Filters transfers where value date is after the specified date.
     in: query
     name: value-date-from
     required: false
@@ -1239,7 +1243,9 @@ parameters:
     required: true
     type: string
   income-status-param:
-    description: Transfer status.
+    description: |
+      Income status.
+      For a list of possible values see [income-statuses](payment-classifications.html#income-statuses) enumeration.
     in: query
     name: status
     required: false
@@ -1275,9 +1281,9 @@ parameters:
 definitions:
   beneficiary-list:
     description: |
-      List of beneficiaries. Can be list of public beneficiaries, 
+      List of beneficiaries. Can be list of public beneficiaries,
       or list of users personal beneficiaries.
-    allOf: 
+    allOf:
     - $ref: '#/definitions/paged-list'
     properties:
       items:
@@ -1324,7 +1330,9 @@ definitions:
         description: Account number
         type: string
       kind:
-        description: Kind of account
+        description: |
+          Kind of account
+          For a list of possible values see [account-kinds](payment-classifications.html#account-kinds) enumeration.
         enum:
           - current-account
           - demand-deposit-account
@@ -1345,7 +1353,7 @@ definitions:
         description: Swift code of creditor bank. Mostly used for foreign payments.
         type: string
       country-code:
-        description: "ISO3166 2 letter code of country. List of countries is maintained by [Reference API](reference-getstarted.html)." 
+        description: "ISO3166 2 letter code of country. List of countries is maintained by [Reference API](reference-getstarted.html)."
         type: string
     type: object
   party-identifier:
@@ -1358,7 +1366,9 @@ definitions:
         description: Identifier value.
         type: string
       kind:
-        description: Kind of identifier
+        description: |
+          Kind of identifier
+          For a list of possible values see [party-kinds](payment-classifications.html#party-kinds) enumeration.
         enum:
           - facebook
           - google
@@ -1371,7 +1381,7 @@ definitions:
       - kind
     type: object
   create-beneficiary-command:
-    description: Command to create personal beneficiary.   
+    description: Command to create personal beneficiary.
     required:
       - name
       - is-trusted
@@ -1406,7 +1416,7 @@ definitions:
     required:
       - name
       - is-trusted
-    type: object      
+    type: object
     properties:
       name:
         description: Name of beneficiary
@@ -1446,7 +1456,7 @@ definitions:
           code-description: 'Descrease of deposit on account of nonresident in cash and in RSD.'
           documents:
             - invoice
-    allOf: 
+    allOf:
     - $ref: '#/definitions/paged-list'
     properties:
       items:
@@ -1496,23 +1506,23 @@ definitions:
     type: object
 
   media:
-    type: object  
+    type: object
     description: URLs of images attached to transaction
     properties:
       image:
         description: URL of transaction image
         type: string
-        format: url        
+        format: url
       party-image:
         description: URL of image representing other party in transaction
         type: string
-        format: url     
+        format: url
 
   geolocation:
     type: object
     required:
       - lat
-      - long  
+      - long
     description: The geographic coordinates of a location
     properties:
       lat:
@@ -1525,19 +1535,21 @@ definitions:
         type: number
       mapped-address:
         description: Address of location specified with coordinates
-        type: string     
+        type: string
 
   nonresident-transfer-instruction:
     description: Instruction with details of nonresident transfer
     type: object
     allOf:
-      - $ref: '#/definitions/cross-border-transfer-instruction'   
+      - $ref: '#/definitions/cross-border-transfer-instruction'
 
   attachment:
     description: Content sent along with message, consists of a type of file, name and content.
     properties:
       content-type:
-        description: The type of content that is sent as an attachment.
+        description: |
+          The type of content that is sent as an attachment.
+          For a list of possible values see [content-types](payment-classifications.html#content-types) enumeration.
         enum:
           - image/png
           - image/jpg
@@ -1556,9 +1568,9 @@ definitions:
         description: URL where content of attachment is available
         type: string
         format: uri
-    type: object  
+    type: object
   address:
-    type: object   
+    type: object
     description: Postal address
     required:
       - address-line
@@ -1571,26 +1583,28 @@ definitions:
         description: Populated place such as city, town or village
         type: string
       country:
-        description: "ISO3166 2 letter code of country. List of countries is maintained by [Reference API](reference-getstarted.html)." 
+        description: "ISO3166 2 letter code of country. List of countries is maintained by [Reference API](reference-getstarted.html)."
         type: string
         maxLength: 2
-        minLength: 2    
+        minLength: 2
   transfer:
     description: Transfer details
-    type: object    
+    type: object
     properties:
       transfer-id:
         description: Unique identifier of transfer assigned by bank
         type: string
       status:
-        description: Transfer status
+        description: |
+          Transfer status
+          For a list of possible values see [transfer-statuses](payment-classifications.html#transfer-statuses) enumeration.
         type: string
         enum:
           - pending
           - scheduled
           - executed
           - rejected
-          - canceled          
+          - canceled
       status-date:
         description: Date and time when the transfer status was reached
         format: date-time
@@ -1602,7 +1616,9 @@ definitions:
       instruction:
         $ref: '#/definitions/instruction'
       transfer-kind:
-        description: Type of the transfer
+        description: |
+          Type of the transfer
+          For a list of possible values see [transfer-kinds](payment-classifications.html#transfer-kinds) enumeration.
         enum:
           - balance-transfer
           - credit-transfer
@@ -1611,9 +1627,11 @@ definitions:
           - p2p-transfer
           - topup
           - bill-payment
-        type: string        
+        type: string
       direction:
-        description: Direction of transfer from customer's perspective (debit, credit).
+        description: |
+          Direction of transfer from customer's perspective (debit, credit).
+          For a list of possible values see [transfer-directions](payment-classifications.html#transfer-directions) enumeration.
         enum:
           - inpayment
           - outpayment
@@ -1628,7 +1646,9 @@ definitions:
     discriminator: kind
     properties:
       kind:
-        description: Transfer kind
+        description: |
+          Transfer kind
+          For a list of possible values see [transfer-kinds](payment-classifications.html#transfer-kinds) enumeration.
         type: string
         enum:
           - balance-transfer
@@ -1637,13 +1657,13 @@ definitions:
           - nonresident-transfer
           - p2p-transfer
           - topup
-          - bill-payment        
+          - bill-payment
       media:
         $ref: '#/definitions/media'
       geolocation:
-        $ref: '#/definitions/geolocation'  
+        $ref: '#/definitions/geolocation'
     required:
-      - kind       
+      - kind
   balance-transfer-instruction:
     description: Instruction with details of balance transfer
     type: object
@@ -1671,7 +1691,7 @@ definitions:
     properties:
       debtor-name:
         description: Name of the debtor
-        type: string   
+        type: string
       debtor-address:
         description: Address of the debtor
         $ref: '#/definitions/address'
@@ -1685,9 +1705,11 @@ definitions:
         description: Identifier of the creditor
         type: string
       creditor-identity-kind:
-        description: Kind of the identifier of the creditor used to deliver p2p payment.
+        description: |
+          Kind of the identifier of the creditor used to deliver p2p payment.
+          For a list of possible values see [p2p-party-kinds](payment-classifications.html#p2p-party-kinds) enumeration.
         enum:
-          - e-mail
+          - email
           - msisdn
           - facebook
         type: string
@@ -1700,18 +1722,18 @@ definitions:
       - debtor-name
       - debtor-account-number
       - creditor-name
-      - creditor-identifier      
+      - creditor-identifier
       - creditor-identity-kind
       - instructed-amount
     type: object
   credit-transfer-instruction:
     description: Instruction with details of credit transfer
     allOf:
-      - $ref: '#/definitions/balance-transfer-instruction'    
+      - $ref: '#/definitions/balance-transfer-instruction'
     properties:
       debtor-name:
         description: Name of the debtor
-        type: string   
+        type: string
       debtor-address:
         description: Address of the debtor
         $ref: '#/definitions/address'
@@ -1720,7 +1742,7 @@ definitions:
         type: string
       creditor-address:
         description: Address of the creditor
-        $ref: '#/definitions/address'        
+        $ref: '#/definitions/address'
       payment-description:
         description: Payment description.
         type: string
@@ -1729,7 +1751,9 @@ definitions:
           Classification that explains purpose of transfer. List of purpose codes is maintained by [Reference API](reference-getstarted.html).
         type: string
       urgency:
-        description: Urgency of transfer
+        description: |
+          Urgency of transfer
+          For a list of possible values see [transfer-urgencies](payment-classifications.html#transfer-urgencies) enumeration.
         enum:
           - ACH
           - RTGS
@@ -1742,7 +1766,7 @@ definitions:
         type: string
       debtor-reference-model:
         description: Optional debtor reference model that specifies check digit algorithm used to verify debtor reference
-        type: string            
+        type: string
       creditor-reference:
         description: Creditor reference such as invoice or bill number
         type: string
@@ -1764,13 +1788,13 @@ definitions:
     type: object
   cross-border-transfer-instruction:
     description: Instruction with details of cross-border transfer
-    type: object       
+    type: object
     allOf:
-      - $ref: '#/definitions/balance-transfer-instruction'    
+      - $ref: '#/definitions/balance-transfer-instruction'
     properties:
       debtor-name:
         description: Name of the debtor
-        type: string   
+        type: string
       debtor-address:
         description: Address of the debtor
         $ref: '#/definitions/address'
@@ -1784,7 +1808,9 @@ definitions:
         description: Creditor reference such as invoice or bill number
         type: string
       charge:
-        description: The party that is charged for the transfer fee.
+        description: |
+          The party that is charged for the transfer fee.
+          For a list of possible values see [charged-parties](payment-classifications.html#charged-parties) enumeration.
         enum:
           - ordering-customer
           - shared
@@ -1796,7 +1822,7 @@ definitions:
       purpose-code:
         description: |
           Classification that explains purpose of transfer. List of purpose codes is maintained by [Reference API](reference-getstarted.html).
-        type: string        
+        type: string
       value-date:
         description: Date when transfer is expected to be executed
         format: date-time
@@ -1808,12 +1834,12 @@ definitions:
         type: array
       creditor-bank:
         description: Bank that receives the money in name of creditor
-        type: string        
+        type: string
       creditor-bank-address:
-        $ref: '#/definitions/address'          
+        $ref: '#/definitions/address'
       debtor-bank:
         description: Bank that sends money in the name of debtor
-        type: string   
+        type: string
       creditor-bank-address:
         $ref: '#/definitions/address'
       creditor-bank-swift-code:
@@ -1830,12 +1856,12 @@ definitions:
       - payment-description
       - purpose-code
       - value-date
-      - residence-code   
+      - residence-code
   bill-payment-instruction:
     description: Instruction with details for bill payment
-    type: object    
+    type: object
     allOf:
-      - $ref: '#/definitions/instruction'     
+      - $ref: '#/definitions/instruction'
     properties:
       bill-id:
         description: Unique identifier of the bill to be settled
@@ -1844,12 +1870,14 @@ definitions:
       - bill-id
   create-draft-command:
     description: Command provides parameters for creating new template
-    type: object    
+    type: object
     properties:
       instruction:
         $ref: '#/definitions/instruction'
       transfer-kind:
-        description: Type of the transfer
+        description: |
+          Type of the transfer
+          For a list of possible values see [transfer-kinds](payment-classifications.html#transfer-kinds) enumeration.
         enum:
           - balance-transfer
           - credit-transfer
@@ -1875,7 +1903,9 @@ definitions:
       instruction:
         $ref: '#/definitions/instruction'
       transfer-kind:
-        description: Type of the transfer
+        description: |
+          Type of the transfer
+          For a list of possible values see [transfer-kinds](payment-classifications.html#transfer-kinds) enumeration.
         enum:
           - balance-transfer
           - credit-transfer
@@ -1897,7 +1927,7 @@ definitions:
       - transfer-kind
   draft-list:
     description: List of drafts and templates
-    allOf: 
+    allOf:
     - $ref: '#/definitions/paged-list'
     properties:
       drafts:
@@ -1908,7 +1938,7 @@ definitions:
     type: object
   draft:
     description: Draft or template for transfer
-    type: object    
+    type: object
     properties:
       draft-id:
         description: Unique identifier of draft
@@ -1918,11 +1948,13 @@ definitions:
         description: Date and time when the draft or template was created
         format: date-time
         type: string
-        readOnly: true        
+        readOnly: true
       instruction:
         $ref: '#/definitions/instruction'
       transfer-kind:
-        description: Type of the transfer
+        description: |
+          Type of the transfer
+          For a list of possible values see [transfer-kinds](payment-classifications.html#transfer-kinds) enumeration.
         enum:
           - balance-transfer
           - credit-transfer
@@ -1941,7 +1973,7 @@ definitions:
         type: string
         description: Customer assigned name of the template
     required:
-      - instruction  
+      - instruction
 
   set-transfer-image-url-command:
     description: Command with image url to set
@@ -1976,7 +2008,9 @@ definitions:
         description: Currency amount.
         $ref: '#/definitions/currency'
       collection-method:
-        description: Specifies the type of p2p transfer collection method
+        description: |
+          Specifies the type of p2p transfer collection method
+          For a list of possible values see [collection-methods](payment-classifications.html#collection-methods) enumeration.
         enum:
           - internal
           - external
@@ -1999,7 +2033,7 @@ definitions:
     properties:
       debtor-name:
         description: Name of the debtor
-        type: string   
+        type: string
       debtor-address:
         description: Address of the debtor
         $ref: '#/definitions/address'
@@ -2022,7 +2056,7 @@ definitions:
       - msisdn
   transfer-list:
     description: List of transfers.
-    allOf: 
+    allOf:
     - $ref: '#/definitions/paged-list'
     properties:
       items:
@@ -2033,7 +2067,7 @@ definitions:
     type: object
   incoming-cross-border-transfer-list:
     description: List of incomes.
-    allOf: 
+    allOf:
     - $ref: '#/definitions/paged-list'
     properties:
       items:
@@ -2044,7 +2078,7 @@ definitions:
     type: object
   incoming-cross-border-transfer:
     description: Income details.
-    type: object    
+    type: object
     properties:
       transfer-id:
         description: Unique identifier of transfer assigned by bank
@@ -2052,11 +2086,13 @@ definitions:
       instruction:
         $ref: '#/definitions/cross-border-transfer-instruction'
       status:
-        description: Transfer status
+        description: |
+          Transfer status
+          For a list of possible values see [incoming-cross-border-transfer-statuses](payment-classifications.html#incoming-cross-border-transfer-statuses) enumeration.
         type: string
         enum:
         - pending
-        - executed          
+        - executed
       status-date:
         description: Date and time when the transfer status was reached
         format: date-time
@@ -2069,7 +2105,7 @@ definitions:
       specified-date:
         description: Date from which next day is calculated
         format: date
-        type: string      
+        type: string
       next-working-date:
         description: Date of next working day for bank relative to specified date
         format: date
@@ -2097,7 +2133,7 @@ definitions:
               message:
                 type: string
     example:
-      -  
+      -
         field: phone-number
         errors:
           -
@@ -2105,8 +2141,8 @@ definitions:
             message: Format for this field is invalid
           -
             error: max-length
-            message: Content exceeds maximum alowed length 
-      - 
+            message: Content exceeds maximum alowed length
+      -
         field: account-number
         errors:
           -
@@ -2114,14 +2150,14 @@ definitions:
             message: Check digit is invalid for this field
   business-problem:
     description: Details on specific problem that prevented processing after successfull validation
-    type: object    
+    type: object
     example:
       problem: document-locked
       message: Document you are trying to access is locked by another user
       details: User john.doe has locked the document
     properties:
       problem:
-        description: Unique literal that identifies specific problem 
+        description: Unique literal that identifies specific problem
         type: string
       message:
         description: Message explaining the situation and optionaly remedies
@@ -2131,7 +2167,7 @@ definitions:
         type: string
   paged-list:
     description: List with support for paging
-    properties:  
+    properties:
       total-count:
         description: Total number of items in collection
         type: integer
@@ -2150,54 +2186,54 @@ definitions:
         enum:
         - asc
         - desc
-      sort-by:  
+      sort-by:
         description: Attribute of the collection item to sort by
         type: string
-  classification-value: 
+  classification-value:
     type: object
     description: Classification value
-    properties: 
-      literal: 
-        description: Literal that uniquely identifies classification value 
-        type: string    
-      code: 
+    properties:
+      literal:
+        description: Literal that uniquely identifies classification value
+        type: string
+      code:
         description: Optional numerical code of classification value
         type: string
-      description: 
+      description:
         description: Description of classification value
         type: string
-      parent-literal: 
+      parent-literal:
         description: Optional literal of parent classification value if schema is hierarchical
-        type: string     
+        type: string
     example:
       literal: billing
       code: 2
       description: Contact may be used to provide party with details of their liabilities to the bank
   classification-list:
     description: List of classification schemas
-    type: object    
-    properties: 
-      items: 
+    type: object
+    properties:
+      items:
         description: List of classification schemas
         items:
           $ref: "#/definitions/classification-info"
         type: array
     example:
-      - 
+      -
         schema-id: filing-purpose
         name: Filing Purpose
         description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture
       -
         schema-id: folder-purpose
         name: Folder Purpose
-        description: List of possible uses of a folder in business context.       
-  classification-info:  
+        description: List of possible uses of a folder in business context.
+  classification-info:
     description: Basic information on classification schema
     properties:
       schema-id:
         type: string
         description: Unique literal that identifies the classification schema. Always in `lowercase-dash` convention.
-      name: 
+      name:
         type: string
         description: User friendly name of classification
       description:
@@ -2206,15 +2242,15 @@ definitions:
     example:
       schema-id: filing-purpose
       name: Filing Purpose
-      description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture   
+      description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture
   classification:
-    type: object   
+    type: object
     description: Classification schema details
     properties:
       schema-id:
         type: string
         description: Unique literal that identifies the classification schema. Always in `lowercase-dash` convention.
-      name: 
+      name:
         type: string
         description: User friendly name of classification
       description:
@@ -2222,7 +2258,7 @@ definitions:
         description: Description of a classification
       values:
         description: List of allowed classification values
-        type: array   
+        type: array
         items:
           $ref: "#/definitions/classification-value"
     example:
@@ -2241,7 +2277,7 @@ definitions:
           description: Contact may be used to provide party with reports on their account
   resource-created-result:
     description: Unique identifier of newly created resource that can be used in future inquires and commands
-    type: string    
+    type: string
 responses:
   default-error-response:
     description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()

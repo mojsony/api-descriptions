@@ -1,4 +1,3 @@
-   
 Possible Exchange API Problems
 =================
 

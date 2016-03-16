@@ -16,13 +16,13 @@ tags:
   - description: Working with exchange rate lists
     name: Lists
   - description: Working with exchange rates
-    name: Rates    
+    name: Rates
   - description: Working with currency exchange orders
     name: Orders
   - description: Working with currency exchange offers
     name: Offers
   - description: Working with classifications
-    name: Classifications 
+    name: Classifications
 consumes:
   - application/json
 produces:
@@ -32,13 +32,13 @@ paths:
     get:
       summary: Get published lists that match criteria
       description: Response contains basic information on published lists that match criteria specified in parameters. Note that lists do not contain details such as currencies and rates.
-      operationId: ExchangeRateLists_GetList      
+      operationId: ExchangeRateLists_GetList
       tags:
         - Lists
       x-asee-tags:
         - Pageable
         - Sortable
-        - Shapeable      
+        - Shapeable
       parameters:
         - name: list-kinds
           description: "Literal that uniquely identifies intended usage of exchange rate list. Common values are `cash`, `forex`. For a complete list of values see classification [exchange-list-kind](exchange-classifications.html#exchange-list-kind)"
@@ -64,11 +64,11 @@ paths:
     get:
       summary: Get latest list of exchange rates
       description: Response contains latest published list of specific kind
-      operationId: ExchangeRateLists_GetLatest    
+      operationId: ExchangeRateLists_GetLatest
       tags:
         - Lists
       x-asee-tags:
-        - Shapeable      
+        - Shapeable
       parameters:
         - name: list-kind
           description: "Literal that uniquely identifies intended usage of exchange rate list. Common values are `cash`, `forex`. For a complete list of values see classification [exchange-rate-list-kind](exchange-classifications.html#exchange-rate-list-kind)"
@@ -76,7 +76,7 @@ paths:
           in: path
           required: true
           x-asee-classification: list-kinds
-        - $ref: '#/parameters/currencies-param'          
+        - $ref: '#/parameters/currencies-param'
         - $ref: '#/parameters/include-param'
         - $ref: '#/parameters/trim-param'
       responses:
@@ -90,13 +90,13 @@ paths:
     get:
       summary: Get latest list for specific date
       description: Response contains latest list for specified date.
-      operationId: ExchangeRateLists_GetForDate      
+      operationId: ExchangeRateLists_GetForDate
       tags:
         - Lists
       x-asee-tags:
         - Pageable
         - Sortable
-        - Shapeable      
+        - Shapeable
       parameters:
         - name: list-kind
           description: "Literal that uniquely identifies intended usage of exchange rate list. Common values are `cash`, `forex`. For a complete list of values see classification [exchange-list-kind](exchange-classifications.html#exchange-list-kind)"
@@ -122,7 +122,7 @@ paths:
       description: Response contains the list of rate records that can be filtered by period, currencies of interest, kind of list where they were published. Default sort order is by effective date descending so that latest rates come on top.
       operationId: ExchangeRates_GetList
       parameters:
-        - $ref: '#/parameters/list-kinds-param'      
+        - $ref: '#/parameters/list-kinds-param'
         - $ref: '#/parameters/from-date-param'
         - $ref: '#/parameters/to-date-param'
         - $ref: '#/parameters/currencies-param'
@@ -147,12 +147,12 @@ paths:
         - Shapeable
   '/offers':
     post:
-      summary: Request new currency exchange offer    
+      summary: Request new currency exchange offer
       description: Customer asks for bank's offer to buy or to sell foreign currency. Response contains one-time offer that takes into account exchanged amount and customer standing at the bank.
       operationId: ExchangeOffers_Request
       tags:
         - Offers
-      x-asee-tags: []      
+      x-asee-tags: []
       parameters:
         - description: Offer request with details of currency exchange deal
           in: body
@@ -167,8 +167,8 @@ paths:
             $ref: '#/definitions/offer'
         '440':
           description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
-            
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+
             - [night-exchange-closed]()
           schema:
             $ref: '#/definitions/business-problem'
@@ -176,12 +176,12 @@ paths:
           $ref: '#/responses/default-error-response'
   '/offers/{offer-id}':
     get:
-      summary: Get details of specific offer    
+      summary: Get details of specific offer
       description: Response contains one-time offer that takes into account exchanged amount and customer standing at the bank.
       operationId: ExchangeOffers_Get
       tags:
         - Offers
-      x-asee-tags: []      
+      x-asee-tags: []
       parameters:
         - description: Unique identifier of offer deal
           type: string
@@ -194,20 +194,20 @@ paths:
           schema:
             $ref: '#/definitions/offer'
         default:
-          $ref: '#/responses/default-error-response'          
+          $ref: '#/responses/default-error-response'
   '/orders':
     get:
       summary: List currency exchange orders
       description: |
         Shows all transactions related to currencies exchanges from one account to all others.
         It is useful when it is required to view this kind of transactions for chosen time interval.
-      operationId: ExchangeOrders_GetList      
+      operationId: ExchangeOrders_GetList
       tags:
         - Orders
       x-asee-tags:
         - Pageable
         - Sortable
-        - Shapeable    
+        - Shapeable
       parameters:
         - $ref: '#/parameters/customer-id-param'
         - $ref: '#/parameters/statuses-param'
@@ -236,9 +236,9 @@ paths:
       operationId: ExchangeOrders_Initiate
       tags:
         - Orders
-      x-asee-tags: []        
+      x-asee-tags: []
       parameters:
-        - description: Initiate order command 
+        - description: Initiate order command
           in: body
           name: cmd
           required: true
@@ -251,8 +251,8 @@ paths:
             $ref: '#/definitions/resource-created-result'
         '440':
           description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
-            
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+
             - [source-account-check-failed](exchange-problems.html)
             - [destination-account-check-failed](exchange-problems.html)
             - [amount-limit-exceeded](exchange-problems.html)
@@ -294,7 +294,7 @@ paths:
       operationId: ExchangeOrders_Validate
       tags:
         - Orders
-      x-asee-tags: []      
+      x-asee-tags: []
       parameters:
         - description: Validate currency exchange transaction command.
           in: body
@@ -307,8 +307,8 @@ paths:
           description: No content
         '440':
           description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
-            
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+
             - [source-account-check-failed]()
             - [destination-account-check-failed]()
             - [amount-limit-exceeded]()
@@ -325,10 +325,10 @@ paths:
 # ENDPOINTS COMMON WITH OTHER APIs                    #
 # ****************************************************#
 
-  /classifications: 
+  /classifications:
     get:
       summary: List all classification schemas used by the API
-      description: Some fields and parameters have been restricted to a list of allowed lookup values maintained by the bank. This method lists all schemas used in this API.    
+      description: Some fields and parameters have been restricted to a list of allowed lookup values maintained by the bank. This method lists all schemas used in this API.
       operationId: "Classifications_GetList"
       responses:
         '200':
@@ -378,7 +378,7 @@ parameters:
     required: false
     type: integer
     default: 10
-    x-asee-common: true    
+    x-asee-common: true
   sort-order-param:
     description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [sorting](common-getstarted.html#sorting)
     in: query
@@ -388,13 +388,13 @@ parameters:
     enum:
     - asc
     - desc
-    x-asee-common: true  
-  sort-by-param:  
+    x-asee-common: true
+  sort-by-param:
     description: Attribute of the collection item to sort by. For more information see general guidance on [sorting](common-getstarted.html#sorting)
     in: query
     name: sort-by
     type: string
-    x-asee-common: true      
+    x-asee-common: true
   include-param:
     description: List of fields to include in response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
     in: query
@@ -403,7 +403,7 @@ parameters:
     items:
       type: string
     collectionFormat: csv
-    x-asee-common: true      
+    x-asee-common: true
   trim-param:
     description: List of fields to trim from response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
     in: query
@@ -427,7 +427,7 @@ parameters:
     in: query
     items:
       type: string
-    collectionFormat: csv    
+    collectionFormat: csv
   currencies-param:
     description: |
       List of currencies of interest to filter the response. If empty or not present it is interpretted that all currencies are interesting. List of currencies is maintained in [Reference API](reference-getstarted.html).
@@ -445,7 +445,7 @@ parameters:
     format: date
     in: query
     minLength: 10
-    maxLength: 10       
+    maxLength: 10
   to-date-param:
     name: to-date
     description: "Latest date (inclusive) for period of interest in ISO 8601 format. If present must be greater or equal to `from-date`. If omitted today is assumed as latest date."
@@ -455,7 +455,9 @@ parameters:
     minLength: 10
     maxLength: 10
   statuses-param:
-    description: Statuses of interest for exchange orders
+    description: |
+      Statuses of interest for exchange orders
+      For a list of possible values see [order-statuses](exchange-classifications.html#order-statuses) enumeration.
     in: query
     name: statuses
     required: false
@@ -482,7 +484,9 @@ parameters:
     format: double
     type: number
   directions-param:
-    description: Direction of currency exchange.
+    description: |
+      Direction of currency exchange.
+      For a list of possible values see [exchange-directions](exchange-classifications.html#exchange-directions) enumeration.
     in: query
     name: directions
     required: false
@@ -501,13 +505,13 @@ parameters:
   customer-id-param:
     description: Identifier of the customer who initiated the currency exchange order
     name: customer-id
-    type: string  
+    type: string
     in: query
 definitions:
   exchange-rate-lists:
     type: object
-    allOf: 
-    - $ref: '#/definitions/paged-list'  
+    allOf:
+    - $ref: '#/definitions/paged-list'
     properties:
       items:
         $ref: '#/definitions/list-info'
@@ -522,11 +526,11 @@ definitions:
         - effective-from: '2016-01-01'
           list-kind: cash
           list-number: 1
-          currency-count: 12   
+          currency-count: 12
         - effective-from: '2016-01-02'
           list-kind: cash
           list-number: 2
-          currency-count: 12        
+          currency-count: 12
   list-info:
     type: object
     properties:
@@ -544,12 +548,12 @@ definitions:
       currency-count:
         type: integer
         description: Number of currencies for which rates are published
-        format: int32    
+        format: int32
     example:
       effective-from: '2016-01-01'
       list-kind: cash
       list-number: 1
-      currency-count: 3        
+      currency-count: 3
   exchange-rate-list:
     description: List of exchange rates
     properties:
@@ -568,35 +572,35 @@ definitions:
         list-number: 1
         currency-count: 3
       currencies:
-        - 
+        -
           currency: EUR
-          code: 978  
+          code: 978
           unit: 1
           mid: 122.9873
           buy: 122.5432
           sell: 123.2353
-        - 
+        -
           currency: USD
-          code: 840  
+          code: 840
           unit: 1
           mid: 110.9873
           buy: 110.5432
-          sell: 111.2353  
-        - 
+          sell: 111.2353
+        -
           currency: CHF
-          code: 756  
+          code: 756
           unit: 1
           mid: 112.9873
           buy: 112.5432
-          sell: 113.2353             
+          sell: 113.2353
   rate-list:
     type: object
     description: List of rate records
-    allOf: 
-    - $ref: '#/definitions/paged-list'  
+    allOf:
+    - $ref: '#/definitions/paged-list'
     properties:
       rates:
-        $ref: '#/definitions/rate-record'    
+        $ref: '#/definitions/rate-record'
     example:
       total-count: 68
       page-size: 10
@@ -609,7 +613,7 @@ definitions:
           list-kind: cash
           rate:
             currency: EUR
-            code: 978  
+            code: 978
             unit: 1
             mid: 122.9873
             buy: 122.5432
@@ -618,11 +622,11 @@ definitions:
           list-kind: forex
           rate:
             currency: EUR
-            code: 978  
+            code: 978
             unit: 1
             mid: 122.9873
             buy: 122.5432
-            sell: 123.2353          
+            sell: 123.2353
   rate-record:
     type: object
     description: Record of a currency exchange rate
@@ -642,7 +646,7 @@ definitions:
       buy, sell and middle rate.
     example:
       currency: EUR
-      code: 978  
+      code: 978
       unit: 1
       mid: 122.9873
       buy: 122.5432
@@ -652,7 +656,7 @@ definitions:
         description: "ISO 4217 3 letter currency code"
         type: string
         minLength: 3
-        maxLength: 3        
+        maxLength: 3
       code:
         description: "Numeric country code according to ISO 3166-1"
         type: string
@@ -661,7 +665,7 @@ definitions:
       unit:
         description: "Unit of exchanged currency in converstion with base currency (1 or 100)"
         format: double
-        type: number    
+        type: number
       mid:
         description: Middle rate
         format: double
@@ -673,10 +677,10 @@ definitions:
       sell:
         description: Selling rate
         format: double
-        type: number        
+        type: number
     type: object
   request-offer-command:
-    type: object  
+    type: object
     description: Details of currency exchange deal for which an offer is asked
     example:
       customer-id: NODJO001
@@ -699,19 +703,21 @@ definitions:
       foreign-currency:
         $ref: '#/definitions/currency'
       direction:
-        description: Kind of currency exchange offer that is requested. Offer to `purchase` or `sell` foreign currency from the perspective of bank. 
-        enum:        
+        description: |
+          Kind of currency exchange offer that is requested. Offer to `purchase` or `sell` foreign currency from the perspective of bank.
+          For a list of possible values see [exchange-directions](exchange-classifications.html#exchange-directions) enumeration.
+        enum:
           - purchase
           - sell
         type: string
   currency:
     description: Currency amount and code
-    type: object  
+    type: object
     required:
-      - amount    
-      - code      
+      - amount
+      - code
     example:
-      amount: 200.00    
+      amount: 200.00
       code: EUR
     properties:
       amount:
@@ -738,21 +744,23 @@ definitions:
       local-amount: 115750.50
       echange-fee:
         code: RSD
-        amount: 11.57      
+        amount: 11.57
     properties:
       offer-id:
         description: Unique identifier of the offer
         type: string
       customer-id:
         description: Identifier of the customer for which the offer is requested
-        type: string        
+        type: string
       valid-untill:
         description: Time and date untill this offer is valid
         type: string
         format: date-time
       direction:
-        description: Kind of currency exchange that is offered. Offer to `purchase` or `sell` foreign currency from the perspective of bank. 
-        enum:        
+        description: |
+          Kind of currency exchange that is offered. Offer to `purchase` or `sell` foreign currency from the perspective of bank.
+          For a list of possible values see [exchange-directions](exchange-classifications.html#exchange-directions) enumeration.
+        enum:
           - purchase
           - sell
         type: string
@@ -768,18 +776,18 @@ definitions:
       amount:
         description: Offered amount in foreign currency
         format: double
-        type: number      
+        type: number
       local-amount:
         description: Offered amount in local currency
         format: double
         type: number
       exchange-fee:
         description: Fee that will be charged for exchange transaction
-        $ref: '#/definitions/currency'        
+        $ref: '#/definitions/currency'
   exchange-order-list:
     description: List of currency exchange transactions.
-    allOf: 
-    - $ref: '#/definitions/paged-list'  
+    allOf:
+    - $ref: '#/definitions/paged-list'
     properties:
       orders:
         description: Transactions list.
@@ -794,46 +802,46 @@ definitions:
       total-pages: 7
       sort-order: desc
       sort-by: 'effective-date'
-      orders: 
-        - order-id: '99900155236001'    
-          customer-id: 'NODJO001'      
+      orders:
+        - order-id: '99900155236001'
+          customer-id: 'NODJO001'
           credited-account: '115-0000000050378-56'
           debited-account: '115-1000100019578-10'
           foreign-currency:
             code: EUR
             amount: 100.00
-          direction: purchase        
+          direction: purchase
           offer-id: '463'
           status: executed
-          status-date: '2015-11-09T10:51:05'    
+          status-date: '2015-11-09T10:51:05'
   exchange-order:
     description: Details of currency exchange transaction.
-    type: object  
+    type: object
     required:
       - order-id
-      - customer-id      
+      - customer-id
       - debited-account
       - credited-account
       - foreign-currency
-      - direction    
+      - direction
       - status
       - status-date
     example:
-      order-id: '99900155236001'    
-      customer-id: 'NODJO001'      
+      order-id: '99900155236001'
+      customer-id: 'NODJO001'
       credited-account: '115-0000000050378-56'
       debited-account: '115-1000100019578-10'
       foreign-currency:
         code: EUR
         amount: 100.00
-      direction: purchase        
+      direction: purchase
       offer-id: '463'
       status: executed
       status-date: '2015-11-09T10:51:05'
     properties:
       order-id:
         description: Unique identifier of exchange order
-        type: string    
+        type: string
       customer-id:
         description: Identifier of the customer who initiated the currency exchange order
         type: string
@@ -846,16 +854,20 @@ definitions:
       foreign-currency:
         $ref: '#/definitions/currency'
       direction:
-        type: string      
-        description: Kind of currency exchange offer that is requested. Offer to `purchase` or `sell` foreign currency from the perspective of bank. 
-        enum:        
+        type: string
+        description: |
+          Kind of currency exchange offer that is requested. Offer to `purchase` or `sell` foreign currency from the perspective of bank.
+          For a list of possible values see [exchange-directions](exchange-classifications.html#exchange-directions) enumeration.
+        enum:
           - purchase
           - sell
       offer-id:
         description: Unique identifier of currency exchange offer
         type: string
       status:
-        description: Enumeration that explain possible statuses of exchange order
+        description: |
+          Enumeration that explain possible statuses of exchange order
+          For a list of possible values see [order-statuses](exchange-classifications.html#order-statuses) enumeration.
         type: string
         enum:
           - pending
@@ -864,10 +876,10 @@ definitions:
       status-date:
         description: Date and time when status was changed
         format: date-time
-        type: string          
+        type: string
   initiate-order-command:
     description: Command for initiating currency-exchange transaction
-    type: object   
+    type: object
     required:
       - customer-id
       - debited-account
@@ -887,22 +899,24 @@ definitions:
       foreign-currency:
         $ref: '#/definitions/currency'
       direction:
-        description: Kind of currency exchange offer that is requested. Offer to `purchase` or `sell` foreign currency from the perspective of bank. 
-        enum:        
+        description: |
+          Kind of currency exchange offer that is requested. Offer to `purchase` or `sell` foreign currency from the perspective of bank.
+          For a list of possible values see [exchange-directions](exchange-classifications.html#exchange-directions) enumeration.
+        enum:
           - purchase
           - sell
         type: string
       offer-id:
         description: Unique identifier of currency exchange offer
         type: string
-    example: 
-      customer-id: 'NODJO001'      
+    example:
+      customer-id: 'NODJO001'
       credited-account: '115-0000000050378-56'
       debited-account: '115-1000100019578-10'
       foreign-currency:
         code: EUR
         amount: 100.00
-      direction: purchase        
+      direction: purchase
       offer-id: '463'
   validate-order-request:
     description: Request to validate currency exchange order
@@ -930,7 +944,7 @@ definitions:
               message:
                 type: string
     example:
-      -  
+      -
         field: phone-number
         errors:
           -
@@ -938,8 +952,8 @@ definitions:
             message: Format for this field is invalid
           -
             error: max-length
-            message: Content exceeds maximum alowed length 
-      - 
+            message: Content exceeds maximum alowed length
+      -
         field: account-number
         errors:
           -
@@ -947,14 +961,14 @@ definitions:
             message: Check digit is invalid for this field
   business-problem:
     description: Details on specific problem that prevented processing after successfull validation
-    type: object    
+    type: object
     example:
       problem: document-locked
       message: Document you are trying to access is locked by another user
       details: User john.doe has locked the document
     properties:
       problem:
-        description: Unique literal that identifies specific problem 
+        description: Unique literal that identifies specific problem
         type: string
       message:
         description: Message explaining the situation and optionaly remedies
@@ -964,7 +978,7 @@ definitions:
         type: string
   paged-list:
     description: List with support for paging
-    properties:  
+    properties:
       total-count:
         description: Total number of items in collection
         type: integer
@@ -983,54 +997,54 @@ definitions:
         enum:
         - asc
         - desc
-      sort-by:  
+      sort-by:
         description: Attribute of the collection item to sort by
         type: string
-  classification-value: 
+  classification-value:
     type: object
     description: Classification value
-    properties: 
-      literal: 
-        description: Literal that uniquely identifies classification value 
-        type: string    
-      code: 
+    properties:
+      literal:
+        description: Literal that uniquely identifies classification value
+        type: string
+      code:
         description: Optional numerical code of classification value
         type: string
-      description: 
+      description:
         description: Description of classification value
         type: string
-      parent-literal: 
+      parent-literal:
         description: Optional literal of parent classification value if schema is hierarchical
-        type: string     
+        type: string
     example:
       literal: billing
       code: 2
       description: Contact may be used to provide party with details of their liabilities to the bank
   classification-list:
     description: List of classification schemas
-    type: object    
-    properties: 
-      items: 
+    type: object
+    properties:
+      items:
         description: List of classification schemas
         items:
           $ref: "#/definitions/classification-info"
         type: array
     example:
-      - 
+      -
         schema-id: filing-purpose
         name: Filing Purpose
         description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture
       -
         schema-id: folder-purpose
         name: Folder Purpose
-        description: List of possible uses of a folder in business context.       
-  classification-info:  
+        description: List of possible uses of a folder in business context.
+  classification-info:
     description: Basic information on classification schema
     properties:
       schema-id:
         type: string
         description: Unique literal that identifies the classification schema. Always in `lowercase-dash` convention.
-      name: 
+      name:
         type: string
         description: User friendly name of classification
       description:
@@ -1039,15 +1053,15 @@ definitions:
     example:
       schema-id: filing-purpose
       name: Filing Purpose
-      description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture   
+      description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture
   classification:
-    type: object   
+    type: object
     description: Classification schema details
     properties:
       schema-id:
         type: string
         description: Unique literal that identifies the classification schema. Always in `lowercase-dash` convention.
-      name: 
+      name:
         type: string
         description: User friendly name of classification
       description:
@@ -1055,7 +1069,7 @@ definitions:
         description: Description of a classification
       values:
         description: List of allowed classification values
-        type: array   
+        type: array
         items:
           $ref: "#/definitions/classification-value"
     example:
@@ -1074,7 +1088,7 @@ definitions:
           description: Contact may be used to provide party with reports on their account
   resource-created-result:
     description: Unique identifier of newly created resource that can be used in future inquires and commands
-    type: string    
+    type: string
 responses:
   default-error-response:
     description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
