@@ -142,7 +142,7 @@ paths:
       summary: Get mailbox messages for authenticated user
       tags:
         - Mailbox
-      operationId: Mailbox_Messages_GetList
+      operationId: MailboxMessages_GetList
       parameters:
         - $ref: '#/parameters/from-time-param'
         - $ref: '#/parameters/to-time-param'
@@ -171,7 +171,7 @@ paths:
       summary: Get specific message
       tags:
         - Mailbox
-      operationId: Mailbox_Messages_Get
+      operationId: MailboxMessages_Get
       parameters:
         - $ref: '#/parameters/message-id-param'
       responses:
@@ -186,7 +186,7 @@ paths:
       summary: Get mailbox summary for authenticated user
       tags:
         - Communications
-      operationId: Mailbox_Messages_Summary_Get
+      operationId: MailboxMessages_Summary_Get
       parameters:
         - $ref: '#/parameters/mailbox-statuses-param'
       responses:
@@ -202,7 +202,7 @@ paths:
       summary: Mark message as read
       tags:
         - Mailbox
-      operationId: Mailbox_Messages_MarkAsRead
+      operationId: MailboxMessages_MarkAsRead
       parameters:
         - $ref: '#/parameters/message-id-param'
         - name: cmd
@@ -221,7 +221,7 @@ paths:
       summary: Archive mailbox messages
       tags:
         - Mailbox
-      operationId: Mailbox_Messages_Archive
+      operationId: MailboxMessages_Archive
       parameters:
         - name: cmd
           in: body
