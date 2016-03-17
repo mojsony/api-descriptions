@@ -12,19 +12,17 @@ host: dev.asseco-see.com
 basePath: /v1/arrangement
 schemes:
   - http
+  - https
 consumes:
   - application/json
 produces:
   - application/json
 tags:
-  -
-    name: Arrangements
+  - name: Arrangements
     description: Working with sales arrangements
-  -
-    name: Installment Plans
+  - name: Installment Plans
     description: Working with installment plans as sub-resources of sales arrangements
-  -
-    name: Conditions
+  - name: Conditions
     description: Working with conditions as sub-resources of sales arrangements
 paths:
   /arrangements:
@@ -164,6 +162,52 @@ responses:
   default-error-response:
     description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling](common-getstarted.html#error-handling)
 parameters:
+
+# ****************************************************#
+# PARAMETERS COMMON WITH OTHER APIs                   #
+# ****************************************************#
+  schema-id-param:
+    name: schema-id
+    description: Identifier of classification schema
+    in: path
+    required: true
+    type: string
+  include-param:
+    description: List of fields to include in response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
+    in: query
+    name: include
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+    x-asee-common: true
+  trim-param:
+    description: List of fields to trim from response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
+    in: query
+    name: trim
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+    x-asee-common: true
+  accounts-param:
+    name: accounts
+    description: Optional list of accounts of interest. If empty or not present, it is interpreted as all accounts are interesting.
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+    in: query
+  sync-timestamp-param:
+    name: sync-timestamp
+    description: Optional timestamp indicator for incremental synchronization. If supplied items that have been recorded or updated after it will be returned. If empty or not present, all items will be returned
+    type: string
+    in: query
+
+  # ****************************************************#
+  # PARAMETERS SPECIFIC FOR ARRANGEMENT API             #
+  # ****************************************************#
+
   page-param:
     name: page
     in: query
@@ -285,9 +329,102 @@ parameters:
     required: true
     type: string
 definitions:
+# ****************************************************#
+# MODELS COMMON WITH OTHER APIs                       #
+# ****************************************************#
+  classification-value:
+    type: object
+    description: Classification value
+    properties:
+      literal:
+        description: Literal that uniquely identifies classification value
+        type: string
+      code:
+        description: Optional, yet unique code of classification value
+        type: string
+      description:
+        description: Description of classification value
+        type: string
+      parent-literal:
+        description: Optional literal of parent classification value if schema is hierarchical
+        type: string
+    example:
+      literal: billing
+      code: 2
+      description: Contact may be used to provide party with details of their liabilities to the bank
+  classification-list:
+    description: List of classification schemas
+    type: object
+    properties:
+      items:
+        description: List of classification schemas
+        items:
+          $ref: "#/definitions/classification-info"
+        type: array
+    example:
+      -
+        schema-id: filing-purpose
+        name: Filing Purpose
+        description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture
+      -
+        schema-id: folder-purpose
+        name: Folder Purpose
+        description: List of possible uses of a folder in business context.
+  classification-info:
+    description: Basic information on classification schema
+    properties:
+      schema-id:
+        type: string
+        description: Unique literal that identifies the classification schema. Always in `lowercase-dash` convention.
+      name:
+        type: string
+        description: User friendly name of classification
+      description:
+        type: string
+        description: Description of a classification
+    example:
+      schema-id: filing-purpose
+      name: Filing Purpose
+      description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture
+  classification:
+    type: object
+    description: Classification schema details
+    properties:
+      schema-id:
+        type: string
+        description: Unique literal that identifies the classification schema. Always in `lowercase-dash` convention.
+      name:
+        type: string
+        description: User friendly name of classification
+      description:
+        type: string
+        description: Description of a classification
+      values:
+        description: List of allowed classification values
+        type: array
+        items:
+          $ref: "#/definitions/classification-value"
+    example:
+      schema-id: contact-purpose
+      name: Contact Purpose
+      description: List of possible uses of contact in business context. Commonly used filing purposes are billing, marketing
+      values:
+        - literal: billing
+          code: 1
+          description: Contact may be used to provide party with details of their liabilities to the bank
+        - literal: marketing
+          code: 2
+          description: Contact may be used to provide party with details of offers
+        - literal: reporting
+          code: 3
+          description: Contact may be used to provide party with reports on their account
+
+# ****************************************************#
+# MODELS SPECIFIC FOR ARRANGEMENT API                 #
+# ****************************************************#
+
   validation-problem:
     type: array
-    collectionFormat: csv
     items:
       type: object
       properties:
@@ -794,7 +931,8 @@ definitions:
     - type: object
       properties:
         fixed-amount:
-          $ref: '#/definitions/currency-amount'
+          allOf:
+          - $ref: '#/definitions/currency-amount'
           description: Currency amount (positive or negative) to be added to other applicable fee components
   pricing-condition:
     description: Detailed information about arrangement price - interest rate or fee condition
@@ -812,7 +950,6 @@ definitions:
         items:
           type: string
         description: The list of currencies for which the price is applicable. Currencies must be identified by ISO 4217 alphanumerical code (EUR, USD).  Empty list means that the price is applicable to all arrangement currencies.
-        collectionFormat: csv
   interest-rate:
     description: Interest rate definition with base and spread.
     properties:
@@ -914,17 +1051,20 @@ definitions:
           format: double
           description: Percentage applied to base amount
         fixed-amount:
-          $ref: '#/definitions/currency-amount'
+          allOf:
+            - $ref: '#/definitions/currency-amount'
           description: Fixed amount component
         variations:
           type: array
           items:
             $ref: '#/definitions/fee-variation'
         lower-limit:
-          $ref: '#/definitions/currency-amount'
+          allOf:
+            - $ref: '#/definitions/currency-amount'
           description: Lower limit applied after fee calculation
         upper-limit:
-          $ref: '#/definitions/currency-amount'
+          allOf:
+            - $ref: '#/definitions/currency-amount'
           description: Upper limit applied after fee calculation
         frequency:
           description: Fee calculation frequency. Service fees, expenses and origination-fee are usually event-triggered.
@@ -1061,7 +1201,6 @@ definitions:
           items:
             type: string
           description: The list of allowed arrangement currencies. Currencies must be identified by ISO 4217 alphanumerical code (EUR, USD). If empty, then primary currency is considered to be only allowed.
-          collectionFormat: csv
         primary-currency:
           type: string
           description: For single currency arrangement, this is one and only currency. For multicurrency arrangements, primary currency is the the currency that is most common and that is used as representative example for APR calculation and other purposes.
@@ -1089,7 +1228,8 @@ definitions:
     description: Defines regular periodic deposits in addition to initial deposit amount.
     properties:
       iteration:
-        $ref: '#/definitions/time-period'
+        allOf:
+          - $ref: '#/definitions/time-period'
         description: Length of time period between two deposits
       amount:
         type: number
@@ -1102,7 +1242,8 @@ definitions:
     - type: object
       properties:
         savings-plan:
-          $ref: '#/definitions/savings-plan'
+          allOf:
+            - $ref: '#/definitions/savings-plan'
           description: Defines regular periodic deposits in addition to initial deposit amount.
   term-deposit:
     description: Term deposit arrangement
@@ -1111,7 +1252,8 @@ definitions:
     - type: object
       properties:
         term:
-          $ref: '#/definitions/time-period'
+          allOf:
+            - $ref: '#/definitions/time-period'
           description: The time period from contract date to maturity.
         initial-maturity-date:
           type: string
@@ -1139,7 +1281,8 @@ definitions:
           format: double
           description: Initial amount, in primary currency
         savings-plan:
-          $ref: '#/definitions/savings-plan'
+          allOf:
+            - $ref: '#/definitions/savings-plan'
           description: Defines regular periodic deposits in addition to initial deposit amount.
   term-loan:
     description: Term loan arrangement
@@ -1148,10 +1291,12 @@ definitions:
     - type: object
       properties:
         term:
-          $ref: '#/definitions/time-period'
+          allOf:
+            - $ref: '#/definitions/time-period'
           description: The time period from contract date to maturity.
         grace:
-          $ref: '#/definitions/time-period'
+          allOf:
+            - $ref: '#/definitions/time-period'
           description: The time period without principal repayment.
         maturity-date:
           type: string
