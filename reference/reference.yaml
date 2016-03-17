@@ -1,6 +1,7 @@
 swagger: '2.0'
 info:
-  description: Reference API gives you access to a repository of registries maintained by the financial institution. 
+  description: |
+    Reference API gives you access to a repository of registries maintained by the financial institution.
     With Reference API you can:
       - Get the list of countries
       - Get the list of currencies
@@ -11,11 +12,12 @@ info:
   contact:
     name: Natasa Tssic
     url: http://dev.asseco-see.com/docs/
-    email: natasa.tasic@asseco-see.rs  
+    email: natasa.tasic@asseco-see.rs
 host: dev.asseco-see.com
 basePath: /v1/reference
 schemes:
   - http
+  - https
 consumes:
   - application/json
 produces:
@@ -25,10 +27,10 @@ tags:
     name: Countries
     description: Working with countries
   -
-    name: Currencies 
+    name: Currencies
     description: Working with currencies
   -
-    name: Channels 
+    name: Channels
     description: Working with channels
 
 paths:
@@ -44,15 +46,15 @@ paths:
       parameters:
         - $ref: "#/parameters/sort-by-param"
         - $ref: "#/parameters/sort-order-param"
-        - $ref: "#/parameters/include-param" 
-        - $ref: "#/parameters/trim-param" 
+        - $ref: "#/parameters/include-param"
+        - $ref: "#/parameters/trim-param"
       responses:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/country-list' 
+            $ref: '#/definitions/country-list'
         default:
-          $ref: '#/responses/default-error-response' 
+          $ref: '#/responses/default-error-response'
 
   /currencies:
     get:
@@ -61,7 +63,7 @@ paths:
         - Currencies
       x-asee-tags:
         - Shapeable
-        - Sortable        
+        - Sortable
       operationId: Currencies_GetList
       parameters:
       - $ref: "#/parameters/sort-by-param"
@@ -72,7 +74,7 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/currency-list' 
+            $ref: '#/definitions/currency-list'
         default:
           $ref: '#/responses/default-error-response'
 
@@ -91,9 +93,9 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/channel-list' 
+            $ref: '#/definitions/channel-list'
         default:
-          $ref: '#/responses/default-error-response' 
+          $ref: '#/responses/default-error-response'
   /banks:
     get:
       summary: Get list of banks
@@ -122,7 +124,7 @@ paths:
         - Pageable
         - Sortable
         - Shapeable
-parameters: 
+parameters:
   page-param:
     name: page
     in: query
@@ -137,7 +139,7 @@ parameters:
     required: false
     type: integer
     default: 10
-    x-asee-common: true       
+    x-asee-common: true
   sort-order-param:
     description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [sorting](common-getstarted.html#sorting)
     in: query
@@ -147,13 +149,13 @@ parameters:
     enum:
     - asc
     - desc
-    x-asee-common: true  
-  sort-by-param:  
+    x-asee-common: true
+  sort-by-param:
     description: Attribute of the collection item to sort by. For more information see general guidance on [sorting](common-getstarted.html#sorting)
     in: query
     name: sort-by
     type: string
-    x-asee-common: true      
+    x-asee-common: true
   include-param:
     description: List of fields to include in response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
     in: query
@@ -162,7 +164,7 @@ parameters:
     items:
       type: string
     collectionFormat: csv
-    x-asee-common: true      
+    x-asee-common: true
   trim-param:
     description: List of fields to trim from response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
     in: query
@@ -185,7 +187,7 @@ parameters:
     required: false
     type: string
   bank-country-param:
-    description: "ISO3166 2 letter code of country. List of countries is maintained by [Reference API](reference-getstarted.html)." 
+    description: "ISO3166 2 letter code of country. List of countries is maintained by [Reference API](reference-getstarted.html)."
     in: query
     name: country
     required: false
@@ -234,13 +236,13 @@ definitions:
         type: array
     type: object
     example:
-      - 
+      -
         code: sms
         literal: SMS
         description: SMS
         parent-channel-id: 38733
         is-leaf: 1
-      - 
+      -
         code: mobile
         literal: Mobile
         description: Mobile
@@ -267,7 +269,7 @@ definitions:
         type: boolean
     type: object
   country-list:
-    type: object  
+    type: object
     description: List of countries
     allOf:
     - $ref: "#/definitions/paged-list"
@@ -276,7 +278,7 @@ definitions:
         type: array
         description: List of countries with basic country information
         items:
-          $ref: "#/definitions/country"    
+          $ref: "#/definitions/country"
     example:
       total-count: 6205
       page-size: 3
@@ -290,7 +292,7 @@ definitions:
         alpha3: SHN
         country-status: Existing
         is-eu-member: false
-        iban-prefix: 
+        iban-prefix:
         iban-length: 0
       - name: FRANCE
         translation-name: Francuska
@@ -299,7 +301,7 @@ definitions:
         alpha3: FRA
         country-status: Existing
         is-eu-member: true
-        iban-prefix: 
+        iban-prefix:
         iban-length: 0
       - name: SAINT BARTHELEMY
         translation-name: Sveti Bartolomej
@@ -308,7 +310,7 @@ definitions:
         alpha3: BLM
         country-status: Existing
         is-eu-member: false
-        iban-prefix: 
+        iban-prefix:
         iban-length: 0
   country:
     description: Basic information about country
@@ -343,9 +345,9 @@ definitions:
         format: int32
         type: integer
     type: object
-    
+
   currency-list:
-    type: object  
+    type: object
     description: List of currencies
     allOf:
     - $ref: "#/definitions/paged-list"
@@ -362,19 +364,19 @@ definitions:
       total-pages: 2069
       items:
       - name: Euro
-        translated-name: 
+        translated-name:
         currency-symbol: €
         currency-code: '978'
         alphanumeric-code: EUR
         is-convertible: true
       - name: Dinars
-        translated-name: 
+        translated-name:
         currency-symbol: RSD
         currency-code: '941'
         alphanumeric-code: RSD
         is-convertible: true
       - name: Francs
-        translated-name: 
+        translated-name:
         currency-symbol: CHF
         currency-code: '756'
         alphanumeric-code: CHF
@@ -403,7 +405,7 @@ definitions:
     type: object
   bank-list:
     description: List of banks
-    allOf: 
+    allOf:
     - $ref: '#/definitions/paged-list'
     properties:
       items:
