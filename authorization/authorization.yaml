@@ -56,7 +56,7 @@ paths:
         - Sortable
         - Shapeable
     post:
-      description: "When \"async\" parameter is not provided, then the operation returns a response once the authentication process completes. 
+      description: "When \"async\" parameter is not provided, then the operation returns a response once the authentication process completes.
             If, however, your application provides this parameter with a value of \"true\", then operation will immediately return an authorization-id, and your application will need to subsequently check the status (and, eventually, result) of the authorization process."
       operationId: Authorizations_Initiate
       parameters:
@@ -74,7 +74,7 @@ paths:
             $ref: '#/definitions/authorization-response-v2'
         '440':
           description: |
-             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
              - [max-attempts-reached] ()
              - [locked-out] ()
           schema:
@@ -124,7 +124,7 @@ paths:
             $ref: '#/definitions/authorization-decision-v2'
         '440':
           description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
             - [authorization-expired] ()
             - [locked-out] ()
             - [max-attempts-reached] ()
@@ -228,16 +228,16 @@ parameters:
     description: Service code for this action
     in: query
     name: service-code
-    required: false
+    required: true
     type: boolean
   async-param:
     description: Value indicating whether this request is asynchronous.
     in: query
     name: async
-    required: false
+    required: true
     type: boolean
   page-size-param:
-    in: query    
+    in: query
     name: page-size
     description: Number of items on a page. For more information see general guidance on [paging and sorting]()
     required: false
