@@ -294,7 +294,7 @@ paths:
       operationId: Transfers_GetList
       parameters:
         - $ref: '#/parameters/beneficiary-account-param'
-        - $ref: '#/parameters/transfer-kind-param'
+        - $ref: '#/parameters/transfer-kinds-param'
         - $ref: '#/parameters/transfer-statuses-param'
         - $ref: '#/parameters/date-from-param'
         - $ref: '#/parameters/date-to-param'
@@ -1148,25 +1148,28 @@ parameters:
     type: string
     minLength: 3
     maxLength: 3
-  transfer-kind-param:
+  transfer-kinds-param:
     description: Kind of the transfer.
     in: query
-    name: transfer-kind
-    required: true
+    name: kinds
+    required: false
     enum:
-      - balance
-      - credit
-      - cross-border
-      - p2p
-      - top-up
-      - all
-    type: string
+      - balance-transfer
+      - credit-transfer
+      - cross-border-transfer
+      - nonresident-transfer
+      - p2p-transfer
+      - topup
+      - bill-payment
+    type: array
+    items:
+      type: string
   transfer-statuses-param:
     description: |
       This parameter is used to filter the result by status of the transfer. Only transfers with specific status are returned.
       For a list of possible values see [transfer-statuses](payment-classifications.html#transfer-statuses) enumeration.
     in: query
-    name: list
+    name: statuses
     required: false
     enum:
       - pending
@@ -1184,8 +1187,6 @@ parameters:
     required: false
     format: date
     type: string
-    minLength: 10
-    maxLength: 10
   date-to-param:
     description: Filters transfers initiated before the specified date.
     in: query
@@ -1193,8 +1194,6 @@ parameters:
     required: false
     format: date
     type: string
-    minLength: 10
-    maxLength: 10
   value-date-from-param:
     description: Filters transfers where value date is after the specified date.
     in: query
