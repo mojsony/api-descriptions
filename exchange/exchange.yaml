@@ -491,6 +491,7 @@ parameters:
     name: directions
     required: false
     type: array
+    collectionFormat: csv
     items:
       type: string
     enum:

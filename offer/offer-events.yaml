@@ -15,6 +15,7 @@ paths:
       summary: A new document has been filed to repository
       tags:
         - Documents
+      operationId: DocumentFiled_Get
       responses:
         '200':
           description: Event payload
@@ -25,6 +26,7 @@ paths:
       summary: A document was moved to different folder
       tags:
         - Documents
+      operationId: DocumentMoved_Get
       responses:
         '200':
           description: Event payload
@@ -35,6 +37,7 @@ paths:
       summary: Document properties were updated
       tags:
         - Documents
+      operationId: DocumentUpdated_Get
       responses:
         '200':
           description: Event payload
@@ -45,16 +48,18 @@ paths:
       summary: A document was deleted
       tags:
         - Documents
+      operationId: DocumentDeleted_Get
       responses:
         '200':
           description: Event payload
           schema:
-            $ref: '#/definitions/document-deleted'            
+            $ref: '#/definitions/document-deleted'
   /folder-created:
     get:
       summary: A new folder was created
       tags:
         - Folders
+      operationId: FolderCreated_Get
       responses:
         '200':
           description: Event payload
@@ -65,6 +70,7 @@ paths:
       summary: A folder was moved to different parent folder
       tags:
         - Folders
+      operationId: FolderMoved_Get
       responses:
         '200':
           description: Event payload
@@ -75,6 +81,7 @@ paths:
       summary: Folder properties were updated
       tags:
         - Folders
+      operationId: FolderUpdated_Get
       responses:
         '200':
           description: Event payload
@@ -85,11 +92,12 @@ paths:
       summary: A folder was deleted
       tags:
         - Folders
+      operationId: FolderDeleted_Get
       responses:
         '200':
           description: Event payload
           schema:
-            $ref: '#/definitions/folder-deleted'            
+            $ref: '#/definitions/folder-deleted'
 definitions:
   event:
     x-asse-comment: Event is redefined within each API to provide more specific examples and documentation
@@ -107,7 +115,7 @@ definitions:
           - document-deleted
           - folder-created
           - dolder-moved
-          - folder-deleted        
+          - folder-deleted
       occurred-on:
         type: string
         format: date-time

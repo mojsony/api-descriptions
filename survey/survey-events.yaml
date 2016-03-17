@@ -15,6 +15,7 @@ paths:
       summary: A new survey is captured and recorded
       tags:
         - Surveys
+      operationId: SurveyCaptured_Get
       responses:
         '200':
           description: Event payload

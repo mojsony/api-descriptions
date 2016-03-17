@@ -1162,6 +1162,7 @@ parameters:
       - topup
       - bill-payment
     type: array
+    collectionFormat: csv
     items:
       type: string
   transfer-statuses-param:
@@ -1178,6 +1179,7 @@ parameters:
       - rejected
       - canceled
     type: array
+    collectionFormat: csv
     items:
       type: string
   date-from-param:
@@ -1483,6 +1485,7 @@ definitions:
         items:
           type: string
         type: array
+        collectionFormat: csv
       code-type:
         description: Type of purpose code.
         enum:
