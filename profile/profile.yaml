@@ -358,7 +358,6 @@ definitions:
         items:
           type: string
         type: array
-        collectionFormat: csv
     type: object
   authorization-method:
     x-asee-compliance: 'This object should be merged with `authorization-limit` object below. No need for two separate objects.'
@@ -660,7 +659,7 @@ definitions:
         format: int64
         type: integer
       contact-id:
-        x-asee-compliance: What is the point of this relation? This property should be removed. 
+        x-asee-compliance: What is the point of this relation? This property should be removed.
         description: 'Contact identifier, either it is postal address, phone number or electronic address'
         format: int64
         type: integer
@@ -695,14 +694,12 @@ definitions:
         items:
           type: string
         type: array
-        collectionFormat: csv
       opt-outs:
         description: List of services for which the customer does not want to receive notifications anymore.
         x-asee-compliance: Should be related to some classification.
         items:
           type: string
         type: array
-        collectionFormat: csv
     type: object
   individual-profile:
     description: Customer profile

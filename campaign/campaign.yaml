@@ -49,18 +49,18 @@ paths:
       x-asee-tags:
         - Sortable
   /campaigns/{campaign-code}/responses:
+    parameters:
+      - description: Unique identifier of the campaign
+        name: campaign-code
+        in: path
+        required: true
+        type: string
     post:
       summary: Capture customer response to campaign offer
       tags:
         - Campaigns
       operationId: Campaigns_CaptureResponse
       parameters:
-      parameters:
-        - description: Unique identifier of the campaign
-          name: campaign-code
-          in: path
-          required: true
-          type: string
         - description: Parameters for adding customer to campaign.
           in: body
           name: cmd
@@ -75,23 +75,24 @@ paths:
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-            
+
             - [campaign-expired](campaign-problems.html)
           schema:
-            $ref: '#/definitions/business-problem'                       
+            $ref: '#/definitions/business-problem'
       x-asee-tags: []
   /campaigns/{campaign-code}/benefits/activate:
+    parameters:
+      - description: Unique identifier of the campaign
+        name: campaign-code
+        in: path
+        required: true
+        type: string
     post:
       summary: Activates the benefit of the campaign, e.g. enables x free transactions on atm for the customer.
       tags:
         - Campaigns
       operationId: Campaigns_Benefits_Activate
       parameters:
-        - description: Unique identifier of the campaign
-          name: campaign-code
-          in: path
-          required: true
-          type: string
         - description: Parameters for activation of campaign benefit.
           in: body
           name: cmd
@@ -105,16 +106,17 @@ paths:
             $ref: '#/responses/default-error-response'
         '440':
           description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
-            
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+
             - [benefit-already-activated](campaign-problems.html)
           schema:
-            $ref: '#/definitions/business-problem'            
+            $ref: '#/definitions/business-problem'
       x-asee-tags: []
 
 # ****************************************************#
 # ENDPOINTS COMMON WITH OTHER APIs                    #
 # ****************************************************#
+
 
   /classifications:
     get:
@@ -235,7 +237,7 @@ definitions:
               message:
                 type: string
     example:
-      -  
+      -
         field: phone-number
         errors:
           -
@@ -243,8 +245,8 @@ definitions:
             message: Format for this field is invalid
           -
             error: max-length
-            message: Content exceeds maximum alowed length 
-      - 
+            message: Content exceeds maximum alowed length
+      -
         field: account-number
         errors:
           -
@@ -252,10 +254,10 @@ definitions:
             message: Check digit is invalid for this field
   business-problem:
     description: Details on specific problem that prevented processing after successfull validation
-    type: object 
+    type: object
     properties:
       problem:
-        description: Unique literal that identifies specific problem 
+        description: Unique literal that identifies specific problem
         type: string
       message:
         description: Message explaining the situation and optionaly remedies

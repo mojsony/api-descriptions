@@ -190,24 +190,11 @@ parameters:
       type: string
     collectionFormat: csv
     x-asee-common: true
-  accounts-param:
-    name: accounts
-    description: Optional list of accounts of interest. If empty or not present, it is interpreted as all accounts are interesting.
-    type: array
-    items:
-      type: string
-    collectionFormat: csv
-    in: query
   sync-timestamp-param:
     name: sync-timestamp
     description: Optional timestamp indicator for incremental synchronization. If supplied items that have been recorded or updated after it will be returned. If empty or not present, all items will be returned
     type: string
     in: query
-
-  # ****************************************************#
-  # PARAMETERS SPECIFIC FOR ARRANGEMENT API             #
-  # ****************************************************#
-
   page-param:
     name: page
     in: query
@@ -239,24 +226,19 @@ parameters:
     name: sort-by
     type: string
     x-asee-common: true
-  include-param:
-    description: List of fields to include in response. For more information see general guidance on [response shaping]()
-    in: query
-    name: include
+
+  # ****************************************************#
+  # PARAMETERS SPECIFIC FOR ARRANGEMENT API             #
+  # ****************************************************#
+
+  accounts-param:
+    name: accounts
+    description: Optional list of accounts of interest. If empty or not present, it is interpreted as all accounts are interesting.
     type: array
     items:
       type: string
     collectionFormat: csv
-    x-asee-common: true
-  trim-param:
-    description: List of fields to trim from response. For more information see general guidance on [response shaping]()
     in: query
-    name: trim
-    type: array
-    items:
-      type: string
-    collectionFormat: csv
-    x-asee-common: true
   customer-id-param:
     description: Unique identifiet of the customer for which arrangements are inquired
     in: query
@@ -285,7 +267,6 @@ parameters:
       - card-access-arrangement
       - electronic-acess-arrangement
       - other-product-arrangement
-    required: false
   party-role-param:
     name: role-kinds
     in: query
@@ -302,7 +283,6 @@ parameters:
         - co-debtor
         - guarantor
         - other
-    required: false
     collectionFormat: csv
   arrangement-status-param:
     name: statuses

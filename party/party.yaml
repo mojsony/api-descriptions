@@ -3,8 +3,8 @@ info:
   version: v1
   title: Party API
   description: |
-    Party API gives you access to individuals and organizations registered with the financial institution whether they are customers or just prospects or related parties. 
-    Also you can get all party related information like identification documents, contacts, financial reports, classifications and arrangements. 
+    Party API gives you access to individuals and organizations registered with the financial institution whether they are customers or just prospects or related parties.
+    Also you can get all party related information like identification documents, contacts, financial reports, classifications and arrangements.
     Party data service can be used to register new prospects in the system'
 host: dev.aseeco-see.com
 basePath: /party
@@ -457,14 +457,12 @@ definitions:
         items:
           type: string
         type: array
-        collectionFormat: csv
       opt-outs:
         description: List of services for which the customer does not want to receive notifications anymore.
         x-asee-compliance: Should be related to some classification.
         items:
           type: string
         type: array
-        collectionFormat: csv
       uri:
         description: URI
         type: string
@@ -1129,7 +1127,6 @@ definitions:
         items:
           type: string
         type: array
-        collectionFormat: csv
       issuing-date:
         description: Issuing date of document.
         format: date-time
@@ -1154,25 +1151,25 @@ definitions:
         description: URI
         type: string
     type: object
-  classification-value: 
+  classification-value:
     description: "Classification value"
-    properties: 
-      code: 
+    properties:
+      code:
         description: "Code of classification value."
         type: "string"
-      literal: 
+      literal:
         description: "Literal."
         type: "string"
-      description: 
+      description:
         description: "Description."
         type: "string"
-      id: 
+      id:
         description: "Identifier of classification value."
         type: "string"
-      parent-id: 
+      parent-id:
         description: "Parent classification value id."
         type: "string"
-      ordinal: 
+      ordinal:
         description: "Ordinal number."
         type: "string"
     type: "object"

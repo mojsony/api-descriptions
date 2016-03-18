@@ -77,13 +77,14 @@ paths:
         - Accounts
       x-asee-tags: []
   '/accounts/{account-number}/nickname':
+    parameters:
+      - $ref: '#/parameters/account-number-param'
     put:
       summary: Change account nickname
       description: |
         Updates account nickname with new one set by customer as more appropriate.
       operationId: Accounts_ChangeNickname
       parameters:
-        - $ref: '#/parameters/account-number-param'
         - description: Command to change account nickname
           in: body
           name: cmd
@@ -139,6 +140,12 @@ paths:
         default:
           $ref: '#/responses/default-error-response'
   /transactions/{transaction-id}:
+    parameters:
+      - name: transaction-id
+        description: Unique identifier of the transaction in the core system
+        type: string
+        in: path
+        required: true
     get:
       summary: Get details of specific customer transaction
       description: Returns all available details about one specific transaction such as place where and why it was originated.
@@ -150,11 +157,6 @@ paths:
       x-asee-tags:
         - Shapeable
       parameters:
-        - name: transaction-id
-          description: Unique identifier of the transaction in the core system
-          type: string
-          in: path
-          required: true
         - $ref: "#/parameters/include-param"
         - $ref: "#/parameters/trim-param"
       responses:
@@ -242,6 +244,12 @@ paths:
         default:
           $ref: '#/responses/default-error-response'
   /statements/{statement-id}:
+    parameters:
+      - name: statement-id
+        description: Unique identifier of specific account statement
+        in: path
+        required: true
+        type: string
     get:
       summary: Get details for specific statement
       description: Returns specific statement with all related details including list of transactions and balances reported in period covered by statement
@@ -251,12 +259,6 @@ paths:
       tags:
         - Statements
       x-asee-tags: []
-      parameters:
-        - name: statement-id
-          description: Unique identifier of specific account statement
-          in: path
-          required: true
-          type: string
       responses:
         200:
           description: OK
@@ -305,12 +307,12 @@ paths:
         - Classifications
 
   /classifications/{schema-id}:
+    parameters:
+      - $ref: '#/parameters/schema-id-param'
     get:
       summary: List values allowed by given classification schema.
       description: Returns all classification values for chosen classification.
       operationId: Classifications_Get
-      parameters:
-        - $ref: '#/parameters/schema-id-param'
       responses:
         '200':
           description: OK
@@ -318,7 +320,6 @@ paths:
             $ref: '#/definitions/classification'
         default:
           $ref: '#/responses/default-error-response'
-
       tags:
         - Classifications
 
@@ -425,15 +426,11 @@ parameters:
       type: string
     collectionFormat: csv
     x-asee-common: true
-  search-query-param:
-    name: q
-    in: query
-    description: The text to search for. All searchable fields are searched by default unless search-fields is specified. When searching searchable fields, the search text itself is tokenized, so multiple terms can be separated by white space (e.g. `q=hello world`).
-    required: true
-    type: string
+
 # ****************************************************#
 # PARAMETERS SPECIFIC FOR ACCOUNT DATA API            #
 # ****************************************************#
+
   years-param:
     description: "Years for which the statements are returned. If empty or not present current calendar year is assumed. Valid range is `1900-2100`. Example - `2014,2015`"
     in: query

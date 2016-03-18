@@ -33,11 +33,11 @@ tags:
     description: Working with credit facility origination
   -
     name: Calculations
-    description: Working with calculation 
+    description: Working with calculation
   -
     name: Classifications
-    description: Working with classifications   
-    
+    description: Working with classifications
+
 paths:
   /deposit-account-openings/{workitem-number}/accept:
     post:
@@ -63,7 +63,7 @@ paths:
              - [account-exists]()
              - [product-not-valid]()
           schema:
-            $ref: '#/definitions/business-problem'  
+            $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
   /deposit-account-openings:
@@ -91,13 +91,13 @@ paths:
               - [product-not-valid]()
               - [deposit-account-opening-maxnumber]()
           schema:
-            $ref: '#/definitions/business-problem'  
+            $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
   /loan-originations/{workitem-number}/activate:
     post:
       summary: Use this operation to activate the loan account based on approved loan origination request.
-      tags: 
+      tags:
         - Loan originations
       operationId: LoanOriginations_Activate
       parameters:
@@ -112,7 +112,7 @@ paths:
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
               - [product-not-valid]()
           schema:
-            $ref: '#/definitions/business-problem'  
+            $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
   /loan-originations:
@@ -139,13 +139,13 @@ paths:
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
               - [product-not-valid]()
           schema:
-            $ref: '#/definitions/business-problem'  
+            $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
   /product-account-openings/{workitem-number}/cancel:
     post:
       summary: Use this operation to cancel product account opening.
-      tags: 
+      tags:
         - Product account openings
       operationId: ProductAccountOpenings_Cancel
       parameters:
@@ -156,7 +156,7 @@ paths:
           schema:
             $ref: '#/definitions/command-result'
         default:
-          $ref: '#/responses/default-error-response'  
+          $ref: '#/responses/default-error-response'
   /product-account-openings/{workitem-number}/status:
     get:
       summary: Gets the status of specific product account-opening.
@@ -172,7 +172,7 @@ paths:
           schema:
             $ref: '#/definitions/product-account-opening-status'
         default:
-          $ref: '#/responses/default-error-response' 
+          $ref: '#/responses/default-error-response'
   /product-account-openings/{workitem-number}/history:
     get:
       summary: Gets the processing history of specific product account-opening.
@@ -192,7 +192,7 @@ paths:
   /deposit-account-openings/{workitem-number}:
     get:
       summary: Gets specific deposit account opening request with detailed information.
-      tags: 
+      tags:
         - Deposit account openings
       operationId: DepositAccountOpenings_Get
       parameters:
@@ -201,13 +201,13 @@ paths:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/deposit-account-opening'          
+            $ref: '#/definitions/deposit-account-opening'
         default:
           $ref: '#/responses/default-error-response'
   /credit-facility-originations/{workitem-number}/cancel:
     post:
       summary: Use this operation to cancel credit facility origination.
-      tags: 
+      tags:
         - Credit facility originations
       operationId: CreditFacilityOriginations_Cancel
       parameters:
@@ -218,11 +218,11 @@ paths:
           schema:
             $ref: '#/definitions/command-result'
         default:
-          $ref: '#/responses/default-error-response' 
+          $ref: '#/responses/default-error-response'
   /credit-facility-originations/{workitem-number}:
     get:
       summary: Gets specific credit facility origination with detailed information.
-      tags: 
+      tags:
         - Credit facility originations
       operationId: CreditFacilityOriginations_Get
       parameters:
@@ -233,11 +233,11 @@ paths:
           schema:
             $ref: '#/definitions/credit-facility-origination'
         default:
-          $ref: '#/responses/default-error-response' 
+          $ref: '#/responses/default-error-response'
   /current-account-openings/{workitem-number}:
     get:
       summary: Gets specific current account opening with detailed information.
-      tags: 
+      tags:
         - Current account openings
       operationId: CurrentAccountOpenings_Get
       parameters:
@@ -248,7 +248,7 @@ paths:
           schema:
             $ref: '#/definitions/current-account-opening'
         default:
-          $ref: '#/responses/default-error-response' 
+          $ref: '#/responses/default-error-response'
   /current-account-openings:
     post:
       summary: Use this operation to create new current account opening request.
@@ -273,13 +273,13 @@ paths:
               - [requested-account-range]()
               - [current-account-arrangement-maxnumber]()
           schema:
-            $ref: '#/definitions/business-problem'  
+            $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
   /loan-originations/{workitem-number}:
     get:
       summary: Gets specific loan origination request with detailed information.
-      tags: 
+      tags:
         - Loan originations
       operationId: LoanOriginations_Get
       parameters:
@@ -290,13 +290,13 @@ paths:
           schema:
             $ref: '#/definitions/loan-origination'
         default:
-          $ref: '#/responses/default-error-response' 
+          $ref: '#/responses/default-error-response'
   /product-account-openings:
     get:
       summary: |
         Use this operation to get list of product requests.
         Supports `paging` `shaping` `sorting` `filtering`.
-      tags: 
+      tags:
         - Product account openings
       x-asee-tags:
         - Shapeable
@@ -315,11 +315,11 @@ paths:
           schema:
             $ref: '#/definitions/product-account-opening-list'
         default:
-          $ref: '#/responses/default-error-response' 
+          $ref: '#/responses/default-error-response'
   /bundled-account-openings/{workitem-number}/cancel:
     post:
       summary: Use this operation to cancel bundled account opening.
-      tags: 
+      tags:
         - Bundled account openings
       operationId: BundledAccountOpenings_Cancel
       parameters:
@@ -330,7 +330,7 @@ paths:
           schema:
             $ref: '#/definitions/command-result'
         default:
-          $ref: '#/responses/default-error-response' 
+          $ref: '#/responses/default-error-response'
   /bundled-account-openings/{workitem-number}:
     get:
       summary: Gets specific bundled account opening with detailed information.
@@ -345,7 +345,7 @@ paths:
           schema:
             $ref: '#/definitions/bundled-account-opening'
         default:
-          $ref: '#/responses/default-error-response' 
+          $ref: '#/responses/default-error-response'
   /bundled-account-openings:
     post:
       summary: Use this operation to create new bundled account opening request.
@@ -370,7 +370,7 @@ paths:
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
               - [requested-account-range]()
           schema:
-            $ref: '#/definitions/business-problem'  
+            $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
   /current-account-openings/{workitem-number}/sign-option:
@@ -436,7 +436,7 @@ paths:
           description: Accepted
           schema:
             $ref: '#/definitions/command-result'
-        
+
         default:
           $ref: '#/responses/default-error-response'
     put:
@@ -457,10 +457,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/command-result'
-        
+
         default:
           $ref: '#/responses/default-error-response'
-  
+
   /credit-facility-originations/{workitem-number}/proposal:
     get:
       summary: Gets proposal details of specific credit limit account opening.
@@ -599,7 +599,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/installment-plan'
-        
+
         default:
           $ref: '#/responses/default-error-response'
   /calculations/indicative-offer:
@@ -626,9 +626,9 @@ paths:
             $ref: '#/definitions/indicative-offer'
         default:
           $ref: '#/responses/default-error-response'
-  /classifications: 
+  /classifications:
     get:
-      summary: Returns all classification schemas used in this API.   
+      summary: Returns all classification schemas used in this API.
       operationId: "Classifications_GetList"
       responses:
         '200':
@@ -681,7 +681,7 @@ responses:
     description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]().
 parameters:
   workitem-number-param:
-    description: Unique identifier for workitem. 
+    description: Unique identifier for workitem.
     in: path
     name: workitem-number
     required: true
@@ -718,7 +718,7 @@ parameters:
     required: false
     type: integer
     default: 10
-    x-asee-common: true    
+    x-asee-common: true
   sort-order-param:
     description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]()
     in: query
@@ -728,19 +728,19 @@ parameters:
     enum:
     - asc
     - desc
-    x-asee-common: true  
-  sort-by-param:  
+    x-asee-common: true
+  sort-by-param:
     description: Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]()
     in: query
     name: sort-by
     type: string
-    x-asee-common: true 
+    x-asee-common: true
   schema-id-param:
     description: Unique schema identifier
     in: path
     name: schema-id
     required: true
-    type: string 
+    type: string
 definitions:
   initiate-deposit-account-opening-command:
     description: Parameters for initiate deposit account opening.
@@ -796,7 +796,7 @@ definitions:
       loan-period:
         description: Loan period.
         $ref: '#/definitions/simple-time-period'
-    type: object   
+    type: object
   initiate-current-account-opening-command:
     description: Parameters for current account account opening initiation.
     properties:
@@ -1115,19 +1115,19 @@ definitions:
         description: Ordinal number.
         type: string
     type: object
-  classification: 
+  classification:
     description: Classification schema used in API contracts.
-    properties: 
-      API: 
+    properties:
+      API:
         description: Name of Api in which classification shema is used.
         type: string
-      description: 
+      description:
         description: Shema description.
         type: string
       schema-id:
         description: Unique identifier of the classification.
         type: string
-      name: 
+      name:
         description: Name of shema.
         type: string
       values:
@@ -1136,12 +1136,12 @@ definitions:
           $ref: "#/definitions/classification-value"
         type: array
     type: "object"
-  classification-list: 
+  classification-list:
     description: List of classification shemas.
-    properties: 
+    properties:
       items:
         description: List of all classification schemas.
-        items: 
+        items:
           $ref: "#/definitions/classification"
         type: "array"
     type: object
@@ -1248,34 +1248,6 @@ definitions:
         format: int32
         type: integer
     type: object
-  product-account-opening-history:
-    description: Product account opening history.
-    properties:
-      items:
-        description: List of work item history
-        items:
-          $ref: '#/definitions/product-account-opening-history-item'
-        type: array
-    type: object
-  product-account-opening-history-item:
-    description: Product account opening history item.
-    properties:
-      modified-by-name:
-        description: Name of person modified by
-        type: string
-      modified-date-time:
-        description: Modified date
-        format: date-time
-        type: string
-      property-name:
-        description: Property name
-        type: string
-      old-value:
-        description: Old value
-        type: string
-      new-value:
-        description: New Value
-        type: string
   indicative-offer:
     description: Indicative offer object.
     properties:
@@ -1358,7 +1330,7 @@ definitions:
       created-record-status:
         description: 'The created, updated, deleted record status.'
         type: string
-    type: object 
+    type: object
   business-problem:
     description: Business problem.
     properties:
@@ -1510,12 +1482,10 @@ definitions:
       comments:
         description: Comments
         type: string
-        description: Step.
-        type: string
       workitem-phase:
         description: Work item phase name.
         type: string
-        
+
   current-account-opening:
     description: Current account opening object.
     properties:
@@ -1648,7 +1618,7 @@ definitions:
     description: Currency amount and code
     properties:
       code:
-        description: Code. 
+        description: Code.
         type: string
       amount:
         description: Amount.
@@ -1819,16 +1789,6 @@ definitions:
       status-date:
         description: Last change date of the work item status.
         format: date-time
-        type: string
-    type: object
-  product-account-opening-status:
-    description: Product account opening status.
-    properties:
-      status:
-        description: Status of request. For complete list of possible values see [workitem-processing-status]() classification.
-        type: string
-      account-number:
-        description: Related account number
         type: string
     type: object
   product-info:
@@ -2013,7 +1973,7 @@ definitions:
     type: object
   residential-address:
     description: Address details for residental customers
-    type: object    
+    type: object
     properties:
       postal-code:
         description: Postal code.
@@ -2023,7 +1983,7 @@ definitions:
         type: string
       address-text-details:
         description: Address text details.
-        $ref: '#/definitions/postal-address-details'    
+        $ref: '#/definitions/postal-address-details'
       address-code:
         description: Address code.
         type: string
@@ -2044,8 +2004,8 @@ definitions:
         description: Country code.
         type: string
       country:
-        description: Country 
-        type: string        
+        description: Country
+        type: string
   postal-address-details:
     description: Postal address details.
     properties:

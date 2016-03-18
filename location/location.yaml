@@ -61,12 +61,12 @@ paths:
         - Sortable
         - Shapeable
   /facilities/{facility-id}:
+    parameters:
+      - $ref: "#/parameters/facility-id-param"
     get:
       summary: Get details on specific facility
       description: "Response contains facility details such as address, geographic coordinates, offered services and working hours."
       operationId: Facilities_Get
-      parameters:
-      - $ref: "#/parameters/facility-id-param"
       responses:
         '200':
           description: Success
@@ -200,6 +200,7 @@ paths:
           $ref: '#/responses/default-error-response'
       tags:
         - Classifications
+
   /classifications/{schema-id}:
     get:
       summary: List values allowed by given classification schema.
@@ -217,6 +218,9 @@ paths:
 
       tags:
         - Classifications
+
+
+
 responses:
   default-error-response:
     description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
@@ -596,7 +600,6 @@ definitions:
         items:
           type: string
         type: array
-        collectionFormat: csv
       address:
         "$ref": "#/definitions/address"
         readOnly: false
@@ -634,9 +637,7 @@ definitions:
       total-pages: 24738
       items:
       - name: "(E771 KNJAŽEVAC-SVRLJIG)-PONOR"
-        alternative-names:
-        - E771 KNJAŽEVAC-SVRLJIG-PONOR;PONOR-E771 KNJAŽEVAC-SVRLJIG;PUT KNJAŽEVAC - ZAJEČAR
-          - PONOR
+        alternative-names: ['E771 KNJAŽEVAC-SVRLJIG-PONOR', 'PONOR-E771 KNJAŽEVAC-SVRLJIG', 'PUT KNJAŽEVAC - ZAJEČAR-PONOR']
         code: '604509426'
         place-name: PONOR
         country-name: SRBIJA
@@ -708,7 +709,6 @@ definitions:
         items:
           type: string
         type: array
-        collectionFormat: csv
       street-code:
         description: Street code
         type: string
@@ -720,38 +720,6 @@ definitions:
         type: string
         maxLength: 2
         minLength: 2
-  place:
-    type: object
-    description: Place basic information
-    properties:
-      place-code:
-        description: "Place code. Every place has its own unique code inside one country."
-        type: string
-      name:
-        description: Place name
-        type: string
-      translated-name:
-        description: Place translation name
-        type: string
-      postal-code:
-        description: Place postal code
-        type: string
-      coordinates:
-        "$ref": "#/definitions/coordinates"
-      kind:
-        description: Place kinds
-        type: string
-      administrative-area:
-        description: Administrative area that place belongs to such as municipality
-        type: string
-      administrative-area-code:
-        description: Code that uniquely identifies administrative area
-        type: string
-      shipping-allowed:
-        description: Determines whether shiping is allowed to this place
-        type: boolean
-
-
 
 # ****************************************************#
 # MODELS COMMON WITH OTHER APIs                       #

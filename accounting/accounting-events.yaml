@@ -75,7 +75,7 @@ definitions:
           account:
             $ref: '#/definitions/account'
           header:
-            $ref: '#/definitions/header'            
+            $ref: '#/definitions/header'
   account-unblocked:
     type: object
     description: Account was unblocked and its use restriction removed
@@ -86,7 +86,7 @@ definitions:
           account:
             $ref: '#/definitions/account'
           header:
-            $ref: '#/definitions/header'              
+            $ref: '#/definitions/header'
   pending-transaction-booked:
     type: object
     description: Pending transaction was booked
@@ -130,14 +130,14 @@ definitions:
           account:
             $ref: '#/definitions/statement'
           header:
-            $ref: '#/definitions/header'            
+            $ref: '#/definitions/header'
 
 # ****************************************************#
 # EVENTS HEADER REDEFINED IN ACCOUNTING API           #
 # ****************************************************#
   header:
     required:
-      - kind  
+      - kind
     properties:
       aggregate-id:
         type: string
@@ -173,7 +173,7 @@ definitions:
 # MODELS COMMON TO ALL APIs                           #
 # ****************************************************#
   event:
-    description: Base event model that ensures that every event instance is globaly identifiable and that it is timestamped 
+    description: Base event model that ensures that every event instance is globaly identifiable and that it is timestamped
     type: object
     properties:
       occurred-on:
@@ -188,7 +188,7 @@ definitions:
       occurred-on: '2015-11-19T13:21:01.000Z'
       id: 736a07bd-809e-43bd-9ac1-20991a78f390
 
- 
+
 
 # ****************************************************#
 # EVENTS PAYLOAD ELEMENTS IN ACCOUNTING API           #
@@ -223,14 +223,14 @@ definitions:
           - closing
           - archived
       posting-status:
-	    description: For a list of possible values see [account-posting-statuses](accounting-classifications.html#account-posting-statuses) enumeration.
+        description: For a list of possible values see [account-posting-statuses](accounting-classifications.html#account-posting-statuses) enumeration.
         type: string
         enum:
           - not-postable
           - no-further-drawings
           - post-all
           - debit-only
-          - credit-only    
+          - credit-only
       kind:
         description: |
           Kind of account used for tracking. This determines balances that make sense.
@@ -255,7 +255,7 @@ definitions:
       currency: EUR
       status: open
       posting-status: post-all
-      kind: current-account  
+      kind: current-account
       sync-timestamp: 26447476
   statement:
     type: object
@@ -263,31 +263,31 @@ definitions:
     properties:
       from-date:
         description: Date when period reported in the statement begins
-        type: string 
+        type: string
         format: date
       to-date:
         description: Date when period reported in the statement ends
-        type: string 
-        format: date 
+        type: string
+        format: date
       account-number:
         description: Unique identifier of the account arrangement for which the statement is generated
-        type: string        
+        type: string
       sequence-number:
         description: Official sequence number of the statement incremented as the statements are generated
         type: number
       generated:
         description: Date and time when statement was generated
-        type: string 
+        type: string
         format: date-time
       document:
         description: Unique identifier of the statement document stored in DMS repository
-        type: string      
+        type: string
       total-credits:
         description: Total number of credit entries in the statement
         type: number
       total-debits:
         description: Total number of debit entries in the statement
-        type: number        
+        type: number
       currency:
         description: Currency code.
         type: string
@@ -310,7 +310,7 @@ definitions:
       generated: 2016-02-01T01:25:00
       document: AS-0021000102101-26
       total-credits: 1
-      total-debits: 3     
+      total-debits: 3
       currency: EUR
       opening-balance: 20.00
       closing-balance: 180.00
@@ -371,15 +371,15 @@ definitions:
       value-date:
         description: Date when the balance and interest are affected
         type: string
-        format: date        
+        format: date
       book-date:
-        description: Date when 
-        type: string 
+        description: Date when
+        type: string
         format: date
       transaction-time:
         description: Date and time when transaction occured
-        type: string 
-        format: date-time      
+        type: string
+        format: date-time
       description:
         description: Text that describes transaction
         type: string
@@ -416,12 +416,12 @@ definitions:
       amount: 100.00
       amount-local: 12283.50
       currency: EUR
-      direction: d  
+      direction: d
       status: b
       value-date: 2016-02-23
       book-date: 2016-02-23
       transaction-time: 2016-02-23T11:25:00
-      description: Branch cash withdrawal 
+      description: Branch cash withdrawal
       transaction-code: 212
       transaction-kind: wdw
       sync-timestamp: 26447476
