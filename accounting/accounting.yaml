@@ -37,7 +37,7 @@ paths:
   /transactions:
     get:
       summary: Get bulk list of account financial transactions
-      description: Returns bulk list of account transactions based on supplied filters. This endpoint supports incremental synchronization
+      description: Returns bulk list of account transactions based on supplied filters. This endpoint supports incremental synchronization so implicit sort order is by `sync-timestamp` ascending. so implicit sort order is by `sync-timestamp` ascending.
       operationId: Transactions_GetList
       produces:
       - text/csv
@@ -63,7 +63,7 @@ paths:
   /statements:
     get:
       summary: Get bulk list of account statements
-      description: Returns bulk list of account statements based on supplied filters. This endpoint supports incremental synchronization
+      description: Returns bulk list of account statements based on supplied filters. This endpoint supports incremental synchronization so implicit sort order is by `sync-timestamp` ascending.
       operationId: Statements_GetList
       produces:
       - text/csv
@@ -86,7 +86,7 @@ paths:
   /balances:
     get:
       summary: Get bulk list of account balances
-      description: Returns bulk list of account balances based on supplied filters. This endpoint supports incremental synchronization
+      description: Returns bulk list of account balances based on supplied filters. This endpoint supports incremental synchronization so implicit sort order is by `sync-timestamp` ascending.
       operationId: Balances_GetList
       produces:
       - text/csv
