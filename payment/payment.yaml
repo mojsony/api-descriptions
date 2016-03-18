@@ -1485,7 +1485,6 @@ definitions:
         items:
           type: string
         type: array
-        collectionFormat: csv
       code-type:
         description: Type of purpose code.
         enum:
@@ -1727,7 +1726,6 @@ definitions:
       - creditor-identifier
       - creditor-identity-kind
       - instructed-amount
-    type: object
   credit-transfer-instruction:
     description: Instruction with details of credit transfer
     allOf:
@@ -1842,7 +1840,7 @@ definitions:
       debtor-bank:
         description: Bank that sends money in the name of debtor
         type: string
-      creditor-bank-address:
+      debtor-bank-address:
         $ref: '#/definitions/address'
       creditor-bank-swift-code:
         type: string
