@@ -67,6 +67,9 @@ paths:
       - $ref: "#/parameters/path"
     get:
       summary: List folder contents by path
+      description: |
+        Returns list of contents for folder at given path
+        > **NOTE** If path parameter is empty, implicit root folder of repository is assummed and all documents and folders in root path are returned.
       tags:
         - Folders
       x-asee-tags:
@@ -685,7 +688,7 @@ parameters:
   path:
     name: path
     in: path
-    description: Path of the folder. Hiararchy of folders separated with forward slash eg. `folder1/folder2/folder3`. Leading and trailing slashes will be trimmed.
+    description: "Path of the folder. Hiararchy of folders separated with forward slash eg. `folder1/folder2/folder3`. Leading and trailing slashes will be trimmed. If empty, implicit root folder of repository is assumed"
     required: true
     type: string
     format: folder-path
