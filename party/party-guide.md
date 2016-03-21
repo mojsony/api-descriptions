@@ -1,34 +1,18 @@
 <span class="icon"></span>Party API
 =========================
-Party API gives you access to individuals and organizations registered with the financial institution whether they are customers or just prospects or related parties. Also you can get all party related information like identification documents, contacts, financial reports, classifications and arrangements. Party data service can be used to register new prospects in the system.
-With Customer survey API you can:
-    - Get list of individual customers
-    - Create new individual customer with full set of data
-    - Create new potential individual customer
-    - Get list of identification documents for individual customer
-    - Get data of the individual customer 
-    - Creates postal address for individual customer
-    - Creates telecommunication number for individual customer
-    - Creates electronic address for individual customer
-    - Get contacts data for individual customer
-    - Get postal address for individual customer
-    - Get telecommunication number for individual customer
-    - Get electronic address for individual customer
-    - Get contact preference for individual customer
-    - Get identification document for individual customer
-    - Get classification schema values
+Party API gives you access to individuals and organizations registered with the financial institution whether they are customers or just prospects or related parties. In addition, you can get all party related information like identification documents, contact points and relationships.
+
+> ## THIS GUIDE IS UNDER CONSTRUCION, PLEASE COME BACK SOON!
    
 Key Resources
 -------------
-Party Data has five top level collection resources: individuals, identification documents, contacts, contact preferences and classifications.
+Party API has on top-level collection resources: parties that specializes into individuals and organizations subresources for the purpose of specific commands. Party also composes identification documents, contact points and relationships as sub-resources.
 
 Resource						| Description
 ------------------------------- |------------------------------------
-*individuals*					| Identifies a particular type of Involved Party that is a natural person who is of interest to the modeled organization.
-*identification documents*      | Represents identification document of the individual customer, sauch as identity card, passport, driving licence...
-*contacts*						| Represents the method and destination of a communication contact with a Role Player. This relates to specific communication media: Postal Address, Telephone Number, Electronic Address 
-*contact preferences*		    | Represents contact that has sepcific usage, like contact address used to communicate about arrangement.
-*classifications*			    | Identifies a grouping of <Business Model Object>s, for example; Single Males Under 30, Married People over 50, etc...  A Classification Value can be further partitioned into several sub-classifications according to different criteria, each of which is represented in turn by a Classification Scheme.
+*parties*					| Individuals and organizations of interest to bank. Information recorded for both organizations and individuals is under this resource. Customer is one role a party can play and customer lifecycle goes from potential, through prospective and active to former.
+*contact points*						| Represents the method and destination of a communication contact with a party. This relates to specific communication media: Postal Address, Telephone Number, Electronic Address
+
 
 Getting started tutorial
 ---------------

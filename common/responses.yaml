@@ -1,8 +1,4 @@
 responses:
-  resource-created-response:
-    description: Resource was created successfuly.
-    schema:
-      $ref: "#/definitions/command-result"
   validation-problem-response:
     description: Your request was not constructed properly. Response contains the list of validation errors for each invalid element of your request. For complete list of possible validation errors see [validation errors]() classification.
     schema: 
