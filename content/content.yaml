@@ -46,13 +46,13 @@ paths:
         default:
           $ref: '#/responses/default-error-response'
   /repositories/{repo}:
+    parameters:
+      - $ref: "#/parameters/repository-name"
     get:
       summary: Get information about the specific repository
       tags:
         - Repositories
       operationId: Repositories_Get
-      parameters:
-        - $ref: "#/parameters/repository-name"
       responses:
         '200':
           description: Success
@@ -62,6 +62,9 @@ paths:
           $ref: '#/responses/default-error-response'
 
   /{repo}/{path}:
+    parameters:
+      - $ref: "#/parameters/repository-name"
+      - $ref: "#/parameters/path"
     get:
       summary: List folder contents by path
       tags:
@@ -71,8 +74,6 @@ paths:
         - Pageable
       operationId: Folders_GetContentsByPath
       parameters:
-        - $ref: "#/parameters/repository-name"
-        - $ref: "#/parameters/path"
         - $ref: "#/parameters/kind-param"
         - $ref: "#/parameters/subfolders-param"
         - $ref: "#/parameters/page-param"
@@ -87,6 +88,9 @@ paths:
         default:
           $ref: '#/responses/default-error-response'
   /{repo}/{path}/search:
+    parameters:
+      - $ref: "#/parameters/repository-name"
+      - $ref: "#/parameters/path"
     get:
       summary: Search folder contents by path
       tags:
@@ -96,8 +100,6 @@ paths:
         - Searchable
       operationId: Folders_SearchContentsByPath
       parameters:
-        - $ref: "#/parameters/repository-name"
-        - $ref: "#/parameters/path"
         - $ref: "#/parameters/search-query-param"
         - $ref: "#/parameters/search-mode-param"
         - $ref: "#/parameters/search-fields-param"
@@ -114,6 +116,9 @@ paths:
         default:
           $ref: '#/responses/default-error-response'
   /{repo}/folders/{id}/search:
+    parameters:
+      - $ref: "#/parameters/repository-name"
+      - $ref: "#/parameters/folder-id-param"
     get:
       summary: Search folder contents
       tags:
@@ -123,8 +128,6 @@ paths:
         - Searchable
       operationId: Folders_SearchContents
       parameters:
-        - $ref: "#/parameters/repository-name"
-        - $ref: "#/parameters/folder-id-param"
         - $ref: "#/parameters/search-query-param"
         - $ref: "#/parameters/search-mode-param"
         - $ref: "#/parameters/search-fields-param"
@@ -141,14 +144,14 @@ paths:
         default:
           $ref: '#/responses/default-error-response'
   /{repo}/{path}/metadata:
+    parameters:
+      - $ref: "#/parameters/repository-name"
+      - $ref: "#/parameters/path"
     get:
       summary: Get folder metadata by path
       tags:
         - Folders
       operationId: Folders_GetMetadataByPath
-      parameters:
-        - $ref: "#/parameters/repository-name"
-        - $ref: "#/parameters/path"
       responses:
         '200':
           description: Success
@@ -158,14 +161,14 @@ paths:
           $ref: '#/responses/default-error-response'
 
   /{repo}/folders/{id}/metadata:
+    parameters:
+      - $ref: "#/parameters/repository-name"
+      - $ref: "#/parameters/folder-id-param"
     get:
       summary: Get folder metadata by id
       tags:
         - Folders
       operationId: Folders_GetMetadata
-      parameters:
-        - $ref: "#/parameters/repository-name"
-        - $ref: "#/parameters/folder-id-param"
 
       responses:
         '200':
@@ -180,8 +183,6 @@ paths:
         - Folders
       operationId: Folders_UpdateMetadata
       parameters:
-        - $ref: "#/parameters/repository-name"
-        - $ref: "#/parameters/folder-id-param"
         -
           name: payload
           in: body
@@ -208,6 +209,9 @@ paths:
           $ref: '#/responses/default-error-response'
 
   /{repo}/folders/{id}/upload-multiple:
+    parameters:
+      - $ref: "#/parameters/repository-name"
+      - $ref: "#/parameters/folder-id-param"
     post:
       summary: Upload multiple documents to folder in one request
       description: |
@@ -219,8 +223,6 @@ paths:
       consumes:
       - multipart/form-data
       parameters:
-        - $ref: "#/parameters/repository-name"
-        - $ref: "#/parameters/folder-id-param"
         -
           name: content-stream-1
           in: formData
@@ -303,15 +305,15 @@ paths:
         default:
           $ref: '#/responses/default-error-response'
   /{repo}/folders/{id}:
+    parameters:
+      - $ref: "#/parameters/repository-name"
+      - $ref: "#/parameters/folder-id-param"
     delete:
       summary: Delete folder.
       description: 'WARNING: This operation deletes folder with all contents and subdirectories'
       tags:
         - Folders
       operationId: Folders_Delete
-      parameters:
-        - $ref: "#/parameters/repository-name"
-        - $ref: "#/parameters/folder-id-param"
       responses:
         '200':
           description: Success
@@ -334,8 +336,6 @@ paths:
       consumes:
       - multipart/form-data
       parameters:
-        - $ref: "#/parameters/repository-name"
-        - $ref: "#/parameters/folder-id-param"
         -
           name: content-stream
           in: formData
@@ -391,13 +391,14 @@ paths:
         default:
           $ref: '#/responses/default-error-response'
   /{repo}/folders:
+    parameters:
+      - $ref: "#/parameters/repository-name"
     post:
       summary: Create new folder in repository
       tags:
         - Folders
       operationId: Folders_Create
       parameters:
-        - $ref: "#/parameters/repository-name"
         -
           name: new-folder
           in: body
@@ -420,15 +421,15 @@ paths:
           $ref: '#/responses/default-error-response'
 
   /{repo}/{path}/{file-name}/metadata:
+    parameters:
+      - $ref: "#/parameters/repository-name"
+      - $ref: "#/parameters/path"
+      - $ref: "#/parameters/file-name"
     get:
       summary: Get document metadata by path and file name
       tags:
         - Documents
       operationId: Documents_GetMetadataByPath
-      parameters:
-        - $ref: "#/parameters/repository-name"
-        - $ref: "#/parameters/path"
-        - $ref: "#/parameters/file-name"
       responses:
         '200':
           description: Success
@@ -437,6 +438,10 @@ paths:
         default:
           $ref: '#/responses/default-error-response'
   /{repo}/{path}/{file-name}:
+    parameters:
+      - $ref: "#/parameters/repository-name"
+      - $ref: "#/parameters/path"
+      - $ref: "#/parameters/file-name"
     get:
       summary: Dowlnoad document content by path
       produces:
@@ -447,31 +452,6 @@ paths:
       tags:
         - Documents
       operationId: Documents_DownloadByPath
-      parameters:
-        - $ref: "#/parameters/repository-name"
-        - $ref: "#/parameters/path"
-        - $ref: "#/parameters/file-name"
-      responses:
-        '200':
-          description: Success
-          schema:
-            type: file
-        default:
-          $ref: '#/responses/default-error-response'
-  /{repo}/documents/{id}:
-    get:
-      summary: Dowlnoad document content
-      produces:
-      - image/jpg
-      - image/png
-      - application/pdf
-      - application/octet-stream
-      tags:
-        - Documents
-      operationId: Documents_Download
-      parameters:
-        - $ref: "#/parameters/repository-name"
-        - $ref: "#/parameters/file-id-param"
       responses:
         '200':
           description: Success
@@ -480,19 +460,14 @@ paths:
         default:
           $ref: '#/responses/default-error-response'
   /{repo}/documents/{id}/metadata:
+    parameters:
+      - $ref: "#/parameters/repository-name"
+      - $ref: "#/parameters/document-id-param"
     get:
       summary: Get document metadata by id
       tags:
         - Documents
       operationId: Documents_GetMetadata
-      parameters:
-        - $ref: "#/parameters/repository-name"
-        -
-          name: id
-          type: string
-          in: path
-          description: asda
-          required: true
       responses:
         '200':
           description: Success
@@ -533,6 +508,9 @@ paths:
         default:
           $ref: '#/responses/default-error-response'
   /{repo}/documents/{id}:
+    parameters:
+      - $ref: "#/parameters/repository-name"
+      - $ref: "#/parameters/document-id-param"
     get:
       summary: Dowlnoad document content
       produces:
@@ -543,9 +521,6 @@ paths:
       tags:
         - Documents
       operationId: Documents_Download
-      parameters:
-        - $ref: "#/parameters/repository-name"
-        - $ref: "#/parameters/document-id-param"
       responses:
         '200':
           description: Success
@@ -559,9 +534,6 @@ paths:
       tags:
         - Documents
       operationId: Documents_Delete
-      parameters:
-        - $ref: "#/parameters/repository-name"
-        - $ref: "#/parameters/document-id-param"
       responses:
         '200':
           description: Document was deleted
@@ -575,9 +547,14 @@ paths:
             $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
+
+# ****************************************************#
+# ENDPOINTS COMMON WITH OTHER APIs                    #
+# ****************************************************#
+
   /classifications:
     get:
-      summary: List all classification schemas used in the API
+      summary: List all classification schemas used by the API
       description: Some fields and parameters have been restricted to a list of allowed lookup values maintained by the bank. This method lists all schemas used in this API.
       operationId: "Classifications_GetList"
       responses:
@@ -589,7 +566,6 @@ paths:
           $ref: '#/responses/default-error-response'
       tags:
         - Classifications
-      x-asee-tags: []
   /classifications/{schema-id}:
     get:
       summary: List values allowed by given classification schema.
@@ -607,7 +583,7 @@ paths:
 
       tags:
         - Classifications
-      x-asee-tags: []
+
 responses:
   resource-created-response:
     description: Resource was created successfuly
