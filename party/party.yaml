@@ -34,17 +34,21 @@ paths:
       x-asee-tags:
         - Pageable
         - Shapeable
-        - Sortable         
+        - Sortable
       operationId: Parties_GetList
       parameters:
         - name: kind
           in: query
-          description: Party kind. If omitted or not present both individuals and organizations are returned.
+          description: |
+            Party kind. If omitted or not present both individuals and organizations are returned.
+            For a list of possible values see [party-kinds](party-classifications.html#party-kinds) enumeration.
           type: string
           enum: [individual, organization]
         - name: statuses
           in: query
-          description: Customer statuses of interest to filter parties. If omitted or not present all customer statuses are considered interesting.
+          description: |
+            Customer statuses of interest to filter parties. If omitted or not present all customer statuses are considered interesting.
+            For a list of possible values see [party-statuses](party-classifications.html#party-statuses) enumeration.
           type: array
           items:
             type: string
@@ -56,19 +60,21 @@ paths:
           type: string
         - name: id-kind
           in: query
-          description: 'Kind of identification number. Common values are `personal-id-number`, `passport-number`, `registration-number`'
+          description: |
+            'Kind of identification number. Common values are `personal-id-number`, `passport-number`, `registration-number`'
+            For a list of possible values see [identification-kinds](party-classifications.html#identification-kinds) enumeration.
           type: string
-          enum: [registration-number, tax-id-number, personal-id-number, identity-card-number, passport-number, driver-license-number, social-security-number]  
+          enum: [registration-number, tax-id-number, personal-id-number, identity-card-number, passport-number, driver-license-number, social-security-number]
         - $ref: '#/parameters/name-param'
         - $ref: '#/parameters/telecommunication-number-param'
         - $ref: '#/parameters/email-param'
-        - $ref: '#/parameters/facebook-account-param'          
+        - $ref: '#/parameters/facebook-account-param'
         - $ref: "#/parameters/page-param"
         - $ref: "#/parameters/page-size-param"
         - $ref: "#/parameters/sort-by-param"
         - $ref: "#/parameters/sort-order-param"
         - $ref: "#/parameters/include-param"
-        - $ref: "#/parameters/trim-param"          
+        - $ref: "#/parameters/trim-param"
       responses:
         200:
           description: OK
@@ -89,7 +95,9 @@ paths:
         - Shapeable
       operationId: Parties_Search
       parameters:
-        - description: Party kind
+        - description: |
+            Party kind
+            For a list of possible values see [party-kinds](party-classifications.html#party-kinds) enumeration.
           in: query
           name: kind
           required: false
@@ -100,11 +108,11 @@ paths:
         - $ref: '#/parameters/search-mode-param'
         - $ref: '#/parameters/latitude-param'
         - $ref: '#/parameters/longitude-param'
-        - $ref: '#/parameters/radius-param'          
+        - $ref: '#/parameters/radius-param'
         - $ref: "#/parameters/page-param"
         - $ref: "#/parameters/page-size-param"
         - $ref: "#/parameters/include-param"
-        - $ref: "#/parameters/trim-param"             
+        - $ref: "#/parameters/trim-param"
       responses:
         200:
           description: OK
@@ -127,21 +135,21 @@ paths:
           required: true
           type: string
         - $ref: "#/parameters/include-param"
-        - $ref: "#/parameters/trim-param"             
+        - $ref: "#/parameters/trim-param"
       responses:
         200:
           description: OK
           schema:
             $ref: '#/definitions/party'
         default:
-          $ref: '#/responses/default-error-response'    
+          $ref: '#/responses/default-error-response'
   '/parties/{party-number}/relationships':
     parameters:
         - description: Unique identifier of the party. Also known as customer number.
           in: path
           name: party-number
           required: true
-          type: string  
+          type: string
     get:
       summary: Get list of party relationships
       tags:
@@ -155,14 +163,14 @@ paths:
             items:
               $ref: '#/definitions/party-relationship'
         default:
-          $ref: '#/responses/default-error-response'                     
+          $ref: '#/responses/default-error-response'
   '/parties/{party-number}/id-documents':
     parameters:
         - description: Unique identifier of the party. Also known as customer number.
           in: path
           name: party-number
           required: true
-          type: string  
+          type: string
     get:
       summary: Get list of id documents for party
       tags:
@@ -176,7 +184,7 @@ paths:
             items:
               $ref: '#/definitions/identification-document'
         default:
-          $ref: '#/responses/default-error-response'           
+          $ref: '#/responses/default-error-response'
   '/parties/{party-number}/contact-preference':
     patch:
       summary: Modify party contact preference
@@ -202,21 +210,21 @@ paths:
           description: |
             Your request was well not well constructed. Look into validation error in response for more details.
           schema:
-            $ref: '#/definitions/validation-problem'          
+            $ref: '#/definitions/validation-problem'
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
           schema:
-            $ref: '#/definitions/business-problem'              
+            $ref: '#/definitions/business-problem'
         default:
-          $ref: '#/responses/default-error-response'          
+          $ref: '#/responses/default-error-response'
   '/parties/{party-number}/contact-points':
     parameters:
         - description: Unique identifier of the party. Also known as customer number.
           in: path
           name: party-number
           required: true
-          type: string  
+          type: string
     get:
       summary: Search list of parties registered by bank
       tags:
@@ -224,7 +232,7 @@ paths:
       operationId: Parties_GetContactPoints
       parameters:
         - $ref: '#/parameters/method-param'
-        - $ref: '#/parameters/usage-param'             
+        - $ref: '#/parameters/usage-param'
       responses:
         200:
           description: OK
@@ -233,7 +241,7 @@ paths:
             items:
               $ref: '#/definitions/contact-point'
         default:
-          $ref: '#/responses/default-error-response' 
+          $ref: '#/responses/default-error-response'
     post:
       summary: Register party contact point
       tags:
@@ -259,12 +267,12 @@ paths:
           description: |
             Your request was well not well constructed. Look into validation error in response for more details.
           schema:
-            $ref: '#/definitions/validation-problem'          
+            $ref: '#/definitions/validation-problem'
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
           schema:
-            $ref: '#/definitions/business-problem'              
+            $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
   '/parties/{party-number}/contact-points/{id}':
@@ -298,37 +306,37 @@ paths:
           description: |
             Your request was well not well constructed. Look into validation error in response for more details.
           schema:
-            $ref: '#/definitions/validation-problem'          
+            $ref: '#/definitions/validation-problem'
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
           schema:
-            $ref: '#/definitions/business-problem'              
+            $ref: '#/definitions/business-problem'
         default:
-          $ref: '#/responses/default-error-response'        
+          $ref: '#/responses/default-error-response'
   '/parties/individuals':
     post:
       summary: Register individual
       description: |
-        Registers new individual according to specified registration profile that determines which fields are mandatory. 
+        Registers new individual according to specified registration profile that determines which fields are mandatory.
         > Mandatory fields for `contact` registration profile:
         - `given-name`
         - `surname`
         - `mobile-phone`
         - `email-address`
-        
+
         > Additional mandatory fields for `prospect` registration profile:
         - `contact-address`
         - `id-number`
 
         > Additional mandatory fields for `customer` registration profile:
         - `birth-place`
-        - `birth-country`       
+        - `birth-country`
         - `country-of-residence`
         - `legal-address`
         - `delivery-address`
         - `employment-status`
-        
+
       tags:
         - Parties
       operationId: Individuals_Register
@@ -347,18 +355,18 @@ paths:
           headers:
             Location:
               type: string
-              description: The URL of the newly registered individual          
+              description: The URL of the newly registered individual
         default:
-          $ref: '#/responses/default-error-response'                
+          $ref: '#/responses/default-error-response'
   '/parties/organizations':
     post:
       summary: Register organization
       description: |
-        Registers new organization according to specified registration profile that determines which fields are mandatory. 
+        Registers new organization according to specified registration profile that determines which fields are mandatory.
         > Mandatory fields for `contact` registration profile:
         - `commercial-name`
         - `phone`
-        
+
         > Additional mandatory fields for `prospect` registration profile:
         - `contact-address`
         - `id-number`
@@ -387,7 +395,7 @@ paths:
           headers:
             Location:
               type: string
-              description: The URL of the newly registered organization          
+              description: The URL of the newly registered organization
         default:
           $ref: '#/responses/default-error-response'
 
@@ -421,13 +429,13 @@ paths:
           $ref: '#/responses/default-error-response'
 
       tags:
-        - Classifications          
+        - Classifications
 responses:
   default-error-response:
     description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling](common-getstarted.html#error-handling)
-    
+
 definitions:
- 
+
   paged-party-list:
     description: List of parties
     type: object
@@ -450,14 +458,16 @@ definitions:
       kind:
         type: string
         enum: [individual, organization]
+        description: |
+            For a list of possible values see [party-kinds](party-classifications.html#party-kinds) enumeration.
       party-number:
         description: Unique identifier of the party. Also known as customer number.
-        type: string        
+        type: string
       contact-name:
         description: "Primary current name of party used by bank for contact purposes. For organizations it is usually same as organization's legal name and for individuals same as person's full name."
         type: string
       contact-preference:
-        $ref: '#/definitions/contact-preference'        
+        $ref: '#/definitions/contact-preference'
       primary-id:
         $ref: '#/definitions/identification-number'
       country-of-residence:
@@ -479,7 +489,7 @@ definitions:
       relationships:
         type: array
         items:
-          $ref: '#/definitions/party-relationship'          
+          $ref: '#/definitions/party-relationship'
   organization:
     description: Organization
     type: object
@@ -491,7 +501,7 @@ definitions:
         type: string
       commercial-name:
         description: "The primary commercial name of an organization, by which it is most commonly recognized"
-        type: string        
+        type: string
       legal-structure:
         type: string
         x-asee-classification: legal-structure
@@ -499,7 +509,7 @@ definitions:
       organization-purpose:
         type: string
         x-asee-classification: organization-purpose
-        description: 'Distinguishes between organizations according to their purpose or format; for example, `association` and `public-service`. For a complete list of possible values see [organization-purpose](party-classifications.html#organization-purpose)' 
+        description: 'Distinguishes between organizations according to their purpose or format; for example, `association` and `public-service`. For a complete list of possible values see [organization-purpose](party-classifications.html#organization-purpose)'
       is-sole-trader:
         type: boolean
         description: 'A flag indicating that this organization represents the business aspects of an individual operating as a sole trader. The relevant Individual can be traced through the party relationship.'
@@ -511,7 +521,7 @@ definitions:
     description: Individual
     type: object
     allOf:
-      - $ref: '#/definitions/party'    
+      - $ref: '#/definitions/party'
     properties:
       full-name:
         description: Human readable name of the object by which it is best recognized.
@@ -530,7 +540,7 @@ definitions:
         description: "Individual's surname as it existed prior to any change of surname resulting from any marriage. In many countries, legal and/or social and cultural conventions dictate or suggest that one spouse assume the surname of the other spouse upon their marriage"
         maxLength: 40
         minLength: 2
-        type: string         
+        type: string
       gender:
         description: 'Gender is the characteristic pertaining to, and differentiating between, masculinity and femininity'
         type: string
@@ -547,19 +557,23 @@ definitions:
         type: string
         format: ISO 3166-1 alpha-2
         minLength: 2
-        maxLength: 2  
+        maxLength: 2
       citizenship:
         description: Country of citizenship entered from original or certified document
         type: string
         format: ISO 3166-1 alpha-2
         minLength: 2
-        maxLength: 2        
+        maxLength: 2
       legal-competency:
-        description: 'Enumeration that distinguishes whether individual has any legal limitation on their ability to transact business with bank'
+        description: |
+          'Enumeration that distinguishes whether individual has any legal limitation on their ability to transact business with bank'
+          For a list of possible values see [legal-competencies](party-classifications.html#legal-competencies) enumeration.
         type: string
         enum: [incompetent-minor, competent-adult]
       marital-status:
-        description: Marital status
+        description: |
+          Marital status
+          For a list of possible values see [marital-statuses](party-classifications.html#marital-statuses) enumeration.
         enum:
           - divorced
           - common-law-marriage
@@ -584,15 +598,15 @@ definitions:
       kind:
         type: string
         x-asee-classification: customer-taxonomy
-        description: 'Classifies customers according to taxonomy defined by bank. For a complete list of possible values see [customer-taxonomy](party-classifications.html#customer-taxonomy) classification'      
+        description: 'Classifies customers according to taxonomy defined by bank. For a complete list of possible values see [customer-taxonomies](party-classifications.html#customer-taxonomies) classification'
       status:
-        description: 'Identifies the state of a customer within a lifecycle model. Values see in [customer-status](party-classifications.html#customer-status) classification.'
-        x-asee-classification: customer-status        
+        description: 'Identifies the state of a customer within a lifecycle model. Values see in [customer-statuses](party-classifications.html#customer-statuses) classification.'
+        x-asee-classification: customer-status
         type: string
       segment:
         type: string
         x-asee-classification: customer-segment
-        description: 'Classifies the customers into segments according to bank requirements. For a complete list of possible values see [customer-segment](party-classifications.html#customer-segment) classification'             
+        description: 'Classifies the customers into segments according to bank requirements. For a complete list of possible values see [customer-segments](party-classifications.html#customer-segments) classification'
   party-relationship:
     type: object
     description: Relationship between two parties - individuals and organizations
@@ -600,9 +614,13 @@ definitions:
       kind:
         type: string
         enum: [marriage, family, ownership, representation, employment]
+        description: |
+          For a list of possible values see [party-relationship-kinds](party-classifications.html#party-relationship-kinds) enumeration.
       role:
         type: string
-        enum: [spouse, child, parent, sibling, cousin, owner, owned, representative, represented, employer, employee]      
+        enum: [spouse, child, parent, sibling, cousin, owner, owned, representative, represented, employer, employee]
+        description: |
+          For a list of possible values see [party-relationship-roles](party-classifications.html#party-relationship-roles) enumeration.
       to-party:
         type: object
         properties:
@@ -614,7 +632,9 @@ definitions:
             description: Name of other party in a relationship
           kind:
             type: string
-            enum: [individual, organization]        
+            enum: [individual, organization]
+            description: |
+              For a list of possible values see [party-kinds](party-classifications.html#party-kinds) enumeration.
   employment:
     description: Employment information for individual
     properties:
@@ -628,8 +648,8 @@ definitions:
       employment-position:
         description: Employment position held by individual
         type: string
-    type: object            
-    
+    type: object
+
   contact-preference:
     description: General contact preference
     properties:
@@ -638,17 +658,17 @@ definitions:
         description: Preferred communication language
         type: string
       opt-ins:
-        description: 'Purposes for which party allowes to be contacted. For a complete list of possible values see [contact-purpose](party-classifications.html#contact-purpose) classification'
+        description: 'Purposes for which party allowes to be contacted. For a complete list of possible values see [contact-purposes](party-classifications.html#contact-purposes) classification'
         items:
           type: string
         type: array
-        x-asee-classification: contact-purpose
+        x-asee-classification: contact-purposes
       opt-outs:
-        description: 'Purposes for which party does not allow to be contacted. For a complete list of possible values see [contact-purpose](party-classifications.html#contact-purpose) classification'
+        description: 'Purposes for which party does not allow to be contacted. For a complete list of possible values see [contact-purposes](party-classifications.html#contact-purposes) classification'
         items:
           type: string
         type: array
-        x-asee-classification: contact-purpose
+        x-asee-classification: contact-purposes
     type: object
   contact-point:
     description: Point of contact for party dependendent on the different means of communication delivery such as postal, telephony, electronic delivery
@@ -658,11 +678,15 @@ definitions:
         type: string
         readOnly: true
       method:
-        description: Enumeration that explains method od contact. Common values are `postal`, `gsm` and `email`
+        description: |
+          Enumeration that explains method od contact. Common values are `postal`, `gsm` and `email`
+          For a list of possible values see [contact-point-methods](party-classifications.html#contact-point-methods) enumeration.
         type: string
         enum: [postal, pstn, gsm, fax, facebook, email, web]
       usage:
-        description: 'Enumeration that explains context of usage of the contact. Commonly used values are `home`, `work`, `business` and `default` which has a special meaning of being a primary contact'
+        description: |
+          'Enumeration that explains context of usage of the contact. Commonly used values are `home`, `work`, `business` and `default` which has a special meaning of being a primary contact'
+          For a list of possible values see [contact-point-usages](party-classifications.html#contact-point-usages) enumeration.
         type: string
         default: default
         enum: [default, home, business, work, seasonal, assistant, delivery, legal]
@@ -680,17 +704,19 @@ definitions:
       - formatted
     properties:
       kind:
-        description: Kind of structured address. Allowed values are `postal-address`, `phone-number` and `email-address`
+        description: |
+          Kind of structured address. Allowed values are `postal-address`, `phone-number` and `email-address`
+          For a list of possible values see [address-kinds](party-classifications.html#address-kinds) enumeration.
         type: string
         enum: [postal-address, phone-number, email-address, facebook-account, web-url]
       formatted:
         description: Formatted address text
-        type: string 
+        type: string
   electronic-address:
     description: Electronic address such as email, url or faebook account
     type: object
     allOf:
-      - $ref: "#/definitions/address"  
+      - $ref: "#/definitions/address"
   postal-address:
     description: Postal delivery address.
     allOf:
@@ -712,7 +738,7 @@ definitions:
         description: ISO 3166-1 alpha-2 country code
         type: string
         maxLength: 2
-        minLength: 2        
+        minLength: 2
       address-code:
         description: Address code assigned for precise postal delivery
         type: string
@@ -763,8 +789,8 @@ definitions:
       - number
       - country-code
       - area-code
-    type: object        
-    
+    type: object
+
   identification-number:
     description: 'Acceptable external identity number taken from original or certified documents that contain identification details of individial or organization such as full name,  date of birth, registered name, date of establishment etc.'
     properties:
@@ -772,7 +798,9 @@ definitions:
         description: Identification number
         type: string
       kind:
-        description: 'Kind of identification number. Common values are `personal-id-number`, `passport-number`, `registration-number` '
+        description: |
+          'Kind of identification number. Common values are `personal-id-number`, `passport-number`, `registration-number` '
+          For a list of possible values see [identification-kinds](party-classifications.html#identification-kinds) enumeration.
         type: string
         enum: [registration-number, tax-id-number, personal-id-number, identity-card-number, passport-number, driver-license-number, social-security-number]
     type: object
@@ -783,22 +811,26 @@ definitions:
     description: Document that was used to identify individual
     properties:
       kind:
-        description: Enumeration that distinguishes between different kinds of identification documents
+        description: |
+          Enumeration that distinguishes between different kinds of identification documents
+          For a list of possible values see [identification-document-kinds](party-classifications.html#identification-document-kinds) enumeration.
         type: string
-        enum: [passport, national-id-card, drivers-license]    
+        enum: [passport, national-id-card, drivers-license]
       serial-number:
         description: Registered serial number of identification document
-        type: string        
+        type: string
       issued:
         description: Date when document was issued
         format: date
-        type: string          
+        type: string
       valid-until:
         description: Date untill document is valid
         format: date
         type: string
       status:
-        description: Status of document
+        description: |
+          Status of document
+          For a list of possible values see [identification-document-statuses](party-classifications.html#identification-document-statuses) enumeration.
         type: string
         enum: [active, annulled, expired]
       place-of-issue:
@@ -810,12 +842,12 @@ definitions:
         description: The authority that issued the document
         maxLength: 100
         minLength: 2
-        type: string        
+        type: string
       content-url:
         description: URL of scanned document image kept in DMS repository
         type: string
         format: url
-    type: object      
+    type: object
 
 
   register-individual-command:
@@ -824,6 +856,8 @@ definitions:
       registration-profile:
         type: string
         enum: [contact, prospect, customer]
+        description: |
+          For a list of possible values see [registration-profiles](party-classifications.html#registration-profiles) enumeration.
       given-name:
         description: "Name given to individual at birth usually by parents. For example *John* or *Jane*. Mandatory in following registration profiles: `contact`, `prospect`, `customer`"
         maxLength: 40
@@ -838,7 +872,7 @@ definitions:
         description: "Individual's surname as it existed prior to any change of surname resulting from any marriage. In many countries, legal and/or social and cultural conventions dictate or suggest that one spouse assume the surname of the other spouse upon their marriage"
         maxLength: 40
         minLength: 2
-        type: string      
+        type: string
       mobile-phone:
         $ref: '#/definitions/telecommunication-number'
       email-address:
@@ -847,7 +881,7 @@ definitions:
         $ref: '#/definitions/postal-address'
       id-number:
         $ref: '#/definitions/identification-number'
-      
+
       id-document:
         $ref: '#/definitions/identification-document'
       birth-place:
@@ -865,7 +899,7 @@ definitions:
         minLength: 2
         type: string
         format: ISO 3166-1 alpha-2
-        
+
       legal-address:
         $ref: '#/definitions/postal-address'
 
@@ -888,36 +922,38 @@ definitions:
       - surname
       - mobile-phone
     type: object
-    
+
   register-organization-command:
     description: Command with details to register organization
     required:
       - registration-profile
       - commercial-name
       - phone
-    type: object    
+    type: object
     properties:
       registration-profile:
         type: string
-        enum: [contact, prospect, customer]   
+        enum: [contact, prospect, customer]
+        description: |
+          For a list of possible values see [registration-profiles](party-classifications.html#registration-profiles) enumeration.
       registered-name:
         description: "Legal name under which oganization is established"
         type: string
       commercial-name:
         description: "The primary commercial name of an organization, by which it is most commonly recognized"
-        type: string        
+        type: string
       legal-structure:
         type: string
-        x-asee-classification: legal-structure
-        description: 'Classifies organizations based on their legal form or structure. For example, `public-organization`, `partnership`, `sole-proprietorship`, `limited-company`.such as trust, company, charity, or estate. For a complete list of possible values see [legal-structure](party-classifications.html#legal-structure)'
+        x-asee-classification: legal-structures
+        description: 'Classifies organizations based on their legal form or structure. For example, `public-organization`, `partnership`, `sole-proprietorship`, `limited-company`.such as trust, company, charity, or estate. For a complete list of possible values see [legal-structures](party-classifications.html#legal-structures)'
       organization-purpose:
         type: string
-        x-asee-classification: organization-purpose
-        description: 'Distinguishes between organizations according to their purpose or format; for example, `association` and `public-service`. For a complete list of possible values see [organization-purpose](party-classifications.html#organization-purpose)' 
+        x-asee-classification: organization-purposes
+        description: 'Distinguishes between organizations according to their purpose or format; for example, `association` and `public-service`. For a complete list of possible values see [organization-purposes](party-classifications.html#organization-purposes)'
       established:
         description: Date on which organization was formally established
         type: string
-        format: date    
+        format: date
       phone:
         $ref: '#/definitions/telecommunication-number'
       email-address:
@@ -929,7 +965,7 @@ definitions:
       legal-address:
         $ref: '#/definitions/postal-address'
       delivery-address:
-        $ref: '#/definitions/postal-address'    
+        $ref: '#/definitions/postal-address'
   register-contact-point-command:
     description: Command to register new contact address
     properties:
@@ -955,7 +991,7 @@ definitions:
         $ref: '#/definitions/contact-preference'
     required:
       - contact-preference
-    type: object    
+    type: object
   resource-created-result:
     description: Unique identifier of newly created resource that can be used in future inquires and commands
     type: string
@@ -976,7 +1012,7 @@ definitions:
               message:
                 type: string
     example:
-      -  
+      -
         field: phone-number
         errors:
           -
@@ -984,8 +1020,8 @@ definitions:
             message: Format for this field is invalid
           -
             error: max-length
-            message: Content exceeds maximum alowed length 
-      - 
+            message: Content exceeds maximum alowed length
+      -
         field: account-number
         errors:
           -
@@ -993,10 +1029,10 @@ definitions:
             message: Check digit is invalid for this field
   business-problem:
     description: Details on specific problem that prevented processing after successfull validation
-    type: object 
+    type: object
     properties:
       problem:
-        description: Unique literal that identifies specific problem 
+        description: Unique literal that identifies specific problem
         type: string
       message:
         description: Message explaining the situation and optionaly remedies
@@ -1145,7 +1181,9 @@ parameters:
     required: false
     type: string
   method-param:
-    description: 'Contact methods of interest to filter contact points. Common values are `postal`, `gsm` and `email`. If empty or not present, all contact methods are considered interesting'
+    description: |
+      'Contact methods of interest to filter contact points. Common values are `postal`, `gsm` and `email`. If empty or not present, all contact methods are considered interesting'
+      For a list of possible values see [contact-point-methods](party-classifications.html#contact-point-methods) enumeration.
     in: query
     name: metohod
     required: false
@@ -1155,7 +1193,9 @@ parameters:
     enum: [postal, pstn, gsm, fax, facebook, email, web]
     collectionFormat: csv
   usage-param:
-    description: 'Usages of interest to filter contact points. Commonly used values are `home`, `work`, `business` and `default` which has a special meaning of being a primary contact. If empty or not present, all usages are considered interesting.'
+    description: |
+      'Usages of interest to filter contact points. Commonly used values are `home`, `work`, `business` and `default` which has a special meaning of being a primary contact. If empty or not present, all usages are considered interesting.'
+      For a list of possible values see [contact-point-usages](party-classifications.html#contact-point-usages) enumeration.
     in: query
     name: usage
     required: false
