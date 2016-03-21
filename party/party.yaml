@@ -28,7 +28,8 @@ tags:
 paths:
   '/parties':
     get:
-      summary: Search list of parties registered by bank
+      summary: List parties matching filter criteria
+      description: Returns list of individuals and organizations that match filter criteria
       tags:
         - Parties
       x-asee-tags:
@@ -84,7 +85,7 @@ paths:
           $ref: '#/responses/default-error-response'
   '/parties/search':
     get:
-      summary: Search list of parties registered by bank
+      summary: Search for individuals and organizations across textual fields
       description: "Returns a list of parties that match filters and search terms accross textual fields such as name, address. Assumed sort is by relevance and then by recency. For addresses tagged with geographic coordinates radius filter can be applied"
       tags:
         - Parties
@@ -151,7 +152,7 @@ paths:
           required: true
           type: string
     get:
-      summary: Get list of party relationships
+      summary: List relationships of specific party
       tags:
         - Parties
       operationId: Parties_Relationship_GetList
@@ -172,7 +173,7 @@ paths:
           required: true
           type: string
     get:
-      summary: Get list of id documents for party
+      summary: List id documents of specific party
       tags:
         - Parties
       operationId: Parties_IdDocuments_GetList
@@ -187,7 +188,7 @@ paths:
           $ref: '#/responses/default-error-response'
   '/parties/{party-number}/contact-preference':
     patch:
-      summary: Modify party contact preference
+      summary: Modify contact preference of specific party
       tags:
         - Parties
       operationId: Parties_ContactPreference_Modify
@@ -226,7 +227,7 @@ paths:
           required: true
           type: string
     get:
-      summary: Search list of parties registered by bank
+      summary: List contact points of specific party
       tags:
         - Contact points
       operationId: Parties_GetContactPoints
@@ -243,7 +244,7 @@ paths:
         default:
           $ref: '#/responses/default-error-response'
     post:
-      summary: Register party contact point
+      summary: Register new contact point for specific party
       tags:
         - Contact points
       operationId: Parties_RegisterContactPoints
@@ -288,7 +289,7 @@ paths:
         required: true
         type: string
     patch:
-      summary: Modify party contact point
+      summary: Modify specific contact point
       tags:
         - Contact points
       operationId: Parties_ModifyContactPoint
@@ -316,20 +317,23 @@ paths:
           $ref: '#/responses/default-error-response'
   '/parties/individuals':
     post:
-      summary: Register individual
+      summary: Register individual details
       description: |
         Registers new individual according to specified registration profile that determines which fields are mandatory.
         > Mandatory fields for `contact` registration profile:
+        
         - `given-name`
         - `surname`
         - `mobile-phone`
         - `email-address`
 
         > Additional mandatory fields for `prospect` registration profile:
+        
         - `contact-address`
         - `id-number`
 
         > Additional mandatory fields for `customer` registration profile:
+        
         - `birth-place`
         - `birth-country`
         - `country-of-residence`
@@ -364,15 +368,18 @@ paths:
       description: |
         Registers new organization according to specified registration profile that determines which fields are mandatory.
         > Mandatory fields for `contact` registration profile:
+        
         - `commercial-name`
         - `phone`
 
         > Additional mandatory fields for `prospect` registration profile:
+        
         - `contact-address`
         - `id-number`
         - `registered-name`
 
         > Additional mandatory fields for `customer` registration profile:
+        
         - `organization-purpose`
         - `legal-address`
         - `delivery-address`
@@ -600,9 +607,10 @@ definitions:
         x-asee-classification: customer-taxonomy
         description: 'Classifies customers according to taxonomy defined by bank. For a complete list of possible values see [customer-taxonomies](party-classifications.html#customer-taxonomies) classification'
       status:
-        description: 'Identifies the state of a customer within a lifecycle model. Values see in [customer-statuses](party-classifications.html#customer-statuses) classification.'
-        x-asee-classification: customer-status
+        description: ' Enumer identifies the state of a customer within a lifecycle model. For a list of values see in [customer-statuses](party-classifications.html#customer-statuses) enumeration'
+        x-asee-enumeration: customer-status
         type: string
+        enum: [potential, prospective, active, dormant, former, declined, rejected]
       segment:
         type: string
         x-asee-classification: customer-segment
@@ -619,6 +627,7 @@ definitions:
       role:
         type: string
         enum: [spouse, child, parent, sibling, cousin, owner, owned, representative, represented, employer, employee]
+        x-asee-enumeration: party-relationship-roles
         description: |
           For a list of possible values see [party-relationship-roles](party-classifications.html#party-relationship-roles) enumeration.
       to-party:
@@ -633,6 +642,7 @@ definitions:
           kind:
             type: string
             enum: [individual, organization]
+            x-asee-enumeration: party-kinds
             description: |
               For a list of possible values see [party-kinds](party-classifications.html#party-kinds) enumeration.
   employment:
