@@ -49,7 +49,7 @@ paths:
           in: query
           description: |
             Customer statuses of interest to filter parties. If omitted or not present all customer statuses are considered interesting.
-            For a list of possible values see [party-statuses](party-classifications.html#party-statuses) enumeration.
+            For a list of possible values see [customer-statuses](party-classifications.html#customer-statuses) enumeration.
           type: array
           items:
             type: string
@@ -321,19 +321,19 @@ paths:
       description: |
         Registers new individual according to specified registration profile that determines which fields are mandatory.
         > Mandatory fields for `contact` registration profile:
-        
+
         - `given-name`
         - `surname`
         - `mobile-phone`
         - `email-address`
 
         > Additional mandatory fields for `prospect` registration profile:
-        
+
         - `contact-address`
         - `id-number`
 
         > Additional mandatory fields for `customer` registration profile:
-        
+
         - `birth-place`
         - `birth-country`
         - `country-of-residence`
@@ -368,18 +368,18 @@ paths:
       description: |
         Registers new organization according to specified registration profile that determines which fields are mandatory.
         > Mandatory fields for `contact` registration profile:
-        
+
         - `commercial-name`
         - `phone`
 
         > Additional mandatory fields for `prospect` registration profile:
-        
+
         - `contact-address`
         - `id-number`
         - `registered-name`
 
         > Additional mandatory fields for `customer` registration profile:
-        
+
         - `organization-purpose`
         - `legal-address`
         - `delivery-address`
@@ -589,8 +589,7 @@ definitions:
           - widowed
         type: string
       employment-status:
-        description: 'Employment status of the individual. Commonly used values are `full-time`, `part-time`, `retired`, `student`, `self-employed`, `unenployed` For complete list of possible values see [employment-status](party-classifications.html#employment-status) classification.'
-        type: string
+        $ref: '#/definitions/employment-status'
       employment:
         $ref: '#/definitions/employment'
       id-documents:
@@ -859,6 +858,19 @@ definitions:
         format: url
     type: object
 
+  employment-status:
+    description: |
+      Employment status of the individual.
+      For complete list of possible values see [employment-statuses](party-classifications.html#employment-statuses) enumeration.
+    type: string
+    enum:
+      - employed
+      - not-employed
+      - retired
+      - shop-owner
+      - farmer
+      - leave-of-absence
+      - part-time-job
 
   register-individual-command:
     description: Command with details to register individual.
@@ -916,11 +928,7 @@ definitions:
       delivery-address:
         $ref: '#/definitions/postal-address'
       employment-status:
-        description: "The status of the Individual's employment. Eg:employed, farmer, leave-of-absence, not-employed, part-time-job...."
-        x-asee-compliance: This property should be related to classification.
-        maxLength: 50
-        minLength: 0
-        type: string
+        $ref: '#/definitions/employment-status'
       party-number:
         description: 'Business identifier of the party if previously registered as prospect'
         maxLength: 30
