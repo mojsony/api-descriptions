@@ -771,6 +771,28 @@ definitions:
         type: number
         format: double
         description: Net cash flow that is being discounted to present value using calculated EAPR
+      discounted-disbursement:
+        format: double
+        type: number
+        description: Disbursement flows discounted using APR counted based on discounted-net-flow
+      discounted-cash-collateral-flow:
+        format: double
+        type: number
+        description: Cash collateral flows discounted using APR counted based on discounted-net-flow
+    example:
+      ordinal: 0
+      date: 2013-10-21T00:00:00
+      activity-kind: disbursement
+      description: Loan disbursement and fee
+      disbursement: 8000.00
+      starting-balance: 0.00
+      principal-repayment: 0.00
+      interest-repayment: 0.00
+      annuity: 0.00
+      fee: 80.00
+      outstanding-balance: 8000.00
+      net-cash-flow: -7920.00
+      discounted-net-cash-flow: -7920.00
   installment-plan:
     description: A list of scheduled payments for entire arrangement lifecycle
     allOf:

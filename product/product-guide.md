@@ -4,13 +4,13 @@ Product API provides product information needed for channel applications. The ma
    
 Key Resources
 -------------
-Product Matching has three top level collection resources: 
+Product Matching has `products` top-level collection with `bundled-products` and `documents` as sub-resources. 
 
 Resource | Description
 ----------- |-----------
-*products* | Serves for getting product informations.
-*bundled products* | Serves for getting bundled products for master product.
-*documentation* | Serves for getting product documentation necessary during different product phases.
+*products* | Catalogue of products offered by bank
+*bundled products* | Products bundled with master product
+*documentation* | Documentation necessary during different arrangement phases
 
 Getting started tutorial
 ---------------

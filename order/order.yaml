@@ -974,6 +974,60 @@ paths:
             $ref: '#/definitions/customer-request-list'
         default:
           $ref: '#/responses/default-error-response'
+
+  /calculations/deposit-payout:
+    get:
+      summary: Calculate partial deposit payout
+      tags:
+        - Calculations
+      operationId: CalculateDepositPayout
+      parameters:
+        - description: Parameters for calculating deposit payout
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/deposit-payout-calculation-request'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/deposit-payout-calculation'
+        '400':
+          description: |
+            Your request was well not well constructed. Look into validation error in response for more details.
+          schema:
+            $ref: '#/definitions/validation-problem'            
+        default:
+          $ref: '#/responses/default-error-response'
+          
+  /calculations/deposit-termination:
+    get:
+      summary: Calculate deposit termination amounts
+      tags:
+        - Calculations
+      deprecated: false
+      operationId: CalculateDepositTermination
+      parameters:
+        - description: Parameters for calculating deposit termination amounts
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/deposit-termination-calculation-request'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/deposit-termination-calculation'
+        '400':
+          description: |
+            Your request was well not well constructed. Look into validation error in response for more details.
+          schema:
+            $ref: '#/definitions/validation-problem'               
+        default:
+          $ref: '#/responses/default-error-response'          
+          
   /classifications: 
     get:
       summary: Returns all classification schemas used in this API.      
@@ -1988,6 +2042,171 @@ definitions:
     required:
       - account-number
     type: object
+  deposit-termination-calculation-request:
+    description: Parameters for deposit termination calculation.
+    properties:
+      arrangement-number:
+        description: Arrangement number.
+        type: string
+    required:
+      - arrangement-number
+    type: object
+  deposit-termination-calculation:
+    description: Deposit termination calculation.
+    properties:
+      calculation-items:
+        description: List of calculated values for deposit assets on account.
+        items:
+          $ref: '#/definitions/deposit-termination-calculation-item'
+        type: array
+    type: object
+  deposit-termination-calculation-item:
+    description: Deposit termination calculation item.
+    properties:
+      total-amount:
+        description: The total amount that will be witdrawn.
+        format: double
+        type: number
+      amount:
+        description: The amount for term period.
+        format: double
+        type: number
+      currency-code:
+        description: The currency number code.
+        type: string
+      currency:
+        description: The currency.
+        type: string
+      settlement-account:
+        description: The settlement account.
+        type: string
+      settlement-currency-code:
+        description: The settlement currency code.
+        type: string
+      settlement-currency:
+        description: The period of deposit.
+        type: string
+      total-interest:
+        description: The total interest.
+        format: double
+        type: number
+      total-tax:
+        description: The total tax.
+        format: double
+        type: number
+      total-fee:
+        description: The total fee.
+        format: double
+        type: number
+      total-fee-currency:
+        description: The currency of total fee
+        format: double
+        type: number
+      accrued-interest:
+        description: The accrued interest
+        format: double
+        type: number
+      adjusted-interest:
+        description: The adjusted interest
+        format: double
+        type: number
+      interest-to-reverse:
+        description: The reverse interest.
+        format: double
+        type: number
+      accrued-tax:
+        description: The accrued tax.
+        format: double
+        type: number
+      adjusted-tax:
+        description: The adjusted tax.
+        format: double
+        type: number
+      tax-to-reverse:
+        description: The reverse tax.
+        format: double
+        type: number
+    type: object
+  deposit-payout-calculation-request:
+    description: Deposit payout calculation command.
+    properties:
+      account:
+        description: Account number which will be terminated.
+        type: string
+      currency-id:
+        description: Currency.
+        $ref: '#/definitions/currency'
+    required:
+      - account
+      - currency-id
+    type: object    
+  deposit-payout-calculation:
+    description: Deposit payout calculation item.
+    properties:
+      total-amount:
+        description: The total amount that will be witdrawn.
+        format: double
+        type: number
+      amount:
+        description: The amount for term period.
+        format: double
+        type: number
+      currency-code:
+        description: The currency number code.
+        type: string
+      currency:
+        description: The currency.
+        type: string
+      settlement-account:
+        description: The settlement account.
+        type: string
+      settlement-currency-code:
+        description: The settlement currency code.
+        type: string
+      settlement-currency:
+        description: The period of deposit.
+        type: string
+      total-interest:
+        description: The total interest.
+        format: double
+        type: number
+      total-tax:
+        description: The total tax.
+        format: double
+        type: number
+      total-fee:
+        description: The total fee.
+        format: double
+        type: number
+      total-fee-currency:
+        description: The currency of total fee
+        format: double
+        type: number
+      accrued-interest:
+        description: The accrued interest
+        format: double
+        type: number
+      adjusted-interest:
+        description: The adjusted interest
+        format: double
+        type: number
+      interest-to-reverse:
+        description: The reverse interest.
+        format: double
+        type: number
+      accrued-tax:
+        description: The accrued tax.
+        format: double
+        type: number
+      adjusted-tax:
+        description: The adjusted tax.
+        format: double
+        type: number
+      tax-to-reverse:
+        description: The reverse tax.
+        format: double
+        type: number
+    type: object    
   credit-transfer:
     description: Credit transfer
     properties:

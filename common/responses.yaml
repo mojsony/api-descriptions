@@ -1,7 +1,7 @@
 responses:
   validation-problem-response:
-    description: Your request was not constructed properly. Response contains the list of validation errors for each invalid element of your request. For complete list of possible validation errors see [validation errors]() classification.
+    description: Your request was not constructed properly. Response contains the list of validation errors for each invalid element of your request. For complete list of possible validation errors see [validation errors](common-getstarted.html#error-handling).
     schema: 
       $ref: '#/definitions/validation-problem'
   default-error-response:
-    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
+    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling](common-getstarted.html#error-handling)
