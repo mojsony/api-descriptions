@@ -460,15 +460,6 @@ definitions:
         description: Minimal repayment percentage of the product
         format: double
         type: number
-      penalty-interest-rate:
-        description: Product penalty interest rate
-        $ref: "#/definitions/calculated-interest-rate"
-      basic-interest-rate:
-        description: Product basic interest rate
-        $ref: "#/definitions/calculated-interest-rate"
-      revolving-interest-rate:
-        description: Product basic revolving rate
-        $ref: "#/definitions/calculated-interest-rate"
       financing-kind:
         type: string
         description: "Identifies type of funding for the product. For detailed view of possible values see [financing-kind](card-classificastions.html#financing-kind) classification"
@@ -486,34 +477,18 @@ definitions:
         description: Minimal repayment percentage of the product
         format: double
         type: number
-      penalty-interest-rate:
-        description: Product penalty interest rate
-        $ref: "#/definitions/calculated-interest-rate"
-      basic-interest-rate:
-        description: Product basic interest rate
-        $ref: "#/definitions/calculated-interest-rate"
-      revolving-interest-rate:
-        description: Product basic revolving rate
-        $ref: "#/definitions/calculated-interest-rate"
   current-account-product:
-    description: Is a financial facility that represents the general checking account facility at the core of the consumer and small business banking activity. There is a range of supporting features that make up the standard facility (checks/cheques, standing orders, debit cards, phone and on-line banking services etc.). The fulfillment will include a range of optional services, fees and interest payments and penalties and will often be bundled and or underlie/support other financial facilities and financial transactions
+    description: "Is a financial facility that represents the general checking account facility at the core of the consumer and small business banking activity. There is a range of supporting features that make up the standard facility (checks/cheques, standing orders, debit cards, phone and on-line banking services etc.). The fulfillment will include a range of optional services, fees and interest payments and penalties and will often be bundled and or underlie/support other financial facilities and financial transactions"
     type: object  
     allOf:
-      - $ref: '#/definitions/product'    
-    properties:
-      interest-rate:
-        description:  Product interest rate
-        $ref: "#/definitions/calculated-interest-rate"
+      - $ref: '#/definitions/product'
+
 
   demand-deposit-product:
     description: Identifies a particular type of Deposit Product that is used for handling day-to-day transactions and can be used to accumulate savings
     type: object
     allOf:
       - $ref: '#/definitions/product'    
-    properties:
-      interest-rate:
-        description: Product interest rate
-        $ref: "#/definitions/calculated-interest-rate"
         
   term-deposit-product:
     description: Type of Deposit product that allows customer to deposit a certain amount of money to be for a specified term, under certain conditions
@@ -529,10 +504,7 @@ definitions:
         description: Minimal term period of the product
         type: string
         format: ISO 8601 duration
-      interest-rate:
-        description: Product interest rate
-        $ref: "#/definitions/calculated-interest-rate"
-        
+
   term-loan-product:
     description: Is a Finance Service that is characterized by the lending of funds for a fixed term, for the purchase of goods and/or services.
     type: object
@@ -553,14 +525,6 @@ definitions:
         description: Minimal downpayment percentage for the product
         format: double
         type: number
-      penalty-interest-rate:
-        type: string
-        description: Product penalty interest rate
-        $ref: "#/definitions/calculated-interest-rate"
-      basic-interest-rate:
-        type: string
-        description: Product basic interest rate
-        $ref: "#/definitions/calculated-interest-rate"
       financing-kind:
         type: string
         description: "Identifies type of funding for the product. For detailed view of possible values see [financing-kind](card-classificastions.html#financing-kind) classification"
@@ -618,7 +582,7 @@ definitions:
           variations:
             -
               origin: campaign
-              benefit-source-id: THRILL2013
+              source-id: THRILL2013
               benefit-id: DISC-023471
               variation-description: Campaign discount on interest rate
               percentage: -0.5
@@ -698,8 +662,7 @@ definitions:
     - type: object
       properties:
         fixed-amount:
-          allOf:
-          - $ref: '#/definitions/currency'
+          $ref: '#/definitions/currency'
           description: Currency amount (positive or negative) to be added to other applicable fee components
   pricing-condition:
     description: Detailed information about arrangement price - interest rate or fee condition
@@ -752,20 +715,9 @@ definitions:
           default: true
         calendar-basis:
           type: string
-          enum:
-          - 30A-360
-          - 30U-360
-          - 30E-360
-          - 30E-360-ISDA
-          - Act-Act-ICMA
-          - Act-Act-ISDA
-          - Act-365-Fixed
-          - Act-360
-          - Act-364
-          - Act-365-L
-          - Act-Act-AFB
+          enum: [30a-360, 30u-360, 30e-360, 30e-360-isda, act-act-icma, act-act-isda, act-365-fixed, act-360, act-364, act-365-l, act-act-afb]
           description: Day count convention used for interest calculation.
-          default: Act-Act-ISDA
+          default: act-act-isda
         rate:
           $ref: '#/definitions/interest-rate'
         variations:
@@ -818,20 +770,17 @@ definitions:
           format: double
           description: Percentage applied to base amount
         fixed-amount:
-          allOf:
-            - $ref: '#/definitions/currency'
+          $ref: '#/definitions/currency'
           description: Fixed amount component
         variations:
           type: array
           items:
             $ref: '#/definitions/fee-variation'
         lower-limit:
-          allOf:
-            - $ref: '#/definitions/currency'
+          $ref: '#/definitions/currency'
           description: Lower limit applied after fee calculation
         upper-limit:
-          allOf:
-            - $ref: '#/definitions/currency'
+          $ref: '#/definitions/currency'
           description: Upper limit applied after fee calculation
         frequency:
           description: Fee calculation frequency. Service fees, expenses and origination-fee are usually event-triggered.
@@ -965,37 +914,3 @@ definitions:
       channel-name:
         type: string
         description: Identifies the label given to a specific Channel to identify or distinguish it from other Channel
-
-  calculated-interest-rate:
-    description: Calculated interest rate
-    type: object  
-    properties:
-      calculated-rate:
-        description: Rate calculated from reference rate and spread
-        $ref: "#/definitions/interest-rate"
-      interest-calculation-method:
-        type: string
-        description: Method used to calculate interest
-        enum: [proportional, compounding]
-      interest-calculation-basis:
-        type: string
-        enum: [30-360, 30-365, actual-360, actual-actual, actual-365]
-      reference-rate-name:
-        description: Name of reference rate name (e.g. EURIBOR 6M, BELIBOR, etc.)
-        type: string
-      reference-rate:
-        description: Reference rate
-        $ref: "#/definitions/interest-rate"
-      spread-rate:
-        description: Spread rate unit of time
-        $ref: "#/definitions/interest-rate"
-  interest-rate:
-    properties:
-      period:
-        description: Interest rate period
-        type: string
-        enum: [daily, mothly, yearly]
-      percentage:
-        description: Interest rate value
-        format: double
-        type: number
