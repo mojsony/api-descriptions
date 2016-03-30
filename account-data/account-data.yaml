@@ -1003,6 +1003,15 @@ definitions:
       sic:
         description: Standard industrial code (SIC) of the merchant
         type: string
+  party:
+    properties:
+      name:
+        type: string
+        description: Name of other side in a transaction. This property is generalization over different ways counterparty names are modeled in different kinds of transactions. It is redundand on purpose to simplify logic on channel applications. For example, in transfers and exchanges it is ultimate creditor or debtor name, while for card transactions this is atm name, pos name or merchant name if those are not available.        
+      identifier:
+        type: string
+        description: Unique identifier of other side in a transaction. This property is generalization over different ways other party is represented in different kinds of transactions. It is redundand on purpose to simplify logic on channel applications. For example, in transfers and exchanges it is account number that is ultimate destination or source of money movement, while for card transactions this is atm or pos id or merchant id if those are not available.  
+        
   coordinates:
     type: object
     required:
@@ -1444,6 +1453,8 @@ definitions:
         $ref: '#/definitions/media'
       pfm:
         $ref: '#/definitions/pfm'
+      party:
+        $ref: '#/definitions/party'        
     example:
       account-number: 00210102101
       transaction-id: 6525671616121
@@ -1469,6 +1480,10 @@ definitions:
         long: 20.429377555847164
       pfm:
         category-id: 27
-        category: "Cash"
+        category: cash
       media:
         image: /v1/conent/mchub/documents/mj20b12534r4
+      party
+        name: null
+        identifier: null
+        
