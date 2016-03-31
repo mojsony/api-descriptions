@@ -468,27 +468,29 @@ paths:
       responses:
         '202':
           description: Accepted
-        '440':
-          description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+        400:
+          $ref: '#/responses/validation-problem-response'
+        # '440':
+        #   description: |
+        #     Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
 
-            [allowed-amount-exceeded](payment-problems.html)
-            [transfer-not-allowed](payment-problems.html)
-            [blocked-account](payment-problems.html)
-            [transfer-not-allowed-accounts-types](payment-problems.html)
-            [debtor-card-not-active](payment-problems.html)
-            [frequency-limit-exceeded](payment-problems.html)
-            [amount-above-limit](payment-problems.html)
-            [account-deposited](payment-problems.html)
-            [insufficient-available-balance](payment-problems.html)
-            [transaction-currency-not-allowed](payment-problems.html)
-            [creditor-aml-check-failed](payment-problems.html)
-            [debtor-aml-check-failed](payment-problems.html)
-            [debtor-account-or-currency-not-valid](payment-problems.html)
-            [creditor-account-or-currency-not-valid](payment-problems.html)
-            [date-not-valid](payment-problems.html)
-          schema:
-            $ref: '#/definitions/business-problem'
+        #     [allowed-amount-exceeded](payment-problems.html)
+        #     [transfer-not-allowed](payment-problems.html)
+        #     [blocked-account](payment-problems.html)
+        #     [transfer-not-allowed-accounts-types](payment-problems.html)
+        #     [debtor-card-not-active](payment-problems.html)
+        #     [frequency-limit-exceeded](payment-problems.html)
+        #     [amount-above-limit](payment-problems.html)
+        #     [account-deposited](payment-problems.html)
+        #     [insufficient-available-balance](payment-problems.html)
+        #     [transaction-currency-not-allowed](payment-problems.html)
+        #     [creditor-aml-check-failed](payment-problems.html)
+        #     [debtor-aml-check-failed](payment-problems.html)
+        #     [debtor-account-or-currency-not-valid](payment-problems.html)
+        #     [creditor-account-or-currency-not-valid](payment-problems.html)
+        #     [date-not-valid](payment-problems.html)
+        #   schema:
+        #     $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
       summary: Validates balance transfer.
@@ -557,21 +559,23 @@ paths:
       responses:
         '202':
           description: Accepted
-        '440':
-          description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+        400:
+          $ref: '#/responses/validation-problem-response'          
+        # '440':
+        #   description: |
+        #     Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
 
-            [frequency-limit-exceeded](payment-problems.html)
-            [work-date-not-set](payment-problems.html)
-            [blocked-account](payment-problems.html)
-            [payment-date-not-set](payment-problems.html)
-            [amount-above-limit](payment-problems.html)
-            [insufficient-available-balance](payment-problems.html)
-            [transaction-currency-not-allowed](payment-problems.html)
-            [debtor-account-or-currency-not-valid](payment-problems.html)
-            [date-not-valid](payment-problems.html)
-          schema:
-            $ref: '#/definitions/business-problem'
+        #     [frequency-limit-exceeded](payment-problems.html)
+        #     [work-date-not-set](payment-problems.html)
+        #     [blocked-account](payment-problems.html)
+        #     [payment-date-not-set](payment-problems.html)
+        #     [amount-above-limit](payment-problems.html)
+        #     [insufficient-available-balance](payment-problems.html)
+        #     [transaction-currency-not-allowed](payment-problems.html)
+        #     [debtor-account-or-currency-not-valid](payment-problems.html)
+        #     [date-not-valid](payment-problems.html)
+        #   schema:
+        #     $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
       summary: Validates credit transfer.
@@ -628,31 +632,33 @@ paths:
       responses:
         '202':
           description: Accepted
-        '440':
-          description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+        400:
+          $ref: '#/responses/validation-problem-response'          
+        # '440':
+        #   description: |
+        #     Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
 
-            [frequency-limit-exceeded](payment-problems.html)
-            [amount-above-limit](payment-problems.html)
-            [creditor-aml-check-failed](payment-problems.html)
-            [debtor-aml-check-failed](payment-problems.html)
-            [debtor-account-not-entered](payment-problems.html)
-            [creditor-name-not-entered](payment-problems.html)
-            [creditor-address-not-entered](payment-problems.html)
-            [creditor-city-not-entered](payment-problems.html)
-            [creditor-IBAN/account-not-entered](payment-problems.html)
-            [creditor-SWIFT-not-entered](payment-problems.html)
-            [creditor-SWIFT-not-valid](payment-problems.html)
-            [currency-not-entered](payment-problems.html)
-            [currency-not-valid](payment-problems.html)
-            [purpose-code-not-entered](payment-problems.html)
-            [purpose-code-not-valid](payment-problems.html)
-            [amount-not-entered](payment-problems.html)
-            [insufficient-balance](payment-problems.html)
-            [creditor-country-code-not-entered](payment-problems.html)
-            [creditor-country-code-not-valid](payment-problems.html)
-          schema:
-            $ref: '#/definitions/business-problem'
+        #     [frequency-limit-exceeded](payment-problems.html)
+        #     [amount-above-limit](payment-problems.html)
+        #     [creditor-aml-check-failed](payment-problems.html)
+        #     [debtor-aml-check-failed](payment-problems.html)
+        #     [debtor-account-not-entered](payment-problems.html)
+        #     [creditor-name-not-entered](payment-problems.html)
+        #     [creditor-address-not-entered](payment-problems.html)
+        #     [creditor-city-not-entered](payment-problems.html)
+        #     [creditor-IBAN/account-not-entered](payment-problems.html)
+        #     [creditor-SWIFT-not-entered](payment-problems.html)
+        #     [creditor-SWIFT-not-valid](payment-problems.html)
+        #     [currency-not-entered](payment-problems.html)
+        #     [currency-not-valid](payment-problems.html)
+        #     [purpose-code-not-entered](payment-problems.html)
+        #     [purpose-code-not-valid](payment-problems.html)
+        #     [amount-not-entered](payment-problems.html)
+        #     [insufficient-balance](payment-problems.html)
+        #     [creditor-country-code-not-entered](payment-problems.html)
+        #     [creditor-country-code-not-valid](payment-problems.html)
+        #   schema:
+        #     $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
       summary: Validates cross-border transfer.
@@ -775,17 +781,19 @@ paths:
       responses:
         '202':
           description: Accepted
-        '440':
-          description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+        400:
+          $ref: '#/responses/validation-problem-response'          
+        # '440':
+        #   description: |
+        #     Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
 
-            [amount-above-limit](payment-problems.html)
-            [blocked-account](payment-problems.html)
-            [insufficient-available-balance](payment-problems.html)
-            [frequency-limit-exceeded](payment-problems.html)
-            [transfer-not-allowed](payment-problems.html)
-          schema:
-            $ref: '#/definitions/business-problem'
+        #     [amount-above-limit](payment-problems.html)
+        #     [blocked-account](payment-problems.html)
+        #     [insufficient-available-balance](payment-problems.html)
+        #     [frequency-limit-exceeded](payment-problems.html)
+        #     [transfer-not-allowed](payment-problems.html)
+        #   schema:
+        #     $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
       summary: Validates person to person transfer.
@@ -2280,4 +2288,8 @@ definitions:
     type: string
 responses:
   default-error-response:
-    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
+    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling](common-getstarted.html#error-handling)
+  validation-problem-response:
+    description: Your request was not constructed properly. Response contains the list of validation errors for each invalid element of your request. For complete list of possible validation errors see [validation](common-getstarted.html#validation) section of the guide.
+    schema:
+      $ref: '#/definitions/validation-problem'    
