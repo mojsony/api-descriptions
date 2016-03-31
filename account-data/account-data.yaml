@@ -1483,7 +1483,6 @@ definitions:
         category: cash
       media:
         image: /v1/conent/mchub/documents/mj20b12534r4
-      party
+      party:
         name: null
         identifier: null
-        
