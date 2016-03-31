@@ -459,7 +459,7 @@ definitions:
       sort-by:
         description: Attribute of the collection item to sort by
         type: string
-  currency-amount:
+  currency:
     description: Currency amount and code
     required:
     - amount
@@ -472,22 +472,6 @@ definitions:
       code:
         type: string
         description: ISO 4217 alphanumerical currncy code (EUR, USD)
-  time-period:
-    description: Duration in days(D), months (M), or years (Y)
-    required:
-    - period
-    - unit-of-time
-    properties:
-      period:
-        type: integer
-        description: Number of days, months or years
-      unit-of-time:
-        type: string
-        enum:
-        - D
-        - M
-        - Y
-        description: Days(D), months (M), or years (Y)
   arrangement-party-role:
     description: Represents party role played in context of arrangement - customer, guarantor, co-debtor, authorized person and other.
     type: object
@@ -933,8 +917,7 @@ definitions:
     - type: object
       properties:
         fixed-amount:
-          allOf:
-          - $ref: '#/definitions/currency-amount'
+          $ref: '#/definitions/currency'
           description: Currency amount (positive or negative) to be added to other applicable fee components
   pricing-condition:
     description: Detailed information about arrangement price - interest rate or fee condition
@@ -1053,20 +1036,17 @@ definitions:
           format: double
           description: Percentage applied to base amount
         fixed-amount:
-          allOf:
-            - $ref: '#/definitions/currency-amount'
+          $ref: '#/definitions/currency'
           description: Fixed amount component
         variations:
           type: array
           items:
             $ref: '#/definitions/fee-variation'
         lower-limit:
-          allOf:
-            - $ref: '#/definitions/currency-amount'
+          $ref: '#/definitions/currency'
           description: Lower limit applied after fee calculation
         upper-limit:
-          allOf:
-            - $ref: '#/definitions/currency-amount'
+          $ref: '#/definitions/currency'
           description: Upper limit applied after fee calculation
         frequency:
           description: Fee calculation frequency. Service fees, expenses and origination-fee are usually event-triggered.
@@ -1230,8 +1210,8 @@ definitions:
     description: Defines regular periodic deposits in addition to initial deposit amount.
     properties:
       iteration:
-        allOf:
-          - $ref: '#/definitions/time-period'
+        type: string
+        format: ISO 8601 duration
         description: Length of time period between two deposits
       amount:
         type: number
@@ -1244,8 +1224,7 @@ definitions:
     - type: object
       properties:
         savings-plan:
-          allOf:
-            - $ref: '#/definitions/savings-plan'
+          $ref: '#/definitions/savings-plan'
           description: Defines regular periodic deposits in addition to initial deposit amount.
   term-deposit:
     description: Term deposit arrangement
@@ -1254,8 +1233,8 @@ definitions:
     - type: object
       properties:
         term:
-          allOf:
-            - $ref: '#/definitions/time-period'
+          type: string
+          format: ISO 8601 duration
           description: The time period from contract date to maturity.
         initial-maturity-date:
           type: string
@@ -1283,8 +1262,7 @@ definitions:
           format: double
           description: Initial amount, in primary currency
         savings-plan:
-          allOf:
-            - $ref: '#/definitions/savings-plan'
+          $ref: '#/definitions/savings-plan'
           description: Defines regular periodic deposits in addition to initial deposit amount.
   term-loan:
     description: Term loan arrangement
@@ -1293,12 +1271,12 @@ definitions:
     - type: object
       properties:
         term:
-          allOf:
-            - $ref: '#/definitions/time-period'
+          type: string
+          format: ISO 8601 duration
           description: The time period from contract date to maturity.
         grace:
-          allOf:
-            - $ref: '#/definitions/time-period'
+          type: string
+          format: ISO 8601 duration
           description: The time period without principal repayment.
         maturity-date:
           type: string
