@@ -601,7 +601,10 @@ definitions:
     - $ref: '#/definitions/paged-list'
     properties:
       rates:
-        $ref: '#/definitions/rate-record'
+        type: array
+        description: List of rate records
+        items:  
+          $ref: '#/definitions/rate-record'
     example:
       total-count: 68
       page-size: 10
