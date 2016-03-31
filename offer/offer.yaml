@@ -27,7 +27,7 @@ tags:
   -
     name: Calculations
     description: Working with calculations
-    
+
   -
     name: Classifications
     description: Working with classifications
@@ -52,7 +52,7 @@ paths:
           schema:
             $ref: '#/definitions/resource-created-result'
         default:
-          $ref: '#/responses/default-error-response'  
+          $ref: '#/responses/default-error-response'
     get:
       summary: List saved drafts for customer
       tags:
@@ -66,10 +66,10 @@ paths:
             items:
               $ref: '#/definitions/draft'
         default:
-          $ref: '#/responses/default-error-response'          
+          $ref: '#/responses/default-error-response'
   /me/drafts/{draft-id}:
     parameters:
-      - $ref: "#/parameters/draft-id-param"  
+      - $ref: "#/parameters/draft-id-param"
     get:
       summary: Get saved draft
       tags:
@@ -91,14 +91,14 @@ paths:
         '204':
           description: No content - draft deleted
         default:
-          $ref: '#/responses/default-error-response'          
+          $ref: '#/responses/default-error-response'
     put:
       operationId: Drafts_Update
       summary: Replace saved draft
       tags:
         - Drafts
       parameters:
-        - description: Modified draft 
+        - description: Modified draft
           in: body
           name: draft
           required: true
@@ -108,7 +108,7 @@ paths:
         '204':
           description: No content - draft updated
         default:
-          $ref: '#/responses/default-error-response'           
+          $ref: '#/responses/default-error-response'
 
   /applications:
     get:
@@ -128,8 +128,8 @@ paths:
         - $ref: "#/parameters/page-size-param"
         - $ref: "#/parameters/sort-by-param"
         - $ref: "#/parameters/sort-order-param"
-        - $ref: "#/parameters/trim-param"        
-        - $ref: "#/parameters/include-param"          
+        - $ref: "#/parameters/trim-param"
+        - $ref: "#/parameters/include-param"
       responses:
         '200':
           description: OK
@@ -143,12 +143,12 @@ paths:
       tags:
         - Applications
       x-asee-tags:
-        - Shapeable        
+        - Shapeable
       operationId: Applications_Get
       parameters:
         - $ref: "#/parameters/application-number-param"
-        - $ref: "#/parameters/trim-param"        
-        - $ref: "#/parameters/include-param"          
+        - $ref: "#/parameters/trim-param"
+        - $ref: "#/parameters/include-param"
       responses:
         '200':
           description: OK
@@ -156,7 +156,7 @@ paths:
             $ref: '#/definitions/application'
         default:
           $ref: '#/responses/default-error-response'
-  
+
   /applications/{application-number}/attachments:
     put:
       summary: Add additional documents to application
@@ -169,7 +169,7 @@ paths:
           description: Comand with details of attached documents
           in: body
           schema:
-            $ref: '#/definitions/attach-documents-command'        
+            $ref: '#/definitions/attach-documents-command'
       responses:
         '204':
           description: No content
@@ -179,11 +179,11 @@ paths:
           description: |
             Your request was well not well constructed. Look into validation error in response for more details.
           schema:
-            $ref: '#/definitions/validation-problem'            
+            $ref: '#/definitions/validation-problem'
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-            
+
               - [product-not-valid](offer-problems.html)
               - [deposit-account-opening-maxnumber](offer-problems.html)
 
@@ -199,7 +199,7 @@ paths:
           description: Comand with details of cancelation
           in: body
           schema:
-            $ref: '#/definitions/cancel-application-command'        
+            $ref: '#/definitions/cancel-application-command'
       responses:
         '204':
           description: No content
@@ -229,18 +229,18 @@ paths:
           description: |
             Your request was well not well constructed. Look into validation error in response for more details.
           schema:
-            $ref: '#/definitions/validation-problem'            
+            $ref: '#/definitions/validation-problem'
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-            
+
               - [product-not-valid](offer-problems.html)
               - [deposit-account-opening-maxnumber](offer-problems.html)
           schema:
             $ref: '#/definitions/business-problem'
         default:
-          $ref: '#/responses/default-error-response'  
-          
+          $ref: '#/responses/default-error-response'
+
   /applications/deposit-openings/{application-number}/accept:
     post:
       summary: Accept offered deposit terms
@@ -272,7 +272,7 @@ paths:
           schema:
             $ref: '#/definitions/business-problem'
         default:
-          $ref: '#/responses/default-error-response'          
+          $ref: '#/responses/default-error-response'
 
   /applications/loan-originations:
     post:
@@ -297,7 +297,7 @@ paths:
           description: |
             Your request was well not well constructed. Look into validation error in response for more details.
           schema:
-            $ref: '#/definitions/validation-problem'            
+            $ref: '#/definitions/validation-problem'
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
@@ -305,7 +305,7 @@ paths:
           schema:
             $ref: '#/definitions/business-problem'
         default:
-          $ref: '#/responses/default-error-response'          
+          $ref: '#/responses/default-error-response'
 
   /applications/loan-originations/{application-number}/accept:
     post:
@@ -339,7 +339,7 @@ paths:
             $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
-          
+
   /calculations/service-fee:
     get:
       summary: Calculate fees and taxes for the service
@@ -363,7 +363,7 @@ paths:
           description: |
             Your request was well not well constructed. Look into validation error in response for more details.
           schema:
-            $ref: '#/definitions/validation-problem'               
+            $ref: '#/definitions/validation-problem'
         default:
           $ref: '#/responses/default-error-response'
 
@@ -389,7 +389,7 @@ paths:
           description: |
             Your request was well not well constructed. Look into validation error in response for more details.
           schema:
-            $ref: '#/definitions/validation-problem'            
+            $ref: '#/definitions/validation-problem'
         default:
           $ref: '#/responses/default-error-response'
 
@@ -415,9 +415,9 @@ paths:
           description: |
             Your request was well not well constructed. Look into validation error in response for more details.
           schema:
-            $ref: '#/definitions/validation-problem'            
+            $ref: '#/definitions/validation-problem'
         default:
-          $ref: '#/responses/default-error-response'    
+          $ref: '#/responses/default-error-response'
 
   /calculations/installment-plan:
     get:
@@ -442,7 +442,7 @@ paths:
           description: |
             Your request was well not well constructed. Look into validation error in response for more details.
           schema:
-            $ref: '#/definitions/validation-problem'   
+            $ref: '#/definitions/validation-problem'
         default:
           $ref: '#/responses/default-error-response'
 
@@ -468,9 +468,9 @@ paths:
           description: |
             Your request was well not well constructed. Look into validation error in response for more details.
           schema:
-            $ref: '#/definitions/validation-problem'            
+            $ref: '#/definitions/validation-problem'
         default:
-          $ref: '#/responses/default-error-response' 
+          $ref: '#/responses/default-error-response'
 
   /calculations/lending-offer-text:
     get:
@@ -494,9 +494,9 @@ paths:
           description: |
             Your request was well not well constructed. Look into validation error in response for more details.
           schema:
-            $ref: '#/definitions/validation-problem'            
+            $ref: '#/definitions/validation-problem'
         default:
-          $ref: '#/responses/default-error-response'   
+          $ref: '#/responses/default-error-response'
 
   /calculations/required-documents:
     get:
@@ -520,14 +520,14 @@ paths:
           description: |
             Your request was well not well constructed. Look into validation error in response for more details.
           schema:
-            $ref: '#/definitions/validation-problem'            
+            $ref: '#/definitions/validation-problem'
         default:
-          $ref: '#/responses/default-error-response'   
+          $ref: '#/responses/default-error-response'
 
-  /classifications: 
+  /classifications:
     get:
       summary: List all classification schemas used by the API
-      description: Some fields and parameters have been restricted to a list of allowed lookup values maintained by the bank. This method lists all schemas used in this API.    
+      description: Some fields and parameters have been restricted to a list of allowed lookup values maintained by the bank. This method lists all schemas used in this API.
       operationId: "Classifications_GetList"
       responses:
         '200':
@@ -571,7 +571,7 @@ parameters:
     in: path
     name: draft-id
     required: true
-    type: string    
+    type: string
   customer-number-param:
     description: Unique identifier for fully registered customer.
     in: query
@@ -622,7 +622,7 @@ parameters:
     required: false
     type: integer
     default: 10
-    x-asee-common: true    
+    x-asee-common: true
   sort-order-param:
     description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [sorting](common-getstarted.html#sorting)
     in: query
@@ -632,13 +632,13 @@ parameters:
     enum:
     - asc
     - desc
-    x-asee-common: true  
-  sort-by-param:  
+    x-asee-common: true
+  sort-by-param:
     description: Attribute of the collection item to sort by. For more information see general guidance on [sorting](common-getstarted.html#sorting)
     in: query
     name: sort-by
     type: string
-    x-asee-common: true      
+    x-asee-common: true
   include-param:
     description: List of fields to include in response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
     in: query
@@ -647,7 +647,7 @@ parameters:
     items:
       type: string
     collectionFormat: csv
-    x-asee-common: true      
+    x-asee-common: true
   trim-param:
     description: List of fields to trim from response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
     in: query
@@ -672,7 +672,7 @@ definitions:
         enum: [deposit-opening, current-account-opening, loan-origination]
         x-asee-enumeration: application-kinds
     type: object
-    
+
   accept-deposit-offer-command:
     description:  Parameters for product origination acceptance
     properties:
@@ -685,15 +685,15 @@ definitions:
           For complete list of possible values see [deposit-opening-kinds](offer-classifications.html#deposit-opening-kinds) enumeration.
         type: string
         enum: [term-deposit, sight-deposit, current-account]
-    type: object    
-    
+    type: object
+
   cancel-application-command:
     description:  Parameters for product origination acceptance
     properties:
       cancelation-reason:
         description: Customer's reason to cancel active application
         type: string
-        x-asee-classification: cancelation-reason
+        x-asee-classification: cancelation-reasons
       kind:
         description: |
           Enumeration that distinguishes different kinds of product applications
@@ -701,17 +701,17 @@ definitions:
         type: string
         enum: [deposit-opening, current-account-opening, loan-origination]
         x-asee-enumeration: application-kinds
-    type: object  
-    
+    type: object
+
   initiate-deposit-opening-command:
     description: Parameters for initiate deposit account opening.
     properties:
-      deposit-opening-kind:  
+      deposit-opening-kind:
         description: |
           Enumeration that distinguishes different kinds of product applications
           For complete list of possible values see [deposit-opening-kinds](offer-classifications.html#deposit-opening-kinds) enumeration.
         type: string
-        enum: [term-deposit, sight-deposit, current-account] 
+        enum: [term-deposit, sight-deposit, current-account]
       amount:
         description: Amount of deposit
         $ref: '#/definitions/currency'
@@ -724,22 +724,19 @@ definitions:
         format: ISO 8601 duration
       primary-currency:
         description: Primary currency of selected product
-        type: string              
+        type: string
       product-code:
         description: A code or short name by which a product can be identified.
         type: string
-      campaign-code:
-        description: A code by which a campaign can be identified
-        type: string           
       signing-option:
         description: |
           Indicates how and where customer chose to sign agreement documents
           For complete list of possible values see [signing-options](offer-classifications.html#signing-options) enumeration.
         type: string
-        enum: [branch, courier, online]   
+        enum: [branch, courier, online]
       requested-account-number:
         description: Optional account number requested by customer
-        type: string               
+        type: string
       nickname:
         description: Nickname of account
         type: string
@@ -749,14 +746,17 @@ definitions:
       requested-activation-date:
         description: Requested activation date
         format: date-time
-        type: string             
+        type: string
+      campaign-code:
+        description: A code by which a campaign can be identified.
+        type: string
     required:
       - amount
       - customer-number
       - product-code
     type: object
 
-    
+
   initiate-loan-origination-command:
     description: Command with details neccesery to initiate loan origination
     properties:
@@ -775,21 +775,18 @@ definitions:
         $ref: '#/definitions/currency'
       invoice-amount:
         description: Invoice amount.
-        $ref: '#/definitions/currency'     
+        $ref: '#/definitions/currency'
       product-code:
         description: A code or short name by which a product can be identified.
-        type: string        
-      campaign-code:
-        description: A code by which a campaign can be identified
-        type: string           
+        type: string
       term:
         description: Loan period.
         type: string
-        format: ISO 8601 duration    
+        format: ISO 8601 duration
       requested-activation-date:
         description: Requested activation date
         format: date-time
-        type: string 
+        type: string
       loan-purposes:
         description: List of loan purposes.
         items:
@@ -807,18 +804,18 @@ definitions:
           Indicates how and where customer chose to sign agreement documents
           For complete list of possible values see [signing-options]](offer-classifications.html#signing-options) enumeration.
         type: string
-        enum: [branch, courier, online]       
+        enum: [branch, courier, online]
       credit-bureau-consent:
         description: Consent for credit bureau inquiry
-        type: boolean        
+        type: boolean
       applicant:
         description: Applicant data
-        $ref: '#/definitions/applicant-info'        
+        $ref: '#/definitions/applicant-info'
       attachments:
         type: array
         items:
-          $ref: '#/definitions/attachment'        
-  
+          $ref: '#/definitions/attachment'
+
   attach-documents-command:
     description: Command with specification of attached documents
     properties:
@@ -826,10 +823,10 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/document'
-          
+
   attachment:
     description: Command with details of attachement
-    properties:      
+    properties:
       attachment-url:
         type: string
         format: url
@@ -839,25 +836,24 @@ definitions:
         description: Unique identifier of document in DMS
       document-type:
         type: string
-        x-asse-classification: document-type
-        description: specific purpose of this document
-
+        x-asse-classification: document-types
+        description: Specific purpose of this document. For complete list of possible values see [document-types](offer-classifications.html#document-types) classification.
   required-documentation-request:
     properties:
       product-code:
         type: string
         description: The unique identifier of a Product
       work-item-type:
-        x-asee-compliance: Is this property used at all? How come that the document has work-item-type, and that the product does not have one? 
+        x-asee-compliance: Is this property used at all? How come that the document has work-item-type, and that the product does not have one?
         type: string
-        description: Identifies Work Item Type for which the document is associated with      
+        description: Identifies Work Item Type for which the document is associated with
       work-item-phase:
         type: string
         description: Identifies Work Item Phase in which a document is introduced
   required-documentation:
     properties:
-      documention: 
-        items: 
+      documention:
+        items:
           $ref: "#/definitions/document"
   document:
     description: Document related to product or workitem
@@ -867,15 +863,16 @@ definitions:
         type: string
         description: The unique identifier of a Product
       work-item-type:
-        x-asee-compliance: Is this property used at all? How come that the document has work-item-type, and that the product does not have one? 
+        x-asee-compliance: Is this property used at all? How come that the document has work-item-type, and that the product does not have one?
         type: string
-        description: Identifies Work Item Type for which the document is associated with      
+        description: Identifies Work Item Type for which the document is associated with
       work-item-phase:
         type: string
         description: Identifies Work Item Phase in which a document is introduced
       document-type:
         type: string
         description: Identifies document type. For complete list of possible values see [document-types](offer-classifications.html#document-types) classification.
+        x-asse-classification: document-types
       is-mandatory:
         type: boolean
         description: Identifies whether the document is mandatory
@@ -888,7 +885,7 @@ definitions:
       template-uri:
         type: string
         format: url
- 
+
   service-fee-calculation-request:
     description: Service fee calculation request.
     properties:
@@ -897,7 +894,7 @@ definitions:
         type: string
       arrangement-number:
         description: Optional number of arrangement that covers the service for which fee is calculated
-        type: string      
+        type: string
       transaction-amount:
         description: Transaction amount
         $ref: '#/definitions/currency'
@@ -973,24 +970,22 @@ definitions:
       term:
         description: The term of deposit. For sight deposits and current accounts `1Y` is expected
         type: string
-        format: ISO 8601 duration       
+        format: ISO 8601 duration
       nominal-interest-rate:
-        description: Interest rate 
-        type: number
-        format: double
+        description: Interest rate
+        allOf:
+        - $ref: '#/definitions/interest-rate'
       interest-calculation-method:
         type: string
         description: Method used to calculate interest
-        enum: [proportional, compounding]
-      interest-calendar-basis:
+        enum: [simple, compounding]
+      interest-calculation-basis:
         type: string
-        enum: [30a-360, 30u-360, 30e-360, 30e-360-isda, act-act-icma, act-act-isda, act-365-fixed, act-360, act-364, act-365-l, act-act-afb]
-        description: Day count convention used for interest calculation.
-        default: act-act-isda
+        enum: [30-360, 30-365, actual-360, actual-actual, actual-365]
       efective-interest-rate:
         format: double
         type: number
-        description: Effective interest rate        
+        description: Effective interest rate
       tax-rate:
         format: double
         type: number
@@ -1002,7 +997,7 @@ definitions:
       tax-amount:
         format: double
         type: number
-        description: Tax amount            
+        description: Tax amount
       payout-amount:
         format: double
         type: number
@@ -1013,7 +1008,7 @@ definitions:
     properties:
       borrowed-amount:
         description: Amount borrowed
-        $ref: '#/definitions/currency'     
+        $ref: '#/definitions/currency'
       term:
         description: The term of loan. For overdafts, revolving limits and other open ended facilities  `1Y` is expected
         type: string
@@ -1035,25 +1030,23 @@ definitions:
         type: string
         format: ISO 8601 duration
       nominal-interest-rate:
-        description: Nominal interest rate 
-        type: number
-        format: double
+        description: Interest rate
+        allOf:
+        - $ref: '#/definitions/interest-rate'
       interest-calculation-method:
         type: string
         description: Method used to calculate interest
         enum: [proportional, compounding]
-      interest-calendar-basis:
+      interest-calculation-basis:
         type: string
-        enum: [30a-360, 30u-360, 30e-360, 30e-360-isda, act-act-icma, act-act-isda, act-365-fixed, act-360, act-364, act-365-l, act-act-afb]
-        description: Day count convention used for interest calculation.
-        default: act-act-isda
+        enum: [30-360, 30-365, actual-360, actual-actual, actual-365]
       efective-interest-rate:
         format: double
         type: number
         description: Effective interest rate
       monthly-repayment:
         description: Amount or repayment
-        $ref: '#/definitions/currency'      
+        $ref: '#/definitions/currency'
       total-interest:
         $ref: '#/definitions/currency'
       total-repayment:
@@ -1062,7 +1055,7 @@ definitions:
       total-fees:
         description: Represents calculated fees
         $ref: '#/definitions/currency'
-    
+
   installment-plan-request:
     description: Request with details neccessery to calculate offered lending terms
     properties:
@@ -1081,7 +1074,7 @@ definitions:
         type: string
       funds-availability-date:
         description: Date from which funds are awailable for drawdown
-        type: string  
+        type: string
         format: date
     required:
       - borrowed-amount
@@ -1115,14 +1108,7 @@ definitions:
         description: Payment due date
       activity-kind:
         type: string
-        enum:
-        - disbursement
-        - downpayment
-        - repayment
-        - interest-payment
-        - fee-payment
-        - cash-collateral-pledging
-        - cash-collateral-release
+        x-asee-classification: installment-activity-kinds
         description: |
           Enumeration which can be used by software to recognize the meaning of the activity that triggers the payment. For example, in combination with product type it can be used at front end as a resource id for row description translation into selected culture. Grouping multiple activities into single row is allowed, and then most appropriate classification should be used. For example, disbursement activity may include downpayment, fee-payment, and cash-collateral-pledging. Also repayment activity may include interest-payment, fee-payment, and cash-collateral-release. For deposit products, disbursement activity-kind is used to describe depositing activity, while repayment is used to describe withdrawal.
           For a list of possible values see [installment-activity-kinds](arrangement-classifications.html#installment-activity-kinds) enumeration.
@@ -1247,7 +1233,7 @@ definitions:
       - term
       - product-code
       - customer-number
-    type: object    
+    type: object
   common-offer-text:
     description: Common text for deposit and lending offers based on consumer protection regulations
     properties:
@@ -1274,39 +1260,39 @@ definitions:
         type: string
       currency:
         description: Currency (1a 2.3) (1a OE 2.4) (1b 2.4) (1b OE 2.5)
-        type: string        
+        type: string
       nominal-interest-rate:
         description: Nominal interest rate (3.1)
         type: string
       effective-interest-rate:
         description: Effective interest rate (1b 3.2) (OE 3.3)
-        type: string    
+        type: string
       interest-calculation-method:
         description: Calculation method (1a 3.3) (1b OE 3.2)
-        type: string        
+        type: string
       related-costs:
         description: Related costs (3.3) (1b OE 3.5) (1a OE 3.6)
-        type: string 
+        type: string
       early-termination-conditions:
         description: Early termination conditions (4.1)
-        type: string        
+        type: string
       complaint-contact-point:
         description: Complaints contact point (1a OE 4.4) (1b OE 4.6)
-        type: string        
+        type: string
   lending-offer-text:
     description: Lending offer text
     properties:
       common:
-        $ref: '#/definitions/common-offer-text'    
+        $ref: '#/definitions/common-offer-text'
       borrowed-amount:
         description: Loan amount (1b 2.2) (OE 2.3)
         type: string
       deposit-amount:
         description: Deposit or downpayment amount (1b 2.3) (OE 2.4)
-        type: string  
+        type: string
       repayments:
         description: Repayments (1b 2.6)
-        type: string 
+        type: string
       sureties:
         description: Sureties such as collaterals and guaranties (1b 2.7) (OE 4.3)
       penalty-interest-rate:
@@ -1314,7 +1300,7 @@ definitions:
         type: string
       approval-requirements:
         description: Approval requirements (1b 3.4) (1b OE 3.5)
-        type: string              
+        type: string
       card-fees:
         description: Unconditional benefits (1b 3.6)
         type: string
@@ -1326,15 +1312,15 @@ definitions:
         type: string
       overdraft-repayment-conditions:
         description: Overdraft repayment conditions (1b 4.3) (OE 4.5)
-        type: string        
+        type: string
   deposit-offer-text:
     description: Deposit offer text
     properties:
       common:
-        $ref: '#/definitions/common-offer-text'      
+        $ref: '#/definitions/common-offer-text'
       deposit-amount:
         description: Amount (1a 2.2) (OE 2.3)
-        type: string   
+        type: string
       tax-information:
         description: Tax information (1a OE 3.3)
         type: string
@@ -1350,8 +1336,6 @@ definitions:
 
   application-list:
     description: Product account opening list
-    x-asee-trimmed:
-    - applications.comments
     allOf:
       - $ref: '#/definitions/paged-list'
     properties:
@@ -1361,7 +1345,7 @@ definitions:
           $ref: '#/definitions/application'
         type: array
     type: object
-    
+
   draft:
     description: Draft of incomplete product application
     properties:
@@ -1373,12 +1357,12 @@ definitions:
       editing-step:
         description: Editing step in entry ui flow (wizard) where draft was saved
         type: string
-        
+
   application:
     description: Common information to all kinds of product applications
     discriminator: kind
     required:
-    - kind 
+    - kind
     properties:
       application-number:
         description: Unique identifier for application workitem
@@ -1398,7 +1382,7 @@ definitions:
         type: string
         enum: [accepted, active, rejected, canceled, approved]
         x-asee-enumeration: application-statuses
-        readOnly: true        
+        readOnly: true
       customer-number:
         description: Customer number
         type: string
@@ -1411,45 +1395,42 @@ definitions:
       product-name:
         description: The primary name assigned to the product used in reports and documents
         type: string
-      campaign-code:
-        description: A code by which a campaign can be identified
-        type: string           
       created:
         description: Date and time when application was recorded in the system
         format: date-time
         type: string
-        readOnly: true       
+        readOnly: true
       request-date:
         description: Date when application was accepted for processing
         format: date
         type: string
-        readOnly: true         
+        readOnly: true
       expiration-date:
         description: Expiration date
         format: date-time
         type: string
-        readOnly: true        
+        readOnly: true
       status-changed:
-        description: Date and time when application status changed 
+        description: Date and time when application status changed
         format: date-time
         type: string
-        readOnly: true        
+        readOnly: true
       last-modified:
         description: Date and time when application was last modified
         format: date-time
         type: string
-        readOnly: true        
-      created-by-name: 
+        readOnly: true
+      created-by-name:
         description: "Name of the agent (bank employee) responsible for opening process, who created product account opening"
         type: string
-        readOnly: true        
-      comments: 
+        readOnly: true
+      comments:
         description: Comments
         type: string
-      workitem-phase: 
+      workitem-phase:
         description: Work item phase name.
         type: string
-        readOnly: true        
+        readOnly: true
   deposit-opening:
     description: Deposit account opening application
     allOf:
@@ -1460,18 +1441,15 @@ definitions:
         type: string
       initial-amount:
         description: Represents initial amount of funds for deposit opening
-        $ref: '#/definitions/currency'        
+        $ref: '#/definitions/currency'
       parrent-arrangement-number:
         description: Optional identifier of parent arrangement under which this deposit account is opened
         type: string
 
   loan-origination:
     description: Credit facility application
-    x-asee-trimmed:
-    - installment-plan
-    - loan-purposes
     allOf:
-      - $ref: '#/definitions/application'    
+      - $ref: '#/definitions/application'
     properties:
       accepted-amount:
         description: Accepted amount.
@@ -1487,18 +1465,18 @@ definitions:
         $ref: '#/definitions/currency'
       invoice-amount:
         description: Invoice amount.
-        $ref: '#/definitions/currency'     
+        $ref: '#/definitions/currency'
       product-code:
         description: A code or short name by which a product can be identified.
-        type: string        
+        type: string
       term:
         description: Lending arrangement term. For overdrafts, credit limits and other open ended arrangements this value is optional
         type: string
-        format: ISO 8601 duration    
+        format: ISO 8601 duration
       requested-activation-date:
         description: Requested activation date
         format: date-time
-        type: string 
+        type: string
       loan-purposes:
         description: List of loan purposes.
         items:
@@ -1516,17 +1494,17 @@ definitions:
           Indicates how and where customer chose to sign agreement documents
           For a list of possible values see [signing-options](offer-classifications.html#signing-options) enumeration.
         type: string
-        enum: [branch, courier, online]        
+        enum: [branch, courier, online]
       credit-bureau-consent:
         description: Consent for credit bureau inquiry
-        type: boolean        
+        type: boolean
       applicant:
         description: Applicant data
-        $ref: '#/definitions/applicant-info'        
+        $ref: '#/definitions/applicant-info'
       attachments:
         type: array
         items:
-          $ref: '#/definitions/attachment'        
+          $ref: '#/definitions/attachment'
 
   loan-purpose:
     description: Loan purpose
@@ -1543,6 +1521,7 @@ definitions:
       loan-type:
         description: Loan type. For complete list of possible values see [loan-types](offer-classifications.html#loan-types) classification.
         type: string
+        x-asee-classification: loan-types
       check-digit-model:
         description: Check digit model.
         type: string
@@ -1569,10 +1548,10 @@ definitions:
           - widowed
       highest-education:
         description: |
-          Highest educational level
-          For complete list of possible values see [education-levels](offer-classifications.html#education-levels) enumeration.
+          Highest educational level.
+          For complete list of possible values see [education-levels](offer-classifications.html#education-levels) classification.
         type: string
-        enum: [elementary, high-school, assoociate, bachelor, master, doctoral , undisclosed]
+        x-asee-classification: education-levels
       home-ownership:
         description: |
           Home ownership
@@ -1610,7 +1589,7 @@ definitions:
         type: array
       total-additional-income:
         description: Total additional income amount.
-        $ref: '#/definitions/currency'        
+        $ref: '#/definitions/currency'
       income-tax-payer:
         type: boolean
         description: Whether applicant is paying income taxes
@@ -1619,7 +1598,7 @@ definitions:
         $ref: '#/definitions/currency'
       total-household-income:
         description: Total household income amount
-        $ref: '#/definitions/currency'       
+        $ref: '#/definitions/currency'
       size-of-household:
         description: Number of household members.
         format: int32
@@ -1631,20 +1610,24 @@ definitions:
       dependent-children:
         description: Number of children.
         format: int32
-        type: integer    
+        type: integer
       dependent-adults:
         description: Number of dependent adults
         format: int32
         type: integer
+
+
       car-ownership:
         description: |
           Car assets.
           For complete list of possible values see [car-ownerships](offer-classifications.html#car-ownerships) enumeration.
         type: string
         enum: [owns, does-not-own, not-disclosed]
+
+
       additional-info:
         description: Additional info
-        type: string        
+        type: string
 
   address:
     description: Structured address for communication. Used as a common base for postal-address, phone-number and email-address
@@ -1737,7 +1720,7 @@ definitions:
       - number
       - country-code
       - area-code
-    type: object    
+    type: object
 
   employment-info:
     description: Employment info
@@ -1754,17 +1737,21 @@ definitions:
         format: date
         type: string
       position-category:
-        description: Employment position category. For complete list of possible values see [employment-position-category]() classification.
+        description: Employment position category. For complete list of possible values see [employment-position-categories](offer-classifications.html#employment-position-categories) classification.
+        x-asee-classification: employment-position-categories
         type: string
       employment-type:
-        description: Type of employment. For complete list of possible values see [employment-type]() classification.
-        type: string
-        enum: [full-time, part-time]
-      employer-legal-structure:
-        x-asee-classification: organization-legal-structure
         description: |
-          Employer legal structure. 
-          Classifies organizations based on their legal form or structure. For example, `public-organization`, `partnership`, `sole-proprietorship`, `limited-company`.such as trust, company, charity, or estate. For a complete list of possible values see [organization-legal-structure](offer-classifications.html#legal-structure)'
+          Type of employment.
+          For complete list of possible values see [employment-types](offer-classifications.html#employment-types) classification.
+        type: string
+        x-asse-classification: employment-types
+      employer-legal-structure:
+        description: |
+          Employer type.
+          For complete list of possible values see [employer-types](offer-classifications.html#employer-types) classification.
+        type: string
+        x-asse-classification: employer-types
     type: object
   income:
     description: Income
@@ -1772,13 +1759,25 @@ definitions:
       amount:
         description: Income amount
         $ref: '#/definitions/currency'
-      source: 
+      source:
         type: string
         description: |
           Income source
           For complete list of possible values see [income-sources](offer-classifications.html#income-sources) enumeration.
         enum: [salary, pension, contract, rent, alimony, royalty, board-membership, separation-allowance ]
-    
+
+  interest-rate:
+    description: Interest rate.
+    properties:
+      period:
+        description: Interest rate period
+        type: string
+        format: ISO 8601 duration
+      percentage:
+        description: Interest rate value
+        format: double
+        type: number
+    type: object
 
 
 # ****************************************************#
@@ -1786,18 +1785,18 @@ definitions:
 # ****************************************************#
   currency:
     description: Currency amount and code
-    type: object  
+    type: object
     required:
-      - amount    
-      - code      
+      - amount
+      - code
     example:
-      amount: 200.00    
+      amount: 200.00
       code: EUR
     properties:
       amount:
         description: Amount
         format: double
-        type: number    
+        type: number
       code:
         description: ISO 4217 3 letter currency code
         type: string
@@ -1823,7 +1822,7 @@ definitions:
               message:
                 type: string
     example:
-      -  
+      -
         field: phone-number
         errors:
           -
@@ -1831,20 +1830,20 @@ definitions:
             message: Format for this field is invalid
           -
             error: max-length
-            message: Content exceeds maximum alowed length 
-      - 
+            message: Content exceeds maximum alowed length
+      -
         field: account-number
         errors:
           -
             error: check-digit-invalid
             message: Check digit is invalid for this field
-  
+
   business-problem:
     description: Details on specific problem that prevented processing after successfull validation
-    type: object 
+    type: object
     properties:
       problem:
-        description: Unique literal that identifies specific problem 
+        description: Unique literal that identifies specific problem
         type: string
       message:
         description: Message explaining the situation and optionaly remedies
@@ -1856,7 +1855,7 @@ definitions:
       problem: document-locked
       message: Document you are trying to access is locked by another user
       details: User john.doe has locked the document
-  
+
   paged-list:
     description: List with support for paging
     properties:
@@ -1901,7 +1900,7 @@ definitions:
       literal: billing
       code: 2
       description: Contact may be used to provide party with details of their liabilities to the bank
-      
+
   classification-list:
     description: List of classification schemas
     type: object
@@ -1920,7 +1919,7 @@ definitions:
         schema-id: folder-purpose
         name: Folder Purpose
         description: List of possible uses of a folder in business context.
-        
+
   classification-info:
     description: Basic information on classification schema
     properties:
@@ -1937,7 +1936,7 @@ definitions:
       schema-id: filing-purpose
       name: Filing Purpose
       description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture
-      
+
   classification:
     type: object
     description: Classification schema details
