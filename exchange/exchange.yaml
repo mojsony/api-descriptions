@@ -502,8 +502,11 @@ definitions:
     allOf:
     - $ref: '#/definitions/paged-list'
     properties:
-      items:
-        $ref: '#/definitions/list-info'
+      lists:
+        type: array
+        description: Exchange rates lists that match criteria
+        items:
+          $ref: '#/definitions/list-info'
     example:
       total-count: 68
       page-size: 10
