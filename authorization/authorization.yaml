@@ -22,7 +22,7 @@ paths:
       tags:
         - OTP
       x-asee-tags: []    
-      operationId: OTP_SMS_Send
+      operationId: OTP_SendSMS
       parameters:
         - description: Command with details to send SMS OTP
           in: body
@@ -45,7 +45,7 @@ paths:
 
   /otp/sms/verify:
     post:
-      operationId: OTP_SMS_Verify
+      operationId: OTP_VerifySMS
       summary: Verify SMS one-time password 
       tags:
         - OTP
@@ -72,7 +72,7 @@ paths:
 
   /otp/oath/verify:
     post:
-      operationId: OTP_Oath_Verify
+      operationId: OTP_VerifyOATH
       summary: Verify OATH compliant one-time password 
       tags:
         - OTP
