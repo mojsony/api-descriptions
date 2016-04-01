@@ -33,3 +33,7 @@ folder-archived              | 50051 | Folder has been archived.
 document-locked              | 50052 | Document has been locked for changes.
 document-archived              | 50053 | Document has been archived.
 max-upload-size-exceeded       | 50054 | Maximum size of content for upload has been exceeded. See details for current limit.
+document-already-exists        | 50055 | Document "{name:}" already exists in path "{path:}"
+folder-already-exists        | 50056 | Folder "{name:}" already exists in path "{path:}"
+folder-not-empty              | 50057 | Folder "{name:}" is not empty
+

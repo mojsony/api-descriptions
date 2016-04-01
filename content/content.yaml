@@ -310,6 +310,7 @@ paths:
             - [folder-locked](content-problems.html)
             - [folder-archived](content-problems.html)
             - [max-upload-size-exceeded](content-problems.html)
+            - [document-already-exists](content-problems.html)            
           schema:
             $ref: '#/definitions/business-problem'
         default:
@@ -411,7 +412,7 @@ paths:
             - [folder-locked](content-problems.html)
             - [folder-archived](content-problems.html)
             - [max-upload-size-exceeded](content-problems.html)
-            - [document-already-exists](content-problems.html
+            - [document-already-exists](content-problems.html)
           schema:
             $ref: '#/definitions/business-problem'
         default:
