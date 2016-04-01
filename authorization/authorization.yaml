@@ -1,202 +1,171 @@
 swagger: '2.0'
 info:
-  description: Authorization API enables authorization of sensitive transactions initiated by actions customer by additional second factor authentication and/or involvement of other customers in authorization. Transaction authorizations are either explicitly requested by channel applications and workflows or initiated by other APIs during transaction and workflow processing.
+  description: Authorization API enables authorization of sensitive actions performed by customers or agents using 2nd factor authentication. Sensitive action authorizations can be explicitly requested by applications or they can be initiated by APIs during authorization checking. Support for 4 eyes verification and separation of duties will be added in future.
   title: Authorization API
   version: v1
-host: dev.asseco-see.rs
-basePath: /authorization
+host: dev.asseco-see.com
+basePath: /v1/authorization
 tags:
-  - description: Working with authorizations
-    name: Authorizations
-  - description: Working with mandates
-    name: Mandates
-  - description: Working with challenges
-    name: Challenges
-  - description: Working with OTP (One Time password)
+  - description: Working with one-time passwords
     name: OTP
-  - description: Working with tokens
-    name: Tokens
 consumes:
   - application/json
 produces:
   - application/json
+schemes:
+  - http
+  - https
 paths:
-
-  /sms-otp/initiate:
+  /otp/sms/send:
     post:
-      operationId: OTP_Initiate
-      parameters:
-        - description: Generate SMS OTP command.
-          in: body
-          name: cmd
-          required: true
-          schema:
-            $ref: '#/definitions/resend-otp-cmd'
-      responses:
-        '200':
-          description: OK
-      summary: Generate One Time Password (OTP) to be used for processes that required it in validations.
+      summary: Generate and send SMS one-time password (SMS OTP)
       tags:
         - OTP
-      x-asee-tags: []
-  /orchestration-tokens:
-    post:
-      description: This token is used for orchestration requests
-      operationId: BulkTokens_Create
+      x-asee-tags: []    
+      operationId: OTP_SMS_Send
       parameters:
-        - description: Generate orchestration token command.
+        - description: Command with details to send SMS OTP
           in: body
           name: cmd
           required: true
           schema:
-            $ref: '#/definitions/bulk-token-command-params'
+            $ref: '#/definitions/send-sms-otp-command'
       responses:
-        '200':
-          description: OK
+        202:
+          description: Accepted - SMS is sent
           schema:
-            $ref: '#/definitions/command-result'
+            $ref: '#/definitions/verification-id'   
+        440:
+          description: |
+            Your request was well constructed but it could not be processed. Consider the following possible problems and look into response for more details:
+
+            - [no-such-user]()            
         default:
           $ref: '#/responses/default-error-response'
-      summary: Create orchestration tokens.
+
+  /otp/sms/verify:
+    post:
+      operationId: OTP_SMS_Verify
+      summary: Verify SMS one-time password 
       tags:
-        - Tokens
-      x-asee-tags: []
-parameters:
-  service-code-param:
-    description: Service code for this action
-    in: query
-    name: service-code
-    required: true
-    type: boolean
-  async-param:
-    description: Value indicating whether this request is asynchronous.
-    in: query
-    name: async
-    required: true
-    type: boolean
-  page-size-param:
-    in: query
-    name: page-size
-    description: Number of items on a page. For more information see general guidance on [paging and sorting]()
-    required: false
-    format: int32
-    type: integer
-  page-param:
-    in: query
-    description: Page index. For more information see general guidance on [paging and sorting]()
-    name: page
-    required: false
-    format: int32
-    type: integer
-  sort-order-param:
-    description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]()
-    in: query
-    name: sort-order
-    required: false
-    enum:
-      - asc
-      - desc
-    type: string
-  sort-by-param:
-    in: query
-    name: sort-by
-    description: Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]()
-    required: false
-    type: string
-  include-param:
-    in: query
-    name: include
-    description: List of fields to include in response. For more information see general guidance on [response shaping]()
-    required: false
-    collectionFormat: csv
-    items:
-      type: string
-    type: array
-  trim-param:
-    in: query
-    name: trim
-    description: List of fields to trim from response. For more information see general guidance on [response shaping]()
-    required: false
-    collectionFormat: csv
-    items:
-      type: string
-    type: array
-  authorization-id-param:
-    description: Authorization id
-    in: path
-    name: authorization-id
-    required: true
-    type: string
+        - OTP
+      x-asee-tags: []      
+      parameters:
+        - description: Request with details to verify SMS OTP
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/verify-sms-otp-request'
+      responses:
+        200:
+          description: OK - OTP is valid
+        440:
+          description: |
+            Your request was well constructed but OTP was be verified. Consider the following possible problems and look into response for more details:
+            
+            - [bad-otp]()
+            - [replayed-otp]()
+            - [no-such-verification]()    
+        default:
+          $ref: '#/responses/default-error-response'
+
+  /otp/oath/verify:
+    post:
+      operationId: OTP_Oath_Verify
+      summary: Verify OATH compliant one-time password 
+      tags:
+        - OTP
+      x-asee-tags: []      
+      parameters:
+        - description: Request with details to verify HOTP or TOTP
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/verify-oath-otp-request'
+      responses:
+        200:
+          description: OK - OTP is valid
+        440:
+          description: |
+            Your request was well constructed but OTP was be verified. Consider the following possible problems and look into response for more details:
+
+            - [bad-otp]()
+            - [replayed-otp]()
+            - [no-such-user]()
+          schema:
+            $ref: '#/definitions/business-problem'          
+        default:
+          $ref: '#/responses/default-error-response'
+
+parameters: {}
 definitions:
 
   business-problem:
+    description: Details on specific problem that prevented processing after successfull validation
+    type: object
     example:
-      type: max-attempts-reached
-      title: Max authorization attempts has been reached
-      details: Max authorization attempts has been reached
+      problem: document-locked
+      message: Document you are trying to access is locked by another user
+      details: User john.doe has locked the document
     properties:
-      type:
+      problem:
+        description: Unique literal that identifies specific problem
         type: string
-      title:
+      message:
+        description: Message explaining the situation and optionaly remedies
         type: string
       details:
+        description: Optional details supplied for troubleshooting
         type: string
-    type: object
 
-
-  generate-challenge-cmd:
-    description: Command for generating challenge
+  send-sms-otp-command:
+    description: Command with details to send SMS OTP
     example:
       authorization-id: AuthorizationId
     properties:
-      authorization-id:
-        description: Authorization Id
+      action:
         type: string
-    required:
-      - authorization-id
-    type: object
-  resend-otp-cmd:
-    description: Command for resending OTP
-    example:
-      authorization-id: 300265
+      message:
+        type: string
+        description: Optional message
+      phone-number:
+        type: string
+        format: phone
+        description: Phone number to send SMS OTP 
+      user-id:
+        type: string
+        description: Optional identifier of user who will receive SMS on preferred mobile phone number.
+
+  verification-id:
+    description: Identifies SMS OTP verification in progress 
+    type: string
+    
+  verify-sms-otp-request:
+    description: Request with details to verify SMS OTP
     properties:
-      authorization-id:
-        description: Authorization Id
+      verification-id:
+        description: Identifies SMS OTP verification in progress
         type: string
+      otp:
+        type: string
+        description: Digits sent via SMS
+
+  verify-oath-otp-request:
+    description: Request with details to verify HOTP or TOTP
     required:
-      - authorization-id
-    type: object
-  bulk-token-command-params:
-    description: Command for issuing authorization token for bulk operations that require multiple authorizations
-    example:
-      service-codes:
-        - initiate-credit-transfer
-      operations-count: 2
+      - user-id
+      - otp    
     properties:
-      service-codes:
-        description: "Service's codes list for bulk authorization"
-        items:
-          type: string
-        type: array
-      operations-count:
-        description: Number of expected operations
-        format: int32
-        type: integer
-    required:
-      - service-codes
-    type: object
-  command-result:
-    example:
-      id: 20390808
-      created-record-status: created
-    properties:
-      id:
+      user-id:
         type: string
-      created-record-status:
+        description: For existing user (customer or agent)
+      otp:
         type: string
-    type: object
+        description: Digits generated by HOTP or TOTP
+        
+
 responses:
   default-error-response:
-    description: 'Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()'
-schemes:
-  - http
+    description: 'Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling](common-getstarted.html#error-handling)'
