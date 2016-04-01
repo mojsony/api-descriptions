@@ -69,7 +69,7 @@ paths:
       summary: List folder contents by path
       description: |
         Returns list of contents for folder at given path
-        > **NOTE** If path parameter is empty, implicit root folder of repository is assummed and all documents and folders in root path are returned.
+        > **NOTE** If path parameter is empty, implicit root folder `/` of repository is assummed and all documents and folders in root path are returned.
       tags:
         - Folders
       x-asee-tags:
@@ -291,6 +291,13 @@ paths:
           type: array
           items:
             type: string
+        -
+          name: overwrite-if-exists
+          in: formData
+          description: If present and true any existing documents having same name will be overwritten 
+          required: true
+          type: boolean
+          default: false          
       responses:
         '201':
           description: Documents uploaded
@@ -313,10 +320,17 @@ paths:
       - $ref: "#/parameters/folder-id-param"
     delete:
       summary: Delete folder.
-      description: 'WARNING: This operation deletes folder with all contents and subdirectories'
+      description: |
+        > **WARNING**: This operation may delete folder with all its contents and subfolders'
       tags:
         - Folders
       operationId: Folders_Delete
+      parameters:
+        - name: delete-content-and-subfolders
+          in: query
+          type: boolean
+          default: false
+          description: If present and true, folder will be deleted with all content and subfolders. Otherwise error will be returned if folder is not empty.
       responses:
         '200':
           description: Success
@@ -326,6 +340,7 @@ paths:
 
             - [folder-locked](content-problems.html)
             - [folder-archived](content-problems.html)
+            - [folder-not-empty](content-problems.html)
           schema:
             $ref: '#/definitions/business-problem'
         default:
@@ -372,6 +387,13 @@ paths:
           description: Identifies the case related to the document such as arrangment, loan application or complaint. Having this file enables flat folder structure where documents in one folder can belong to different cases.
           required: true
           type: string
+        -
+          name: overwrite-if-exists
+          in: formData
+          description: If present and true any existing documents having same name will be overwritten 
+          required: true
+          type: boolean
+          default: false
       responses:
         '201':
           description: Document uploaded
@@ -389,6 +411,7 @@ paths:
             - [folder-locked](content-problems.html)
             - [folder-archived](content-problems.html)
             - [max-upload-size-exceeded](content-problems.html)
+            - [document-already-exists](content-problems.html
           schema:
             $ref: '#/definitions/business-problem'
         default:
@@ -411,13 +434,16 @@ paths:
             $ref: '#/definitions/folder'
       responses:
         '201':
-          $ref: '#/responses/resource-created-response'
+          description: Created
+          schema:
+            $ref: '#/definitions/folder'
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
 
             - [folder-locked](content-problems.html)
             - [folder-archived](content-problems.html)
+            - [folder-already-exists](content-problems.html)            
           schema:
             $ref: '#/definitions/business-problem'
         default:
@@ -588,10 +614,6 @@ paths:
         - Classifications
 
 responses:
-  resource-created-response:
-    description: Resource was created successfuly
-    schema:
-      $ref: "#/definitions/resource-created-result"
   validation-problem-response:
     description: Your request was not constructed properly. Response contains the list of validation errors for each invalid element of your request. To learn more see general guidance on [validation](common-getstarted.html#validation).
     schema:
@@ -725,9 +747,6 @@ definitions:
 # DEFINITIONS OF MODELS COMMON WITH OTHER APIs        #
 # ****************************************************#
 
-  resource-created-result:
-    description: Unique identifier of newly created resource that can be used in future inquires and commands
-    type: string
   validation-problem:
     type: array
     items:
