@@ -60,7 +60,16 @@ Authenticate users with different credentials
 @@@
 ##/entitlements
 ###&#xEA0A
-Control access to sensitive actions
+Track customer access rights and usage limits
+[EXPLORE](entitlements.html)
+[LEARN](entitlements-getstarted.html)
+
+@@@
+
+@@@
+##/authorization
+###&#xEA1F
+Verify sensitive actions
 [EXPLORE](entitlements.html)
 [LEARN](entitlements-getstarted.html)
 

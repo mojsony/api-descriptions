@@ -58,8 +58,8 @@ paths:
           schema:
             $ref: '#/definitions/verify-sms-otp-request'
       responses:
-        200:
-          description: OK - OTP is valid
+        204:
+          description: No content - OTP is valid
         440:
           description: |
             Your request was well constructed but OTP was be verified. Consider the following possible problems and look into response for more details:
@@ -85,8 +85,8 @@ paths:
           schema:
             $ref: '#/definitions/verify-oath-otp-request'
       responses:
-        200:
-          description: OK - OTP is valid
+        204:
+          description: No content - OTP is valid
         440:
           description: |
             Your request was well constructed but OTP was be verified. Consider the following possible problems and look into response for more details:
@@ -127,9 +127,10 @@ definitions:
     properties:
       action:
         type: string
+        description: Optional service code of sensitive action that will be verified 
       message:
         type: string
-        description: Optional message
+        description: Optional message to include in SMS sent to user
       phone-number:
         type: string
         format: phone
@@ -138,6 +139,7 @@ definitions:
         type: string
         description: Optional identifier of user who will receive SMS on preferred mobile phone number.
 
+        
   verification-id:
     description: Identifies SMS OTP verification in progress 
     type: string
@@ -151,6 +153,7 @@ definitions:
       otp:
         type: string
         description: Digits sent via SMS
+
 
   verify-oath-otp-request:
     description: Request with details to verify HOTP or TOTP
