@@ -1,14 +1,18 @@
 ﻿<span class="icon"></span>Device API Guide
 =========================
-Device API enables you to register devices, mange device statuses, enable device for push notifications etc. 
-   
+Device API manages customer owned devices such as mobile phones and tracks state of bank issued devices such payment cards and authentication devices such as hardware tokens.
+
+> ##THIS API GUIDE IS UNDER CONSTRUCTION. COME BACK SOON.
+
 Key Resources
 -------------
-Device API has only one top level collection resources:
+Device API has only two top-level collection resources: `owned-devices` and `issued-devices`
 
 Resource | Description
 ----------- |-----------
-*devices*  | Includes basic data about devices such as nickname, device imei, device status, customer etc. Beside this basic data it contains some data whichregards push notifications. 
+*owned-devices*  | Devices owned by customer such as mobile phone, smart watch or tablet. Devices are registered in order to enhance security during authorization checking and to enable push notifications.
+*issued-devices* | Devices issued by bank such as payment cards and hardware tokens. Besides basic details, resource exposes status of the device. 
+
 
 Getting started tutorial
 ---------------
@@ -34,11 +38,11 @@ Prefix the path with the correct root URL in order to obtain the full resource p
 ###3. Register Device
  You need to post `devices` metadata representation as json to following endpoint:
 ```
-POST /devices
+POST /owned-devices
 ```
 ```json
 {
-  "imei": "990000862471854",
+  "external-device-identifier": "990000862471854",
   "operating-system": "iOS 9.x",
   "nickname": "My Phone",
   "brand-name": "Apple IPhone",

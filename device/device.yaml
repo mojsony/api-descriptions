@@ -2,19 +2,7 @@
 host: api.asee.co
 basePath: /v1/device
 info:
-  description: |
-    Device API is used to manage customer devices. This API provides funcionalities for managing device.
-    With Device API you can: 
-      - Register new device for a specified customer
-      - Update some of device nickname
-      - List all devices
-      - Get specific device
-      - Block device
-      - Unblock device
-      - Unregister device
-      - Register device for push notifications
-      - Regenerate push notification registration if expired
-      - List all device models
+  description: "Device API manages customer owned devices such as mobile phones and tracks state of bank issued devices such payment cards and authentication devices such as hardware tokens."
   title: Device API
   version: v1
 schemes:
@@ -25,203 +13,418 @@ consumes:
 produces:
 - application/json
 tags:
-- name: Devices
-  description: Working with devices
+- name: Owned devices
+  description: Working with Owned devices
+- name: Issued devices
+  description: Working with issued devices  
+- name: Classifications
+  description: Working with classifications      
 paths:
-  '/devices':
+  '/owned-devices':
     get:
-      summary: Lists devices. When used without optional parameters all customer devices will be listed.
-      deprecated: false
-      operationId: Devices_GetList
+      summary: List customer owned devices
+      description: Response containts customer devices that match supplied filters
+      operationId: OwnedDevices_GetList
       parameters:
-      - $ref: "#/parameters/status-param"
-      - $ref: "#/parameters/page-param"
-      - $ref: "#/parameters/page-size-param"
+      - $ref: "#/parameters/customer-number-param"      
+      - $ref: "#/parameters/owned-device-statuses-param"
       - $ref: "#/parameters/sort-by-param"
       - $ref: "#/parameters/sort-order-param"
       responses:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/device-list'
+            $ref: '#/definitions/owned-device-list'
         default:
           $ref: '#/responses/default-error-response'
       tags:
-      - Devices
+      - Owned devices
+      x-asee-tags:
+        - Shapeable
+        - Sortable
     post:
-      summary: Operation registers new device.
+      summary: Register customer owned device
       deprecated: false
-      operationId: Devices_Register
+      operationId: OwnedDevices_Register
       parameters:
-      - description: Parameters providing details of new device.
+      - description: Command with details to register device
         in: body
         name: cmd
         required: true
         schema:
           $ref: '#/definitions/register-device-command'
       responses:
-        '200':
-          description: OK
+        '201':
+          description: Created
           schema:
-            $ref: '#/definitions/command-result'
+            $ref: '#/definitions/resource-created-result'
+          headers:
+            Location:
+              description: URL where device details can be obtained
+              type: string
+              format: url            
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-            - [nickname-not-unique]()
-            - [imei-not-unique]()
-            - [operating-system-not-set]()
-            - [imei-not-set]()
+            
+            - [nickname-not-unique](device-problems.html)
+            - [device-not-unique](device-problems.html)
           schema:
             $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
       tags:
-      - Devices
-  '/devices/{imei}':
+      - Owned devices
+  '/owned-devices/{device-id}':
     get:
-      summary: Get information about specific device.
+      summary: Get details of specific customer owned device
       deprecated: false
-      operationId: Devices_Get
+      operationId: OwnedDevices_Get
       parameters:
-      - $ref: "#/parameters/imei-param"
+      - $ref: "#/parameters/device-id-param"
       responses:
         '200': 
           description: OK
           schema:
-            $ref: '#/definitions/device'
+            $ref: '#/definitions/owned-device'
         default:
           $ref: '#/responses/default-error-response'
       tags:
-      - Devices
-  '/devices/{imei}/nickname':
+      - Owned devices
+      x-asee-tags:
+        - Shapeable
+  '/owned-devices/{device-id}/nickname':
     put:
-      summary: Updates device nickname.
+      summary: Set device nickname
       deprecated: false
-      operationId: Devices_UpdateNickname
+      operationId: OwnedDevices_SetNickname
       parameters:
-      - $ref: "#/parameters/imei-param"
-      - description: Parameters providing data nedded for updating device.
+      - $ref: "#/parameters/device-id-param"
+      - description: Command with nickname to set
         in: body
         name: cmd
         required: true
         schema:
-          $ref: '#/definitions/update-device-nickname-command'
+          $ref: '#/definitions/set-device-nickname-command'
+      responses:
+        '204':
+          description: No content
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+            
+            - [nickname-not-unique](device-problems.html)
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+      - Owned devices
+  '/owned-devices/{device-id}/push-notification-handle':
+    put:
+      summary: Set push notification handle for device
+      deprecated: false
+      operationId: OwnedDevices_SetPushHandle
+      parameters:
+      - $ref: "#/parameters/device-id-param"   
+      - description: Command with details for push handle
+        in: body
+        name: cmd
+        required: true
+        schema:
+          $ref: '#/definitions/register-push-notifications-command'
+      responses:
+        '200':
+          description: OK.
+          schema:
+            description: Registration id
+            type: string
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+            
+            - [device-status-not-valid](device-problems.html)
+            - [valid-push-registration-exist](device-problems.html)
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+      - Owned devices
+  '/owned-devices/{device-id}/block':
+    post:
+      summary: Block customer owned device
+      operationId: OwnedDevices_Block
+      parameters:
+      - $ref: "#/parameters/device-id-param"
+      responses:
+        '204':
+          description: No content - device blocked
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+            
+            - [device-status-not-valid](device-problems.html)
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+      - Owned devices
+      
+  '/owned-devices/{device-id}/unblock':
+    post:
+      summary: Unblock customer owned device
+      operationId: OwnedDevices_Unblock
+      parameters:
+      - $ref: "#/parameters/device-id-param"
+      responses:
+        '204':
+          description: No content - device unblocked
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+            
+            - [device-status-not-valid](device-problems.html)
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+      - Owned devices
+      
+  '/owned-devices/{device-id}/unregister':
+    post:
+      summary: Unregister customer owned device
+      operationId: OwnedDevices_Unregister
+      parameters:
+      - $ref: "#/parameters/device-id-param"
+      responses:
+        '204':
+          description: No content - device unregistered
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+            - [device-status-not-valid](device-problems.html)
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+      - Owned devices
+
+# Issued devices
+
+  '/issued-devices':
+    get:
+      summary: Lists issued devices such as cards or tokens
+      description: When used without optional parameters all customer devices will be listed
+      operationId: IssuedDevices_GetList
+      parameters:
+      - $ref: "#/parameters/card-statuses-param"
+      - $ref: "#/parameters/sort-by-param"
+      - $ref: "#/parameters/sort-order-param"
       responses:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/command-result'
+            $ref: '#/definitions/issued-device-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+      - Issued devices
+      x-asee-tags:
+        - Shapeable
+        - Sortable
+  '/issued-devices/{device-id}':
+    get:
+      summary: Get information about specific device.
+      deprecated: false
+      operationId: IssuedDevices_Get
+      parameters:
+      - $ref: "#/parameters/device-id-param"
+      - $ref: "#/parameters/trim-param"
+      - $ref: "#/parameters/include-param"
+      responses:
+        '200': 
+          description: OK
+          schema:
+            $ref: '#/definitions/issued-device'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+      - Issued devices
+      x-asee-tags:
+        - Shapeable
+  '/issued-devices/{device-id}/nickname':
+    put:
+      summary: Set device nickname
+      deprecated: false
+      operationId: IssuedDevices_SetNickname
+      parameters:
+      - $ref: "#/parameters/device-id-param"
+      - description: Command with nickname to set
+        in: body
+        name: cmd
+        required: true
+        schema:
+          $ref: '#/definitions/set-device-nickname-command'
+      responses:
+        '204':
+          description: No content - nickname set
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-            - [nickname-not-unique]()
-            - [nickname-not-set]()
+
+            - [nickname-not-unique](device-problems.html)
           schema:
             $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
       tags:
-      - Devices
-  '/devices/{imei}/push-notifications':
-    post:
-      summary: Operation for enabling device to recieve push notifications. Beside device IMEI and status it returns push registration Id.
-      deprecated: false
-      operationId: Devices_RegisterPushNotifications
-      parameters:
-      - $ref: "#/parameters/imei-param"     
+      - Issued devices      
+      
+
+  /classifications: 
+    get:
+      summary: List all classification schemas used by the API
+      description: Some fields and parameters have been restricted to a list of allowed lookup values maintained by the bank. This method lists all schemas used in this API.    
+      operationId: "Classifications_GetList"
       responses:
         '200':
-          description: Returns device IMEI, device status and Registration Id.
+          description: Success
           schema:
-            $ref: '#/definitions/command-result'
-        '440':
-          description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-            - [device-status-not-valid]()
-            - [valid-push-registration-exist]()
+            $ref: '#/definitions/classification-list'
         default:
           $ref: '#/responses/default-error-response'
       tags:
-      - Devices
-  '/devices/{imei}/block':
-    post:
-      summary: Updates device status to blocked. It returns device IMEI and status.
-      deprecated: false
-      operationId: Devices_Block
+        - Classifications
+
+  /classifications/{schema-id}:
+    get:
+      summary: List values allowed by given classification schema.
+      description: Returns all classification values for chosen classification.
+      operationId: Classifications_Get
       parameters:
-      - $ref: "#/parameters/imei-param"
+        - $ref: '#/parameters/schema-id-param'
       responses:
         '200':
-          description: OK.
+          description: OK
           schema:
-            $ref: '#/definitions/command-result'
-        '440':
-          description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-            - [device-status-not-valid]()
-            - [device-not-exist]()
-          schema:
-            $ref: '#/definitions/business-problem'
+            $ref: '#/definitions/classification'
         default:
           $ref: '#/responses/default-error-response'
       tags:
-      - Devices
-  '/devices/{imei}/unblock':
-    post:
-      summary: Updates device status to unblocked. It returns device IMEI and status.
-      deprecated: false
-      operationId: Devices_Unblock
-      parameters:
-      - $ref: "#/parameters/imei-param"
-      responses:
-        '200':
-          description: OK.
-          schema:
-            $ref: '#/definitions/command-result'
-        '440':
-          description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-            - [device-status-not-valid]()
-            - [device-not-exist]()
-          schema:
-            $ref: '#/definitions/business-problem'
-        default:
-          $ref: '#/responses/default-error-response'
-      tags:
-      - Devices
-  '/devices/{imei}/unregister':
-    post:
-      summary: Updates device status to unregistred. It returns device IMEI and status.
-      deprecated: false
-      operationId: Devices_Unregister
-      parameters:
-      - $ref: "#/parameters/imei-param"
-      responses:
-        '200':
-          description: OK.
-          schema:
-            $ref: '#/definitions/command-result'
-        '440':
-          description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-            - [device-status-not-valid]()
-            - [device-not-exist]()
-          schema:
-            $ref: '#/definitions/business-problem'
-        default:
-          $ref: '#/responses/default-error-response'
-      tags:
-      - Devices
-definitions: 
-  device:
-    description: Contains details of device.
+        - Classifications      
+      
+definitions:
+  issued-device-list:
+    description: List of issued devices
     properties:
-      imei:
-        description: Device IMEI (The International Mobile Station Equipment Identity), that uniquely identifies the device.
+      devices:
+        type: array      
+        description: Device list
+        items:
+          $ref: '#/definitions/issued-device'
+          
+  issued-device:
+    description: Details of issued device
+    discriminator: kind
+    properties:
+      device-id:
+        description: Unique identifier of issued device
         type: string
-      customer-id:
-        description: Device owner unique identifier.
+      kind:
         type: string
+        enum: [payment-card, smart-card, otp-token]      
+      holder-id:
+        type: string
+        description: Unique identifier of customer that device was issued to
+      capabilities:
+        description: Technical capabilities of device
+        type: array
+        items:
+          type: string
+          enum: [hmac, pki, secure-element, magnetic-stripe, push, telephony, sms, icc, nfc, display]
+        
+  payment-card:
+    description: A physical or virtual card used for performing financial transactions
+    allOf:
+    - $ref: '#/definitions/issued-device'
+    properties:
+      masked-card-number:
+        type: string
+        description: Masked card number
+      card-number:
+        type: string
+        description: Full card number       
+      is-primary:
+        type: boolean
+        description: Whether card is primary or additional card for account
+      card-status:
+        description: Identifies a status from Customer perspective
+        enum:
+        - inactive
+        - valid
+        - expired
+        - blocked
+        - reported-as-lost
+        type: string        
+      cardholder-name:
+        type: string
+        description: Cardholder name
+      delivery-date:
+        type: string
+        format: date
+        description: Month and year when card expires 
+      activation-date:
+        type: string
+        format: date
+        description: Month and year when card expires 
+      expiration-date:
+        type: string
+        format: date
+        description: Month and year when card expires        
+      card-kind:
+        type: string
+        description: "Enumeration that distinguishes between card kinds according to the manner in which use of or access to the Product Arrangement is facilitated. For complete list of possible values see [card-kind](device-classificastions.html#payment-card-kind) enumeration."
+        enum: [debit-card, credit-card, prepaid-card, charge-card, stored-value-card]
+      card-brand:
+        type: string
+        x-asee-classification: card-brand
+        description: "Identifies the set of types of Financial Transaction Cards that are available. For complete list of possible values see [card-brand](prodcut-classificastions.html#card-brand) classification."
+      card-image-url:
+        description: Image of the card in content management system
+        type: string
+        format: url
+  owned-device-list:
+    description: List of Owned devices
+    properties:
+      devices:
+        type: array      
+        description: Devices list
+        items:
+          $ref: '#/definitions/owned-device'
+
+  owned-device:
+    description: Device owned by customer
+    properties:
+      device-id:
+        description: Unique identifier of customer owned device assigned by bank
+        type: string      
+      external-device-id:
+        description: Device IMEI (The International Mobile Station Equipment Identity).
+        type: string
+      external-device-id-kind:
+        type: string
+        enum: [imei, app-id]
+      owner-id:
+        description: Unique identifier of customer that is device owner
+        type: string
+      capabilities:
+        description: Technical capabilities of device
+        type: array
+        items:
+          type: string
+          enum: [hmac, pki, secure-element, magnetic-stripe, push, telephony, sms, icc, nfc, display]        
       status:
         description: Identifies a status from Customer perspective.
         enum:
@@ -235,115 +438,188 @@ definitions:
       operating-system:
         description: Device running operating system.
         type: string
-      brand-name:
-        description: Device manufacturer.
+      manufacturer:
+        description: Device manufacturer
         type: string
-      model-name:
-        description: Device model name.
+      model:
+        description: Device model name
         type: string
-      installation-Id:
-        description: Unique installation identifier.
-        type: string
-      push-id:
-        description: Push notifications Registration Id.
-        type: string
-      push-expiration-date:
-        description: If device is already registered for push notifications, this property contains expiration date.
+      push-registered:
+        description: Flag indicating whether the push notifications are registered.
+        type: boolean
+      push-handle-expiration:
+        description: If device is already registered for push notifications, this property contains expiration date and time
         format: "date-time"
         type: "string"
-    type: object
-  device-list:
-    description: Paged list of devices.
-    allOf: 
-    - $ref: '#/definitions/paged-list'
-    properties:
-      items:
-        description: List of device models.
-        items:
-          $ref: '#/definitions/device'
-        type: array
-    type: object
+
+
   register-device-command:
-    description: Registers new device for a user.
+    description: Registers new device for a user
     properties:
-      imei:
-        description: Device IMEI (The International Mobile Station Equipment Identity).
+      external-device-id:
+        description: Identifier for customer owned device available to mobile application
         type: string
+      external-device-id-kind:
+        description: Kind of identifier for customer owned device such as `imei` and `app-id`
+        type: string
+        enum: [imei, app-id]
       operating-system:
-        description: Device running operating system.
+        description: Device running operating system
         type: string
       nickname:
-        description: Device nick name given by owner.
+        description: Device nick name given by owner
         type: string
       brand-name:
-        description: Device manufacturer.
+        description: Device manufacturer
         type: string
       model-name:
-        description: Device model name.
+        description: Device model name
         type: string
-    type: object
-  update-device-nickname-command:
-    description: Updates device nick name.
+      push-platform:
+        description: Push notifications platform
+        type: string
+      push-handle:
+        description: Installation id for push notifications
+        type: string          
+
+  set-device-nickname-command:
+    description: Device nick name
     properties: 
       nick-name:
-        description: New nickname for current device.
+        description: New nickname for device
         type: string
-    type: object 
-  command-result:
-    description: Command result provides status of operation and identifier of the record.
+        
+  register-push-notifications-command:
+    description: Register device for push notifications
     properties:
-      id:
-        description: Id of created, updated or deleted entity.
+      push-platform:
+        description: Push notifications platform
         type: string
-      created-record-status:
-        description: The created, updated, deleted record status.
-        type: string
-    type: object
+        enum: [apns, gcm, wns, mpns]
+      pns-handle:
+        description: Platform Notification Service (PNS) handle for a device. The PNS handle could be a ChannelURI, device token, or GCM registration id. 
+        type: string    
+
+  resource-created-result:
+    description: Identfier of created resource
+    type: string
+
   business-problem:
-    description: Provides information about business policy violation that prevents operation from being executed.
+    description: Details on specific problem that prevented processing after successfull validation
+    type: object 
     properties:
       problem:
-        description: Literal.
+        description: Unique literal that identifies specific problem 
         type: string
       message:
-        description: Error message.
+        description: Message explaining the situation and optionaly remedies
         type: string
       details:
-        description: Detailed description of error.
+        description: Optional details supplied for troubleshooting
         type: string
-  paged-list:
-    description: List with support for paging
-    properties:  
-      total-count:
-        description: Total number of items in collection
-        type: integer
-      page-size:
-        description: Size of the page
-        type: integer
-      page:
-        description: Index of current page
-        type: integer
-      total-pages:
-        description: Total number of pages of set size
-        type: integer
-      sort-order:
-        description: Sort order (`asc` or `desc`). Default is asc.
-        type: string
-        enum:
-        - asc
-        - desc
-      sort-by:  
-        description: Attribute of the collection item to sort by
-        type: string
+    example:
+      problem: document-locked
+      message: Document you are trying to access is locked by another user
+      details: User john.doe has locked the document
+  
+  classification-value:
     type: object
+    description: Classification value
+    properties:
+      literal:
+        description: Literal that uniquely identifies classification value
+        type: string
+      code:
+        description: Optional numerical code of classification value
+        type: string
+      description:
+        description: Description of classification value
+        type: string
+      parent-literal:
+        description: Optional literal of parent classification value if schema is hierarchical
+        type: string
+    example:
+      literal: billing
+      code: 2
+      description: Contact may be used to provide party with details of their liabilities to the bank
+      
+  classification-list:
+    description: List of classification schemas
+    type: object
+    properties:
+      items:
+        description: List of classification schemas
+        items:
+          $ref: "#/definitions/classification-info"
+        type: array
+    example:
+      -
+        schema-id: filing-purpose
+        name: Filing Purpose
+        description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture
+      -
+        schema-id: folder-purpose
+        name: Folder Purpose
+        description: List of possible uses of a folder in business context.
+        
+  classification-info:
+    description: Basic information on classification schema
+    properties:
+      schema-id:
+        type: string
+        description: Unique literal that identifies the classification schema. Always in `lowercase-dash` convention.
+      name:
+        type: string
+        description: User friendly name of classification
+      description:
+        type: string
+        description: Description of a classification
+    example:
+      schema-id: filing-purpose
+      name: Filing Purpose
+      description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture
+      
+  classification:
+    type: object
+    description: Classification schema details
+    properties:
+      schema-id:
+        type: string
+        description: Unique literal that identifies the classification schema. Always in `lowercase-dash` convention.
+      name:
+        type: string
+        description: User friendly name of classification
+      description:
+        type: string
+        description: Description of a classification
+      values:
+        description: List of allowed classification values
+        type: array
+        items:
+          $ref: "#/definitions/classification-value"
+    example:
+      schema-id: contact-purpose
+      name: Contact Purpose
+      description: List of possible uses of contact in business context. Commonly used filing purposes are billing, marketing
+      values:
+        - literal: billing
+          code: 1
+          description: Contact may be used to provide party with details of their liabilities to the bank
+        - literal: marketing
+          code: 2
+          description: Contact may be used to provide party with details of offers
+        - literal: reporting
+          code: 3
+          description: Contact may be used to provide party with reports on their account
+
 responses:
   default-error-response:
-    description: Besides specific status codes above, other standard http [status codes] (http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
+    description: "Besides specific status codes above, other standard http [status codes] (http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling](common-getstarted.html#error-handling)"
 parameters:
-  status-param:
+  owned-device-statuses-param:
     description: Only devices in provided statuses will be listed. If not provided devices in all statuses will be listed.
     in: query
-    name: status
+    name: device-statuses
     required: false
     collectionFormat: csv
     enum:
@@ -353,29 +629,46 @@ parameters:
     items:
       type: string
     type: array
-  imei-param:
-    name: imei
+  card-statuses-param:
+    description: Only card in provided statuses will be listed. If not provided devices in all statuses will be listed
+    in: query
+    name: card-statuses
+    required: false
+    collectionFormat: csv
+    type: array    
+    enum:
+      - inactive
+      - valid
+      - expired
+      - blocked
+      - reported-as-lost
+    items:
+      type: string
+
+  customer-number-param:
+    name: customer-number
+    in: query
+    description: Unique identifier of customer in bank records
+    required: false
+    type: string
+    
+  device-id-param:
+    name: device-id
     in: path
-    description: Device IMEI (The International Mobile Station Equipment Identity).
+    description: Unique identifier of customer owned device assigned by bank
     required: true
     type: string
-  page-param:
-    name: page
-    in: query
-    description: Page index. For more information see general guidance on [paging and sorting]()
-    type: integer
-    default: 1
-    x-asee-common: true
-  page-size-param:
-    name: page-size
-    in: query
-    description: Number of items on a page. For more information see general guidance on [paging and sorting]()
-    required: false
-    type: integer
-    default: 10
-    x-asee-common: true
+
+
+    
+  schema-id-param:
+    name: schema-id
+    description: Identifier of classification schema
+    in: path
+    required: true
+    type: string
   sort-order-param:
-    description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]()
+    description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [sorting](common-getstarted.html#sorting)
     in: query
     name: sort-order
     type: string
@@ -383,10 +676,28 @@ parameters:
     enum:
     - asc
     - desc
-    x-asee-common: true
-  sort-by-param:
-    description: Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]()
+    x-asee-common: true  
+  sort-by-param:  
+    description: Attribute of the collection item to sort by. For more information see general guidance on [sorting](common-getstarted.html#sorting)
     in: query
     name: sort-by
     type: string
+    x-asee-common: true      
+  include-param:
+    description: List of fields to include in response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
+    in: query
+    name: include
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+    x-asee-common: true      
+  trim-param:
+    description: List of fields to trim from response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
+    in: query
+    name: trim
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
     x-asee-common: true
