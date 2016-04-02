@@ -70,8 +70,8 @@ Track customer access rights and usage limits
 ##/authorization
 ###&#xEA1F
 Verify sensitive actions
-[EXPLORE](entitlements.html)
-[LEARN](entitlements-getstarted.html)
+[EXPLORE](authorization.html)
+[LEARN](authorization-getstarted.html)
 
 @@@
 
