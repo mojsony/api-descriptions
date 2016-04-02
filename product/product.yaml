@@ -426,13 +426,13 @@ definitions:
       card-kind:
         #x-asee-compliance: We should probaby rename this to card-type. Also, maybe it is better to have this property as enum, not classification, because there are only few possible types influencing behaviour of the card .. debit, credit, prepaid, gift. [Stefan] This classification in Experience is defined as open. It makes sense to be enumeration, but I would not make changes right now, not to violated balance with EXP. Also, as with some others compliance, it remains free to change with next iteration ot implementation.
         type: string
-        description: "Enumeration that distinguishes between card kinds according to the manner in which use of or access to the Product Arrangement is facilitated. For complete list of possible values see [card-kind](card-classificastions.html#card-kind) enumeration."
+        description: "Enumeration that distinguishes between card kinds according to the manner in which use of or access to the Product Arrangement is facilitated. For complete list of possible values see [card-kind](product-classificastions.html#card-kind) enumeration."
         enum: [debit-card, credit-card, prepaid-card, charge-card, stored-value-card]
       card-brand:
         #x-asee-compliance: In customer-account and other APIs we have this specified through two separate properties.. card-brand and card-kind (e.g. brand is visa, kind is electron). Can we have two properties with relevant classifications here too? [Stefan] In Exp, there is only one classification for this. Is not modeled in this way, and I think, we will not need this separation, because these is only few values.
         type: string
         x-asee-classification: card-brand
-        description: Identifies the set of types of Financial Transaction Cards that are available. For complete list of possible values see [card-brand](card-classificastions.html#card-brand) classification.
+        description: Identifies the set of types of Financial Transaction Cards that are available. For complete list of possible values see [card-brand](product-classificastions.html#card-brand) classification.
       daily-limit:
         #x-asee-compliance: Why are only daily limit amount and number exposed? There are also many other relevant properties that could have been exposed too periodic limit, membership fee, withdrawal, transaction, many other types of fees. 
          #Stefan | Conclution| We agreed that this is light functionality, not complete one. It expose only a basic set of data for some functionality. We will developed (complete) this with a specific need for it, and/or in next iteration/implementation project.
