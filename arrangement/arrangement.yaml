@@ -1375,7 +1375,6 @@ definitions:
           description: Debit/credit
         card-brand:
           type: string
-          format: double
           description: The name of card brand
         cards:
           description: The list of active issued cards
