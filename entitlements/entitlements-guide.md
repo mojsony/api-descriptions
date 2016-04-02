@@ -1,19 +1,25 @@
-<span class="icon"></span> Entitlements API Guide 
+<span class="icon"></span> Entitlements API Guide
 ======================
-Risk based authorization of customer initiated actions solved by elevated level of authentication and/or involvement of multiple authorizing parties. Action authorizations are either explicitly requested by channel application or initiated by backend or multichannel modules during transaction and workflow processing.
-   
+
+Entitlements API lets you check and enforce access entitlements with customer mandates and limits. Mandates are given per arrangement and can specify allowed services, applicable channels and any limits set for each mandate holder. Mandate model is aligned with ISO 20022.
+
+> ##THIS API GUIDE IS UNDER CONSTRUCTION. COME BACK SOON.
+
 Key Resources
 -------------
-Action Authorization has three top level collection resources: 
+
+Entitlements API two top level collection resources: `mandates`, `limit-balances` with three specialized sub resources - `card-limits`, `online-limits`, `account-limits`
 
 Resource | Description
 ----------- |-----------
-*customers* | Serves for getting mandates for customers.
-*check* | Serves for checking authorization.
-*initiate* | Serves for initiating new authorisation.
+*mandates* | Entitlements that allow mandate holders to access to services within arrangements
+*limit-balances/card-limits* | Remaining and used balance of limits set for payment cards
+*limit-balances/account-limits* | Remaining and used balance of limits set for account arrangements
+*limit-balances/online-limits* | Remaining and used balance of limits set for online access 
 
 Getting started tutorial
 ---------------
+
 To get started follow these steps:
 
 ###1. Authenticate your app
