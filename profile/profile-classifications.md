@@ -3,35 +3,6 @@ Classifications
 ===============
 
 
-Search Category
--------------- 
-Defines category of search parameter.
-
-Literal 			| Code	| Description
---------------------|-------|------------------------
-`phone`				| 00001	| Phone
-`mobile`			| 00002	| Mobile Phone
-`email`				| 00003	| E-mail Address
-`postal-address`	| 00004	| Postal Address
-`facebook-account`	| 00005	| Facebook Account
-`customer-number`	| 00006	| Customer Number
-`pin`				| 00007	| Personal Identification Number
-
-
-
-Arrangement Category 
---------------
-Identifies the type associated with an <Arrangement>. This type may be hierarchical.
-
-Literal 				    | Code 	| Description
-----------------------------|-------|------------------------
-`bank-transit-account`		| 00001 | Bank Transit Account
-`cash-drawer`				| 00002 | Cash Drawer
-`local-currency-card`		| 00003 | Local Currency Card
-`deposit-card`				| 00004 | Deposit Card
-`dedicated-account`			| 00005 | Dedicated Account
-`non-resident-account`		| 00006 | Non-resident Account
-`deposit-account`			| 00007 | Deposit Account
 
 
 Arrangement Lifecycle Status 
@@ -54,39 +25,6 @@ Literal 				    | Code 	| Description
 `incomplete`				| 00012 | Identifies an <Arrangement> in which the obligations have not been fully discharged by the terms of the contract.
 
 
-Record Status
---------------
-Gets or sets the created, updated, deleted record status.
-
-Literal 		| Code 	| Description
-----------------|-------|------------------------
-`created`		| 00001 | Created record status
-`updated`		| 00002 | Updated record status
-`deleted`		| 00003 | Deleted record status
-
-
-Contact Address Category
---------------
-Category of the contact address of the individual customer.
-
-Literal						| Code 	| Description
-----------------------------|-------|------------------------
-`postal-address`			| 00001 | Postal address
-`telecommunication-number`	| 00002	| Telecommunication number
-`electronic-address`		| 00003	| Electronic address
-
-
-Category of Individuals
--------------- 
-Defines category of individual customer, based on its residential status or age or some other differentiation that bank needs.
-
-Literal 					| Code	| Description
-----------------------------|-------|------------------------
-`resident-individuals`		| 00001	| Resident Individuals
-`non-resident-individuals`	| 00002	| Non-Resident Individuals
-`minors`					| 00003	| Minors
-
-
 
 Customer Lyfecycle Status
 -------------- 
@@ -102,43 +40,4 @@ Literal					| Code 	| Description
 `former`				| 00006	| Identifies a Customer Lifecycle Status in which the <Involved Party> (the <Customer>) previously had an active customer relationship with the modeled organization but currently is inactive with no open <Product Arrangement>s in force.
 `prospective`			| 00007	| Identifies a lifecycle state where an <Involved Party> (the <Customer>) has been identified as a possible active customer by the modeled organization and has been contacted by the modeled organization.
 
-
-Primary Identification Document
--------------- 
-Acceptable primary proof of identity entered from original or certified documents with full name and date of birth.
-
-Literal							| Code 	| Description
---------------------------------|-------|------------------------
-`passport`						| 00001	| Passport
-`driving-licence`				| 00002	| Driving licence
-`personal-identification-card`	| 00003	| Personal identification card
-
-
-Registration Number 
---------------
-Kind of identification number of individual customer. 
-
-Literal 							| Code 	| Description
-------------------------------------|--------|------------------------
-`national-identification-number`	| 00001 | National identification number
-`tax-identification-number`			| 00002	| Tax identification number
-`social-security-number`			| 00003	| Social security number
-`driver-licence-number`				| 00004	| Driver licence number
-`passport-number`					| 00005	| Passport number
-`identity-card-number`				| 00006	| Idenitity card number
-
-
-Contact Usage
---------------
-Usage type of the contact.
-
-Literal 		| Code 	| Description
-----------------|-------|------------------------
-`seasonal`		| 00001 | Seasonal
-`assistant`		| 00002	| Assistant
-`work`			| 00003	| Work
-`home`			| 00004	| Home
-`default`		| 00005	| Default
-`business`		| 00006	| Business
-`legal`			| 00007	| Legal
 

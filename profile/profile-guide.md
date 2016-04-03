@@ -1,18 +1,19 @@
 <span class="icon"></span>Profile API Guide
 =========================
-Profile API gives you access to subset of customer data needed in real-time operational interaction, servicing, fulfillment and sales. This is an operational view on data data derived from different source optimized to serve the channel applications.
-   
+Profile API gives you access to facts on customers, their behavior and usage of arrangements so you can optimize real-time operational decisions and interactions.
+
+> ##UNDER CONSTRUCTION. PLEASE COME BACK SOON.
+
 Key Resources
 -------------
-Profile API has five top level collection resources: individual profiles, mandates, authorized persons, contact preference and arrangements.
+Profile API has three top-level collection resources: `individual-profiles`, `organization-profiles` and `arrangement-profiles`.
 
 Resource						| Description
 ------------------------------- |------------------------------------
-*individual profiles*			| Profile with personal information about individual decoupled from base entity and other profiles because of specific protection and versioning needs.
-*mandates*						| Identifies the terms and conditions governing the use of a Service and specifies the access permissions for <Arrangement>s covered by this Mandate.
-*authorized persons*			| Represents the person(s) formally authorized by customer to perform specific operations (withdrawal, payment...) under certain conditions (limits, authorization...)
-*contact preferences*		    | Represents contact that has sepcific usage, like contact address used to communicate about arrangement.
-*arrangements*					| Identifies a potential or actual agreement between an Organization and one or more Involved Partys that provides and affirms the rules and obligations associated with that agreement.
+*individual profiles*			| Profile of individual customer with details on product usage, channel and social media behavior, customer, demographic, financial and household data.
+*organization profiles*		| Profile of organizational customer with details on organization and customer profile, product usage and channel behavior. Financial profile of organization will be added in future versions.
+*arrangement profiles*		| Profile of arrangement and facts on its usage that are not tracked by accounting balances.
+
 
 Getting started tutorial
 ---------------
