@@ -40,9 +40,9 @@ This classification represents status of request.
 
 Literal                 | Code  | Description
 ------------------------|-------|------------------------
-`fee-repayment`         | 2     | Fee repayment
+`fee-repayment`         | 0     | Fee repayment
 `interest-repayment`    | 1     | Interest repayment
-`principal-repayment`   | 0     | Principal repayment
+`principal-repayment`   | 2     | Principal repayment
 
 loan-kinds
 -----
