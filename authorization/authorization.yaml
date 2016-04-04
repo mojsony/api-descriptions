@@ -18,7 +18,7 @@ schemes:
 paths:
   /otp/sms/send:
     post:
-      summary: Generate and send SMS one-time password (SMS OTP)
+      summary: Generate and send SMS one-time password
       tags:
         - OTP
       x-asee-tags: []    
@@ -32,7 +32,7 @@ paths:
             $ref: '#/definitions/send-sms-otp-command'
       responses:
         202:
-          description: Accepted - SMS is sent
+          description: Accepted - SMS sent
           schema:
             $ref: '#/definitions/verification-id'   
         440:
@@ -69,6 +69,60 @@ paths:
             - [no-such-verification]()    
         default:
           $ref: '#/responses/default-error-response'
+
+  /otp/email/send:
+    post:
+      summary: Generate and send email with one-time password 
+      tags:
+        - OTP
+      x-asee-tags: []    
+      operationId: OTP_SendEmail
+      parameters:
+        - description: Command with details to send OTP email
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/send-email-otp-command'
+      responses:
+        202:
+          description: Accepted - Email sent
+          schema:
+            $ref: '#/definitions/verification-id'   
+        440:
+          description: |
+            Your request was well constructed but it could not be processed. Consider the following possible problems and look into response for more details:
+
+            - [no-such-user]()            
+        default:
+          $ref: '#/responses/default-error-response'
+          
+  /otp/email/verify:
+    post:
+      operationId: OTP_VerifyEmail
+      summary: Verify email one-time password 
+      tags:
+        - OTP
+      x-asee-tags: []      
+      parameters:
+        - description: Request with details to verify email OTP
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/verify-email-otp-request'
+      responses:
+        204:
+          description: No content - OTP is valid
+        440:
+          description: |
+            Your request was well constructed but OTP was be verified. Consider the following possible problems and look into response for more details:
+            
+            - [bad-otp]()
+            - [replayed-otp]()
+            - [no-such-verification]()    
+        default:
+          $ref: '#/responses/default-error-response'          
 
   /otp/oath/verify:
     post:
@@ -122,8 +176,6 @@ definitions:
 
   send-sms-otp-command:
     description: Command with details to send SMS OTP
-    example:
-      authorization-id: AuthorizationId
     properties:
       action:
         type: string
@@ -134,11 +186,27 @@ definitions:
       phone-number:
         type: string
         format: phone
-        description: Phone number to send SMS OTP 
+        description: Phone number that will receive OTP 
       user-id:
         type: string
         description: Optional identifier of user who will receive SMS on preferred mobile phone number.
 
+  send-email-otp-command:
+    description: Command with details to send email OTP
+    properties:
+      action:
+        type: string
+        description: Optional service code of sensitive action that will be verified 
+      message:
+        type: string
+        description: Optional message to include in SMS sent to user
+      email:
+        type: string
+        format: email
+        description: Email that will receive OTP 
+      user-id:
+        type: string
+        description: Optional identifier of user who will receive SMS on preferred mobile phone number.
         
   verification-id:
     description: Identifies SMS OTP verification in progress 
@@ -155,6 +223,16 @@ definitions:
         description: Digits sent via SMS
 
 
+  verify-email-otp-request:
+    description: Request with details to verify Email OTP
+    properties:
+      verification-id:
+        description: Identifies SMS OTP verification in progress
+        type: string
+      otp:
+        type: string
+        description: Digits sent via Email
+        
   verify-oath-otp-request:
     description: Request with details to verify HOTP or TOTP
     required:

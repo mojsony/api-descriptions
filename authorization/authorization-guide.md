@@ -4,12 +4,13 @@ Authorization API enables authorization of sensitive actions performed by custom
 
 Key Resources
 -------------
-Authorization API has one top level resource `otp` with two subresources `sms` and `oath`: 
+Authorization API has one top level resource `otp` with three subresources `sms`, `email` and `oath`: 
 
 Resource | Description
 ----------- |-----------
 *otp* | Provides operations related to one-time passwords
 *otp/sms* | Provides operations specific to SMS one-time passwords
+*otp/email* | Provides operations specific to email one-time passwords
 *otp/oath* | Provides operations specific to OATH one-time passwords such TOTP and HOTP
 
 Getting started tutorial
