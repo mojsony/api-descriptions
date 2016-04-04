@@ -88,7 +88,7 @@ Literal                | Code  | Description
 `master-degree`        |5      | Master degree
 `doctorate`            |6      | Doctorate
 `bachelor`             |7      | Bachelor
-`prefer-not-to-answer` |8      | Prefer not to answer
+`not-disclosed`        |8      | Not disclosed
 
 employment-kinds
 -----
