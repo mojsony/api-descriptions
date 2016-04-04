@@ -836,8 +836,8 @@ definitions:
         description: Unique identifier of document in DMS
       document-type:
         type: string
-        x-asse-classification: document-types
-        description: Specific purpose of this document. For complete list of possible values see [document-types](offer-classifications.html#document-types) classification.
+        x-asse-classification: document-kinds
+        description: Specific purpose of this document. For complete list of possible values see [document-kinds](offer-classifications.html#document-kinds) classification.
   required-documentation-request:
     properties:
       product-code:
@@ -871,8 +871,8 @@ definitions:
         description: Identifies Work Item Phase in which a document is introduced
       document-type:
         type: string
-        description: Identifies document type. For complete list of possible values see [document-types](offer-classifications.html#document-types) classification.
-        x-asse-classification: document-types
+        description: Identifies document type. For complete list of possible values see [document-kinds](offer-classifications.html#document-kinds) classification.
+        x-asse-classification: document-kinds
       is-mandatory:
         type: boolean
         description: Identifies whether the document is mandatory
@@ -1519,9 +1519,9 @@ definitions:
         description: Reference number.
         type: string
       loan-type:
-        description: Loan type. For complete list of possible values see [loan-types](offer-classifications.html#loan-types) classification.
+        description: Loan type. For complete list of possible values see [loan-kinds](offer-classifications.html#loan-kinds) classification.
         type: string
-        x-asee-classification: loan-types
+        x-asee-classification: loan-kinds
       check-digit-model:
         description: Check digit model.
         type: string
@@ -1743,15 +1743,15 @@ definitions:
       employment-type:
         description: |
           Type of employment.
-          For complete list of possible values see [employment-types](offer-classifications.html#employment-types) classification.
+          For complete list of possible values see [employment-kinds](offer-classifications.html#employment-kinds) classification.
         type: string
-        x-asse-classification: employment-types
+        x-asse-classification: employment-kinds
       employer-legal-structure:
         description: |
           Employer type.
-          For complete list of possible values see [employer-types](offer-classifications.html#employer-types) classification.
+          For complete list of possible values see [employer-kinds](offer-classifications.html#employer-kinds) classification.
         type: string
-        x-asse-classification: employer-types
+        x-asse-classification: employer-kinds
     type: object
   income:
     description: Income
