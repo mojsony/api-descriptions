@@ -139,6 +139,7 @@ Literal              | Description
 `rejected` | Rejected
 `canceled` | Canceled
 `approved` | Approved
+`expired`  | Expired
 
 application-kinds
 -----
