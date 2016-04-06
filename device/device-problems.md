@@ -1,8 +1,9 @@
-﻿   
-Possible problems
+﻿Device API Possible problems
 =================
 
-When request is valid and no standard status code describes situation, device management API will return status code `440` with one of the following problems in the payload. To learn more see general guidance on [error handling]()
+When request is valid and no standard status code describes situation, device management API will return status code `440` with one of the following problems in the payload. To learn more see general guidance on [error handling](common-getstarted.html#error-handling).
+
+Range of problem codes for this API is `52400 - 52599`.
 
 Literal                               | Code   | Description
 --------------------------------------|--------|-----------------------------------------
@@ -14,4 +15,3 @@ Literal                               | Code   | Description
 `device-not-exist`                    | 52406  | Device with specified imei does not exist.
 `valid-push-registration-exist`       | 52407  | Valid push registration for specified device exist.
 `device-status-not-valid`             | 52408  | Device status is not valid for requested operation.
-

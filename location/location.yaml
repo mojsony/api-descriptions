@@ -25,7 +25,7 @@ info:
   title: Location API
   version: v1
   contact:
-    name: Natasa Tssic
+    name: Natasa Tasic
     url: http://dev.asseco-see.com/docs/
     email: natasa.tasic@asseco-see.rs
 paths:
@@ -288,7 +288,9 @@ parameters:
     type: string
     required: true
   facility-kinds-param:
-    description: Kinds of facilities (`branch` or `atm`) to return. If empty or not present, all facilities will be returned.
+    description: |
+      Kinds of facilities (`branch` or `atm`) to return. If empty or not present, all facilities will be returned.
+      For a list of possible values see [facility-kinds](location-classifications.html#facility-kinds) enumeration.
     in: query
     name: kinds
     required: false
@@ -300,7 +302,9 @@ parameters:
     type: array
     collectionFormat: csv
   services-param:
-    description: "Return only facilities offering certain services. If empty or not present, all facilities will be returned. For complete list of possible values see [facility-services](location-classifications.html#facility-services) classification."
+    description: |
+      "Return only facilities offering certain services. If empty or not present, all facilities will be returned.
+      For complete list of possible values see [facility-services](location-classifications.html#facility-services) classification."
     in: query
     name: services
     required: false
@@ -308,6 +312,7 @@ parameters:
       type: string
     type: array
     collectionFormat: csv
+    x-asee-classification: facility-services
   latitude-param:
     description: Geograpphic latitude of the location where facilities are searched
     in: query
@@ -590,7 +595,9 @@ definitions:
         description: Facility name
         type: string
       kind:
-        description: Facility is either `branch` or `atm`.
+        description: |
+          Facility is either `branch` or `atm`.
+          For a list of possible values see [facility-kinds](location-classifications.html#facility-kinds) enumeration.
         enum:
           - branch
           - atm

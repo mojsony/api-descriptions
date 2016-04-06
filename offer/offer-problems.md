@@ -1,7 +1,8 @@
 Possible Offer API Problems
 =================
 
-To learn more see general guidance on [error handling](common-getstarted.html#error-handling).
+When request is valid and no standard status code describes situation, API will return http status code `440` with one of the following problems in the payload. To learn more see general guidance on [error handling](common-getstarted.html#error-handling).
+
 Range of problem codes for this API is `53000 - 53199`.
 
 Common problems
@@ -21,8 +22,6 @@ service-unavailable              | 53006 | Service is currently unavailable (bec
 
 Offer API Specific Problems
 ------------
-
-When request is valid and no standard status code describes situation, API will return http status code `440` with one of the following problems in the payload.
 
 Literal 				                        | Code 	 |   Description
 ----------------------------------------|--------|-----------------------------------------

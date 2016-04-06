@@ -16,9 +16,9 @@ tags:
 - name: Owned devices
   description: Working with Owned devices
 - name: Issued devices
-  description: Working with issued devices  
+  description: Working with issued devices
 - name: Classifications
-  description: Working with classifications      
+  description: Working with classifications
 paths:
   '/owned-devices':
     get:
@@ -26,7 +26,7 @@ paths:
       description: Response containts customer devices that match supplied filters
       operationId: OwnedDevices_GetList
       parameters:
-      - $ref: "#/parameters/customer-number-param"      
+      - $ref: "#/parameters/customer-number-param"
       - $ref: "#/parameters/owned-device-statuses-param"
       - $ref: "#/parameters/sort-by-param"
       - $ref: "#/parameters/sort-order-param"
@@ -40,8 +40,7 @@ paths:
       tags:
       - Owned devices
       x-asee-tags:
-        - Shapeable
-        - Sortable
+      - Sortable
     post:
       summary: Register customer owned device
       deprecated: false
@@ -62,11 +61,11 @@ paths:
             Location:
               description: URL where device details can be obtained
               type: string
-              format: url            
+              format: url
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-            
+
             - [nickname-not-unique](device-problems.html)
             - [device-not-unique](device-problems.html)
           schema:
@@ -83,7 +82,7 @@ paths:
       parameters:
       - $ref: "#/parameters/device-id-param"
       responses:
-        '200': 
+        '200':
           description: OK
           schema:
             $ref: '#/definitions/owned-device'
@@ -91,8 +90,7 @@ paths:
           $ref: '#/responses/default-error-response'
       tags:
       - Owned devices
-      x-asee-tags:
-        - Shapeable
+      x-asee-tags: []
   '/owned-devices/{device-id}/nickname':
     put:
       summary: Set device nickname
@@ -112,7 +110,7 @@ paths:
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-            
+
             - [nickname-not-unique](device-problems.html)
           schema:
             $ref: '#/definitions/business-problem'
@@ -126,7 +124,7 @@ paths:
       deprecated: false
       operationId: OwnedDevices_SetPushHandle
       parameters:
-      - $ref: "#/parameters/device-id-param"   
+      - $ref: "#/parameters/device-id-param"
       - description: Command with details for push handle
         in: body
         name: cmd
@@ -142,7 +140,7 @@ paths:
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-            
+
             - [device-status-not-valid](device-problems.html)
             - [valid-push-registration-exist](device-problems.html)
         default:
@@ -161,7 +159,7 @@ paths:
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-            
+
             - [device-status-not-valid](device-problems.html)
           schema:
             $ref: '#/definitions/business-problem'
@@ -169,7 +167,7 @@ paths:
           $ref: '#/responses/default-error-response'
       tags:
       - Owned devices
-      
+
   '/owned-devices/{device-id}/unblock':
     post:
       summary: Unblock customer owned device
@@ -182,7 +180,7 @@ paths:
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-            
+
             - [device-status-not-valid](device-problems.html)
           schema:
             $ref: '#/definitions/business-problem'
@@ -190,7 +188,7 @@ paths:
           $ref: '#/responses/default-error-response'
       tags:
       - Owned devices
-      
+
   '/owned-devices/{device-id}/unregister':
     post:
       summary: Unregister customer owned device
@@ -232,7 +230,6 @@ paths:
       tags:
       - Issued devices
       x-asee-tags:
-        - Shapeable
         - Sortable
   '/issued-devices/{device-id}':
     get:
@@ -244,7 +241,7 @@ paths:
       - $ref: "#/parameters/trim-param"
       - $ref: "#/parameters/include-param"
       responses:
-        '200': 
+        '200':
           description: OK
           schema:
             $ref: '#/definitions/issued-device'
@@ -280,13 +277,13 @@ paths:
         default:
           $ref: '#/responses/default-error-response'
       tags:
-      - Issued devices      
-      
+      - Issued devices
 
-  /classifications: 
+
+  /classifications:
     get:
       summary: List all classification schemas used by the API
-      description: Some fields and parameters have been restricted to a list of allowed lookup values maintained by the bank. This method lists all schemas used in this API.    
+      description: Some fields and parameters have been restricted to a list of allowed lookup values maintained by the bank. This method lists all schemas used in this API.
       operationId: "Classifications_GetList"
       responses:
         '200':
@@ -313,18 +310,18 @@ paths:
         default:
           $ref: '#/responses/default-error-response'
       tags:
-        - Classifications      
-      
+        - Classifications
+
 definitions:
   issued-device-list:
     description: List of issued devices
     properties:
       devices:
-        type: array      
+        type: array
         description: Device list
         items:
           $ref: '#/definitions/issued-device'
-          
+
   issued-device:
     description: Details of issued device
     discriminator: kind
@@ -334,17 +331,21 @@ definitions:
         type: string
       kind:
         type: string
-        enum: [payment-card, smart-card, otp-token]      
+        description: |
+          For a list of possible values see [device-kinds](device-classifications.html#device-kinds) enumeration.
+        enum: [payment-card, smart-card, otp-token]
       holder-id:
         type: string
         description: Unique identifier of customer that device was issued to
       capabilities:
-        description: Technical capabilities of device
+        description: |
+          Technical capabilities of device
+          For a list of possible values see [device-capabilities](device-classifications.html#device-capabilities) enumeration.
         type: array
         items:
           type: string
           enum: [hmac, pki, secure-element, magnetic-stripe, push, telephony, sms, icc, nfc, display]
-        
+
   payment-card:
     description: A physical or virtual card used for performing financial transactions
     allOf:
@@ -355,42 +356,48 @@ definitions:
         description: Masked card number
       card-number:
         type: string
-        description: Full card number       
+        description: Full card number
       is-primary:
         type: boolean
         description: Whether card is primary or additional card for account
       card-status:
-        description: Identifies a status from Customer perspective
+        description: |
+          Identifies a status from Customer perspective
+          For a list of possible values see [card-statuses](device-classifications.html#card-statuses) enumeration.
         enum:
         - inactive
         - valid
         - expired
         - blocked
         - reported-as-lost
-        type: string        
+        type: string
       cardholder-name:
         type: string
         description: Cardholder name
       delivery-date:
         type: string
         format: date
-        description: Month and year when card expires 
+        description: Month and year when card expires
       activation-date:
         type: string
         format: date
-        description: Month and year when card expires 
+        description: Month and year when card expires
       expiration-date:
         type: string
         format: date
-        description: Month and year when card expires        
+        description: Month and year when card expires
       card-kind:
         type: string
-        description: "Enumeration that distinguishes between card kinds according to the manner in which use of or access to the Product Arrangement is facilitated. For complete list of possible values see [card-kind](device-classificastions.html#payment-card-kind) enumeration."
+        description: |
+          "Enumeration that distinguishes between card kinds according to the manner in which use of or access to the Product Arrangement is facilitated.
+          For complete list of possible values see [card-kinds](device-classificastions.html#card-kinds) enumeration."
         enum: [debit-card, credit-card, prepaid-card, charge-card, stored-value-card]
       card-brand:
         type: string
         x-asee-classification: card-brand
-        description: "Identifies the set of types of Financial Transaction Cards that are available. For complete list of possible values see [card-brand](prodcut-classificastions.html#card-brand) classification."
+        description: |
+          "Identifies the set of types of Financial Transaction Cards that are available.
+          For complete list of possible values see [card-brand](prodcut-classificastions.html#card-brand) classification."
       card-image-url:
         description: Image of the card in content management system
         type: string
@@ -399,7 +406,7 @@ definitions:
     description: List of Owned devices
     properties:
       devices:
-        type: array      
+        type: array
         description: Devices list
         items:
           $ref: '#/definitions/owned-device'
@@ -409,24 +416,30 @@ definitions:
     properties:
       device-id:
         description: Unique identifier of customer owned device assigned by bank
-        type: string      
+        type: string
       external-device-id:
         description: Device IMEI (The International Mobile Station Equipment Identity).
         type: string
       external-device-id-kind:
         type: string
+        description: |
+          For complete list of possible values see [device-id-kinds](device-classificastions.html#device-id-kinds) enumeration."
         enum: [imei, app-id]
       owner-id:
         description: Unique identifier of customer that is device owner
         type: string
       capabilities:
-        description: Technical capabilities of device
+        description: |
+          Technical capabilities of device
+          For complete list of possible values see [device-capabilities](device-classificastions.html#device-capabilities) enumeration."
         type: array
         items:
           type: string
-          enum: [hmac, pki, secure-element, magnetic-stripe, push, telephony, sms, icc, nfc, display]        
+          enum: [hmac, pki, secure-element, magnetic-stripe, push, telephony, sms, icc, nfc, display]
       status:
-        description: Identifies a status from Customer perspective.
+        description: |
+          Identifies a status from Customer perspective.
+          For complete list of possible values see [device-statuses](device-classificastions.html#device-statuses) enumeration."
         enum:
         - active
         - blocked
@@ -460,7 +473,9 @@ definitions:
         description: Identifier for customer owned device available to mobile application
         type: string
       external-device-id-kind:
-        description: Kind of identifier for customer owned device such as `imei` and `app-id`
+        description: |
+          Kind of identifier for customer owned device such as `imei` and `app-id`
+          For complete list of possible values see [device-id-kinds](device-classificastions.html#device-id-kinds) enumeration."
         type: string
         enum: [imei, app-id]
       operating-system:
@@ -480,25 +495,27 @@ definitions:
         type: string
       push-handle:
         description: Installation id for push notifications
-        type: string          
+        type: string
 
   set-device-nickname-command:
     description: Device nick name
-    properties: 
+    properties:
       nick-name:
         description: New nickname for device
         type: string
-        
+
   register-push-notifications-command:
     description: Register device for push notifications
     properties:
       push-platform:
-        description: Push notifications platform
+        description: |
+          Push notifications platform
+          For complete list of possible values see [push-platforms](device-classificastions.html#push-platforms) enumeration."
         type: string
         enum: [apns, gcm, wns, mpns]
       pns-handle:
-        description: Platform Notification Service (PNS) handle for a device. The PNS handle could be a ChannelURI, device token, or GCM registration id. 
-        type: string    
+        description: Platform Notification Service (PNS) handle for a device. The PNS handle could be a ChannelURI, device token, or GCM registration id.
+        type: string
 
   resource-created-result:
     description: Identfier of created resource
@@ -506,10 +523,10 @@ definitions:
 
   business-problem:
     description: Details on specific problem that prevented processing after successfull validation
-    type: object 
+    type: object
     properties:
       problem:
-        description: Unique literal that identifies specific problem 
+        description: Unique literal that identifies specific problem
         type: string
       message:
         description: Message explaining the situation and optionaly remedies
@@ -521,7 +538,7 @@ definitions:
       problem: document-locked
       message: Document you are trying to access is locked by another user
       details: User john.doe has locked the document
-  
+
   classification-value:
     type: object
     description: Classification value
@@ -542,7 +559,7 @@ definitions:
       literal: billing
       code: 2
       description: Contact may be used to provide party with details of their liabilities to the bank
-      
+
   classification-list:
     description: List of classification schemas
     type: object
@@ -561,7 +578,7 @@ definitions:
         schema-id: folder-purpose
         name: Folder Purpose
         description: List of possible uses of a folder in business context.
-        
+
   classification-info:
     description: Basic information on classification schema
     properties:
@@ -578,7 +595,7 @@ definitions:
       schema-id: filing-purpose
       name: Filing Purpose
       description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture
-      
+
   classification:
     type: object
     description: Classification schema details
@@ -617,7 +634,9 @@ responses:
     description: "Besides specific status codes above, other standard http [status codes] (http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling](common-getstarted.html#error-handling)"
 parameters:
   owned-device-statuses-param:
-    description: Only devices in provided statuses will be listed. If not provided devices in all statuses will be listed.
+    description: |
+      Only devices in provided statuses will be listed. If not provided devices in all statuses will be listed.
+      For complete list of possible values see [device-statuses](device-classificastions.html#device-statuses) enumeration."
     in: query
     name: device-statuses
     required: false
@@ -630,12 +649,14 @@ parameters:
       type: string
     type: array
   card-statuses-param:
-    description: Only card in provided statuses will be listed. If not provided devices in all statuses will be listed
+    description: |
+      Only card in provided statuses will be listed. If not provided devices in all statuses will be listed
+      For complete list of possible values see [card-statuses](device-classificastions.html#card-statuses) enumeration."
     in: query
     name: card-statuses
     required: false
     collectionFormat: csv
-    type: array    
+    type: array
     enum:
       - inactive
       - valid
@@ -651,7 +672,7 @@ parameters:
     description: Unique identifier of customer in bank records
     required: false
     type: string
-    
+
   device-id-param:
     name: device-id
     in: path
@@ -660,7 +681,7 @@ parameters:
     type: string
 
 
-    
+
   schema-id-param:
     name: schema-id
     description: Identifier of classification schema
@@ -676,13 +697,13 @@ parameters:
     enum:
     - asc
     - desc
-    x-asee-common: true  
-  sort-by-param:  
+    x-asee-common: true
+  sort-by-param:
     description: Attribute of the collection item to sort by. For more information see general guidance on [sorting](common-getstarted.html#sorting)
     in: query
     name: sort-by
     type: string
-    x-asee-common: true      
+    x-asee-common: true
   include-param:
     description: List of fields to include in response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
     in: query
@@ -691,7 +712,7 @@ parameters:
     items:
       type: string
     collectionFormat: csv
-    x-asee-common: true      
+    x-asee-common: true
   trim-param:
     description: List of fields to trim from response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
     in: query

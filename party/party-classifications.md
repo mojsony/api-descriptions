@@ -12,8 +12,7 @@ Literal      | Code | Description
 `non-resident-individuals` | 00002 | Non-Resident Individuals
 `minors`     | 00003 | Minors
 
-
-Customer Lyfecycle Status
+Customer Statuses
 --------------
 Identifies the state of a Customer within a lifecycle model.
 
@@ -26,7 +25,6 @@ Literal     | Code  | Description
 `active`    | 00005 | Identifies a Customer Lifecycle Status in which the <Customer> has accepted and is using a product or service offered by the modeled organization.
 `former`    | 00006 | Identifies a Customer Lifecycle Status in which the <Involved Party> (the <Customer>) previously had an active customer relationship with the modeled organization but currently is inactive with no open <Product Arrangement>s in force.
 `prospective`   | 00007 | Identifies a lifecycle state where an <Involved Party> (the <Customer>) has been identified as a possible active customer by the modeled organization and has been contacted by the modeled organization.
-
 
 Primary Identification Document
 --------------
