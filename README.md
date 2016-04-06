@@ -3,7 +3,7 @@ Documentation for ASEE public APIs
 ==================================
 > **IMPORTANT**: See the published version of this content on [documentation site](http://dev.asseco-see.com/docs)
 
-
+> ##Material is publshed under [Asseco Reference License](license.md)
 
 API Definition and Documentation Guidelines
 ---------------------------------
