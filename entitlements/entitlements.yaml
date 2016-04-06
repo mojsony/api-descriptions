@@ -8,14 +8,14 @@ info:
   contact:
     name: Nikola Stojanovic
     url: http://dev.asseco-see.com/docs/
-    email: nikola.stojanovic@asseco-see.rs  
+    email: nikola.stojanovic@asseco-see.rs
 tags:
 - description: Working with mandates
   name: Mandates
 - description: Working with limit balances
   name: Limit balances
 - name: Classifications
-  description: Working with classifications    
+  description: Working with classifications
 consumes:
 - application/json
 produces:
@@ -33,7 +33,7 @@ paths:
         - $ref: '#/parameters/arrangements-param'
         - $ref: '#/parameters/customers-param'
         - $ref: '#/parameters/channels-param'
-        - $ref: '#/parameters/services-param'  
+        - $ref: '#/parameters/services-param'
         - $ref: '#/parameters/sort-order-param'
         - $ref: '#/parameters/sort-by-param'
         - $ref: '#/parameters/include-param'
@@ -71,10 +71,9 @@ paths:
       x-asee-tags:
         - Shapeable
 
-
   /limit-balances/card-limits:
     get:
-      summary: Get balances of card limits for specifc customer or card  
+      summary: Get balances of card limits for specifc customer or card
       description: "Response contains details of specific mandate with holders, their optional limits and possible list of applicable channels and allowed services"
       operationId: CardLimitBalances_GetList
       parameters:
@@ -101,7 +100,7 @@ paths:
 
   /limit-balances/account-limits:
     get:
-      summary: Get balances of account limits for specific customer or account  
+      summary: Get balances of account limits for specific customer or account
       description: "Response contains details of specific mandate with holders, their optional limits and possible list of applicable channels and allowed services"
       operationId: AccountLimitBalances_GetList
       parameters:
@@ -124,8 +123,8 @@ paths:
         - Limit balances
       x-asee-tags:
         - Sortable
-        - Shapeable  
-             
+        - Shapeable
+
   /limit-balances/online-limits:
     get:
       summary: Get balances of online limits for specific customer or account
@@ -151,7 +150,7 @@ paths:
         - Limit balances
       x-asee-tags:
         - Sortable
-        - Shapeable         
+        - Shapeable
 
 # ****************************************************#
 # ENDPOINTS COMMON WITH OTHER APIs                    #
@@ -188,7 +187,7 @@ paths:
           $ref: '#/responses/default-error-response'
 
       tags:
-        - Classifications        
+        - Classifications
 
 parameters:
 # ****************************************************#
@@ -209,13 +208,13 @@ parameters:
     enum:
     - asc
     - desc
-    x-asee-common: true  
-  sort-by-param:  
+    x-asee-common: true
+  sort-by-param:
     description: Attribute of the collection item to sort by. For more information see general guidance on [sorting](common-getstarted.html#sorting)
     in: query
     name: sort-by
     type: string
-    x-asee-common: true      
+    x-asee-common: true
   include-param:
     description: List of fields to include in response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
     in: query
@@ -224,7 +223,7 @@ parameters:
     items:
       type: string
     collectionFormat: csv
-    x-asee-common: true      
+    x-asee-common: true
   trim-param:
     description: List of fields to trim from response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
     in: query
@@ -233,7 +232,7 @@ parameters:
     items:
       type: string
     collectionFormat: csv
-    x-asee-common: true    
+    x-asee-common: true
 # ****************************************************#
 # PARAMETERS SPECIFIC TO THIS API                     #
 # ****************************************************#
@@ -245,18 +244,20 @@ parameters:
     type: array
     minItems: 1
     uniqueItems: true
-    collectionFormat: csv        
+    collectionFormat: csv
     items:
-      type: string   
+      type: string
   arrangement-kinds-param:
-    description: List of arrangements kinds for which mandates are inquired
+    description: |
+      List of arrangements kinds for which mandates are inquired
+      For a list of possible values see [arrangement-kind-param](arrangement-classifications.html#arrangement-kinds) enumeration.
     in: query
     name: arrangement-kinds
     required: false
     type: array
     minItems: 1
     uniqueItems: true
-    collectionFormat: csv        
+    collectionFormat: csv
     items:
       type: string
       enum:
@@ -269,38 +270,40 @@ parameters:
       - credit-card-facility
       - card-access-arrangement
       - electronic-acess-arrangement
-      - other-product-arrangement 
+      - other-product-arrangement
   customers-param:
     description: List of identifiers of mandate holders for which mandates are inquired. Mandatory if `arrangements` param is not present.
     in: query
     name: customers
-    required: false    
+    required: false
     type: array
     minItems: 1
     uniqueItems: true
-    collectionFormat: csv        
+    collectionFormat: csv
     items:
-      type: string      
+      type: string
   customer-number-param:
     description: List of identifiers of mandate holders for which mandates are inquired. Mandatory if `arrangements` param is not present.
     in: query
     name: customer-number
-    required: false    
+    required: false
     type: string
   mandate-number-param:
     description: Unique and unambiguous identification of the mandate
     in: path
     name: mandate-number
     required: true
-    type: string    
+    type: string
   channels-param:
     name: channels
     type: array
-    in: query    
-    description: List of channels for which mandates are inquired
+    in: query
+    description: |
+      List of channels for which mandates are inquired
+      For a list of possible values see [channels](entitlements-classifications.html#channels) enumeration.
     minItems: 1
     uniqueItems: true
-    collectionFormat: csv    
+    collectionFormat: csv
     items:
       type: string
       enum: [online, branch, call-center, any]
@@ -309,15 +312,15 @@ parameters:
     name: services
     required: false
     collectionFormat: csv
-    type: array  
-    description: List of bank services allowed by the mandates
+    type: array
+    description: |
+      List of bank services allowed by the mandates
+      For a list of possible values see [bank-services](entitlements-classifications.html#bank-services) classification.
     minItems: 1
     uniqueItems: true
     items:
       type: string
-      enum: [any, transfers, exchanges, mandates, maintenance, balances, statements]  # TODO move to classification        
-
-
+      x-asee-classification: bank-services
 definitions:
   classification-value:
     type: object
@@ -339,7 +342,7 @@ definitions:
       literal: billing
       code: 2
       description: Contact may be used to provide party with details of their liabilities to the bank
-      
+
   classification-list:
     description: List of classification schemas
     type: object
@@ -358,7 +361,7 @@ definitions:
         schema-id: folder-purpose
         name: Folder Purpose
         description: List of possible uses of a folder in business context.
-        
+
   classification-info:
     description: Basic information on classification schema
     properties:
@@ -375,7 +378,7 @@ definitions:
       schema-id: filing-purpose
       name: Filing Purpose
       description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture
-      
+
   classification:
     type: object
     description: Classification schema details
@@ -408,7 +411,7 @@ definitions:
         - literal: reporting
           code: 3
           description: Contact may be used to provide party with reports on their account
-          
+
   currency:
     description: Currency amount and code
     required:
@@ -427,13 +430,13 @@ definitions:
         description: ISO 4217 3 letter currency code
         type: string
         minLength: 3
-        maxLength: 3     
+        maxLength: 3
 
   mandate-list:
     type: array
     items:
       $ref: '#/definitions/mandate'
-      
+
   mandate:
     description: Entitlement of mandate holder to access services for an arrangement
     required:
@@ -451,7 +454,9 @@ definitions:
         type: string
         description: Unique identifier of the account arrangement that is the object of the mandate
       arrangement-kind:
-        description: Primary enumeration of arrangements according to product type
+        description: |
+          Primary enumeration of arrangements according to product type
+          For a list of possible values see [arrangement-kind-param](arrangement-classifications.html#arrangement-kinds) enumeration.
         type: string
         enum:
           - current-account
@@ -463,13 +468,15 @@ definitions:
           - credit-card-facility
           - card-access-arrangement
           - electronic-acess-arrangement
-          - other-product-arrangement              
+          - other-product-arrangement
       customer-number:
         description: "Identification of the mandate holder in bank's records"
-        type: string   
+        type: string
       applicable-channels:
         type: array
-        description: "Channel for which the operation mandate is valid. If applicable-channels equals `fax`, this means that a bank operation instruction sent by fax will be processed according to the mandate"
+        description: |
+          "Channel for which the operation mandate is valid. If applicable-channels equals `fax`, this means that a bank operation instruction sent by fax will be processed according to the mandate"
+          For a list of possible values see [channels](entitlements-classifications.html#channels) enumeration.
         minItems: 1
         uniqueItems: true
         items:
@@ -477,12 +484,14 @@ definitions:
           enum:  [online, branch, call-center, atm, pos, vpos, any]
       allowed-services:
         type: array
-        description: "List of bank services allowed by the mandate. These are groupings of more granular operations"
+        description: |
+          "List of bank services allowed by the mandate. These are groupings of more granular operations"
+          For a list of possible values see [bank-services](entitlements-classifications.html#bank-services) classification.
         minItems: 1
         uniqueItems: true
         items:
           type: string
-          enum: [any, transfer, payment, exchange, withdrawal, mandate, maintenance, balance-inquiry, turnover-inquiry]          
+          x-asee-classification: bank-services
       effective-date:
         type: string
         format: date
@@ -508,13 +517,13 @@ definitions:
       arrangement-number: 00301000121312
       arrangement-kind: current-account
       applicable-channels: [any]
-      allowed-services: [any]  
+      allowed-services: [any]
       effective-date: 2015-11-12
-      mandate-holders: 
-        - 
+      mandate-holders:
+        -
           customer-number: pepe037
           customer-name: Petar Petrovic
-        - 
+        -
           customer-number: mipe022
           customer-name: Milena Petrovic
           limits:
@@ -525,16 +534,16 @@ definitions:
               - # cumulative daily amount limit
                 total-amount:
                   amount: 10000
-                  code: EUR                  
+                  code: EUR
                 period: P1D
               - # monthly number of transactions limit
                 total-count: 100
-                period: P1M  
+                period: P1M
   limit-balance-list:
     type: array
     items:
       $ref: '#/definitions/limit-balance'
-  
+
   limit-balance:
     description: Balance of the limit
     required:
@@ -550,7 +559,9 @@ definitions:
         type: string
         description: Unique identifier of the account arrangement that is the object of the mandate
       arrangement-kind:
-        description: Primary enumeration of arrangements according to product type
+        description: |
+          Primary enumeration of arrangements according to product type
+          For a list of possible values see [arrangement-kind-param](arrangement-classifications.html#arrangement-kinds) enumeration.
         type: string
         enum:
         - current-account
@@ -562,11 +573,13 @@ definitions:
         - credit-card-facility
         - card-access-arrangement
         - electronic-acess-arrangement
-        - other-product-arrangement              
+        - other-product-arrangement
       customer-number:
         description: "Identification of the mandate holder in bank's records"
-        type: string  
+        type: string
       limit-kind:
+        description: |
+          For a list of possible values see [limit-kinds](entitlements-classifications.html#limit-kinds) enumeration.
         type: string
         enum: [amount-in-period, count-in-period]
       used-amount:
@@ -574,22 +587,26 @@ definitions:
         type: number
         format: double
       remaining-amount:
-        description: Amount of limit that is still remaining      
+        description: Amount of limit that is still remaining
         type: number
-        format: double      
+        format: double
       currency:
         description: ISO 4217 3 letter currency code
         type: string
         minLength: 3
-        maxLength: 3      
+        maxLength: 3
       service:
-        description: "Bank service tracked by the limit"
+        description: |
+          "Bank service tracked by the limit"
+          For a list of possible values see [bank-services](entitlements-classifications.html#bank-services) classification.
         type: string
-        enum: [any, transfers, exchanges, mandates, maintenance, balances, statements]          
-        default: any        
+        x-asee-classification: bank-services
+        default: any
       channel:
         type: string
-        description: "Channel tracked by the limit. If channel is not relevant expected value is `any`"
+        description: |
+          "Channel tracked by the limit. If channel is not relevant expected value is `any`"
+          For a list of possible values see [channels](entitlements-classifications.html#channels) enumeration.
         enum: [online, branch, call-center, atm, pos, vpos, any]
       calculated:
         description: Date and time when limit balance was calculated. Note that this is not the time when balance was requested, it is rather the time when last transaction affected the balance.
@@ -598,11 +615,11 @@ definitions:
       period-end:
         description: Date and time when limit usage will be reset
         type: string
-        format: date-time    
+        format: date-time
       period:
         description: Period specified as a ISO 8601 duration. Usualy in days or months
         type: string
-        format: ISO 8601 duration        
+        format: ISO 8601 duration
     example:
       arrangement-number: 432577279917217
       arrangment-kind: card-access-arrangement
@@ -615,7 +632,7 @@ definitions:
       channel: atm
       period-end: 2016-04-03
       period: P1D
-                  
+
   mandate-holder:
     description: Holder of the mandate
     required:
@@ -626,7 +643,7 @@ definitions:
         description: Identification of the mandate holder in bank's records
         type: string
       customer-name:
-        description: Name of the mandate holder in bank's records      
+        description: Name of the mandate holder in bank's records
         type: string
       is-owner:
         type: boolean
@@ -638,7 +655,7 @@ definitions:
       limits:
         description: Authorisation granted to a mandate holder
         $ref: '#/definitions/limits'
-        
+
   limits:
     description: Authorisation granted to a mandate holder
     properties:
@@ -650,7 +667,7 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/period-limit'
-     
+
 
   period-limit:
     description: Limit in specific period
@@ -661,15 +678,17 @@ definitions:
     properties:
       kind:
         type: string
+        description: |
+          For a list of possible values see [limit-kinds](entitlements-classifications.html#limit-kinds) enumeration.
         enum: [amount-in-period, count-in-period]
       period:
         description: Period specified as a ISO 8601 duration. Usualy in days or months
         type: string
-        format: ISO 8601 duration    
-    
+        format: ISO 8601 duration
+
   period-amount-limit:
     allOf:
-    - $ref: '#/definitions/period-limit'    
+    - $ref: '#/definitions/period-limit'
     description: Maximum cumulative amount of transactions allowed over specific period
     required:
       - total-amount
@@ -680,7 +699,7 @@ definitions:
 
   period-count-limit:
     allOf:
-    - $ref: '#/definitions/period-limit'    
+    - $ref: '#/definitions/period-limit'
     description: Maximum number of transactions allowed by the mandate in the period
     required:
       - total-count
@@ -689,7 +708,7 @@ definitions:
         description: Maximum number of transactions allowed by the mandate in the period
         type: integer
         format: int32
- 
+
 responses:
   default-error-response:
     description: 'Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling](common-getstarted.html#error-handling)'

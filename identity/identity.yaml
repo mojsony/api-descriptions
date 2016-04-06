@@ -2,7 +2,7 @@ swagger: '2.0'
 host: dev.asseco-see.com
 basePath: /v1/identity
 info:
-  description: Identity API manages online identity and credentials of users. This covers signup process, confirmations of contact points, changing and recovery of forgotten passwords and usernames. Logins from external identity providers can be linked to user profile. Hint pictures, security questions and password policy enhance user experience and security of the recovery processes. 
+  description: Identity API manages online identity and credentials of users. This covers signup process, confirmations of contact points, changing and recovery of forgotten passwords and usernames. Logins from external identity providers can be linked to user profile. Hint pictures, security questions and password policy enhance user experience and security of the recovery processes.
   title: Identity API
   version: v1
 tags:
@@ -11,7 +11,7 @@ tags:
   - description: Working with credentials
     name: Credentials
   - description: Working with policy
-    name: Policy    
+    name: Policy
 consumes:
   - application/json
 produces:
@@ -35,15 +35,15 @@ paths:
           $ref: '#/responses/default-error-response'
       tags:
         - Policy
-        
+
   '/me':
     get:
       summary: Get profile of authenticated user
       description: Provides user profile of authenticated user
       operationId: Users_GetProfile
       parameters:
-        - $ref: '#/parameters/include-param'  
-        - $ref: '#/parameters/trim-param'       
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
       responses:
         '200':
           description: OK
@@ -72,20 +72,20 @@ paths:
         '440':
           description: |
             Your request was well constructed but it could not be processed. Consider the following possible problems and look into response for more details:
-            
+
             | Problem | Description |
             |-|-|
             | [login-already-used]() | Login {login} at {provider} is already linked to another user profile |
-            | [provider-not-supported]() | Provider {provider} not supported |            
+            | [provider-not-supported]() | Provider {provider} not supported |
         default:
-          $ref: '#/responses/default-error-response'          
+          $ref: '#/responses/default-error-response'
       tags:
         - Credentials
-      x-asee-tags: []    
-      
+      x-asee-tags: []
+
   '/me/logins/{login}':
     delete:
-      summary: Remove linked login for authenticated user    
+      summary: Remove linked login for authenticated user
       operationId: Users_RemoveLinkedLogin
       parameters:
         - description: Login at external identity provider such as facebook username or gmail address
@@ -101,7 +101,7 @@ paths:
       tags:
         - Credentials
       x-asee-tags: []
-      
+
   '/me/password':
     put:
       summary: Set new password for authenticated user
@@ -119,18 +119,18 @@ paths:
         '440':
           description: |
             Your request was well constructed but it could not be processed. Consider the following possible problems and look into response for more details:
-            
+
             | Problem | Description |
             |-|-|
             | [password-same-as-existing]() | New password cannot be same as existing password |
-            | [password-does-not-meet-requirements]() | Password is weaker than allowed by password strength policy|            
+            | [password-does-not-meet-requirements]() | Password is weaker than allowed by password strength policy|
         default:
           $ref: '#/responses/default-error-response'
 
       tags:
         - Credentials
       x-asee-tags: []
-      
+
   '/me/username':
     put:
       summary: Change username for authenticated user
@@ -149,7 +149,7 @@ paths:
         '440':
           description: |
             Your request was well constructed but it could not be processed. Consider the following possible problems and look into response for more details:
-            
+
             | Problem | Description |
             |-|-|
             | [username-already-used]() | Username {username} is already used |
@@ -177,17 +177,17 @@ paths:
         '440':
           description: |
             Your request was well constructed but it could not be processed. Consider the following possible problems and look into response for more details:
-            
+
             | Problem | Description |
             |-|-|
-            | [email-already-used]() | Email address {email} is already used |          
+            | [email-already-used]() | Email address {email} is already used |
         default:
           $ref: '#/responses/default-error-response'
 
       tags:
         - Users
-      x-asee-tags: []  
-      
+      x-asee-tags: []
+
   '/me/email/confirm':
     put:
       summary: Confirm new email address for authenticated user
@@ -206,17 +206,17 @@ paths:
         '440':
           description: |
             Your request was well constructed but it could not be processed. Consider the following possible problems and look into response for more details:
-            
+
             | Problem | Description |
             |-|-|
-            | [verification-expired]() | Time allowed for verfication has expired  |                 
-            
+            | [verification-expired]() | Time allowed for verfication has expired  |
+
         default:
           $ref: '#/responses/default-error-response'
 
       tags:
         - Users
-      x-asee-tags: []  
+      x-asee-tags: []
 
   '/me/phone-number':
     put:
@@ -236,17 +236,17 @@ paths:
         '440':
           description: |
             Your request was well constructed but it could not be processed. Consider the following possible problems and look into response for more details:
-            
+
             | Problem | Description |
             |-|-|
-            | [phone-number-already-used]() | Phone number {phone} is already used |                    
+            | [phone-number-already-used]() | Phone number {phone} is already used |
         default:
           $ref: '#/responses/default-error-response'
 
       tags:
         - Users
-      x-asee-tags: []  
-      
+      x-asee-tags: []
+
   '/me/phone-number/confirm':
     put:
       summary: Confirm new phone number for authenticated user
@@ -265,20 +265,20 @@ paths:
         '440':
           description: |
             Your request was well constructed but it could not be processed. Consider the following possible problems and look into response for more details:
-            
+
             | Problem | Description |
             |-|-|
-            | [verification-expired]() | Time allowed for verfication has expired  |            
+            | [verification-expired]() | Time allowed for verfication has expired  |
         default:
           $ref: '#/responses/default-error-response'
 
       tags:
         - Users
-      x-asee-tags: []       
-      
+      x-asee-tags: []
+
   '/me/answers':
     put:
-      summary: Set answers to security questions for authenticated user    
+      summary: Set answers to security questions for authenticated user
       description: Sets answers for questeions which user has selected to be used for authentication in case of forgotten username or password
       operationId: Users_SetSecurityAnswers
       parameters:
@@ -287,7 +287,7 @@ paths:
           name: cmd
           required: true
           schema:
-            $ref: '#/definitions/set-security-answers-command'        
+            $ref: '#/definitions/set-security-answers-command'
       responses:
         '200':
           description: OK
@@ -306,7 +306,7 @@ paths:
       description: Resets user password by randomly generating new one and initiates password reset process
       operationId: Users_ResetPassword
       parameters:
-        - $ref: '#/parameters/username-param'      
+        - $ref: '#/parameters/username-param'
         - description: Command with parameters for password reset
           in: body
           name: cmd
@@ -321,31 +321,31 @@ paths:
       tags:
         - Credentials
       x-asee-tags: []
-      
+
   '/users':
     get:
       summary: Find user
       description:  "Finds user profile matching email, linked login, phone or customer number. All supplied parameters are matched against user repository. Parameters are optional but at least one parameter must be supplied. If more than one user profile matches supplied criteria `404 Not found` will be returned."
       operationId: Users_Find
       parameters:
-        - $ref: '#/parameters/email-param'     
+        - $ref: '#/parameters/email-param'
         - $ref: '#/parameters/phone-number-param'
         - $ref: '#/parameters/customer-number-param'
-        - $ref: '#/parameters/linked-login-param'    
-        - $ref: '#/parameters/include-param'  
-        - $ref: '#/parameters/trim-param'                      
+        - $ref: '#/parameters/linked-login-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
       responses:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/user'    
+            $ref: '#/definitions/user'
         '404':
-          description: Not found or multiple matches               
+          description: Not found or multiple matches
         default:
           $ref: '#/responses/default-error-response'
       tags:
         - Users
-      x-asee-tags: [Shapeable]         
+      x-asee-tags: [Shapeable]
     post:
       summary: Register new user
       description: "Registers new user based on supplied profile details. Checks whether username, email, phone number are already used"
@@ -365,31 +365,31 @@ paths:
           headers:
             Location:
               type: string
-              description: The URL of the newly registered user  
+              description: The URL of the newly registered user
         '440':
           description: |
             Your request was well constructed but it could not be processed. Consider the following possible problems and look into response for more details:
-            
+
             | Problem | Description |
             |-|-|
-            | [username-already-used]() | Username {username} is already used |      
-            | [email-already-used]() | Email address {email} is already used |  
-            | [phone-number-already-used]() | Phone number {phone} is already used |           
+            | [username-already-used]() | Username {username} is already used |
+            | [email-already-used]() | Email address {email} is already used |
+            | [phone-number-already-used]() | Phone number {phone} is already used |
         default:
           $ref: '#/responses/default-error-response'
       tags:
         - Users
-      x-asee-tags: []    
+      x-asee-tags: []
 
   '/users/{username}':
     get:
-      summary: Get profile of specific user    
+      summary: Get profile of specific user
       description: Retrieves user profile information for specified user
       operationId: Users_Get
       parameters:
         - $ref: '#/parameters/username-param'
-        - $ref: '#/parameters/include-param'  
-        - $ref: '#/parameters/trim-param'             
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
       responses:
         '200':
           description: OK
@@ -399,9 +399,9 @@ paths:
           $ref: '#/responses/default-error-response'
       tags:
         - Users
-      x-asee-tags: [Shapeable] 
-      
-  '/users/{username}/username-recovery':      
+      x-asee-tags: [Shapeable]
+
+  '/users/{username}/username-recovery':
     post:
       summary: Recover forgotten username for specific user
       description: Initiates process to recover forgotten username
@@ -440,14 +440,14 @@ paths:
       tags:
         - Credentials
       x-asee-tags: []
-      
+
   '/users/{username}/hint-picture':
     put:
-      summary: Set hint picture for specific user 
+      summary: Set hint picture for specific user
       description: Sets the hint picture for specific user
       operationId: Users_SetHintPicture
       parameters:
-        - $ref: '#/parameters/username-param'          
+        - $ref: '#/parameters/username-param'
         - description: Command with parameters to set hint picture
           in: body
           name: cmd
@@ -462,10 +462,10 @@ paths:
       tags:
         - Credentials
       x-asee-tags: []
-      
+
   '/users/{username}/questions':
     get:
-      summary: Gets security questions    
+      summary: Gets security questions
       description: Gets the security questions which user has selected to be used for identification and password change in case of forgotten password.
       operationId: Users_GetSecurityQuestions
       parameters:
@@ -481,7 +481,7 @@ paths:
       tags:
         - Credentials
       x-asee-tags: []
-      
+
   '/users/{username}/answers/validate':
     post:
       summary: Validate answers on security questions
@@ -500,12 +500,12 @@ paths:
         '440':
           description: |
             Your request was well constructed but it could not be processed. Consider the following possible problems and look into response for more details:
-            
+
             | Problem | Description |
             |-|-|
-            | [answers-not-valid]() | Supplied answers to security questions are not valid | 
+            | [answers-not-valid]() | Supplied answers to security questions are not valid |
           schema:
-            $ref: '#/definitions/business-problem'          
+            $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
       tags:
@@ -521,7 +521,7 @@ parameters:
     items:
       type: string
     collectionFormat: csv
-    x-asee-common: true    
+    x-asee-common: true
   trim-param:
     description: List of fields to trim from response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
     in: query
@@ -531,14 +531,14 @@ parameters:
       type: string
     collectionFormat: csv
     x-asee-common: true
-    
+
   username-param:
     description: The username. Username is unique identifier
     in: path
     name: username
     required: true
     type: string
-    
+
   email-param:
     description: The username. Username is unique identifier
     in: query
@@ -553,7 +553,7 @@ parameters:
     name: phone-number
     required: false
     type: string
-    format: phone-number    
+    format: phone-number
 
   customer-number-param:
     description: The username. Username is unique identifier
@@ -568,18 +568,18 @@ parameters:
     name: login
     required: false
     type: string
-    
+
 definitions:
   resource-created-result:
     description: Identifier of created resource
     type: string
-    
+
   business-problem:
     description: Details on specific problem that prevented processing after successfull validation
- 
+
     properties:
       problem:
-        description: Unique literal that identifies specific problem 
+        description: Unique literal that identifies specific problem
         type: string
       message:
         description: Message explaining the situation and optionaly remedies
@@ -590,26 +590,26 @@ definitions:
     example:
       problem: document-locked
       message: Document you are trying to access is locked by another user
-      details: User john.doe has locked the document    
+      details: User john.doe has locked the document
 
   password-requirements:
-    description: Contains parameters for adding new external login provider  
+    description: Contains parameters for adding new external login provider
     properties:
       length:
-        description: Minimum length of the password  
+        description: Minimum length of the password
         type: integer
         format: int32
       non-alphanumeric:
-        type: boolean     
-        description: "A flag indicating if passwords must contain a non-alphanumeric character" 
+        type: boolean
+        description: "A flag indicating if passwords must contain a non-alphanumeric character"
       lowercase:
-        type: boolean     
+        type: boolean
         description: A flag indicating if passwords must contain a lower case ASCII character
       uppercase:
-        type: boolean     
-        description: A flag indicating if passwords must contain a upper case ASCII character 
+        type: boolean
+        description: A flag indicating if passwords must contain a upper case ASCII character
       digit:
-        type: boolean     
+        type: boolean
         description: A flag indicating if passwords must contain a digit
 
   register-linked-login-command:
@@ -632,7 +632,7 @@ definitions:
       - code
       - provider
 
-    
+
   change-password-command:
     description: Contains parameters for changing user's password.
     example:
@@ -663,7 +663,7 @@ definitions:
     required:
       - username
 
-    
+
   change-username-command:
     description: Contains parameters for changing username
     example:
@@ -674,7 +674,7 @@ definitions:
         type: string
     required:
       - new-username
-      
+
   initiate-username-recovery-command:
     description: Contains parameters for username recovery
     example:
@@ -684,8 +684,8 @@ definitions:
         description: Username to recover
         type: string
     required:
-      - username      
-    
+      - username
+
   register-email-command:
     description: Contains parameters for changing email address
     example:
@@ -705,7 +705,7 @@ definitions:
     properties:
       username:
         description: Username whose email is being confirmed
-        type: string      
+        type: string
       email:
         description: Email to confirm
         type: string
@@ -716,13 +716,13 @@ definitions:
     required:
       - email
       - confirmation-code
-      
+
   confirm-phone-number-command:
     description: Contains parameters for changing phone number
     properties:
       username:
         description: Username whose email is being confirmed
-        type: string      
+        type: string
       phone-number:
         description: Phone number to confirm
         type: string
@@ -732,8 +732,8 @@ definitions:
         type: string
     required:
       - phone-number
-      - confirmation-code      
-    
+      - confirmation-code
+
   register-phone-number-command:
     description: Contains parameters for changing phone number
     example:
@@ -746,7 +746,7 @@ definitions:
     required:
       - new-phone-number
 
-    
+
   set-hint-picture-command:
     description: Contains parameters for setting new hint picture for the user
     example:
@@ -757,7 +757,7 @@ definitions:
         type: string
         format: url
 
-    
+
   security-question-list:
     description: Security questions
     properties:
@@ -767,7 +767,7 @@ definitions:
           $ref: '#/definitions/security-question'
         type: array
 
-    
+
   security-question:
     description: 'Security question'
     example:
@@ -803,7 +803,7 @@ definitions:
           $ref: '#/definitions/available-answer'
         type: array
 
-    
+
   available-answer:
     description: Possible value for the answer.
     example:
@@ -817,7 +817,7 @@ definitions:
         description: Answer text
         type: string
 
-    
+
   validate-security-answers-request:
     description: Contains list of answers to security questions that should be validated
     properties:
@@ -836,7 +836,7 @@ definitions:
         items:
           $ref: '#/definitions/security-answer'
         type: array
-    
+
   security-answer:
     description: Answer to security question.
     example:
@@ -908,13 +908,13 @@ definitions:
     properties:
       user-id:
         description: Unique id of user in identity store
-        type: string         
+        type: string
       username:
         description: Username chosen by the user
-        type: string    
+        type: string
       customer-number:
         description: "Unique identifier of customer in bank's records. Available if the user is already customer of the bank"
-        type: string        
+        type: string
       last-login:
         description: Date and time of last login
         format: date-time
@@ -922,7 +922,7 @@ definitions:
       last-answer-validated:
         description: Last time when security answer vas validated
         format: date-time
-        type: string     
+        type: string
       last-password-reset:
         description: Date and time of last login
         format: date-time
@@ -930,7 +930,7 @@ definitions:
       lock-expires:
         description: Date and time when lock expires
         format: date-time
-        type: string      
+        type: string
       first-name:
         description: User's first name
         type: string
@@ -941,17 +941,17 @@ definitions:
         description: Email address
         type: string
       email-verified:
-        type: boolean   
+        type: boolean
         description: A flag indicating if email has been verified for the user
       phone-number:
         description: Phone number
         type: string
       phone-number-verified:
-        type: boolean     
-        description: A flag indicating if phone number has been verified for the user        
+        type: boolean
+        description: A flag indicating if phone number has been verified for the user
       hint-picture-url:
         description: Picture that user has chosen to be used in login process as security measure against phishing attacks.
-        type: string        
+        type: string
       linked-logins:
         description: Linked logins from external identity providers such as Google, Facebook, Microsoft
         items:
@@ -961,22 +961,24 @@ definitions:
         type: boolean
         description: A flag indicating if multifactor authentication is enabled for the user
       status:
-        description: Status
+        description: |
+          Status
+          For a list of possible values see [user-statuses](identity-classifications.html#user-statuses) enumeration.
         enum:
           - active
           - locked
         type: string
-        
+
   linked-login:
     description: Login from social provider
     properties:
       login:
         description: Login name at google or facebook user name
         type: string
-      provider: 
+      provider:
         description: Identity provider compatible with Oauth2 and OpenID Connect
         type: string
-      
+
 responses:
   default-error-response:
     description: 'Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling](common-getstarted.html#error-handling)'

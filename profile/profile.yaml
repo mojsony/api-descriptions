@@ -6,7 +6,7 @@ info:
   contact:
     name: Milan Drakulic
     url: http://dev.asseco-see.com/docs/
-    email: milan.drakulic@asseco-see.rs  
+    email: milan.drakulic@asseco-see.rs
 host: dev.assecosee.com
 basePath: /v1/profile
 schemes:
@@ -24,7 +24,7 @@ tags:
   - name: Arrangement profiles
     description: Working with arrangement profiles
   - name: Classifications
-    description: Working with classifications    
+    description: Working with classifications
 
 paths:
   '/individual-profiles/{party-number}':
@@ -38,7 +38,7 @@ paths:
       parameters:
         - $ref: '#/parameters/party-number-param'
         - $ref: '#/parameters/include-param'
-        - $ref: '#/parameters/trim-param'           
+        - $ref: '#/parameters/trim-param'
       responses:
         '200':
           description: OK
@@ -46,7 +46,7 @@ paths:
             $ref: '#/definitions/individual-profile'
         default:
           $ref: '#/responses/default-error-response'
-          
+
   '/organization-profiles/{party-number}':
     get:
       summary: Get profile of specific organization
@@ -58,7 +58,7 @@ paths:
       parameters:
         - $ref: '#/parameters/party-number-param'
         - $ref: '#/parameters/include-param'
-        - $ref: '#/parameters/trim-param'        
+        - $ref: '#/parameters/trim-param'
       responses:
         '200':
           description: OK
@@ -66,7 +66,7 @@ paths:
             $ref: '#/definitions/organization-profile'
         default:
           $ref: '#/responses/default-error-response'
-          
+
   '/arrangement-profiles/{arrangement-number}':
     get:
       summary: Get profile of specific arrangemnt
@@ -78,20 +78,20 @@ paths:
       parameters:
         - $ref: '#/parameters/arrangement-number-param'
         - $ref: '#/parameters/include-param'
-        - $ref: '#/parameters/trim-param'         
+        - $ref: '#/parameters/trim-param'
       responses:
         '200':
           description: OK
           schema:
             $ref: '#/definitions/arrangement-profile'
         default:
-          $ref: '#/responses/default-error-response'    
-                
-                
-  /classifications: 
+          $ref: '#/responses/default-error-response'
+
+
+  /classifications:
     get:
       summary: List all classification schemas used by the API
-      description: Some fields and parameters have been restricted to a list of allowed lookup values maintained by the bank. This method lists all schemas used in this API.    
+      description: Some fields and parameters have been restricted to a list of allowed lookup values maintained by the bank. This method lists all schemas used in this API.
       operationId: "Classifications_GetList"
       responses:
         '200':
@@ -119,7 +119,7 @@ paths:
           $ref: '#/responses/default-error-response'
       tags:
         - Classifications
-        
+
 responses:
   default-error-response:
     description: "Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling](common-getstarted.html#error-handling)"
@@ -152,7 +152,7 @@ parameters:
     items:
       type: string
     collectionFormat: csv
-    x-asee-common: true      
+    x-asee-common: true
   trim-param:
     description: List of fields to trim from response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
     in: query
@@ -173,23 +173,25 @@ definitions:
         description: Indicator whether individual is employee of the bank
         type: boolean
       lifecycle-status:
-        description:  Distinguishes between individuals according to whether or not they are living or if their status is unknown
+        description:  |
+          Distinguishes between individuals according to whether or not they are living or if their status is unknown
+          For a list of possible values see [individual-profile-lifecycle-statuses](profile-classifications.html#individual-profile-lifecycle-statuses) enumeration.
         type: string
         enum: [living, deceased, missing, unknown]
       channel:
         $ref: '#/definitions/channel-behavior'
       product:
-        $ref: '#/definitions/product-usage'     
+        $ref: '#/definitions/product-usage'
       demographic:
-        $ref: '#/definitions/demographic-profile'      
+        $ref: '#/definitions/demographic-profile'
       customer:
         $ref: '#/definitions/customer-profile'
       financial:
-        $ref: '#/definitions/individual-financial-profile'      
+        $ref: '#/definitions/individual-financial-profile'
       household:
         $ref: '#/definitions/household-profile'
       social:
-        $ref: '#/definitions/social-media-behavior' 
+        $ref: '#/definitions/social-media-behavior'
     example:
       party-number: nodjo001
       is-employee: false
@@ -229,7 +231,7 @@ definitions:
       financial:
         disposable-income: 120000000
         regular-income: 100000000
-        additional-income: 20000000 
+        additional-income: 20000000
         net-worth: 2400000000
         car-ownership: owns
       household:
@@ -261,20 +263,24 @@ definitions:
         twitter-followers: 5151021
         twitter-tweets: 2251
         twitter-mentions: 98449821
-        
+
   organization-profile:
     properties:
       party-number:
         description: Unique identifier of the party. Also known as customer number.
-        type: string    
+        type: string
       legal-structure:
         type: string
         x-asee-classification: legal-structure
-        description: 'Classifies organizations based on their legal form or structure. For example, `public-organization`, `partnership`, `sole-proprietorship`, `limited-company`.such as trust, company, charity, or estate. For a complete list of possible values see [legal-structure](party-classifications.html#legal-structure)'
+        description: |
+          'Classifies organizations based on their legal form or structure. For example, `public-organization`, `partnership`, `sole-proprietorship`, `limited-company`.such as trust, company, charity, or estate.
+          For a complete list of possible values see [legal-structure](party-classifications.html#legal-structure)'
       organization-purpose:
         type: string
         x-asee-classification: organization-purpose
-        description: 'Distinguishes between organizations according to their purpose or format; for example, `association` and `public-service`. For a complete list of possible values see [organization-purpose](party-classifications.html#organization-purpose)'
+        description: |
+          'Distinguishes between organizations according to their purpose or format; for example, `association` and `public-service`.
+          For a complete list of possible values see [organization-purpose](party-classifications.html#organization-purpose)'
       is-sole-trader:
         type: boolean
         description: 'A flag indicating that this organization represents the business aspects of an individual operating as a sole trader. The relevant Individual can be traced through the party relationship.'
@@ -287,15 +293,17 @@ definitions:
         type: integer
         format: int32
       lifecycle-status:
-        description:  Distinguishes between organizations according to the life cycle states through which they may pass over time
+        description: |
+          Distinguishes between organizations according to the life cycle states through which they may pass over time
+          For a list of possible values see [organization-profile-lifecycle-statuses](profile-classifications.html#organization-profile-lifecycle-statuses) enumeration.
         type: string
-        enum: [active, closed, formed, potential, inactive, suspendend, unknown]
+        enum: [active, closed, formed, potential, inactive, suspended, unknown]
       channel:
         $ref: '#/definitions/channel-behavior'
       product:
-        $ref: '#/definitions/product-usage' 
+        $ref: '#/definitions/product-usage'
       customer:
-        $ref: '#/definitions/customer-profile'        
+        $ref: '#/definitions/customer-profile'
     example:
       party-number: resno003
       legal-structure: limited-liability-company
@@ -339,7 +347,7 @@ definitions:
         unresolved-issues: 0
 
   arrangement-profile:
-    properties:  
+    properties:
       arrangement-number:
         type: string
         description: "Unique identifier of an account arrangementsuch as primary account number"
@@ -357,9 +365,11 @@ definitions:
         - credit-facility
         - credit-card-facility
       lifecycle-status:
-        description:  Distinguishes between arrangements according to life cycle states through which they may pass over time
+        description: |
+          Distinguishes between arrangements according to life cycle states through which they may pass over time
+          For a list of possible values see [arrangement-profile-lifecycle-statuses](profile-classifications.html#arrangement-profile-lifecycle-statuses) enumeration.
         type: string
-        enum: [effective, termminated, completed, suspended, dormant]        
+        enum: [effective, termminated, completed, suspended, dormant]
       next-installment-amount:
         type: number
         format: double
@@ -367,35 +377,35 @@ definitions:
       minimum-repayment-amount:
         type: number
         format: double
-        description: Minimum repayment given next monthly installment and any overdue payments    
+        description: Minimum repayment given next monthly installment and any overdue payments
       next-installment-date:
         type: string
         format: date
-        description: Date when next installment is due        
+        description: Date when next installment is due
       remaining-installments:
         type: integer
         format: int32
-        description: Number of remaining installments  
+        description: Number of remaining installments
       days-overdue:
         type: integer
         format: int32
-        description: Number of days minimum payment is outstanding past its due date  
+        description: Number of days minimum payment is outstanding past its due date
       amount-overdue:
         type: integer
         format: int32
-        description: Total amount outstanding past its due date        
+        description: Total amount outstanding past its due date
       first-salary-date:
         type: string
         format: date
-        description: Date when first salary income was booked on current account arrangement   
+        description: Date when first salary income was booked on current account arrangement
       first-transaction-date:
         type: string
         format: date
-        description: Date when first financial transaction was booked against account arrangement         
+        description: Date when first financial transaction was booked against account arrangement
       last-transaction-date:
         type: string
         format: date
-        description: Date when last financial transaction was booked against account arrangement    
+        description: Date when last financial transaction was booked against account arrangement
       last-statement-date:
         type: string
         format: date
@@ -410,7 +420,7 @@ definitions:
       lifecycle-status: effective
       first-salary-date: 2015-08-30
       first-transaction-date: 2015-09-01
-      last-transaction-date: 2016-01-21 
+      last-transaction-date: 2016-01-21
       last-statement-date: 2015-12-31
   product-usage:
     properties:
@@ -421,7 +431,7 @@ definitions:
       accounts-used:
         description: "Number of account arrangements which are currently used by the customer"
         type: integer
-        format: int32   
+        format: int32
       average-liabilities:
         type: number
         format: double
@@ -436,7 +446,7 @@ definitions:
         description: Credit limit utilization ratio is the measure of utilization of the credit limit extended to customer expressed percentage
       total-arrears:
         type: number
-        format: double      
+        format: double
         description: Total amount of arrears for the customer such as late payments on loans or credit facilities
       receives-salary:
         description: Indicator whether customer receives salary to account held at bank
@@ -449,13 +459,13 @@ definitions:
         type: boolean
       uses-overdraft:
         description: Indicator whether customer uses overdraft facility with bank
-        type: boolean        
+        type: boolean
       uses-mortgage:
         description: Indicator whether customer uses mortgage loan with bank
-        type: boolean           
+        type: boolean
       uses-consumer-credit:
         description: Indicator whether customer uses consumer loan with bank
-        type: boolean         
+        type: boolean
 
   customer-profile:
     properties:
@@ -464,8 +474,10 @@ definitions:
         x-asee-classification: customer-taxonomy
         description: 'Classifies customers according to taxonomy defined by bank. For a complete list of possible values see [customer-taxonomies](party-classifications.html#customer-taxonomies) classification'
       status:
-        description: ' Enumer identifies the state of a customer within a lifecycle model. For a list of values see in [customer-statuses](party-classifications.html#customer-statuses) enumeration'
-        x-asee-enumeration: customer-status
+        description: |
+          'Enumer identifies the state of a customer within a lifecycle model.
+          For a list of values see in [customer-statuses](party-classifications.html#customer-statuses) enumeration'
+        x-asee-enumeration: customer-statuses
         type: string
         enum: [potential, prospective, active, dormant, former, declined, rejected]
       segment:
@@ -487,7 +499,7 @@ definitions:
       retention-score:
         type: integer
         format: int32
-        description: "The scoring of the likelihood of the customer staying with the bank"          
+        description: "The scoring of the likelihood of the customer staying with the bank"
 
   demographic-profile:
     properties:
@@ -516,19 +528,19 @@ definitions:
           - single
           - widowed
           - unknown
-        type: string   
+        type: string
       highest-education:
         description: |
           Highest educational level.
           For complete list of possible values see [education-levels](profile-classifications.html#education-levels) classification.
         type: string
-        x-asee-classification: education-levels        
+        x-asee-classification: education-levels
       current-occupation:
         description: |
           Distinguishes between individuals according to a person's work or business engagement. For example, farmer, free-professional, tradesperson, author, business-owner, consultant, doctor, dentist, economist, homemaker etc.
           For complete list of possible values see [occupations](profile-classifications.html#occupations) classification.
         type: string
-        x-asee-classification: occupations              
+        x-asee-classification: occupations
       employment-status:
         description: |
           Employment status of the individual.
@@ -546,7 +558,7 @@ definitions:
       years-with-employer:
         description: How many years is individual working for current employer
         format: int32
-        type: integer          
+        type: integer
       work-experience:
         description: Total working experience in years
         format: int32
@@ -555,9 +567,9 @@ definitions:
         description: Language preferred by individual as standard BCP47 language tag. Example `sr-Latn-RS` or `en-US`
         type: string
         format: BCP47
-        
+
   individual-financial-profile:
-    properties:  
+    properties:
       disposable-income:
         type: number
         format: double
@@ -566,26 +578,28 @@ definitions:
         type: number
         format: double
         description: Total monthly income of individual from regular sources such as employment, pension etc.
-      additional-income:        
+      additional-income:
         type: number
         format: double
         description: Total monthly additional income of individual from additional sources such as rent, contract, alimony etc.
       net-worth:
         type: number
         format: double
-        description: Total assets minus total liabilities of individual. This is based on information available to the bank and is used for assessing the wealth of customers or prospective customers 
+        description: Total assets minus total liabilities of individual. This is based on information available to the bank and is used for assessing the wealth of customers or prospective customers
       car-ownership:
         description: |
           Car assets.
           For complete list of possible values see [car-ownerships](offer-classifications.html#car-ownerships) enumeration.
         type: string
-        enum: [owns, does-not-own, unknown]  
-        
+        enum: [owns, does-not-own, unknown]
+
   household-profile:
     properties:
       housing-tenure:
         type: string
-        enum: [owned-with-mortgage, owned-without-mortgage, rented, unknown]    
+        description: |
+          For a list of possible values see [housing-tenures](profile-classifications.html#housing-tenures) enumeration.
+        enum: [owned-with-mortgage, owned-without-mortgage, rented, unknown]
       monthly-income:
         type: number
         format: double
@@ -605,8 +619,8 @@ definitions:
       dependent-adults:
         description: Number of dependent adults
         format: int32
-        type: integer 
-        
+        type: integer
+
   channel-behavior:
     properties:
       mobile-sessions:
@@ -616,11 +630,11 @@ definitions:
       web-sessions:
         description: Number of web channel sessions in recent period (usually 6 mohths)
         format: int32
-        type: integer      
+        type: integer
       atm-visits:
         description: Number of atm visits in recent period (usually 6 mohths)
         format: int32
-        type: integer      
+        type: integer
       branch-visits:
         description: Number of branch visits in recent period (usually 6 mohths)
         format: int32
@@ -636,11 +650,11 @@ definitions:
       web-transactions:
         description: Number of transactions initiated via web channel in recent period (usually 6 mohths)
         format: int32
-        type: integer      
+        type: integer
       atm-transactions:
         description: Number of transactions initiated via atm in recent period (usually 6 mohths)
         format: int32
-        type: integer      
+        type: integer
       branch-transactions:
         description: Number of transactions initiated via branch in recent period (usually 6 mohths)
         format: int32
@@ -648,12 +662,12 @@ definitions:
       cc-transactions:
         description: Number of transactions initiated via contact center in recent period (usually 6 mohths)
         format: int32
-        type: integer        
+        type: integer
       unresolved-issues:
-        description: Number of unresolved issues such as complaints customer has with bank 
+        description: Number of unresolved issues such as complaints customer has with bank
         format: int32
         type: integer
-        
+
   social-media-behavior:
     properties:
       facebook-friends:
@@ -663,23 +677,23 @@ definitions:
       facebook-posts:
         description: "Number of facebook posts associated with customer"
         type: integer
-        format: int32    
+        format: int32
       facebook-comments:
         description: "Number of facebook comments associated with customer"
         type: integer
-        format: int32            
+        format: int32
       linked-in-connections:
         description: "Number of linked-in connections associated with customer"
         type: integer
-        format: int32     
+        format: int32
       linked-in-posts:
         description: "Number of linked-in posts associated with customer"
         type: integer
-        format: int32    
+        format: int32
       linked-in-comments:
         description: "Number of linked-in comments associated with customer"
         type: integer
-        format: int32              
+        format: int32
       twitter-followers:
         description: "Number of twitter followers associated with customer"
         type: integer
@@ -687,11 +701,11 @@ definitions:
       twitter-tweets:
         description: "Number of twitter followers associated with customer"
         type: integer
-        format: int32       
+        format: int32
       twitter-mentions:
         description: "Number of twitter followers associated with customer"
         type: integer
-        format: int32   
+        format: int32
 
   classification-value:
     type: object
@@ -713,7 +727,7 @@ definitions:
       literal: billing
       code: 2
       description: Contact may be used to provide party with details of their liabilities to the bank
-      
+
   classification-list:
     description: List of classification schemas
     type: object
@@ -732,7 +746,7 @@ definitions:
         schema-id: folder-purpose
         name: Folder Purpose
         description: List of possible uses of a folder in business context.
-        
+
   classification-info:
     description: Basic information on classification schema
     properties:
@@ -749,7 +763,7 @@ definitions:
       schema-id: filing-purpose
       name: Filing Purpose
       description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture
-      
+
   classification:
     type: object
     description: Classification schema details

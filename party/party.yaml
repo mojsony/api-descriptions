@@ -607,7 +607,7 @@ definitions:
         description: 'Classifies customers according to taxonomy defined by bank. For a complete list of possible values see [customer-taxonomies](party-classifications.html#customer-taxonomies) classification'
       status:
         description: ' Enumer identifies the state of a customer within a lifecycle model. For a list of values see in [customer-statuses](party-classifications.html#customer-statuses) enumeration'
-        x-asee-enumeration: customer-status
+        x-asee-enumeration: customer-statuses
         type: string
         enum: [potential, prospective, active, dormant, former, declined, rejected]
       segment:

@@ -1,11 +1,7 @@
-   
-Classifications
+Profile API Classifications
 ===============
 
-
-
-
-Arrangement Lifecycle Status 
+Arrangement Lifecycle Status
 --------------
 Identifies the lifecycle status associated of the arrangement
 
@@ -24,20 +20,49 @@ Literal 				    | Code 	| Description
 `rejected`					| 00011 | Identifies an <Arrangement> that was rejected by modeled organization.
 `incomplete`				| 00012 | Identifies an <Arrangement> in which the obligations have not been fully discharged by the terms of the contract.
 
+Profile API Enumerations
+===============
 
+Individual Profile Lifecycle Statuses
+----
 
-Customer Lyfecycle Status
--------------- 
-Identifies the state of a Customer within a lifecycle model.
+Literal			| Description
+------------|------------------------
+living      | Living
+deceased    | Deceased
+missing     | Missing
+unknown     | Unknown
 
-Literal					| Code 	| Description
-------------------------|-------|------------------------
-`rejected`				| 00001	| Identifies a Customer Life Cycle Status in which the object <Involved Party> has sought to initiate an active relationship with the subject Involved Party (the seller of a product or service), but the seller has refused to establish the active relationship.
-`declined`				| 00002	| Identifies a Customer Lifecycle State in which the subject <Involved Party> has been contacted by the object <Involved Party> (the seller of a product or service) in order to establish an active Customer Relationship, but the Prospective <Customer> has rejected the offer and has opted not to establish an active relationship.
-`dormant`				| 00003	| Identifies a Customer Lifecycle Status in which the <Involved Party> has previously accepted and acquired the goods or used the services offered by the modeled organization, but has not acquired goods or used services for a specified period of time.
-`potential`				| 00004	| Identifies a Customer Life Cycle State in which the 'subject' <Involved Party> (the <Customer>) has been identified as a possible participant in an active customer relationship with the object Involved Party but in which the modeled organization has not contacted the subject Involved Party.
-`active`				| 00005	| Identifies a Customer Lifecycle Status in which the <Customer> has accepted and is using a product or service offered by the modeled organization.
-`former`				| 00006	| Identifies a Customer Lifecycle Status in which the <Involved Party> (the <Customer>) previously had an active customer relationship with the modeled organization but currently is inactive with no open <Product Arrangement>s in force.
-`prospective`			| 00007	| Identifies a lifecycle state where an <Involved Party> (the <Customer>) has been identified as a possible active customer by the modeled organization and has been contacted by the modeled organization.
+Organization Profile Lifecycle Statuses
+----
 
+Literal					| Description
+----------------|------------------------
+active | Active
+closed | Closed
+formed | Formed
+potential | Potential
+inactive | Inactive
+suspended | Suspended
+unknown | Unknown
 
+Arrangement Profile Lifecycle Statuses
+----
+
+Literal					| Description
+----------------|------------------------
+effective | Effective
+termminated | Terminated
+completed | Completed
+suspended | Suspended
+dormant | Dormant
+
+Housing Tenures
+----
+
+Literal					| Description
+----------------|------------------------
+owned-with-mortgage | Owned with mortgage
+owned-without-mortgage | Owner without mortgage
+rented | Rented
+unknown | Unknown
