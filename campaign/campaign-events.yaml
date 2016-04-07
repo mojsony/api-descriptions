@@ -1,12 +1,13 @@
 swagger: '2.0'
+x-asee-visibility: internal
 info:
   version: v1
   title: Campaign API Events
   description: Events published by Campaign API
-  contact: 
+  contact:
     name: Mladen Milenkovic
     url: http://dev.asseco-see.com/docs/
-    email: mladen.milenkovic@asseco-see.rs    
+    email: mladen.milenkovic@asseco-see.rs
 
 paths: {}
 
@@ -30,7 +31,7 @@ definitions:
             type: string
           campaign-code:
             description: Unique identifier of campaign.
-            type: string        
+            type: string
           source-uri:
             description: Keeps information about point of access, which helps with the analysis of efficiency of the channels.
             type: string
@@ -59,7 +60,7 @@ definitions:
             type: string
           campaign-code:
             description: Unique identifier of campaign.
-            type: string        
+            type: string
           benefits:
             description: Benefits activated for customer
             properties:
@@ -68,7 +69,7 @@ definitions:
                 items:
                   $ref: '#/definitions/benefit'
                 type: array
-            type: object  
+            type: object
           header:
             $ref: '#/definitions/header'
         example:
@@ -81,7 +82,7 @@ definitions:
 # ****************************************************#
   header:
     required:
-      - kind  
+      - kind
     properties:
       aggregate-id:
         type: string
@@ -109,7 +110,7 @@ definitions:
 # MODELS COMMON TO ALL APIs                           #
 # ****************************************************#
   event:
-    description: Base event model that ensures that every event instance is globaly identifiable and that it is timestamped 
+    description: Base event model that ensures that every event instance is globaly identifiable and that it is timestamped
     type: object
     properties:
       occurred-on:
@@ -124,7 +125,7 @@ definitions:
       occurred-on: '2015-11-19T13:21:01.000Z'
       id: 736a07bd-809e-43bd-9ac1-20991a78f390
 
- 
+
 
 # ****************************************************#
 # EVENTS PAYLOAD ELEMENTS IN CAMPAIGN API             #
@@ -149,5 +150,5 @@ definitions:
         type: boolean
       is-relative-modification:
         description: Defines if the benefit provides absolute or relative modification to existing product condition.
-        type: boolean      
+        type: boolean
     type: object
