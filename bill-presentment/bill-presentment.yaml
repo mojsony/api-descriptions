@@ -1,5 +1,6 @@
 swagger: '2.0'
-host: api.asee.co
+x-asee-visibility: internal
+host: dev.asseco-see.com
 basePath: /bill-presentment
 info:
   description: Enable users of banking mobile application payment of bills to suppliers of various services using bill presentments (invoices).
@@ -170,7 +171,7 @@ paths:
         - Sortable
         - Shapeable
     post:
-      description: | 
+      description: |
         Serves to subscribe at bills issuer and receive bills that can be payed from the account.
         It is possible to choose diferent kind of notifications and to set standing order for bills.
         It is useful because it provides easier way to pay bills.
@@ -189,7 +190,7 @@ paths:
             $ref: '#/definitions/command-result'
         '440':
           description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
               - [nickname-already-exists]()
               - [debtor-account-not-active]()
               - [subscription-already-registered]()
@@ -236,7 +237,7 @@ paths:
           description: No Content
         '440':
           description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details: 
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
               - [subscription-not-active]()
               - [unpaid-bills-exist]()
               - [standing-order-scheduled]()
@@ -354,7 +355,7 @@ parameters:
 definitions:
   bill-list:
     description: Bill list
-    allOf: 
+    allOf:
     - $ref: '#/definitions/paged-list'
     example:
       total-count: 0
@@ -523,7 +524,7 @@ definitions:
         type: string
     type: object
   debtor:
-    description: Owner of account who will pay a bill. 
+    description: Owner of account who will pay a bill.
     example:
       name: Nikola Stojanovic
       address: King Alexandar's Boulevard 101
@@ -572,7 +573,7 @@ definitions:
     description: 'Geolocation details - Latitude, Longitude, Mapped address'
     example:
       lat:  44° 48' N
-      lon:  20° 27' E 
+      lon:  20° 27' E
       mapped-address: 'Main Boulevard 110, Belgrade, Serbia.'
     properties:
       lat:
@@ -611,7 +612,7 @@ definitions:
       total-pages: 6
       sort-order: asc
       sort-by:
-    allOf: 
+    allOf:
     - $ref: '#/definitions/paged-list'
     properties:
       bill-issuers:
@@ -711,7 +712,7 @@ definitions:
       sort-order: asc
       sort-by:
       items: []
-    allOf: 
+    allOf:
     - $ref: '#/definitions/paged-list'
     properties:
       items:
@@ -934,10 +935,10 @@ definitions:
 #       message:
 #         description: Displayed message.
 #         type: string
-#     type: object 
+#     type: object
   paged-list:
     description: List with support for paging and sorting
-    properties:  
+    properties:
       total-count:
         description: Total number of items in collection
         type: integer
@@ -956,7 +957,7 @@ definitions:
         enum:
         - asc
         - desc
-      sort-by:  
+      sort-by:
         description: Attribute of the collection item to sort by
         type: string
 responses:
@@ -966,9 +967,9 @@ responses:
 #       $ref: "#/definitions/command-result"
 #   validation-problem-response:
 #     description: |
-#       Your request was not constructed properly. Response contains the list of validation errors for each invalid element of your request. 
+#       Your request was not constructed properly. Response contains the list of validation errors for each invalid element of your request.
 #       For complete list of possible validation errors see [validation errors]() classification.
-#     schema: 
+#     schema:
 #       $ref: '#/definitions/validation-problem'
   default-error-response:
     description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()

@@ -1,4 +1,5 @@
 swagger: '2.0'
+x-asee-visibility: public
 host: dev.aseeco-see.com
 basePath: /v1/payment
 info:
@@ -560,7 +561,7 @@ paths:
         '202':
           description: Accepted
         400:
-          $ref: '#/responses/validation-problem-response'          
+          $ref: '#/responses/validation-problem-response'
         # '440':
         #   description: |
         #     Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
@@ -633,7 +634,7 @@ paths:
         '202':
           description: Accepted
         400:
-          $ref: '#/responses/validation-problem-response'          
+          $ref: '#/responses/validation-problem-response'
         # '440':
         #   description: |
         #     Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
@@ -782,7 +783,7 @@ paths:
         '202':
           description: Accepted
         400:
-          $ref: '#/responses/validation-problem-response'          
+          $ref: '#/responses/validation-problem-response'
         # '440':
         #   description: |
         #     Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
@@ -2291,4 +2292,4 @@ responses:
   validation-problem-response:
     description: Your request was not constructed properly. Response contains the list of validation errors for each invalid element of your request. For complete list of possible validation errors see [validation](common-getstarted.html#validation) section of the guide.
     schema:
-      $ref: '#/definitions/validation-problem'    
+      $ref: '#/definitions/validation-problem'

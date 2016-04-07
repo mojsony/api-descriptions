@@ -1,4 +1,5 @@
 ﻿swagger: '2.0'
+x-asee-visibility: public
 host: api.asee.co
 basePath: /v1/device
 info:

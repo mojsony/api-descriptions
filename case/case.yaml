@@ -1,4 +1,5 @@
 swagger: '2.0'
+x-asee-visibility: internal
 host: dev.asseco-see.com
 basePath: /v1/case
 info:
@@ -45,14 +46,14 @@ paths:
         - $ref: '#/parameters/sort-order-param'
         - $ref: '#/parameters/sort-by-param'
         - $ref: '#/parameters/include-param'
-        - $ref: '#/parameters/trim-param'    
+        - $ref: '#/parameters/trim-param'
       responses:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/case-list' 
+            $ref: '#/definitions/case-list'
         default:
-          $ref: '#/responses/default-error-response'       
+          $ref: '#/responses/default-error-response'
       summary: Operation returns list of cases with basic details like registration date current lifecycle state and the name and id of the agent responsible for handling the case. When used without optional parameters all active cases are returned.
       tags:
         - Cases
@@ -67,7 +68,7 @@ paths:
       parameters:
         - $ref: '#/parameters/case-id-param'
         - $ref: '#/parameters/include-param'
-        - $ref: '#/parameters/trim-param'     
+        - $ref: '#/parameters/trim-param'
       responses:
         '200':
           description: OK
@@ -81,7 +82,7 @@ paths:
       x-asee-tags:
         - Shapeable
   '/cases/{case-id}/status':
-    put:      
+    put:
       deprecated: false
       operationId: Cases_Update
       parameters:
@@ -91,19 +92,19 @@ paths:
           name: cmd
           required: true
           schema:
-            $ref: '#/definitions/update-case-command'  
+            $ref: '#/definitions/update-case-command'
       responses:
         '200':
           description: OK
           schema:
             $ref: '#/definitions/command-result'
         default:
-          $ref: '#/responses/default-error-response'        
+          $ref: '#/responses/default-error-response'
       summary: Operation updates the specified case progress. Operation returns customer case with updated status.
       tags:
         - Cases
   '/cases/{case-id}/history':
-    get:      
+    get:
       deprecated: false
       operationId: Cases_GetHistory
       parameters:
@@ -111,7 +112,7 @@ paths:
         - $ref: '#/parameters/page-size-param'
         - $ref: '#/parameters/page-param'
         - $ref: '#/parameters/sort-order-param'
-        - $ref: '#/parameters/sort-by-param'  
+        - $ref: '#/parameters/sort-by-param'
       responses:
         '200':
           description: OK
@@ -126,7 +127,7 @@ paths:
         - Pageable
         - Sortable
   /callback-requests:
-    post:      
+    post:
       deprecated: false
       operationId: CallbackRequests_Create
       parameters:
@@ -135,7 +136,7 @@ paths:
           name: cmd
           required: true
           schema:
-            $ref: '#/definitions/create-callback-request-command'      
+            $ref: '#/definitions/create-callback-request-command'
       responses:
         '200':
           description: OK
@@ -147,7 +148,7 @@ paths:
       tags:
         - Callback requests
   /complaints:
-    post:     
+    post:
       deprecated: false
       operationId: Complaints_Create
       parameters:
@@ -156,7 +157,7 @@ paths:
           name: cmd
           required: true
           schema:
-            $ref: '#/definitions/create-complaint-command'      
+            $ref: '#/definitions/create-complaint-command'
       responses:
         '200':
           description: OK
@@ -168,7 +169,7 @@ paths:
       tags:
         - Complaints
   /service-requests:
-    post:      
+    post:
       deprecated: false
       operationId: ServiceRequests_Create
       parameters:
@@ -177,7 +178,7 @@ paths:
           name: cmd
           required: true
           schema:
-            $ref: '#/definitions/create-service-request-command'      
+            $ref: '#/definitions/create-service-request-command'
       responses:
         '200':
           description: OK
@@ -189,7 +190,7 @@ paths:
       tags:
         - Service requests
   '/cases/{case-id}/attachments':
-    post:      
+    post:
       deprecated: false
       operationId: Cases_AddAttachment
       parameters:
@@ -199,7 +200,7 @@ paths:
           name: cmd
           required: true
           schema:
-            $ref: '#/definitions/add-case-attachment-command'   
+            $ref: '#/definitions/add-case-attachment-command'
       responses:
         '200':
           description: OK
@@ -211,7 +212,7 @@ paths:
       tags:
         - Cases
   '/cases/{case-id}/close':
-    post:      
+    post:
       deprecated: false
       operationId: Cases_Close
       parameters:
@@ -221,7 +222,7 @@ paths:
           name: cmd
           required: true
           schema:
-            $ref: '#/definitions/close-case-command'   
+            $ref: '#/definitions/close-case-command'
       responses:
         '200':
           description: OK
@@ -238,7 +239,7 @@ paths:
       operationId: Cases_RemoveAttachment
       parameters:
         - $ref: '#/parameters/case-id-param'
-        - $ref: '#/parameters/file-id-param'    
+        - $ref: '#/parameters/file-id-param'
       responses:
         '204':
           description: No content
@@ -247,9 +248,9 @@ paths:
       summary: Operation removes attaced file from case.
       tags:
         - Cases
-  '/classifications': 
+  '/classifications':
     get:
-      description: Returns all classification schemas used in this API.      
+      description: Returns all classification schemas used in this API.
       operationId: "Classifications_GetList"
       responses:
         '200':
@@ -404,12 +405,12 @@ parameters:
     in: path
     name: schema-id
     required: true
-    type: string 
+    type: string
 definitions:
   case-list:
     description: Paged list of customer cases.
-    allOf: 
-    - $ref: '#/definitions/paged-list'  
+    allOf:
+    - $ref: '#/definitions/paged-list'
     properties:
       items:
         description: List of customer cases.
@@ -501,7 +502,7 @@ definitions:
       attachment-uri:
         description: URI
         type: string
-    type: object  
+    type: object
   update-case-command:
     description: Updates resolution and state of some case.
     properties:
@@ -528,7 +529,7 @@ definitions:
     type: object
   case-history:
     description: Provides the history of customer case processing.
-    allOf: 
+    allOf:
     - $ref: '#/definitions/paged-list'
     properties:
       items:
@@ -739,7 +740,7 @@ definitions:
     type: object
   paged-list:
     description: List with support for paging
-    properties:  
+    properties:
       total-count:
         description: Total number of items in collection
         type: integer
@@ -758,41 +759,41 @@ definitions:
         enum:
         - asc
         - desc
-      sort-by:  
+      sort-by:
         description: Attribute of the collection item to sort by
         type: string
-  classification-value: 
+  classification-value:
     description: Classification value
     example: TO DO
-    properties: 
-      code: 
+    properties:
+      code:
         description: Code of classification value.
         type: string
-      literal: 
+      literal:
         description: Literal.
         type: string
-      description: 
+      description:
         description: Description.
         type: string
-      id: 
+      id:
         description: Identifier of classification value.
         type: string
-      parent-id: 
+      parent-id:
         description: Parent classification value id.
         type: string
-      ordinal: 
+      ordinal:
         description: Ordinal number.
-        type: string      
+        type: string
     type: object
   classification-list:
     description: List of classification shemas.
-    properties: 
-      items: 
+    properties:
+      items:
         description: List of all classification schemas.
         items:
           $ref: "#/definitions/classification"
         type: array
-    type: object  
+    type: object
   classification:
     description: Classification schema used in API contracts.
     example:
@@ -804,44 +805,44 @@ definitions:
         - code: '0'
           literal: card-lost
           description: Card lost and new one should be issued.
-          id: 
-          parent-id: 
-          ordinal: 
+          id:
+          parent-id:
+          ordinal:
         - code: '1'
           literal: card-stolen
           description: Card stollen and new one should be issued.
-          id: 
-          parent-id: 
-          ordinal: 
+          id:
+          parent-id:
+          ordinal:
         - code: '2'
           literal: card-damadged
           description: Card damadged and new one should be issued.
-          id: 
-          parent-id: 
-          ordinal: 
+          id:
+          parent-id:
+          ordinal:
         - code: '3'
           literal: emboss-name-changing
           description: Change emboss name.
-          id: 
-          parent-id: 
-          ordinal: 
+          id:
+          parent-id:
+          ordinal:
         - code: '4'
           literal: pin-lost
           description: PIN code lost and new one should be created.
-          id: 
-          parent-id: 
+          id:
+          parent-id:
           ordinal:
-    properties: 
-      API: 
+    properties:
+      API:
         description: Name of Api in which classification shema is used.
         type: string
-      description: 
+      description:
         description: Shema description.
         type: string
       schema-id:
         description: Unique identifier of the classification.
         type: string
-      name: 
+      name:
         description: Name of shema.
         type: string
       values:

@@ -1,9 +1,10 @@
 swagger: '2.0'
+x-asee-visibility: internal
 host: api.asee.co
 basePath: /customer-event
 info:
   description: |
-    Customer event API gives you access to all events registered for a customer or you can register new events for customers. 
+    Customer event API gives you access to all events registered for a customer or you can register new events for customers.
     The event registration is used only for actions and operations performed by third party system not connected to Multichannel API.
   title: Customer Event API
   version: beta
@@ -54,7 +55,7 @@ paths:
           schema:
             $ref: '#/definitions/event-list'
         default:
-            $ref: '#/responses/default-error-response'      
+            $ref: '#/responses/default-error-response'
       summary: List all registered events for a customer.
       tags:
         - Events
@@ -69,7 +70,7 @@ paths:
       parameters:
         - $ref: '#/parameters/event-id-param'
         - $ref: '#/parameters/include-param'
-        - $ref: '#/parameters/trim-param'     
+        - $ref: '#/parameters/trim-param'
       responses:
         '200':
           description: OK
@@ -89,7 +90,7 @@ paths:
       parameters:
         - $ref: '#/parameters/event-id-param'
         - $ref: '#/parameters/include-param'
-        - $ref: '#/parameters/trim-param'    
+        - $ref: '#/parameters/trim-param'
       responses:
         '200':
           description: OK
@@ -109,7 +110,7 @@ paths:
       parameters:
         - $ref: '#/parameters/event-id-param'
         - $ref: '#/parameters/include-param'
-        - $ref: '#/parameters/trim-param'     
+        - $ref: '#/parameters/trim-param'
       responses:
         '200':
           description: OK
@@ -129,7 +130,7 @@ paths:
       parameters:
         - $ref: '#/parameters/event-id-param'
         - $ref: '#/parameters/include-param'
-        - $ref: '#/parameters/trim-param'   
+        - $ref: '#/parameters/trim-param'
       responses:
         '200':
           description: OK
@@ -149,7 +150,7 @@ paths:
       parameters:
         - $ref: '#/parameters/event-id-param'
         - $ref: '#/parameters/include-param'
-        - $ref: '#/parameters/trim-param'     
+        - $ref: '#/parameters/trim-param'
       responses:
         '200':
           description: OK
@@ -189,7 +190,7 @@ paths:
       parameters:
         - $ref: '#/parameters/event-id-param'
         - $ref: '#/parameters/include-param'
-        - $ref: '#/parameters/trim-param'   
+        - $ref: '#/parameters/trim-param'
       responses:
         '200':
           description: OK
@@ -209,7 +210,7 @@ paths:
       parameters:
         - $ref: '#/parameters/event-id-param'
         - $ref: '#/parameters/include-param'
-        - $ref: '#/parameters/trim-param'  
+        - $ref: '#/parameters/trim-param'
       responses:
         '200':
           description: OK
@@ -223,7 +224,7 @@ paths:
       x-asee-tags:
         - Shapeable
   /communication-events:
-    post:      
+    post:
       deprecated: false
       operationId: CommunicationEvents_Create
       parameters:
@@ -232,7 +233,7 @@ paths:
           name: cmd
           required: true
           schema:
-            $ref: '#/definitions/create-communication-event-command'      
+            $ref: '#/definitions/create-communication-event-command'
       responses:
         '200':
           description: OK
@@ -243,9 +244,9 @@ paths:
       summary: Register new communication event
       tags:
         - Communication events
-  '/classifications': 
+  '/classifications':
     get:
-      description: Returns all classification schemas used in this API.      
+      description: Returns all classification schemas used in this API.
       operationId: "Classifications_GetList"
       responses:
         '200':
@@ -372,7 +373,7 @@ parameters:
 definitions:
   event-list:
     description: Paged list of customer events.
-    allOf: 
+    allOf:
     - $ref: '#/definitions/paged-list'
     properties:
       items:
@@ -431,7 +432,7 @@ definitions:
       value:
         description: Value of event property.
         type: string
-    type: object  
+    type: object
   communication-event:
     description: Details about communication event related to customer, i.e. the record of receiving or sending a message between two parties.
     properties:
@@ -833,7 +834,7 @@ definitions:
     type: object
   paged-list:
     description: List with support for paging
-    properties:  
+    properties:
       total-count:
         description: Total number of items in collection
         type: integer
@@ -852,42 +853,42 @@ definitions:
         enum:
         - asc
         - desc
-      sort-by:  
+      sort-by:
         description: Attribute of the collection item to sort by
         type: string
     type: object
-  classification-value: 
+  classification-value:
     description: Classification value
     example: TO DO
-    properties: 
-      code: 
+    properties:
+      code:
         description: Code of classification value.
         type: string
-      literal: 
+      literal:
         description: Literal.
         type: string
-      description: 
+      description:
         description: Description.
         type: string
-      id: 
+      id:
         description: Identifier of classification value.
         type: string
-      parent-id: 
+      parent-id:
         description: Parent classification value id.
         type: string
-      ordinal: 
+      ordinal:
         description: Ordinal number.
-        type: string      
+        type: string
     type: object
   classification-list:
     description: List of classification shemas.
-    properties: 
-      items: 
+    properties:
+      items:
         description: List of all classification schemas.
         items:
           $ref: "#/definitions/classification"
         type: array
-    type: object  
+    type: object
   classification:
     description: Classification schema used in API contracts.
     example:
@@ -899,44 +900,44 @@ definitions:
         - code: '0'
           literal: card-lost
           description: Card lost and new one should be issued.
-          id: 
-          parent-id: 
-          ordinal: 
+          id:
+          parent-id:
+          ordinal:
         - code: '1'
           literal: card-stolen
           description: Card stollen and new one should be issued.
-          id: 
-          parent-id: 
-          ordinal: 
+          id:
+          parent-id:
+          ordinal:
         - code: '2'
           literal: card-damadged
           description: Card damadged and new one should be issued.
-          id: 
-          parent-id: 
-          ordinal: 
+          id:
+          parent-id:
+          ordinal:
         - code: '3'
           literal: emboss-name-changing
           description: Change emboss name.
-          id: 
-          parent-id: 
-          ordinal: 
+          id:
+          parent-id:
+          ordinal:
         - code: '4'
           literal: pin-lost
           description: PIN code lost and new one should be created.
-          id: 
-          parent-id: 
+          id:
+          parent-id:
           ordinal:
-    properties: 
-      API: 
+    properties:
+      API:
         description: Name of Api in which classification shema is used.
         type: string
-      description: 
+      description:
         description: Shema description.
         type: string
       schema-id:
         description: Unique identifier of the classification.
         type: string
-      name: 
+      name:
         description: Name of shema.
         type: string
       values:

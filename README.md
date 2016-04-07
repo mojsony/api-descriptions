@@ -1,9 +1,11 @@
 ![API](http://www.onedesk.com/wordpress/wp-content/uploads/2012/10/API-128x128.png)
 Documentation for ASEE public APIs
 ==================================
-> **IMPORTANT**: See the published version of this content on [documentation site](http://dev.asseco-see.com/docs)
+> ###Material is published under [Asseco REST API Reference License](license.md)
 
-> ##Material is publshed under [Asseco Reference License](license.md)
+Public site
+-----------
+See the published version of this content on [documentation site](http://dev.asseco-see.com/docs/public)
 
 API Definition and Documentation Guidelines
 ---------------------------------
