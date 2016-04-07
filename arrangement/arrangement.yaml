@@ -888,7 +888,7 @@ definitions:
         - sales-discount
         description: |
           The origin of the variation.
-          For a list of possible values see [price-variation-origin](arrangement-classifications.html#price-variation-origin) enumeration.
+          For a list of possible values see [price-variation-origins](arrangement-classifications.html#price-variation-origins) enumeration.
       benefit-source-id:
         type: string
         description: If applicable, the identifier of the benefit source. For example, collective benefit for employees of a company should refer to the company id, campaign benefits to campaign id, etc.

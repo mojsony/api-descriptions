@@ -387,14 +387,14 @@ definitions:
         type: string
         description: |
           "Enumeration that distinguishes between card kinds according to the manner in which use of or access to the Product Arrangement is facilitated.
-          For complete list of possible values see [card-kinds](device-classificastions.html#card-kinds) enumeration."
+          For complete list of possible values see [card-kinds](device-classifications.html#card-kinds) enumeration."
         enum: [debit-card, credit-card, prepaid-card, charge-card, stored-value-card]
       card-brand:
         type: string
         x-asee-classification: card-brand
         description: |
           "Identifies the set of types of Financial Transaction Cards that are available.
-          For complete list of possible values see [card-brand](prodcut-classificastions.html#card-brand) classification."
+          For complete list of possible values see [card-brand](prodcut-classifications.html#card-brand) classification."
       card-image-url:
         description: Image of the card in content management system
         type: string
@@ -420,7 +420,7 @@ definitions:
       external-device-id-kind:
         type: string
         description: |
-          For complete list of possible values see [device-id-kinds](device-classificastions.html#device-id-kinds) enumeration."
+          For complete list of possible values see [device-id-kinds](device-classifications.html#device-id-kinds) enumeration."
         enum: [imei, app-id]
       owner-id:
         description: Unique identifier of customer that is device owner
@@ -428,7 +428,7 @@ definitions:
       capabilities:
         description: |
           Technical capabilities of device
-          For complete list of possible values see [device-capabilities](device-classificastions.html#device-capabilities) enumeration."
+          For complete list of possible values see [device-capabilities](device-classifications.html#device-capabilities) enumeration."
         type: array
         items:
           type: string
@@ -436,7 +436,7 @@ definitions:
       status:
         description: |
           Identifies a status from Customer perspective.
-          For complete list of possible values see [device-statuses](device-classificastions.html#device-statuses) enumeration."
+          For complete list of possible values see [device-statuses](device-classifications.html#device-statuses) enumeration."
         enum:
         - active
         - blocked
@@ -472,7 +472,7 @@ definitions:
       external-device-id-kind:
         description: |
           Kind of identifier for customer owned device such as `imei` and `app-id`
-          For complete list of possible values see [device-id-kinds](device-classificastions.html#device-id-kinds) enumeration."
+          For complete list of possible values see [device-id-kinds](device-classifications.html#device-id-kinds) enumeration."
         type: string
         enum: [imei, app-id]
       operating-system:
@@ -507,7 +507,7 @@ definitions:
       push-platform:
         description: |
           Push notifications platform
-          For complete list of possible values see [push-platforms](device-classificastions.html#push-platforms) enumeration."
+          For complete list of possible values see [push-platforms](device-classifications.html#push-platforms) enumeration."
         type: string
         enum: [apns, gcm, wns, mpns]
       pns-handle:
@@ -633,7 +633,7 @@ parameters:
   owned-device-statuses-param:
     description: |
       Only devices in provided statuses will be listed. If not provided devices in all statuses will be listed.
-      For complete list of possible values see [device-statuses](device-classificastions.html#device-statuses) enumeration."
+      For complete list of possible values see [device-statuses](device-classifications.html#device-statuses) enumeration."
     in: query
     name: device-statuses
     required: false
@@ -648,7 +648,7 @@ parameters:
   card-statuses-param:
     description: |
       Only card in provided statuses will be listed. If not provided devices in all statuses will be listed
-      For complete list of possible values see [card-statuses](device-classificastions.html#card-statuses) enumeration."
+      For complete list of possible values see [card-statuses](device-classifications.html#card-statuses) enumeration."
     in: query
     name: card-statuses
     required: false

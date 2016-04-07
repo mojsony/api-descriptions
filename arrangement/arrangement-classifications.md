@@ -75,7 +75,7 @@ Kinds of one activity in Instalment Plan (one row).
 |cash-collateral-pledging| Cash Collateral Pledging|
 |cash-collateral-release| Cash Collateral Release|
 
-Price Variation Origin
+Price Variation Origins
 ---
 
 The origin of the price variation
