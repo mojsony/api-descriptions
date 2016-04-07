@@ -1,9 +1,10 @@
-
 REST API Guide and Reference
 ====================================
 Asseco REST APIs represent collection endpoints that serve the needs of banking applications. While each API exposes specific functionality, technical concerns of API usage have been designed in a consistent manner to enable easier integration into channel applications. This section describes concerns and usage patterns that are common to all APIs.
 
-@@@
+> Read [Asseco REST API Reference License](common-license.html) before using the materials
+
+@@@ public
 ##/location
 ###&#xE9B2
 Get location and availability of branches and ATMs
@@ -12,7 +13,7 @@ Get location and availability of branches and ATMs
 
 @@@
 
-@@@
+@@@ public
 ##/identity
 ###&#xEA0E
 Enroll users and manage their online identity 
@@ -21,7 +22,7 @@ Enroll users and manage their online identity
 
 @@@
 
-@@@
+@@@ public
 ##/content
 ###&#xE831
 Store and access documents and other digital content 
@@ -30,7 +31,7 @@ Store and access documents and other digital content
 
 @@@
 
-@@@
+@@@ public
 ##/correspondence
 ###&#xE81A
 Format and deliver customer correspondence
@@ -39,7 +40,7 @@ Format and deliver customer correspondence
 
 @@@
 
-@@@
+@@@ public
 ##/campaign
 ###&#xEAD4
 Target customers and prospects with offers
@@ -48,7 +49,7 @@ Target customers and prospects with offers
 
 @@@
 
-@@@
+@@@ public
 ##/authentication
 ###&#xEA20
 Authenticate users with different credentials 
@@ -57,7 +58,7 @@ Authenticate users with different credentials
 
 @@@
 
-@@@
+@@@ public
 ##/entitlements
 ###&#xEA0A
 Track customer access rights and usage limits
@@ -66,7 +67,7 @@ Track customer access rights and usage limits
 
 @@@
 
-@@@
+@@@ public
 ##/authorization
 ###&#xEA1F
 Verify sensitive actions
@@ -75,7 +76,7 @@ Verify sensitive actions
 
 @@@
 
-@@@
+@@@ internal
 ##/dialog
 ###&#xEA9F
 Optimize your interaction with customers
@@ -84,7 +85,7 @@ Optimize your interaction with customers
 
 @@@
 
-@@@
+@@@ public
 ##/account-data
 ###&#xE886
 Access and tag customer accounts and transactions
@@ -93,7 +94,7 @@ Access and tag customer accounts and transactions
 
 @@@
 
-@@@
+@@@ public
 ##/arrangement
 ###&#xE869
 Define and manage terms of customer agreements
@@ -102,7 +103,7 @@ Define and manage terms of customer agreements
 
 @@@
 
-@@@
+@@@ public
 ##/profile
 ###&#xEA1A
 Get quick facts and measures from customer profiles
@@ -112,7 +113,7 @@ Get quick facts and measures from customer profiles
 @@@
 
 
-@@@
+@@@ public
 ##/offer
 ###&#xE8A7
 Create and manage offers given to customers
@@ -121,7 +122,7 @@ Create and manage offers given to customers
 
 @@@
 
-@@@
+@@@ internal
 ##/case
 ###&#xEAF4
 Capture and resolve issues raised by customers
@@ -130,7 +131,7 @@ Capture and resolve issues raised by customers
 
 @@@
 
-@@@
+@@@ public
 ##/product
 ###&#xE8D6
 Access catalogue of bank’s products and services
@@ -139,7 +140,7 @@ Access catalogue of bank’s products and services
 
 @@@
 
-@@@
+@@@ public
 ##/party
 ###&#xEA06
 Access data on people and organizations of interest to bank
@@ -148,7 +149,7 @@ Access data on people and organizations of interest to bank
 
 @@@
 
-@@@
+@@@ public
 ##/reference
 ###&#xE84C
 Access reference data managed by bank
@@ -157,16 +158,16 @@ Access reference data managed by bank
 
 @@@
 
-@@@
-##/payment-order
+@@@ public
+##/payment
 ###&#xE8AC
 Initiate and track customer payments 
-[EXPLORE](payment-order.html)
-[LEARN](payment-order-getstarted.html)
+[EXPLORE](payment.html)
+[LEARN](payment-getstarted.html)
 
 @@@
 
-@@@
+@@@ internal
 ##/order
 ###&#xE895
 Service and execute orders received from customers
@@ -175,7 +176,7 @@ Service and execute orders received from customers
 
 @@@
 
-@@@
+@@@ internal
 ##/survey
 ###&#xE828
 Collect feedback from customers
@@ -184,7 +185,7 @@ Collect feedback from customers
 
 @@@
 
-@@@
+@@@ public
 ##/device
 ###&#xE9CE
 Manage customer owned and bank issued devices
@@ -193,8 +194,8 @@ Manage customer owned and bank issued devices
 
 @@@
 
-@@@
-##/currency-exchange
+@@@ public
+##/exchange
 ###&#xE8B8
 Track rates, buy and sell foreign currency
 [EXPLORE](exchange.html)
@@ -202,7 +203,7 @@ Track rates, buy and sell foreign currency
 
 @@@
 
-@@@
+@@@ internal
 ##/bill-presentment
 ###&#xE99D
 Present and manage monthly bills of customers
@@ -210,7 +211,7 @@ Present and manage monthly bills of customers
 [LEARN](bill-presentment-getstarted.html)
 @@@
 
-@@@
+@@@ internal
 ##/personal-finance
 ###&#xE88A
 Manage personal finances of customers
@@ -218,7 +219,7 @@ Manage personal finances of customers
 [LEARN](personal-finance-getstarted.html)
 @@@
 
-@@@
+@@@ internal
 ##/fraud
 ###&#xEB2B
 Manage personal finances of customers
@@ -226,7 +227,7 @@ Manage personal finances of customers
 [LEARN](fraud-getstarted.html)
 @@@
 
-@@@
+@@@ internal
 ##/customer-event
 ###&#xEAC3
 Manage personal finances of customers
@@ -234,7 +235,7 @@ Manage personal finances of customers
 [LEARN](customer-event-getstarted.html)
 @@@
 
-@@@
+@@@ public
 ##/accounting
 ###&#xE862
 Track positions on analytical accounts
