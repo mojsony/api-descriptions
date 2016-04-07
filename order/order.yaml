@@ -4,13 +4,12 @@ info:
   version: v1
   title: Order API
   description: |
-<<<<<<< HEAD
-    Customer order API enables you to initiate, track, query and execute self-care orders. You can grant and revoke mandates to self or others, manage communication preferences like notifications, alerts and contacts and manage channels or cards.  All orders are treated like work items and they go through a series of steps until executed.  The time to complete these steps depends on the type of the customer order. 
+    Customer order API enables you to initiate, track, query and execute self-care orders. You can grant and revoke mandates to self or others, manage communication preferences like notifications, alerts and contacts and manage channels or cards.  All orders are treated like work items and they go through a series of steps until executed.  The time to complete these steps depends on the type of the customer order.
+  contact:
+    name: Aleksandar Milosevic
+    url: http://dev.asseco-see.com/docs/order-getstarted.html
+    email: aca@see.asseco.com
 host: dev.asseco-see.com
-=======
-    Customer order API enables you to initiate, track, query and execute Self-Care orders.  You can issue orders for opening new accounts, set up the terms and conditions of the existing and new accounts, grant and revoke mandates to self or others, manage communication preferences like notifications, alerts and contacts and manage channels or cards.  All orders are treated like work items and they go through a series of steps until executed.  The time to complete these steps depends on the type of the customer order.
-host: api.asee.co
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
 basePath: /v1/order
 schemes:
   - http
@@ -81,7 +80,6 @@ paths:
 
   /me/orders:
     get:
-<<<<<<< HEAD
       summary: List self-care orders for authenticated customer
       tags:
         - Orders
@@ -106,17 +104,12 @@ paths:
             $ref: '#/definitions/order-list'
         default:
           $ref: '#/responses/default-error-response'
-          
+
   /orders:
     get:
       summary: List self-care orders for customer
       tags:
         - Orders
-=======
-      summary: Returns additional card requests for provided customer.
-      tags:
-        - Additional card issuances
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
       x-asee-tags:
         - Shapeable
         - Sortable
@@ -130,13 +123,8 @@ paths:
         - $ref: "#/parameters/page-size-param"
         - $ref: "#/parameters/sort-by-param"
         - $ref: "#/parameters/sort-order-param"
-<<<<<<< HEAD
         - $ref: "#/parameters/trim-param"
         - $ref: "#/parameters/include-param"
-=======
-        - $ref: "#/parameters/include-param"
-        - $ref: "#/parameters/trim-param"
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
       responses:
         '200':
           description: OK
@@ -144,7 +132,7 @@ paths:
             $ref: '#/definitions/order-list'
         default:
           $ref: '#/responses/default-error-response'
-          
+
   /orders/{order-number}:
     get:
       summary: Gets details of specific self-care order
@@ -207,7 +195,6 @@ paths:
           description: Comand with details of cancelation
           in: body
           schema:
-<<<<<<< HEAD
             $ref: '#/definitions/cancel-order-command'
       responses:
         '204':
@@ -215,8 +202,8 @@ paths:
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-                    
-              - [order-not-cancellable]()          
+
+              - [order-not-cancellable]()
         default:
           $ref: '#/responses/default-error-response'
 
@@ -238,112 +225,40 @@ paths:
           description: No content
         default:
           $ref: '#/responses/default-error-response'
-          
+
   /orders/card-issuances:
     post:
       summary: Order additional card for authorized person
       description: Initiates issuance of additional card and returns order-number.
-      tags: 
+      tags:
         - Orders
       operationId: CardIssuances_Initiate
-      parameters: 
-          - 
+      parameters:
+          -
             description: "Command with details of card issuance order"
             in: body
             name: cmd
             required: true
-            schema: 
+            schema:
               $ref: "#/definitions/initiate-card-issuance-command"
       responses:
         '202':
           $ref: '#/responses/resource-created-response'
-=======
-            $ref: '#/definitions/additional-card-issuance-list'
-        default:
-          $ref: '#/responses/default-error-response'
-    post:
-      summary: Creates request for additional card and returns command-result with customer order id, validation errors if there are any, and current order status.
-      tags:
-        - Additional card issuances
-      operationId: AdditionalCardIssuances_Request
-      parameters:
-          -
-            description: "Command contains parameters of additional card request."
-            in: "body"
-            name: "cmd"
-            required: true
-            schema:
-              $ref: "#/definitions/request-additional-card-issuance-command"
-      responses:
-        '202':
-          $ref: '#/responses/request-accepted-response'
-          description: Request has been accepted for processing
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
         '440':
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-            
+
             - [request-already-exists]()
             - [active-additional-card-already-exists]()
             - [owner-can-not-have-additional-card]()
           schema:
             $ref: '#/definitions/business-problem'
         default:
-<<<<<<< HEAD
           $ref: '#/responses/default-error-response'
-                             
 
-  /orders/card-blockades: 
-    post: 
-=======
-          $ref: '#/responses/default-error-response'
-  /additional-card-issuances/{order-number}/cancel:
+
+  /orders/card-blockades:
     post:
-      summary: "Cancels request for additional card and returns command-result with order Id, validation errors if there are any, and current order status."
-      tags:
-        - Additional card issuances
-      operationId: AdditionalCardIssuances_Cancel
-      parameters:
-        -
-           description: "Number of request which cancelation is initiated."
-           in: "path"
-           name: "order-number"
-           required: true
-           type: "string"
-      responses:
-        '200':
-          description: Success
-        '440':
-          description: |
-            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
-            - [request-status-not-eligible-for-cancelation]()
-          schema:
-            $ref: '#/definitions/business-problem'
-        default:
-          $ref: '#/responses/default-error-response'
-  /additional-card-issuances/{order-number}:
-    get:
-      summary: "Returns details of specified additional card request"
-      tags:
-        - Additional card issuances
-      operationId: AdditionalCardIssuances_Get
-      parameters:
-        -
-          description: "Number of order to fetch."
-          in: "path"
-          name: "order-number"
-          required: true
-          type: "string"
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/additional-card-issuance'
-        default:
-          $ref: '#/responses/default-error-response'
-  /card-blockades:
-    post:
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
       summary: "Creates request for card blocking and automatically change card lifecycle status to suspended. Operation returns command-result with order id, validation errors if there are any, and current order status."
       tags:
         - Card blockades
@@ -354,13 +269,8 @@ paths:
           in: "body"
           name: "cmd"
           required: true
-<<<<<<< HEAD
-          schema: 
-              $ref: "#/definitions/initiate-card-blockade-command"
-=======
           schema:
-              $ref: "#/definitions/request-card-blockade-command"
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
+              $ref: "#/definitions/initiate-card-blockade-command"
       responses:
         '202':
           $ref: '#/responses/resource-created-response'
@@ -372,37 +282,10 @@ paths:
           schema:
             $ref: '#/definitions/business-problem'
         default:
-<<<<<<< HEAD
-          $ref: '#/responses/default-error-response'         
-
-  /orders/card-deblockades: 
-    post: 
-=======
           $ref: '#/responses/default-error-response'
-  /card-blockades/{order-number}:
-    get:
-      summary: "Returns details of card blocking request."
-      tags:
-           - Card blockades
-      operationId: CardBlockades_Get
-      deprecated: true
-      parameters:
-          -
-            description: Number of order to fetch.
-            in: "path"
-            name: "order-number"
-            required: true
-            type: "string"
-      responses:
-          '200':
-            description: Success
-            schema:
-              $ref: '#/definitions/card-blockade'
-          default:
-            $ref: '#/responses/default-error-response'
-  /card-deblockades:
+
+  /orders/card-deblockades:
     post:
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
       summary: "Creates request for card unblocking and automaticly change card lifecycle status to active. Operation returns command-result with order id, validation errors if there are any, and current order status."
       tags:
         - Card deblockades
@@ -413,13 +296,8 @@ paths:
           in: "body"
           name: "cmd"
           required: true
-<<<<<<< HEAD
-          schema: 
-            $ref: "#/definitions/initiate-card-deblockade-command"
-=======
           schema:
-            $ref: "#/definitions/request-card-deblockade-command"
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
+            $ref: "#/definitions/initiate-card-deblockade-command"
       responses:
         '202':
           $ref: '#/responses/resource-created-response'
@@ -431,15 +309,9 @@ paths:
           schema:
             $ref: '#/definitions/business-problem'
         default:
-<<<<<<< HEAD
-          $ref: '#/responses/default-error-response'      
-  /orders/card-activations: 
-    post: 
-=======
           $ref: '#/responses/default-error-response'
-  /card-activations:
+  /orders/card-activations:
     post:
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
       summary: "Creates request for card activation and automatically change card lifecycle status to active. Operation returns command-result with order id, validation errors if there are any, and current order status."
       tags:
          - Card activations
@@ -463,15 +335,9 @@ paths:
           schema:
             $ref: '#/definitions/business-problem'
         default:
-<<<<<<< HEAD
-          $ref: '#/responses/default-error-response' 
-  /orders/card-terminations: 
-    post: 
-=======
           $ref: '#/responses/default-error-response'
-  /card-terminations:
+  /orders/card-terminations:
     post:
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
       summary: "Creates request for card termination and automatically change card lifecycle status to terminated. Operation returns command-result with order id, validation errors if there are any, and current order status."
       tags:
           - Card terminations
@@ -482,13 +348,8 @@ paths:
           in: "body"
           name: "cmd"
           required: true
-<<<<<<< HEAD
-          schema: 
-            $ref: "#/definitions/initiate-card-termination-command"
-=======
           schema:
-            $ref: "#/definitions/request-card-termination-command"
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
+            $ref: "#/definitions/initiate-card-termination-command"
       responses:
         '202':
           $ref: '#/responses/resource-created-response'
@@ -500,58 +361,10 @@ paths:
           schema:
             $ref: '#/definitions/business-problem'
         default:
-<<<<<<< HEAD
-          $ref: '#/responses/default-error-response'   
-
-  /orders/card-replacements: 
-    post: 
-=======
           $ref: '#/responses/default-error-response'
-  /card-deblockades/{order-number}:
-    get:
-      summary: "Returns details of card deblocking request for provided parameter."
-      tags:
-          - Card deblockades
-      operationId: CardDeblockades_Get
-      deprecated: true
-      parameters:
-        -
-          description: "Number of order to fetch."
-          in: "path"
-          name: "order-number"
-          required: true
-          type: "string"
-      responses:
-          '200':
-            description: Success
-            schema:
-              $ref: '#/definitions/card-deblockade'
-          default:
-            $ref: '#/responses/default-error-response'
-  /card-terminations/{order-number}:
-    get:
-       summary: "Returns details of card termination request for provided parameter."
-       deprecated: true
-       tags:
-          - Card terminations
-       operationId: CardTerminations_Get
-       parameters:
-         -
-            description: "Number of order to fetch."
-            in: "path"
-            name: "order-number"
-            required: true
-            type: "string"
-       responses:
-          '200':
-            description: Success
-            schema:
-              $ref: '#/definitions/card-termination'
-          default:
-            $ref: '#/responses/default-error-response'
-  /card-replacements:
+
+  /orders/card-replacements:
     post:
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
        summary: "Creates request for card replacement and returns command-result with order id, validation errors if there are any, and current order status."
        tags:
           - Card replacements
@@ -575,33 +388,8 @@ paths:
           schema:
             $ref: '#/definitions/business-problem'
         default:
-<<<<<<< HEAD
-          $ref: '#/responses/default-error-response' 
-
-=======
           $ref: '#/responses/default-error-response'
-  /card-replacements/{order-number}:
-    get:
-        summary: "Returns details of card replacement request for provided parameter."
-        tags:
-          - Card replacements
-        operationId: CardReplacements_Get
-        deprecated: true
-        parameters:
-          -
-            description: "Number of order to fetch."
-            in: "path"
-            name: "order-number"
-            required: true
-            type: "string"
-        responses:
-          '200':
-            description: Success
-            schema:
-              $ref: '#/definitions/card-replacement'
-          default:
-            $ref: '#/responses/default-error-response'
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
+
   /mandate-assignments:
     post:
         summary: Use this operation to initiate assignment of mandate.
@@ -651,53 +439,9 @@ paths:
             schema:
                $ref: '#/definitions/mandate-assigments-list'
           default:
-<<<<<<< HEAD
-               $ref: '#/responses/default-error-response'     
+               $ref: '#/responses/default-error-response'
 
 
-=======
-               $ref: '#/responses/default-error-response'
-  /mandate-assignments/{order-number}:
-    get:
-        summary: Use this operation to get mandate assigment.
-        tags:
-          - Mandate assignments
-        deprecated: false
-        operationId: MandateAssignments_Get
-        parameters:
-          - in: path
-            name: order-number
-            required: true
-            type: string
-            description: Order number
-        responses:
-          '200':
-             description: OK
-             schema:
-               $ref: '#/definitions/mandate-assigment'
-          default:
-               $ref: '#/responses/default-error-response'
-  /mandate-assignments/{order-number}/cancel:
-    post:
-        summary: Use this operation to cancel assignment of mandate.
-        tags:
-          - Mandate assignments
-        deprecated: false
-        operationId: MandateAssignments_Cancel
-        parameters:
-          - in: path
-            name: order-number
-            required: true
-            type: string
-            description: Order number
-        responses:
-          '204':
-            description: No content
-            schema:
-                $ref: '#/definitions/business-problem'
-          default:
-                $ref: '#/responses/default-error-response'
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
   /standing-orders:
     get:
       summary: Gets customer standing orders.
@@ -836,36 +580,10 @@ paths:
             schema:
                 $ref: '#/definitions/business-problem'
         default:
-<<<<<<< HEAD
-                $ref: '#/responses/default-error-response'  
-                
+                $ref: '#/responses/default-error-response'
+
 
   /orders/current-account-terminations:
-=======
-                $ref: '#/responses/default-error-response'
-  /account-terminations:
-    get:
-      summary: Gets the list of account termination requests
-      tags:
-        - Account terminations
-      deprecated: false
-      operationId: AccountTerminations_GetList
-      parameters:
-        - $ref: "#/parameters/page-number-param"
-        - $ref: "#/parameters/page-size-param"
-        - $ref: "#/parameters/sort-by-param"
-        - $ref: "#/parameters/sort-order-param"
-        - $ref: "#/parameters/include-param"
-        - $ref: "#/parameters/trim-param"
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/account-termination-list'
-        default:
-          $ref: '#/responses/default-error-response'
-  /current-account-terminations:
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
     post:
       summary: Use this operation to initiate current account termination.
       tags:
@@ -991,50 +709,8 @@ paths:
             $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
-<<<<<<< HEAD
 
   /orders/deposit-payouts:
-=======
-  /arrangement-amendments/{order-number}/cancel:
-    post:
-      summary: Use this operation to cancel amendment request.
-      tags:
-        - Arrangement amendments
-      deprecated: false
-      operationId: ArrangementAmendments_Cancel
-      parameters:
-        - in: path
-          name: order-number
-          required: true
-          type: string
-          description: Order number.
-      responses:
-        '204':
-          description: No content
-        default:
-          $ref: '#/responses/default-error-response'
-  /arrangement-amendments/{order-number}:
-    get:
-      summary: Gets amendment request with detailed information. Use this operation to get amendment request details.
-      tags:
-        - Arrangement amendments
-      deprecated: false
-      operationId: ArrangementAmendments_Get
-      parameters:
-        - in: path
-          name: order-number
-          required: true
-          type: string
-          description: Order number.
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/arrangement-amendment'
-        default:
-          $ref: '#/responses/default-error-response'
-  /deposit-payouts:
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
     post:
       summary: Use this operation to create deposit payout request.
       tags:
@@ -1149,7 +825,7 @@ responses:
     description: Request has been accepted for processing
     schema:
       $ref: '#/definitions/identifier'
-    
+
   default-error-response:
     description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]().
 parameters:
@@ -1221,11 +897,7 @@ parameters:
     - desc
     x-asee-common: true
   sort-by-param:
-<<<<<<< HEAD
     description: Attribute of the collection item to sort by. For more information see general guidance on [sorting](common-getstarted.html#sorting)
-=======
-    description: Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]()
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
     in: query
     name: sort-by
     type: string
@@ -1248,7 +920,6 @@ parameters:
       type: string
     collectionFormat: csv
     x-asee-common: true
-<<<<<<< HEAD
 
 definitions:
 
@@ -1270,20 +941,170 @@ definitions:
         type: string
       order-type:
         description: Order type.
-=======
-  customer-number-param:
-    name: customer-number
-    in: query
-    description: Customer number.
-    required: true
-    type: string
-  schema-id-param:
-    description: Unique schema identifier
-    in: path
-    name: schema-id
-    required: true
-    type: string
-definitions:
+        type: string
+        x-asee-compliance: This should be related to enum.
+      creation-date:
+        description: Order posting date
+        type: string
+      status:
+        description: Status of request. For complete list of possible values see [workitem-processing-status]() classification.
+        type: string
+      description:
+        description: Order description.
+        type: string
+    type: object
+
+# ORDER BASE
+  order-list:
+    description: List of self-care orders
+    properties:
+      items:
+        items:
+          $ref: "#/definitions/order"
+        type: array
+    example:
+        total-count: 2
+        page-size: 10
+        page: 1
+        total-pages: 1
+        sort-order: desc
+        sort-by: created-on
+        items:
+        -
+           order-number: WI0000499335
+           authorized-customer-number: MIGR00002
+           authorized-customer-name: Mileva Grujic
+           owner-customer-number: BRVU00002
+           owner-customer-name: Branislav Vukovic
+           arrangement-number: 0064200001930
+           product-code: MasterCard
+           description:
+           status: proposed
+           customer-friendly-status: active
+           creation-date: 2015-10-20T23:22:10
+        -
+           order-number: WI0000499748
+           authorized-customer-number: MIGR00002
+           authorized-customer-name: Mileva Grujic
+           owner-customer-number: BRVU00002
+           owner-customer-name: Branislav Vukovic
+           arrangement-number: 0064200001930
+           product-code: MasterCard
+           description:
+           status: proposed
+           customer-friendly-status: active
+           creation-date: 2015-10-20T23:22:10
+  order:
+    description: Self-care order that instructs bank to act within existing arrangement terms. Contains information common to all kinds of self-care orders
+    discriminator: kind
+    required: [kind]
+    properties:
+      order-number:
+        description: Unique identifier for order workitem
+        type: string
+        readOnly: true
+      kind:
+        description: |
+          Enumeration that distinguishes different kinds of self-care orders
+          For a list of possible values see [order-kinds](offer-classifications.html#application-kinds) enumeration.
+        type: string
+        enum: [card-issuance, current-account-opening, loan-origination]
+        x-asee-enumeration: order-kinds
+      status:
+        description: |
+          Status of order.
+          For a list of possible values see [order-statuses](offer-classifications.html#order-statuses) enumeration.
+        type: string
+        enum: [accepted, active, rejected, canceled, completed, expired]
+        x-asee-enumeration: order-statuses
+        readOnly: true
+      customer-number:
+        description: Unique identifier of ordering customer
+        type: string
+      customer-name:
+        description: Name of ordering customer
+        type: string
+      created:
+        description: Date and time when order was recorded in the system
+        format: date-time
+        type: string
+        readOnly: true
+      expiration-date:
+        description: Date and time when order expires
+        format: date-time
+        type: string
+        readOnly: true
+      status-changed:
+        description: Date and time when order status changed
+        format: date-time
+        type: string
+        readOnly: true
+      last-modified:
+        description: Date and time when order was last modified
+        format: date-time
+        type: string
+        readOnly: true
+      comments:
+        description: Comments
+        type: string
+      account-arrangement-number:
+        description: Unique identifier of arrangement that this order is related to
+        type: string
+      product-code:
+        description: A code or short name by which a product can be identified
+        type: string
+      description:
+         description: "Description."
+         type: "string"
+    example:
+      order-number: WI0000499335
+      authorized-customer-number: MIGR00002
+      authorized-customer-name: Mileva Grujic
+      customer-number: BRVU00002
+      customer-name: Branislav Vukovic
+      arrangement-number: 0064200001930
+      product-code: MasterCard
+      description:
+      status: proposed
+      customer-friendly-status: active
+      creation-date: 2015-10-20T23:22:10
+  cancel-order-command:
+    description:  Parameters for order cancelation
+    properties:
+      cancelation-reason:
+        description: Customer's reason to cancel active application
+        type: string
+        x-asee-classification: cancelation-reasons
+      kind:
+        description: |
+          Enumeration that distinguishes different kinds of self-care orders
+          For complete list of possible values see [order-kinds](order-classifications.html#order-kinds) enumeration.
+        type: string
+        enum: [card-issuances]
+        x-asee-enumeration: order-kinds
+  attach-documents-command:
+    description: Command with specification of attached documents
+    properties:
+      documents:
+        type: array
+        items:
+          $ref: '#/definitions/attachment'
+  attachment:
+    description: Details of attachment
+    properties:
+      attachment-url:
+        type: string
+        format: url
+        description: URL of document content in DMS
+      attachment-id:
+        type: string
+        description: Unique identifier of document in DMS
+      document-type:
+        type: string
+        x-asse-classification: document-types
+        description: "Specific purpose of this document. For complete list of possible values see [document-types](order-classifications.html#document-types) classification."
+
+# CARDS
   request-card-replacement-command:
       description: Contains parameters for request creation.
       properties:
@@ -1351,276 +1172,7 @@ definitions:
           customer-friendly-status: active
           status-date: '2015-06-17T00:00:00'
           creation-date: '2015-06-17T10:44:57.867'
-  classification-value:
-      description: Classification value.
-      properties:
-        code:
-          description: Code of classification value.
-          type: string
-        literal:
-          description: Literal.
-          type: string
-        description:
-          description: Description.
-          type: string
-        id:
-          description: Identifier of classification value.
-          type: string
-        parent-id:
-          description: Parent classification value id.
-          type: string
-        ordinal:
-          description: Ordinal number.
-          type: string
-      type: object
-  classification:
-    description: Classification schema used in API contracts.
-    properties:
-      API:
-        description: Name of Api in which classification shema is used.
-        type: string
-      description:
-        description: Shema description.
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
-        type: string
-        x-asee-compliance: This should be related to enum.
-      creation-date:
-        description: Order posting date
-        type: string
-<<<<<<< HEAD
-      status:
-        description: Status of request. For complete list of possible values see [workitem-processing-status]() classification.
-        type: string
-      description:
-        description: Order description.
-        type: string
-=======
-      name:
-        description: Name of shema.
-        type: string
-      values:
-        description: List of classification values.
-        items:
-          $ref: "#/definitions/classification-value"
-        type: array
-    type: "object"
-  classification-list:
-    description: List of classification shemas.
-    properties:
-      items:
-        description: List of all classification schemas.
-        items:
-          $ref: "#/definitions/classification"
-        type: "array"
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
-    type: object
 
-# ORDER BASE
-  order-list: 
-    description: List of self-care orders
-    properties: 
-      items: 
-        items: 
-          $ref: "#/definitions/order"
-        type: array
-    example:
-<<<<<<< HEAD
-        total-count: 2
-        page-size: 10
-        page: 1
-        total-pages: 1
-        sort-order: desc
-        sort-by: created-on
-        items:
-        - 
-           order-number: WI0000499335
-           authorized-customer-number: MIGR00002
-           authorized-customer-name: Mileva Grujic
-           owner-customer-number: BRVU00002
-           owner-customer-name: Branislav Vukovic
-           arrangement-number: 0064200001930
-           product-code: MasterCard
-           description: 
-           status: proposed
-           customer-friendly-status: active
-           creation-date: 2015-10-20T23:22:10
-        - 
-           order-number: WI0000499748
-           authorized-customer-number: MIGR00002
-           authorized-customer-name: Mileva Grujic
-           owner-customer-number: BRVU00002
-           owner-customer-name: Branislav Vukovic
-           arrangement-number: 0064200001930
-           product-code: MasterCard
-           description: 
-           status: proposed
-           customer-friendly-status: active
-           creation-date: 2015-10-20T23:22:10
-  order: 
-    description: Self-care order that instructs bank to act within existing arrangement terms. Contains information common to all kinds of self-care orders
-    discriminator: kind
-    required: [kind]
-    properties: 
-      order-number: 
-        description: Unique identifier for order workitem
-        type: string
-        readOnly: true
-      kind:
-        description: |
-          Enumeration that distinguishes different kinds of self-care orders
-          For a list of possible values see [order-kinds](offer-classifications.html#application-kinds) enumeration.
-        type: string
-        enum: [card-issuance, current-account-opening, loan-origination]
-        x-asee-enumeration: order-kinds
-      status:
-        description: |
-          Status of order.
-          For a list of possible values see [order-statuses](offer-classifications.html#order-statuses) enumeration.
-        type: string
-        enum: [accepted, active, rejected, canceled, completed, expired]
-        x-asee-enumeration: order-statuses
-        readOnly: true      
-      customer-number:
-        description: Unique identifier of ordering customer
-        type: string
-      customer-name:
-        description: Name of ordering customer
-        type: string    
-      created:
-        description: Date and time when order was recorded in the system
-        format: date-time
-        type: string
-        readOnly: true
-      expiration-date:
-        description: Date and time when order expires
-        format: date-time
-        type: string
-        readOnly: true
-      status-changed:
-        description: Date and time when order status changed
-        format: date-time
-        type: string
-        readOnly: true
-      last-modified:
-        description: Date and time when order was last modified
-        format: date-time
-        type: string
-        readOnly: true
-      comments:
-        description: Comments
-        type: string        
-      account-arrangement-number: 
-        description: Unique identifier of arrangement that this order is related to
-        type: string
-      product-code:
-        description: A code or short name by which a product can be identified
-        type: string
-      description: 
-         description: "Description."
-         type: "string"
-    example:
-      order-number: WI0000499335
-      authorized-customer-number: MIGR00002
-      authorized-customer-name: Mileva Grujic
-      customer-number: BRVU00002
-      customer-name: Branislav Vukovic
-      arrangement-number: 0064200001930
-      product-code: MasterCard
-      description: 
-      status: proposed
-      customer-friendly-status: active
-      creation-date: 2015-10-20T23:22:10
-  cancel-order-command:
-    description:  Parameters for order cancelation
-    properties:
-      cancelation-reason:
-        description: Customer's reason to cancel active application
-        type: string
-        x-asee-classification: cancelation-reasons
-      kind:
-        description: |
-          Enumeration that distinguishes different kinds of self-care orders
-          For complete list of possible values see [order-kinds](order-classifications.html#order-kinds) enumeration.
-        type: string
-        enum: [card-issuances]
-        x-asee-enumeration: order-kinds
-  attach-documents-command:
-    description: Command with specification of attached documents
-    properties:
-      documents:
-        type: array
-        items:
-          $ref: '#/definitions/attachment'
-  attachment:
-    description: Details of attachment
-    properties:
-      attachment-url:
-        type: string
-        format: url
-        description: URL of document content in DMS
-      attachment-id:
-        type: string
-        description: Unique identifier of document in DMS
-      document-type:
-        type: string
-        x-asse-classification: document-types
-        description: "Specific purpose of this document. For complete list of possible values see [document-types](order-classifications.html#document-types) classification."
-
-# CARDS
-  request-card-replacement-command: 
-      description: Contains parameters for request creation.
-      properties: 
-        card-id: 
-          description: "Unique identifier of card which replacement is initiated."
-          type: "string"
-        embossement-line-1: 
-          description: "First line of embossed text on the card."
-          type: "string"
-        replacement-reason: 
-          description: "Replacement reason. For complete list of possible values see [card-replacement-reason]() classification."
-          type: "string"
-        description: 
-          description: "Additional description."
-          type: "string"
-      required: 
-        - "card-id"
-        - "replacement-reason"
-      type: "object"
-  card-replacement: 
-      description: "Contains details of card replacement request."
-      properties: 
-        order-number: 
-          description: "Order number."
-          type: "string"
-        serial-number: 
-          description: "Card serial number."
-          type: "string"
-        embossment-line-1: 
-          description: "First line of embossed text on the card."
-          type: "string"
-        replacement-reason: 
-          description: "Reason for card replacement."
-          type: "string"
-        description: 
-          description: "Description."
-          type: "string"
-        status: 
-          description: "Status of request. For complete list of possible values see [workitem-processing-status]() classification."
-          type: "string"
-        customer-friendly-status: 
-          description: "Customer friendly name for status of request. See classification: "
-          type: "string"
-          enum:
-=======
-      items:
-        -
-          api: Customer Order
-          description: This classification contains reasons for card replacement.
-          name: card-replacement-reason
-        -
-          api: Customer Order
-          description: This classification contains reasons for card blockade.
-          name: card-blockade-reason
   request-card-activation-command:
     description: Contains parameters for request creation.
     properties:
@@ -1633,87 +1185,9 @@ definitions:
     required:
        - "card-id"
     type: "object"
-  card-deblockade:
-    description: "Contains details of card deblocking request."
-    properties:
-      order-number:
-        description: "Order number."
-        type: "string"
-      serial-number:
-        description: "Card serial number."
-        type: "string"
-      description:
-        description: "Description."
-        type: "string"
-      status:
-        description: "Status of request. For complete list of possible values see [workitem-processing-status]() classification."
-        type: "string"
-      customer-friendly-status:
-        description: "Customer friendly name for status of request. See classification: "
-        type: "string"
-        enum:
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
-          - active
-          - abandoned
-          - expired
-          - suspended
-          - complete
-          - rejected
-<<<<<<< HEAD
-        status-date: 
-          description: "Date of last status change."
-          format: "date-time"
-          type: "string"
-        creation-date: 
-          description: "Creation date of request."
-          format: "date-time"
-          type: "string"
-      type: "object"
-      example:
-          order-number: CSR-56000078430001
-          serial-number: '9891770100056846'
-          description: ''
-          status: accepted
-          customer-friendly-status: active
-          status-date: '2015-06-17T00:00:00'
-          creation-date: '2015-06-17T10:44:57.867'
 
-  request-card-activation-command: 
-    description: Contains parameters for request creation.
-    properties: 
-      card-id: 
-        description: "Unique identifier of card which activation is initiated."
-        type: "string"
-      description: 
-        description: "Additional description."
-=======
-      status-date:
-        description: "Date of last status change."
-        format: "date-time"
-        type: "string"
-      creation-date:
-        description: "Creation date of request."
-        format: "date-time"
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
-        type: "string"
-    required: 
-       - "card-id"
-    type: "object"
-<<<<<<< HEAD
 
-       
-  initiate-card-termination-command: 
-=======
-    example:
-       order-number: CSR-56000078541001
-       serial-number: '9891770100056846'
-       description: ''
-       status: accepted
-       customer-friendly-status: active
-       status-date: '2015-06-17T00:00:00'
-       creation-date: '2015-06-17T10:44:57.867'
-  request-card-termination-command:
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
+  initiate-card-termination-command:
       description: Contains parameters for request creation.
       properties:
         card-id:
@@ -1767,12 +1241,8 @@ definitions:
        customer-friendly-status: active
        status-date: '2015-06-17T00:00:00'
        creation-date: '2015-06-17T10:44:57.867'
-<<<<<<< HEAD
-       
-  initiate-card-deblockade-command: 
-=======
-  request-card-deblockade-command:
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
+
+  initiate-card-deblockade-command:
     description: Contains parameters for request creation.
     properties:
       card-id:
@@ -1784,17 +1254,10 @@ definitions:
     required:
        - "card-id"
     type: "object"
-<<<<<<< HEAD
-  card-deblockade: 
+  card-deblockade:
     description: "Contains details of card deblocking request."
-    properties: 
-      order-number: 
-=======
-  card-blockade:
-    description: "Contains details of card blocking request."
     properties:
       order-number:
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
         description: "Order number."
         type: "string"
       serial-number:
@@ -1832,25 +1295,24 @@ definitions:
        status: accepted
        customer-friendly-status: active
        status-date: '2015-06-17T00:00:00'
-<<<<<<< HEAD
-       creation-date: '2015-06-17T10:44:57.867'    
-       
-  card-blockade: 
+       creation-date: '2015-06-17T10:44:57.867'
+
+  card-blockade:
     description: "Contains details of card blocking request."
-    properties: 
-      order-number: 
+    properties:
+      order-number:
         description: "Order number."
         type: "string"
-      serial-number: 
+      serial-number:
         description: "Card serial number."
         type: "string"
-      description: 
+      description:
         description: "Description."
         type: "string"
-      status: 
+      status:
         description: "Status of request. For complete list of possible values see [workitem-processing-status]() classification."
         type: "string"
-      customer-friendly-status: 
+      customer-friendly-status:
         description: "Customer friendly name for status of request. See classification: "
         type: "string"
         enum:
@@ -1860,14 +1322,24 @@ definitions:
           - suspended
           - complete
           - rejected
-      status-date: 
+      status-date:
         description: "Date of last status change."
         format: "date-time"
         type: "string"
-      creation-date: 
-=======
+      creation-date:
+        description: "Creation date of request."
+        format: "date-time"
+        type: "string"
+    type: "object"
+    example:
+       order-number: CSR-56000085677009
+       serial-number: '9891770100056722'
+       description: ''
+       status: accepted
+       customer-friendly-status: active
+       status-date: '2015-06-17T00:00:00'
        creation-date: '2015-06-17T10:44:57.867'
-  request-card-blockade-command:
+  initiate-card-blockade-command:
       description: Contains parameters for request creation.
       properties:
         card-id:
@@ -1883,103 +1355,41 @@ definitions:
         - "card-id"
         - "blockade-reason"
       type: "object"
-  additional-card-issuance:
-    description: "Contains details of additional card request."
-    properties:
-      order-number:
-        description: "Order number."
-        type: "string"
-      authorized-customer-number:
-        description: "Customer number of client for whom is created request of additional card."
-        type: "string"
-      authorized-customer-name:
-        description: "Customer name of client for whom is created request of additional card."
-        type: "string"
-      owner-customer-number:
-        description: "Customer number of owner of arrangement."
-        type: "string"
-      owner-customer-name:
-        description: "Customer name of owner of arrangement."
-        type: "string"
-      arrangement-number:
-        description: "Arrangement number."
-        type: "string"
-      product-code:
-        description: "Product code"
-        type: "string"
-      description:
-         description: "Description."
-         type: "string"
-      status:
-        description: "Status of request. For complete list of possible values see [workitem-processing-status]() classification"
-        type: "string"
-        x-asse-classification:
-      customer-friendly-status:
-        description: "Customer friendly name for status of request. See classification: "
-        type: "string"
-        enum:
-        - active
-        - abandoned
-        - expired
-        - suspended
-        - complete
-        - rejected
-      creation-date:
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
-        description: "Creation date of request."
-        format: "date-time"
-        type: "string"
-    type: "object"
-    example:
-<<<<<<< HEAD
-       order-number: CSR-56000085677009
-       serial-number: '9891770100056722'
-       description: ''
-       status: accepted
-       customer-friendly-status: active
-       status-date: '2015-06-17T00:00:00'
-       creation-date: '2015-06-17T10:44:57.867'
-  initiate-card-blockade-command: 
-      description: Contains parameters for request creation.
-      properties: 
-        card-id: 
-          description: "Unique identifier of card blocking is initiated."
-          type: "string"
-        blockade-reason: 
-          description: "Card blockade reason. For a complete list of possible values see [card-blockade-reason]() classification."
-          type: "string"
-        description: 
-          description: "Additional description."
-          type: "string"
-      required: 
-        - "card-id"
-        - "blockade-reason"
-      type: "object"
-          
 
-  initiate-card-issuance-command: 
+
+  initiate-card-issuance-command:
     description: Contains parameters for request creation.
-    properties: 
-      authorized-customer-number: 
+    properties:
+      authorized-customer-number:
         description: "Identifier of customer who is being authorized for additional card."
         type: "string"
-      account-number: 
+      account-number:
         description: "Identifies the arrangement to which new card will be linked."
         type: "string"
-    required: 
+    required:
         - authorized-customer-number
         - account-number
     example:
       authorized-customer-number: MIGR00002
       arrangement-number: 0064200001930
-  card-issuance: 
+  card-issuance:
     allOf:
       - $ref: '#/definitions/order'
     description: Order of additional payment card
-    properties: 
-      authorized: 
+    properties:
+      authorized:
         description: Customer number of authorized person who will be card holder
-=======
+        type: string
+      authorized-name:
+        description: Name of authorized person who will be card holder
+        type: string
+      account-number:
+        description: Unique identifier of account arrangement such as current account or credit facility
+        type: string
+      product-code:
+        description: "Product code"
+        type: string
+    example:
       order-number: WI0000499335
       authorized-customer-number: MIGR00002
       authorized-customer-name: Mileva Grujic
@@ -1988,344 +1398,6 @@ definitions:
       arrangement-number: 0064200001930
       product-code: MasterCard
       description:
-      status: proposed
-      customer-friendly-status: active
-      creation-date: 2015-10-20T23:22:10
-  additional-card-issuance-list:
-    description: "Contains list of details of additional card requests."
-    properties:
-      items:
-        items:
-          $ref: "#/definitions/additional-card-issuance"
-        type: "array"
-    type: "object"
-    example:
-        total-count: 2
-        page-size: 10
-        page: 1
-        total-pages: 1
-        sort-order: desc
-        sort-by: created-on
-        items:
-        -
-           order-number: WI0000499335
-           authorized-customer-number: MIGR00002
-           authorized-customer-name: Mileva Grujic
-           owner-customer-number: BRVU00002
-           owner-customer-name: Branislav Vukovic
-           arrangement-number: 0064200001930
-           product-code: MasterCard
-           description:
-           status: proposed
-           customer-friendly-status: active
-           creation-date: 2015-10-20T23:22:10
-        -
-           order-number: WI0000499748
-           authorized-customer-number: MIGR00002
-           authorized-customer-name: Mileva Grujic
-           owner-customer-number: BRVU00002
-           owner-customer-name: Branislav Vukovic
-           arrangement-number: 0064200001930
-           product-code: MasterCard
-           description:
-           status: proposed
-           customer-friendly-status: active
-           creation-date: 2015-10-20T23:22:10
-  request-additional-card-issuance-command:
-    description: Contains parameters for request creation.
-    properties:
-      authorized-customer-number:
-        description: "Identifier of customer who is being authorized for additional card."
-        type: "string"
-      arrangement-number:
-        description: "Identifies the arrangement to which new card will be linked."
-        type: "string"
-    required:
-        - "authorized-customer-number"
-        - "arrangement-number"
-    type: "object"
-    example:
-      authorized-customer-number: MIGR00002
-      arrangement-number: 0064200001930
-  command-result:
-    x-asee-compliance: Missing object description. Description of properties missing too.
-    properties:
-      id:
-        type: string
-        readOnly: true
-      resource-status:
-        type: string
-        readOnly: true
-    example:
-      id: WI0000499335
-      resource-status: active
-  business-problem:
-    x-asee-compliance: Missing object description. Description of properties missing too.
-    properties:
-      problem:
-        type: string
-      message:
-        type: string
-      details:
-        type: string
-    example:
-      problem: active-request-already-exists
-      message: Request that you are trying to record already exists and it's in one of active status.
-      details:
-  initiate-mandate-request-command:
-    description: Parameters for new mandates initiation.
-    properties:
-      initiator-customer-number:
-        description: The initiator person customer number. Probably account owner.
-        type: string
-      items:
-        description: List of mandates to create.
-        items:
-          $ref: '#/definitions/mandate'
-        type: array
-    required:
-      - initiator-customer-number
-    type: object
-  mandate:
-    description: Contains information about customer mandate.
-    properties:
-      arrangement-number:
-        description: Arrangement number.
-        type: string
-      nickname:
-        description: Mandate nickname, will be presented to customer as arrangement name.
-        type: string
-      customer-number:
-        description: Customer number of authorised person.
-        type: string
-  standing-order-list:
-    description: Standing order list.
-    properties:
-      total-count:
-        description: Total count.
-        format: int32
-        type: integer
-      page-size:
-        description: Size of the page.
-        format: int32
-        type: integer
-      page-number:
-        description: Page number.
-        format: int32
-        type: integer
-      total-pages:
-        description: Total pages.
-        format: int32
-        type: integer
-      items:
-        description: List of standing orders
-        items:
-          $ref: '#/definitions/standing-order'
-        type: array
-  standing-order:
-    description: Standing order item.
-    properties:
-      arrangement-number:
-        description: Arrangement number.
-        type: string
-      nickname:
-        description: Standing order nickname.
-        type: string
-      customer-number:
-        description: Standing order owner customer number.
-        type: string
-      customer-name:
-        description: Standing order owner customer name.
-        type: string
-      transfer-details:
-        description: Transfer details.
-        $ref: '#/definitions/credit-transfer'
-      first-payment-date:
-        description: First payment date.
-        format: date-time
-        type: string
-      frequency:
-        description: Execution frequency for periodical standing order.
-        $ref: '#/definitions/simple-time-period'
-      next-payment-date:
-        description: Next payment date.
-        format: date-time
-        type: string
-      start-date:
-        description: Start date. This is activation date.
-        format: date-time
-        type: string
-      end-date:
-        description: End date. This is standing order closing date.
-        format: date-time
-        type: string
-      lifecycle-status:
-        description: Standing order status.
-        type: string
-        x-asee-compliance: This should be related to some classification or enum.
-    required:
-      - nickname
-      - transfer-details
-      - start-date
-      - end-date
-    type: object
-  change-standing-order-nickname-command:
-    description: Request for changing standing order nickname.
-    properties:
-      nickname:
-        description: Standing order (arrangement) nickname.
-        type: string
-    required:
-      - nickname
-    type: object
-  request-deposit-payout-command:
-    description: Request for initiating deposit payout.
-    properties:
-      account:
-        description: Number order which will be terminated.
-        type: string
-      currency:
-        description: Currency.
-        type: string
-    required:
-      - account
-      - currency
-    type: object
-  initiate-standing-order-command:
-    description: Parameters for standing order initiation.
-    properties:
-      nickname:
-        description: Standing order (arrangement) nickname.
-        type: string
-      customer-number:
-        description: Standing order owner customer number.
-        type: string
-      product-code:
-        description: Product code. Unique identifier of product with default terms and settings.
-        type: string
-      transfer-details:
-        description: Transfer details.
-        $ref: '#/definitions/credit-transfer'
-      frequency:
-        description: Execution frequency for periodical standing order.
-        $ref: '#/definitions/simple-time-period'
-      payment-date:
-        description: Payment date.
-        format: date-time
-        type: string
-      start-date:
-        description: Start date. This is standing order activation date.
-        format: date-time
-        type: string
-      end-date:
-        description: End date. This is standing order closing date.
-        format: date-time
-        type: string
-      first-payment-date:
-        description: First payment date.
-        format: date-time
-        type: string
-    required:
-      - nickname
-      - product-code
-      - transfer-details
-      - start-date
-      - end-date
-    type: object
-  account-termination-list:
-    properties:
-      total-count:
-        description: Total count.
-        format: int32
-        type: integer
-      page-size:
-        description: Size of the page.
-        format: int32
-        type: integer
-      page-number:
-        description: Page number.
-        format: int32
-        type: integer
-      total-pages:
-        description: Total pages.
-        format: int32
-        type: integer
-      items:
-        description: List of account termination requests
-        items:
-          $ref: '#/definitions/account-termination'
-        type: array
-    type: object
-  account-termination:
-    properties:
-      order-number:
-        description: Order number of termination request.
-        type: string
-      kind:
-        description: Account termination request kind.
-        enum:
-          - current-account
-          - bundled-account
-          - deposit-account
-          - credit-facility
-          - loan
-        type: string
-      status:
-        description: Status of request. For complete list of possible values see [workitem-processing-status]() classification.
-        type: string
-      product-number:
-        x-asee-compliance: Why is this property relevant to termination process? It is not needed and should be removed.
-        description: A code or short name by which a product can be identified.
-        type: string
-      product-name:
-        x-asee-compliance: Why is this property relevant to termination process? It is not needed and should be removed.
-        description: The primary name assigned to the product.  This name is used in reports and documents referring to the product.
-        type: string
-      creation-date:
-        description: Request creation date.
-        format: date-time
-        type: string
-      expiration-date:
-        description: Request expiration date.
-        format: date-time
-        type: string
-      last-modification-date:
-        description: Last modified date
-        format: date-time
-        type: string
-      customer-name:
-        description: Customer name of arrangement owner.
-        type: string
-      customer-number:
-        description: Customer number of arrangement owner.
-        type: string
-      account-number:
-        description: The number of account to terminate.
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
-        type: string
-      authorized-name: 
-        description: Name of authorized person who will be card holder
-        type: string       
-      account-number: 
-        description: Unique identifier of account arrangement such as current account or credit facility
-        type: string
-<<<<<<< HEAD
-      product-code: 
-        description: "Product code"
-=======
-      foreign-currency-settlement-account-number:
-        description: Settlement account number for foreign currency.
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
-        type: string
-    example:
-      order-number: WI0000499335
-      authorized-customer-number: MIGR00002
-      authorized-customer-name: Mileva Grujic
-      owner-customer-number: BRVU00002
-      owner-customer-name: Branislav Vukovic
-      arrangement-number: 0064200001930
-      product-code: MasterCard
-      description: 
       status: active
       created: 2015-10-20T23:22:10
 
@@ -2392,7 +1464,7 @@ definitions:
         type: string
     type: object
 
-# MANDATES  
+# MANDATES
   initiate-mandate-request-command:
     description: Parameters for new mandates initiation.
     properties:
@@ -2566,7 +1638,7 @@ definitions:
         description: Number order which will be terminated.
         type: string
       currency:
-        description: Currency. 
+        description: Currency.
         type: string
     required:
       - account
@@ -2611,7 +1683,7 @@ definitions:
           - credit-facility
           - loan
         type: string
-      status: 
+      status:
         description: Status of request. For complete list of possible values see [workitem-processing-status]() classification.
         type: string
       product-number:
@@ -2647,7 +1719,7 @@ definitions:
         description: Settlement account number for domestic currency.
         type: string
       foreign-currency-settlement-account-number:
-        description: Settlement account number for foreign currency. 
+        description: Settlement account number for foreign currency.
         type: string
       convert-to-domestic-currency:
         description: Indicates if all foreign currency assets should be converted to domestic currency on settlement.
@@ -2656,7 +1728,7 @@ definitions:
         description: Indicates if account assets will be withdrawn by cash payout.
         type: boolean
     type: object
-    
+
 # CALCULATIONS
   deposit-termination-calculation-request:
     description: Parameters for deposit termination calculation.
@@ -2822,10 +1894,9 @@ definitions:
         description: The reverse tax.
         format: double
         type: number
-<<<<<<< HEAD
-    type: object    
+    type: object
 
-# STANDING ORDER   
+# STANDING ORDER
   initiate-standing-order-command:
     description: Parameters for standing order initiation.
     properties:
@@ -2839,22 +1910,22 @@ definitions:
         description: Product code. Unique identifier of product with default terms and settings.
         type: string
       transfer-details:
-        description: Transfer details. 
+        description: Transfer details.
         $ref: '#/definitions/credit-transfer'
       period:
         description: Execution frequency for periodical standing order.
         type: string
         format: ISO 8601 duration
       payment-date:
-        description: Payment date.  
+        description: Payment date.
         format: date-time
         type: string
       start-date:
-        description: Start date. This is standing order activation date.  
+        description: Start date. This is standing order activation date.
         format: date-time
         type: string
       end-date:
-        description: End date. This is standing order closing date.  
+        description: End date. This is standing order closing date.
         format: date-time
         type: string
       first-payment-date:
@@ -2908,7 +1979,7 @@ definitions:
         description: Standing order owner customer name.
         type: string
       transfer-details:
-        description: Transfer details. 
+        description: Transfer details.
         $ref: '#/definitions/credit-transfer'
       first-payment-date:
         description: First payment date.
@@ -2919,11 +1990,11 @@ definitions:
         type: string
         format: ISO 8601 duration
       next-payment-date:
-        description: Next payment date. 
+        description: Next payment date.
         format: date-time
         type: string
       start-date:
-        description: Start date. This is activation date. 
+        description: Start date. This is activation date.
         format: date-time
         type: string
       end-date:
@@ -2950,9 +2021,6 @@ definitions:
       - nickname
     type: object
 
-=======
-    type: object
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
   credit-transfer:
     description: Credit transfer
     properties:
@@ -3061,11 +2129,11 @@ definitions:
         type: string
         minLength: 3
         maxLength: 3
-        
+
   identifier:
     description: Unique identifier of newly created resource that can be used in future inquires and commands
     type: string
-    
+
   validation-problem:
     type: array
     items:
@@ -3157,7 +2225,6 @@ definitions:
       parent-literal:
         description: Optional literal of parent classification value if schema is hierarchical
         type: string
-<<<<<<< HEAD
     example:
       literal: billing
       code: 2
@@ -3231,6 +2298,3 @@ definitions:
         - literal: reporting
           code: 3
           description: Contact may be used to provide party with reports on their account
-=======
-    type: object
->>>>>>> 3344ee79f7c0d1352acbb9e0c5a2f69b315f90d8
