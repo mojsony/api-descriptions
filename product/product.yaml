@@ -570,6 +570,13 @@ definitions:
           Identifies type of funding for the product.
           For detailed view of possible values see [financing-kind](card-classifications.html#financing-kind) classification
         x-asee-classification: financing-kind
+  
+  electronic-access-product:
+    description: "Identifies a Product Access Service which enables a Product to be accessed by use of an on-line system, such as a computer terminal or telephone."
+    type: object
+    allOf:
+      - $ref: '#/definitions/product'
+        
   product-conditions:
     description: Product terms and conditions
     properties:
