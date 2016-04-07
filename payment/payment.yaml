@@ -1480,7 +1480,7 @@ definitions:
       code: 289
       code-description: Payment of citizen.
       document-list: sample
-      code-type: 5
+      code-type: domestic
     properties:
       code:
         description: Purpose code.
@@ -1494,9 +1494,8 @@ definitions:
           type: string
         type: array
       code-type:
-        description: Type of purpose code.
-        enum:
-          - TO DO
+        description: Type of purpose code
+        enum: [domestic, cross-border, sepa]
         type: string
     type: object
   currency:
