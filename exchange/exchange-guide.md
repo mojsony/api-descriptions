@@ -1,3 +1,7 @@
+---
+visibility: internal
+---
+
 <span class="icon"></span>Exchange API Guide 
 ======================
 Exchange API provides endpoints to initiate and track currency exchange orders, get one-time tailored offers for specific exchange deals and get latest and historic exchange rates and lists for reference and calculations. 

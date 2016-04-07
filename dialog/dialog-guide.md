@@ -1,3 +1,7 @@
+---
+visibility: internal
+---
+
 <span class="icon"></span>Dialog API Guide
 ======================
 Dialog API provides various methods for 

@@ -1,3 +1,7 @@
+---
+visibility: internal
+---
+
 <span class="icon"></span>Fraud API Guide
 =========================
 Fraud API enables to prevent fraud activitis according to legal requirements of finanacial institution. With Fraud API you can:

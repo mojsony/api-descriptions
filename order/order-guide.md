@@ -1,3 +1,7 @@
+---
+visibility: internal
+---
+
 ![Folders](http://cdn.flaticon.com/png/64/98/98193.png)
 Customer Order API v2
 =========================

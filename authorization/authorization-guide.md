@@ -1,3 +1,7 @@
+---
+visibility: public
+---
+
 <span class="icon"></span>Authorization API Guide
 ======================
 Authorization API enables authorization of sensitive actions performed by customers or agents using 2nd factor authentication. Sensitive action authorizations can be explicitly requested by applications or they can be initiated by APIs during authorization checking. Support for 4 eyes verification and separation of duties will be added in future.

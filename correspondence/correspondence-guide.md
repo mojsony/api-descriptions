@@ -1,3 +1,7 @@
+---
+visibility: internal
+---
+
 <span class="icon"></span> Correspondence API Guide
 =========================
 

@@ -1,3 +1,7 @@
+---
+visibility: public
+---
+
 Arrangement API Guide
 =========================
 
