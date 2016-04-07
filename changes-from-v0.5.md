@@ -113,72 +113,69 @@ Here is the partial list of APIs ordered by requests for clarification coming fr
 ###Priority 1 use cases
 
 | Use case                        | v.05                               | v1                       | Note                |
-|-|-|-|
-| Get OAuth2 authorization token |POST authentication/token        | POST authentication/connect/token | Proprietary definition replaced by OpenIDConnect standard
-| Initiate SMS OTP | POST authentication/challenges | POST authorization/otp/sms/send| Moved to Authorization API
-| List banks | GET payment-order/banks| GET reference/banks | Moved to Reference API
-| List countries | GET reference-data/countries | GET reference/countries | Renamed to Reference API
-| List purpose codes | GET payment-order/purpose-codes | GET payment/purpose-codes | Renamed to Payment API
-| Get data on specific account | GET customer-account/accounts/{param} | GET account-data/accounts/{param} | Renamed to Account Data API. Kept only basic account information information 
-| ... | ...  | GET arrangement/arrangements/{param} | Arrangement data moved arrangement API
-| ... | ...  | GET entitlements/limit-balances/account-limits | Moved limits to Entitlements API
-| ... | ...  | GET profile/arrangement-profile/param | Moved arrangement usage tracking data to Profile API
-| Get account transactions | GET customer-account/accounts/{param}/transactions | GET account-data/transactions | Moved to top level resource filtered by account
-| ... | ...  | GET account-data/transactions/search | Moved text, geospatial and PFM category search to separate endpoint
-| List customer's applications  | GET offer-management/customer-product-application | GET offer/applications | Renamed to Offer API
-| ... | ...  | GET offer/drafts | Moved multi-step application entry  support to separate endpoint
-| ??? | GET authentication/users/phone/validation-tokens | N/A | **DEPRECATED**
-| ???| GET authentication/users/otp/{param} | N/A | **DEPRECATED**
-| Verify SMS OTP | POST authentication/users/msisdn/validation-tokens/verify | POST authorization/otp/sms/verify | Moved to Authorization API
-| Register new user | POST authentication/users | POST identity/users | Moved to Identity API
-| Get current account offer text | GET offer-management/deposit-indicative-offers | GET offer/calculations/deposit-offer-text | Renamed to Offer API. Generalized for deposits
-| Get deposit offer text | GET offer-management/deposit-indicative-offers | ... | ...
-| Initiate current account application | POST offer-management/initiate-current-account-application | POST offer/applications/deposit-openings | Generalized for deposits
-| Get specific deposit application | GET offer-management/deposit-application/{param} | GET offer/applications/{param} | Moved to one collection resource with polymorphic models
-| Get transactions for card | GET customer-account/cards/{param}/transactions | GET account-data/transactions | Moved to root collection resource with card-number as a one of the filters
-| Get cards for customer | GET customer-account/{param}/cards | GET arrangement/arrangements | Moved to arrangement with card-access kind as one of the filters
-| Get data on specific card | GET customer-account/cards/{param} | GET arrangement/arrangements/{param} | Basic card data moved to Arrangement API
-| ...| ... | GET device/issued-devices/{param} | Physical plastic card related data such as expriation, image, capabilities moved to Device API
-| Get exchange rates | GET currency-exchange/rates | GET exchange/rates | Renamed to Exchange API
-| Request currency exchange offer | POST currency-exchange/offer | POST exchange/offers | Renamed endpoint
-| Initiate new currency exchange order | POST currency-exchange/transactions | POST exchange/orders | Renamed endpoint
-| List bank's ATMs | GET location-data/facilities/atms | GET location/facilities | Generialized for all physical presence points 
-| List bank's branches | GET location-data/facilities/branches | .. | ..
-| Get data on specific ATM | GET location-data/facilities/atms/{param} | GET location/facilities/{param} | Generalized for all physical presence points
+|---------------------------------|------------------------------------|--------------------------|---------------------|
+| Get OAuth2 authorization token | POST authentication/token        | POST authentication/connect/token | Proprietary definition replaced by OpenIDConnect standard |
+| Initiate SMS OTP | POST authentication/challenges | POST authorization/otp/sms/send| Moved to Authorization API |
+| List banks | GET payment-order/banks| GET reference/banks | Moved to Reference API |
+| List countries | GET reference-data/countries | GET reference/countries | Renamed to Reference API |
+| List purpose codes | GET payment-order/purpose-codes | GET payment/purpose-codes | Renamed to Payment API |
+| Get data on specific account | GET customer-account/accounts/{param} | GET account-data/accounts/{param} | Renamed to Account Data API. Kept only basic account information | 
+| ... | ...  | GET arrangement/arrangements/{param} | Arrangement data moved arrangement API |
+| ... | ...  | GET entitlements/limit-balances/account-limits | Moved limits to Entitlements API |
+| ... | ...  | GET profile/arrangement-profile/param | Moved arrangement usage tracking data to Profile API |
+| Get account transactions | GET customer-account/accounts/{param}/transactions | GET account-data/transactions | Moved to top level resource filtered by account |
+| ... | ...  | GET account-data/transactions/search | Moved text, geospatial and PFM category search to separate endpoint |
+| List customer's applications  | GET offer-management/customer-product-application | GET offer/applications | Renamed to Offer API |
+| ... | ...  | GET offer/drafts | Moved multi-step application entry  support to separate endpoint |
+| ??? | GET authentication/users/phone/validation-tokens | N/A | **DEPRECATED** |
+| ???| GET authentication/users/otp/{param} | N/A | **DEPRECATED** |
+| Verify SMS OTP | POST authentication/users/msisdn/validation-tokens/verify | POST authorization/otp/sms/verify | Moved to Authorization API |
+| Register new user | POST authentication/users | POST identity/users | Moved to Identity API |
+| Get current account offer text | GET offer-management/deposit-indicative-offers | GET offer/calculations/deposit-offer-text | Renamed to Offer API. Generalized for deposits |
+| Get deposit offer text | GET offer-management/deposit-indicative-offers | ... | ... |
+| Initiate current account application | POST offer-management/initiate-current-account-application | POST offer/applications/deposit-openings | Generalized for deposits |
+| Get specific deposit application | GET offer-management/deposit-application/{param} | GET offer/applications/{param} | Moved to one collection resource with polymorphic models |
+| Get transactions for card | GET customer-account/cards/{param}/transactions | GET account-data/transactions | Moved to root collection resource with card-number as a one of the filters |
+| Get cards for customer | GET customer-account/{param}/cards | GET arrangement/arrangements | Moved to arrangement with card-access kind as one of the filters |
+| Get data on specific card | GET customer-account/cards/{param} | GET arrangement/arrangements/{param} | Basic card data moved to Arrangement API |
+| ...| ... | GET device/issued-devices/{param} | Physical plastic card related data such as expriation, image, capabilities moved to Device API |
+| Get exchange rates | GET currency-exchange/rates | GET exchange/rates | Renamed to Exchange API |
+| Request currency exchange offer | POST currency-exchange/offer | POST exchange/offers | Renamed endpoint |
+| Initiate new currency exchange order | POST currency-exchange/transactions | POST exchange/orders | Renamed endpoint |
+| List bank's ATMs | GET location-data/facilities/atms | GET location/facilities | Generialized for all physical presence points  |
+| List bank's branches | GET location-data/facilities/branches | .. | .. |
+| Get data on specific ATM | GET location-data/facilities/atms/{param} | GET location/facilities/{param} | Generalized for all physical presence points |
 | Get data on specific branch | GET location-data/facilities/branches/{param} | ... | ...
-| Validate balance transfer | POST payment-order/balance-transfers/validate | POST payment/transfers/balance-transfers/validate | Renamed to Payment API. Renamed endpoint
-| Initiate balance transfer | POST payment-order/balance-transfers | POST payment/transfers/balance-transfers/ | Renamed endpoint
-| List customer's accounts | GET customer-account/accounts | GET arrangement/arrangements | Moved to Arrangemet API with customer as one of the parameters
-| Get miscellaneous customer data | GET party-profile/individual-profiles/{param} | GET party/parties/{param} | Removed redundancy. Basic information on customer only in Party API
-| ... | ... | GET profile/individuals | Facts and measures on individuals kept in Profile API
-| Set preferred language for customer | POST party-data/individuals/update-profile-language | PATCH parties/party-number/contact-preference | Generalized for all contact preferences
-| Get mailbox messages | GET correspondence/communications | GET me/messages | Separated endpoint for mailbox
-| Mark message as read | PUT correspondence/communications | POST me/messages/{param}/mark-as-red | Refactored to CQRS style oriented endpoint
-| List customer's templates | GET payment-order/personal-templates | GET payment/drafts | Generalized for both templates and drafts
-| Get specific template | GET payment-order/personal-templates/{param} | GET payment/drafts/{param} | ...
-| Modify specific template | PUT payment-order/personal-templates/{param} | PUT payment/drafts/{param} | ...
-| Delete specific template | DELETE payment-order/personal-templates/{param} | DELETE payment/drafts/{param} | ...
-| List customer's personal beneficiaries | GET payment-order/personal-beneficiaries| GET payment/personal-beneficiaries | Renamed to Payment API
-| Get specific personal beneficiary | GET payment-order/personal-beneficiaries/{param} | GET payment/personal-beneficiaries/{param} | ...
-| Modify specific personal beneficiary | PUT payment-order/personal-beneficiaries/{param} | PUT payment/personal-beneficiaries/{param} | ...
-| Delete specific personal beneficiary | DELETE payment-order/personal-beneficiaries/{param} | DELETE payment/personal-beneficiaries/{param} | ...
-| List public beneficiaries | GET payment-order/public-beneficiaries | GET payment/public-beneficiaries | ...
-| Validate credit transfer | POST payment-order/credit-transfers/validate | POST payment/transfers/credit-transfers/validate | ...
-| Initiate credit transfer | POST payment-order/credit-transfers | POST payment/transfers/credit-transfers/ | ...
-| Validate cross-border transfer | POST payment-order/crossborder-transfers/validate | POST payment/transfers/cross-border-transfers/validate | ...
-| Initiate cross-border transfer | POST payment-order/crossborder-transfers | POST payment/transfers/cross-border-transfers/ | ...
-| Calculate service fee | POST offer-management/calculate-service-fee | GET offer/calculations/service-fee | Renamed to Offer API. Renamed endpoint
+| Validate balance transfer | POST payment-order/balance-transfers/validate | POST payment/transfers/balance-transfers/validate | Renamed to Payment API. Renamed endpoint |
+| Initiate balance transfer | POST payment-order/balance-transfers | POST payment/transfers/balance-transfers/ | Renamed endpoint |
+| List customer's accounts | GET customer-account/accounts | GET arrangement/arrangements | Moved to Arrangemet API with customer as one of the filters |
+| Get miscellaneous customer data | GET party-profile/individual-profiles/{param} | GET party/parties/{param} | Removed redundancy. Basic information on customer only in Party API |
+| ... | ... | GET profile/individuals | Facts and measures on individuals kept in Profile API |
+| Set preferred language for customer | POST party-data/individuals/update-profile-language | PATCH parties/party-number/contact-preference | Generalized for all contact preferences |
+| Get mailbox messages | GET correspondence/communications | GET me/messages | Separated endpoint for mailbox |
+| Mark message as read | PUT correspondence/communications | POST me/messages/{param}/mark-as-red | Refactored to CQRS style oriented endpoint |
+| List customer's templates | GET payment-order/personal-templates | GET payment/drafts | Generalized for both templates and drafts |
+| Get specific template | GET payment-order/personal-templates/{param} | GET payment/drafts/{param} | ... |
+| Modify specific template | PUT payment-order/personal-templates/{param} | PUT payment/drafts/{param} | ... |
+| Delete specific template | DELETE payment-order/personal-templates/{param} | DELETE payment/drafts/{param} | ... |
+| List customer's personal beneficiaries | GET payment-order/personal-beneficiaries| GET payment/personal-beneficiaries | Renamed to Payment API |
+| Get specific personal beneficiary | GET payment-order/personal-beneficiaries/{param} | GET payment/personal-beneficiaries/{param} | ... |
+| Modify specific personal beneficiary | PUT payment-order/personal-beneficiaries/{param} | PUT payment/personal-beneficiaries/{param} | ... |
+| Delete specific personal beneficiary | DELETE payment-order/personal-beneficiaries/{param} | DELETE payment/personal-beneficiaries/{param} | ... |
+| List public beneficiaries | GET payment-order/public-beneficiaries | GET payment/public-beneficiaries | ... |
+| Validate credit transfer | POST payment-order/credit-transfers/validate | POST payment/transfers/credit-transfers/validate | ... |
+| Initiate credit transfer | POST payment-order/credit-transfers | POST payment/transfers/credit-transfers/ | ... |
+| Validate cross-border transfer | POST payment-order/crossborder-transfers/validate | POST payment/transfers/cross-border-transfers/validate | ... |
+| Initiate cross-border transfer | POST payment-order/crossborder-transfers | POST payment/transfers/cross-border-transfers/ | ... |
+| Calculate service fee | POST offer-management/calculate-service-fee | GET offer/calculations/service-fee | Renamed to Offer API. Renamed endpoint |
 
 ###Priority 2 use cases
 
 | Use case                        | v.05                               | v1                       | Note                |
-|-|-|-|
-| Get loan repayment plan | GET customer-account/accounts/{param}/installment-plan | GET arrangement/arrangements/{param}/installment-plan | Moved to Arrangement API 
-| Upload file | POST Content-management/upload-file/ | POST content/{repo}/folders/{param} | Renamed endpoint and refactored to use folders
-| Register device | N/A | POST device/owned-devices | New Device API handles both owned and issued devices
-| Register device for push notifications | N/A | PUT /owned-devices/{param}/push-notification-handle | ...
-| Unregister device | N/A | POST device/owned-devices/{param}/unregister | ...
-| Block device | N/A | POST device/owned-devices/{param}/block | ...
-
-
-
+|---------------------------------|------------------------------------|--------------------------|---------------------|
+| Get loan repayment plan | GET customer-account/accounts/{param}/installment-plan | GET arrangement/arrangements/{param}/installment-plan | Moved to Arrangement API  |
+| Upload file | POST Content-management/upload-file/ | POST content/{repo}/folders/{param} | Renamed endpoint and refactored to use folders |
+| Register device | N/A | POST device/owned-devices | New Device API handles both owned and issued devices |
+| Register device for push notifications | N/A | PUT /owned-devices/{param}/push-notification-handle | ... |
+| Unregister device | N/A | POST device/owned-devices/{param}/unregister | ... |
+| Block device | N/A | POST device/owned-devices/{param}/block | ... |
