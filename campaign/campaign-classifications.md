@@ -1,3 +1,6 @@
+---
+visibility: public
+---
 Campaign API Classifications
 ===============
 

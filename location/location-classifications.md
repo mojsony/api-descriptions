@@ -1,4 +1,6 @@
-
+---
+visibility: public
+---
 Location API Classifications
 ===============
 

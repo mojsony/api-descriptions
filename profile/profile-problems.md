@@ -1,3 +1,6 @@
+---
+visibility: public
+---
 Possible Profile API Problems
 =================
 

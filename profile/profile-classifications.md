@@ -1,3 +1,6 @@
+---
+visibility: public
+---
 Profile API Classifications
 ===============
 

@@ -1,3 +1,6 @@
+---
+visibility: public
+---
 Payment API Classifications
 ===============
 

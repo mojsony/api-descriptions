@@ -1,9 +1,11 @@
-   
+---
+visibility: internal
+---
 Classifications
 ===============
 
 Callback category
------------------ 
+-----------------
 This classification declares the category of problem for which the customer asks callback support.
 
 Literal 				      | Code   | Description
@@ -24,4 +26,3 @@ Literal 				      | Code   | Description
 `suggestion`                  | 00003  | Suggestion
 `complaint`                   | 00004  | Complaint
 `other`                       | 00005  | Other
-

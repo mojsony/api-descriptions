@@ -1,3 +1,6 @@
+---
+visibility: public
+---
 Content API Classifications
 ===============
 
@@ -19,7 +22,7 @@ Literal            | Code  | Description
 Folder Purpose
 --------------
 
-This classification explains intended use of folder in business context. 
+This classification explains intended use of folder in business context.
 
 Literal           | Code | Description
 ------------------------|--------|------------------------

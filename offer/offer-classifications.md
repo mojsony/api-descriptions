@@ -1,3 +1,6 @@
+---
+visibility: public
+---
 Offer API Classifications
 ========
 

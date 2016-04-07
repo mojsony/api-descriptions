@@ -1,3 +1,6 @@
+---
+visibility: public
+---
 ﻿Device API Enumerations
 ===============
 

@@ -1,3 +1,6 @@
+---
+visibility: internal
+---
 Possible Case API Problems
 =================
 

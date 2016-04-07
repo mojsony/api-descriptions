@@ -1,3 +1,6 @@
+---
+visibility: public
+---
 Product API Classifications
 ===============
 

@@ -1,3 +1,6 @@
+---
+visibility: public
+---
 Accounting API Classifications
 ===============
 
@@ -12,8 +15,8 @@ Literal 				      | Code 	| Description
 cash-withdrawal |	CWDL	| Cash Withdrawal
 cash-deposit |	CDPT	| Cash Deposit
 cross-border-cash-withdrawal 	| XBCW | Cross-Border Cash Withdrawal
-pos-payment-debit-card | 	POSD 	| 	Point-of-Sale (POS) Payment  - Debit Card	
-pos-payment-credit-card | POSC | Credit Card Payment 
+pos-payment-debit-card | 	POSD 	| 	Point-of-Sale (POS) Payment  - Debit Card
+pos-payment-credit-card | POSC | Credit Card Payment
 cross-border-credit-card-payment | XBCP | Cross Border Credit Card Payment
 smart-card-payment |	SMRT	| Smart-Card Payment
 ... | ... |...
@@ -131,5 +134,3 @@ pmt|Payment details
 sto|Standing order details
 brn|Branch transaction details
 int|Internal transaction details
-
-

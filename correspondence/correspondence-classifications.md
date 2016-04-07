@@ -1,3 +1,6 @@
+---
+visibility: public
+---
 Correspondence API Enumerations
 ===============
 

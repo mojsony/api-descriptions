@@ -1,3 +1,6 @@
+---
+visibility: public
+---
 Possible Exchange API Problems
 =================
 

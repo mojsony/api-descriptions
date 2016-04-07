@@ -1,3 +1,6 @@
+---
+visibility: public
+---
 Possible Product API Problems
 =================
 

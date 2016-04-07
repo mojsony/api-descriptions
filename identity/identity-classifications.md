@@ -1,3 +1,6 @@
+---
+visibility: public
+---
 Identity API Enumerations
 ===============
 

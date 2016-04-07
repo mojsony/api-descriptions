@@ -1,3 +1,6 @@
+---
+visibility: public
+---
 Arrangement API Enumerations
 ===============
 

@@ -1,3 +1,6 @@
+---
+visibility: public
+---
 Entitlements API Classifications
 ===============
 

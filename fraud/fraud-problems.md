@@ -1,3 +1,6 @@
+---
+visibility: internal
+---
 Possible Fraud API Problems
 =================
 

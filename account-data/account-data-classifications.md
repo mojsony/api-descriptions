@@ -1,3 +1,6 @@
+---
+visibility: public
+---
 Account Data API Classifications
 ===============
 

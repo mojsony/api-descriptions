@@ -1,3 +1,6 @@
+---
+visibility: public
+---
 Exchange API Classifications
 ===============
 

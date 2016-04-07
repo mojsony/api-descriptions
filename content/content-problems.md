@@ -1,3 +1,6 @@
+---
+visibility: public
+---
 Possible Content API Problems
 =================
 
@@ -19,8 +22,6 @@ internal-error                   | 50004 | Unexpected error condition has occurr
 not-implemented                  | 50005 | Service does not currently implement the operation, or it lacks the capability to fulfill the request. This implies possible future implementation
 service-unavailable              | 50006 | Service is currently unavailable (because it is overloaded or down for maintenance). This is a temporary state
 
-
-
 Content API Specific Problems
 ---------------
 
@@ -36,4 +37,3 @@ max-upload-size-exceeded       | 50054 | Maximum size of content for upload has 
 document-already-exists        | 50055 | Document "{name:}" already exists in path "{path:}"
 folder-already-exists        | 50056 | Folder "{name:}" already exists in path "{path:}"
 folder-not-empty              | 50057 | Folder "{name:}" is not empty
-

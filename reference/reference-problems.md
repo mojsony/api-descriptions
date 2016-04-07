@@ -1,3 +1,6 @@
+---
+visibility: public
+---
 Possible Reference API Problems
 =================
 

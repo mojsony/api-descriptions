@@ -1,3 +1,6 @@
+---
+visibility: public
+---
 Possible Account Data API Problems
 =================
 

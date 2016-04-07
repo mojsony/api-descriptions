@@ -1,4 +1,6 @@
-   
+---
+visibility: internal
+---
 Possible problems
 =================
 
