@@ -4,7 +4,7 @@ Changes from v0.5 to v1
 As **v1** is the first version available to public, we took the opportunity to clean up and increase quality of APIs. With **v1** we achieved following goals:
 - clarified boundaries, naming of APIs and their responsibilities
 - consistent style of rest endpoints (learn once apply anywhere)
-- free of implementation specifics (standard ASEE API not belonging to any particural application)
+- free of implementation specifics (standard ASEE API not belonging to any particular application)
 - free of customization specifics
 - consistent use of string formats, enumerations and classifications
 - increased generality (not tailored for specific UI need or bank customization)
@@ -35,7 +35,7 @@ Entitlements API lets you check and enforce access entitlements with customer ma
 ###Device API **`NEW`**
 Device API manages customer owned devices such as mobile phones and tracks state of bank issued devices such payment cards and authentication devices such as hardware tokens.
 ###Identity API **`NEW`**
-Identity API manages online identity and credentials of users. This covers signup process, confirmations of contact points, changing and recovery of forgotten passwords and usernames. Logins from external identity providers can be linked to user profile. Hint pictures, security questions and password policy enhance user experience and security of the recovery processes. 
+Identity API manages online identity and credentials of users. This covers sign-up process, confirmations of contact points, changing and recovery of forgotten passwords and usernames. Logins from external identity providers can be linked to user profile. Hint pictures, security questions and password policy enhance user experience and security of the recovery processes. 
 ###Accounting API **`NEW`**
 Accounting API tracks positions and transactions on customer account arrangements. Account arrangements have their accounts that track positions
 affected by entries posted with transactions. Statements report changes during certain time period.
@@ -123,7 +123,7 @@ Here is the partial list of APIs ordered by requests for clarification coming fr
 | ... | ...  | GET arrangement/arrangements/{param} | Arrangement data moved arrangement API |
 | ... | ...  | GET entitlements/limit-balances/account-limits | Moved limits to Entitlements API |
 | ... | ...  | GET profile/arrangement-profile/param | Moved arrangement usage tracking data to Profile API |
-| Get account transactions | GET customer-account/accounts/{param}/transactions | GET account-data/transactions | Moved to top level resource filtered by account |
+| Get account transactions | GET customer-account/accounts/{param}/transactions | GET account-data/transactions | Moved to top-level resource filtered by account |
 | ... | ...  | GET account-data/transactions/search | Moved text, geospatial and PFM category search to separate endpoint |
 | List customer's applications  | GET offer-management/customer-product-application | GET offer/applications | Renamed to Offer API |
 | ... | ...  | GET offer/drafts | Moved multi-step application entry  support to separate endpoint |
@@ -138,11 +138,11 @@ Here is the partial list of APIs ordered by requests for clarification coming fr
 | Get transactions for card | GET customer-account/cards/{param}/transactions | GET account-data/transactions | Moved to root collection resource with card-number as a one of the filters |
 | Get cards for customer | GET customer-account/{param}/cards | GET arrangement/arrangements | Moved to arrangement with card-access kind as one of the filters |
 | Get data on specific card | GET customer-account/cards/{param} | GET arrangement/arrangements/{param} | Basic card data moved to Arrangement API |
-| ...| ... | GET device/issued-devices/{param} | Physical plastic card related data such as expriation, image, capabilities moved to Device API |
+| ...| ... | GET device/issued-devices/{param} | Physical plastic card related data such as expiration, image, capabilities moved to Device API |
 | Get exchange rates | GET currency-exchange/rates | GET exchange/rates | Renamed to Exchange API |
 | Request currency exchange offer | POST currency-exchange/offer | POST exchange/offers | Renamed endpoint |
 | Initiate new currency exchange order | POST currency-exchange/transactions | POST exchange/orders | Renamed endpoint |
-| List bank's ATMs | GET location-data/facilities/atms | GET location/facilities | Generialized for all physical presence points  |
+| List bank's ATMs | GET location-data/facilities/atms | GET location/facilities | Generalized for all physical presence points  |
 | List bank's branches | GET location-data/facilities/branches | .. | .. |
 | Get data on specific ATM | GET location-data/facilities/atms/{param} | GET location/facilities/{param} | Generalized for all physical presence points |
 | Get data on specific branch | GET location-data/facilities/branches/{param} | ... | ...
@@ -179,3 +179,4 @@ Here is the partial list of APIs ordered by requests for clarification coming fr
 | Register device for push notifications | N/A | PUT /owned-devices/{param}/push-notification-handle | ... |
 | Unregister device | N/A | POST device/owned-devices/{param}/unregister | ... |
 | Block device | N/A | POST device/owned-devices/{param}/block | ... |
+
