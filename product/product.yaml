@@ -28,40 +28,42 @@ paths:
   /products:
     get:
       summary: Returns list of products with general information
-      tags: 
+      tags:
         - Products
       x-asee-tags:
-        - Shapeable        
+        - Shapeable
       operationId: Products_GetList
       parameters:
         - $ref: "#/parameters/statuses-param"
         - $ref: "#/parameters/kinds-param"
         - $ref: "#/parameters/name-param"
-        - $ref: "#/parameters/product-family-param"        
+        - $ref: "#/parameters/product-family-param"
         - $ref: "#/parameters/channel-code-param"
+        - $ref: "#/parameters/include-param"
+        - $ref: "#/parameters/trim-param"
       responses:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/product-list'          
+            $ref: '#/definitions/product-list'
         default:
           $ref: '#/responses/default-error-response'
   /products/{product-code}:
-    get: 
+    get:
       summary: Get details of specific product
-      tags: 
+      tags:
         - Products
       operationId: Products_Get
-      parameters:    
+      parameters:
         - $ref: "#/parameters/channel-code-param"
         - $ref: "#/parameters/product-code-param"
       responses:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/product'          
+            $ref: '#/definitions/product'
         default:
-          $ref: '#/responses/default-error-response'          
+          $ref: '#/responses/default-error-response'
   /products/{product-code}/conditions:
     get:
       summary: Get terms and conditions for the product
@@ -72,50 +74,52 @@ paths:
       operationId: Products_GetConditions
       parameters:
         - $ref: "#/parameters/product-code-param"
+        - $ref: "#/parameters/include-param"
+        - $ref: "#/parameters/trim-param"
       responses:
         '200':
           description: Success
           schema:
             $ref: '#/definitions/product-conditions'
         default:
-          $ref: '#/responses/default-error-response'          
+          $ref: '#/responses/default-error-response'
   /products/{product-code}/bundled-products:
-    get: 
+    get:
       summary: List products bundled with specific master product
-      tags: 
+      tags:
         - Products
       operationId: Products_GetBundledProducts
       parameters:
-        - $ref: "#/parameters/channel-code-param"  
-        - $ref: "#/parameters/campaign-code-param"                     
+        - $ref: "#/parameters/channel-code-param"
+        - $ref: "#/parameters/campaign-code-param"
         - $ref: "#/parameters/product-code-param"
       responses:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/bundled-product-list'          
+            $ref: '#/definitions/bundled-product-list'
         default:
           $ref: '#/responses/default-error-response'
   /products/{product-code}/documentation:
-    get: 
+    get:
       summary: List documentation for product
-      tags: 
+      tags:
         - Products
       operationId: Products_GetDocumentation
-      parameters:                    
+      parameters:
         - $ref: "#/parameters/product-code-param"
       responses:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/product-documentation-list'          
+            $ref: '#/definitions/product-documentation-list'
         default:
           $ref: '#/responses/default-error-response'
 
-  /classifications: 
+  /classifications:
     get:
       summary: List all classification schemas used by the API
-      description: Some fields and parameters have been restricted to a list of allowed lookup values maintained by the bank. This method lists all schemas used in this API.    
+      description: Some fields and parameters have been restricted to a list of allowed lookup values maintained by the bank. This method lists all schemas used in this API.
       operationId: "Classifications_GetList"
       responses:
         '200':
@@ -144,7 +148,6 @@ paths:
       tags:
         - Classifications
 
-        
 responses:
   default-error-response:
     description: "Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling](common-getstarted.html#error-handling)"
@@ -164,22 +167,26 @@ parameters:
   statuses-param:
     name: statuses
     in: query
-    description: Identifies product status from Customer perspective 
-    required: false
-    type: array
-    items:
-      type: string  
-      x-asee-enumeration: external-product-status     
-      enum: [available, no-longer-available, temporarily-unavailable, comming-soon]  
-  kinds-param:
-    name: kinds
-    in: query
-    description: Product kind. If set only products of these kinds will be returned otherwise all products will be returned
+    description: |
+      Identifies product status from Customer perspective
+      For complete list of possible values see [product-statuses](product-classifications.html#product-statuses) enumeration.
     required: false
     type: array
     items:
       type: string
-      x-asee-enumeration: product-kind      
+      x-asee-enumeration: product-statuses
+      enum: [available, no-longer-available, temporarily-unavailable, coming-soon]
+  kinds-param:
+    name: kinds
+    in: query
+    description: |
+      Product kind. If set only products of these kinds will be returned otherwise all products will be returned
+      For complete list of possible values see [product-kinds](product-classifications.html#product-kinds) enumeration.
+    required: false
+    type: array
+    items:
+      type: string
+      x-asee-enumeration: product-kinds
       enum:
       - current-account
       - demand-deposit
@@ -189,9 +196,8 @@ parameters:
       - overdraft-facility
       - card-access
       - electronic-access
-      - service 
-     
-  name-param:     
+      - service
+  name-param:
     name: name
     in: query
     description: Name or part of the products name
@@ -209,27 +215,45 @@ parameters:
     description: Channel code
     required: false
     type: string
-  campaign-code-param: 
+  campaign-code-param:
     name: campaign-code
     in: query
     description: Campaign identifier
     required: false
-    type: string      
+    type: string
+  include-param:
+    description: List of fields to include in response. For more information see general guidance on [response shaping]()
+    in: query
+    name: include
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+    x-asee-common: true
+  trim-param:
+    description: List of fields to trim from response. For more information see general guidance on [response shaping]()
+    in: query
+    name: trim
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+    x-asee-common: true
 definitions:
   currency:
     description: Currency amount and code
-    type: object  
+    type: object
     required:
-      - amount    
-      - code      
+      - amount
+      - code
     example:
-      amount: 200.00    
+      amount: 200.00
       code: EUR
     properties:
       amount:
         description: Amount
         format: double
-        type: number    
+        type: number
       code:
         description: ISO 4217 3 letter currency code
         type: string
@@ -255,7 +279,7 @@ definitions:
       literal: billing
       code: 2
       description: Contact may be used to provide party with details of their liabilities to the bank
-      
+
   classification-list:
     description: List of classification schemas
     type: object
@@ -274,7 +298,7 @@ definitions:
         schema-id: folder-purpose
         name: Folder Purpose
         description: List of possible uses of a folder in business context.
-        
+
   classification-info:
     description: Basic information on classification schema
     properties:
@@ -291,7 +315,7 @@ definitions:
       schema-id: filing-purpose
       name: Filing Purpose
       description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture
-      
+
   classification:
     type: object
     description: Classification schema details
@@ -329,7 +353,7 @@ definitions:
     description: General information about product
     type: object
     discriminator: kind
-    required:        
+    required:
     - product-code
     - kind
     properties:
@@ -338,7 +362,10 @@ definitions:
         description: The unique identifier of a Product
       kind:
         type: string
-        description: Classifies products according to its nature and scope
+        x-asee-enumeration: product-kinds
+        description: |
+          Classifies products according to its nature and scope
+          For complete list of possible values see [product-kinds](product-classifications.html#product-kinds) enumeration.
         enum:
         - current-account
         - demand-deposit
@@ -348,7 +375,7 @@ definitions:
         - overdraft-facility
         - card-access
         - electronic-access
-        - service        
+        - service
       name:
         type: string
         description: Label given to a specific Product to identify or distinguish it from other Products
@@ -360,14 +387,17 @@ definitions:
         description: Textual description of the characteristics of a Product
       benefits-info:
         type: string
-        description: Identifies a product benefits info        
+        description: Identifies a product benefits info
       family-name:
         type: string
         description: Name of Subject Area to hold the subtypes of Product
       status:
         type: string
-        description: Identifies product status from Customer perspective    
-        enum: [available, no-longer-available, temporarily-unavailable, comming-soon]        
+        x-asee-enumeration: product-statuses
+        description: |
+          Identifies product status from Customer perspective
+          For complete list of possible values see [product-statuses](product-classifications.html#product-statuses) enumeration.
+        enum: [available, no-longer-available, temporarily-unavailable, coming-soon]
       primary-market-segment-name:
         type: string
         description: Market segment where the product is primarily intended
@@ -379,7 +409,7 @@ definitions:
         description: Product image URL in content management
       cover-image-url:
         type: string
-        description: Product cover image URL in content management  
+        description: Product cover image URL in content management
       application-process-description:
         type: string
         description: Text describing how the application process for the product is performed
@@ -388,11 +418,11 @@ definitions:
         description: Text describing necessary documents if the client wants to apply for the product
       campaign-code:
         type: string
-        description: Campaign Identifier   
+        description: Campaign Identifier
       availability-start:
-        type: string                
+        type: string
         description: Date from which the product is available
-        format: date      
+        format: date
       primary-currency:
         description: Primary currency of the product as ISO 4217 3 letter currency code
         type: string
@@ -400,22 +430,22 @@ definitions:
       allowed-currencies:
         type: array
         description: Allowed currencies for the product as list of as ISO 4217 3 letter currency codes
-        items: 
+        items:
           type: string
-          format: ISO 4217 3-letter   
+          format: ISO 4217 3-letter
       maximal-amount:
         description: Maximal monetary amount for the product
         $ref: "#/definitions/currency"
       minimal-amount:
         description: Minimal monetary amount for the product
-        $ref: "#/definitions/currency"                   
+        $ref: "#/definitions/currency"
   product-list:
     description: List of products
     type: object
     properties:
       products:
         type: array
-        items: 
+        items:
           $ref: '#/definitions/product'
   card-access-product:
     description: Identifies a Product which allows a Customer to obtain access to a group of services that are related to the card
@@ -426,32 +456,37 @@ definitions:
       card-kind:
         #x-asee-compliance: We should probaby rename this to card-type. Also, maybe it is better to have this property as enum, not classification, because there are only few possible types influencing behaviour of the card .. debit, credit, prepaid, gift. [Stefan] This classification in Experience is defined as open. It makes sense to be enumeration, but I would not make changes right now, not to violated balance with EXP. Also, as with some others compliance, it remains free to change with next iteration ot implementation.
         type: string
-        description: "Enumeration that distinguishes between card kinds according to the manner in which use of or access to the Product Arrangement is facilitated. For complete list of possible values see [card-kind](product-classificastions.html#card-kind) enumeration."
+        x-asee-enumeration: card-kinds
+        description: |
+          Enumeration that distinguishes between card kinds according to the manner in which use of or access to the Product Arrangement is facilitated.
+          For complete list of possible values see [card-kinds](product-classifications.html#card-kinds) enumeration.
         enum: [debit-card, credit-card, prepaid-card, charge-card, stored-value-card]
       card-brand:
         #x-asee-compliance: In customer-account and other APIs we have this specified through two separate properties.. card-brand and card-kind (e.g. brand is visa, kind is electron). Can we have two properties with relevant classifications here too? [Stefan] In Exp, there is only one classification for this. Is not modeled in this way, and I think, we will not need this separation, because these is only few values.
         type: string
-        x-asee-classification: card-brand
-        description: Identifies the set of types of Financial Transaction Cards that are available. For complete list of possible values see [card-brand](product-classificastions.html#card-brand) classification.
+        x-asee-classification: card-brands
+        description: |
+          Identifies the set of types of Financial Transaction Cards that are available.
+          For complete list of possible values see [card-brands](product-classifications.html#card-brands) classification.
       daily-limit:
-        #x-asee-compliance: Why are only daily limit amount and number exposed? There are also many other relevant properties that could have been exposed too periodic limit, membership fee, withdrawal, transaction, many other types of fees. 
+        #x-asee-compliance: Why are only daily limit amount and number exposed? There are also many other relevant properties that could have been exposed too periodic limit, membership fee, withdrawal, transaction, many other types of fees.
          #Stefan | Conclution| We agreed that this is light functionality, not complete one. It expose only a basic set of data for some functionality. We will developed (complete) this with a specific need for it, and/or in next iteration/implementation project.
         description: Identifies a limit on the total value of Accounting Transactions that may ocur through this access service over a given 24 hour period, where applicable
         $ref: "#/definitions/currency"
       daily-transactions-limit:
         type: integer
         description: Limit on the number of transactions that may ocur through this access service over a given 24 hour period, where applicable
-        format: int32        
+        format: int32
       card-access-product-channels:
         type: array
         description: List with basic informations about Product Access Service Channels
-        items: 
+        items:
           $ref: '#/definitions/product-access-service-channel'
   credit-facility-product:
     description: Identifies a Loan product where the Customer is approved a certain amount, that is available without a precise definition of the repayment of the same, but with the definition of interest rate.
     type: object
     allOf:
-      - $ref: '#/definitions/product'    
+      - $ref: '#/definitions/product'
     properties:
       minimal-repayment-amount:
         description: Minimal repayment currency amount of the product
@@ -462,13 +497,16 @@ definitions:
         type: number
       financing-kind:
         type: string
-        description: "Identifies type of funding for the product. For detailed view of possible values see [financing-kind](card-classificastions.html#financing-kind) classification"
+        description: |
+          Identifies type of funding for the product.
+          For detailed view of possible values see [financing-kind](card-classifications.html#financing-kind) classification
+        x-asee-classification: financing-kind
         #x-asee-compliance: This property should either be related to classification or to the enum. It cannot be related to both. In this case, classification is probably the better choice. Also, mentioned classification is not defined in classification file. [Stefan] This classification potentially will be expanding with new values. I will change it to be open classification.
   overdraft-facility-product:
     description:  An overdraft facility allows you to withdraw cash from your current account up to the overdraft limit approved. It is a short-term standby credit facility which is usually renewable on a specified time period.
-    type: object  
+    type: object
     allOf:
-      - $ref: '#/definitions/product'    
+      - $ref: '#/definitions/product'
     properties:
       minimal-repayment-amount:
         description: Minimal repayment amount of the product
@@ -479,7 +517,7 @@ definitions:
         type: number
   current-account-product:
     description: "Is a financial facility that represents the general checking account facility at the core of the consumer and small business banking activity. There is a range of supporting features that make up the standard facility (checks/cheques, standing orders, debit cards, phone and on-line banking services etc.). The fulfillment will include a range of optional services, fees and interest payments and penalties and will often be bundled and or underlie/support other financial facilities and financial transactions"
-    type: object  
+    type: object
     allOf:
       - $ref: '#/definitions/product'
 
@@ -488,13 +526,13 @@ definitions:
     description: Identifies a particular type of Deposit Product that is used for handling day-to-day transactions and can be used to accumulate savings
     type: object
     allOf:
-      - $ref: '#/definitions/product'    
-        
+      - $ref: '#/definitions/product'
+
   term-deposit-product:
     description: Type of Deposit product that allows customer to deposit a certain amount of money to be for a specified term, under certain conditions
     type: object
     allOf:
-      - $ref: '#/definitions/product'    
+      - $ref: '#/definitions/product'
     properties:
       maximal-term:
         description: Maximal term period of the product
@@ -509,7 +547,7 @@ definitions:
     description: Is a Finance Service that is characterized by the lending of funds for a fixed term, for the purchase of goods and/or services.
     type: object
     allOf:
-      - $ref: '#/definitions/product' 
+      - $ref: '#/definitions/product'
     properties:
       maximal-term:
         description: Maximal term period of the product
@@ -527,8 +565,10 @@ definitions:
         type: number
       financing-kind:
         type: string
-        description: "Identifies type of funding for the product. For detailed view of possible values see [financing-kind](card-classificastions.html#financing-kind) classification"
-        enum: [cash, internal-refinancing, external-refinancing, invoice]
+        description: |
+          Identifies type of funding for the product.
+          For detailed view of possible values see [financing-kind](card-classifications.html#financing-kind) classification
+        x-asee-classification: financing-kind
   product-conditions:
     description: Product terms and conditions
     properties:
@@ -633,7 +673,8 @@ definitions:
         - sales-discount
         description: |
           The origin of the variation.
-          For a list of possible values see [price-variation-origin](arrangement-classifications.html#price-variation-origin) enumeration.
+          For a list of possible values see [price-variation-origins](arrangement-classifications.html#price-variation-origins) enumeration.
+        x-asee-enumeration: price-variation-origins
       benefit-source-id:
         type: string
         description: If applicable, the identifier of the benefit source. For example, collective benefit for employees of a company should refer to the company id, campaign benefits to campaign id, etc.
@@ -709,6 +750,7 @@ definitions:
           description: |
             Classification of interest rates due to their purpose. Note that penalty interest applies to loans while early withdrawal interest applies to deposits.
             For a list of possible values see [interest-rate-kinds](arrangement-classifications.html#interest-rate-kinds) enumeration.
+          x-asee-enumeration: interest-rate-kinds
         is-compound:
           type: boolean
           description: If true, interest calculation method is compound, else it is simle.
@@ -716,8 +758,11 @@ definitions:
         calendar-basis:
           type: string
           enum: [30a-360, 30u-360, 30e-360, 30e-360-isda, act-act-icma, act-act-isda, act-365-fixed, act-360, act-364, act-365-l, act-act-afb]
-          description: Day count convention used for interest calculation.
+          description: |
+            Day count convention used for interest calculation.
+            For complete list of possible values see [calendar-basis](product-classifications.html#calendar-basis) enumeration.
           default: act-act-isda
+          x-asee-enumeration: calendar-basis
         rate:
           $ref: '#/definitions/interest-rate'
         variations:
@@ -759,6 +804,7 @@ definitions:
           description: |
             Classification of fees due to their purpose. Note that early repayment fee applies to loans while early withdrawal fee applies to deposits.
             For a list of possible values see [fee-condition-kinds](arrangement-classifications.html#fee-condition-kinds) enumeration.
+          x-asee-enumeration: fee-condition-kinds
         service-code:
           type: string
           description: The code of the service to which fee applies, in case that kind is service fee.
@@ -783,7 +829,9 @@ definitions:
           $ref: '#/definitions/currency'
           description: Upper limit applied after fee calculation
         frequency:
-          description: Fee calculation frequency. Service fees, expenses and origination-fee are usually event-triggered.
+          description: |
+            Fee calculation frequency. Service fees, expenses and origination-fee are usually event-triggered.
+            For complete list of possible values see [fee-condition-frequencies](product-classifications.html#fee-condition-frequencies) enumeration.
           type: string
           enum:
           - event-triggered
@@ -792,23 +840,25 @@ definitions:
           - semiyearly
           - yearly
           default: event-triggered
+          x-asee-enumeration: fee-condition-frequencies
   general-condition:
     description: General, freetext terms and conditions defining
     properties:
       category:
         description: |
-          Categoty which can be used for grouping conditions
+          Category which can be used for grouping conditions
           For a list of possible values see [general-condition-categories](arrangement-classifications.html#general-condition-categories) enumeration.
         type: string
         enum:
         - general
         - repayment
-        - withdraval
+        - withdrawal
         - termination
         - collaterals
         - servicing
         - dependencies
         - relationship
+        x-asee-enumeration: general-condition-categories
       description:
         type: string
         description: Freetext description of the condition. Should be culture-sensitive.
@@ -831,7 +881,9 @@ definitions:
         description: The unique identifier of a Product
       product-kind:
         type: string
-        description: Classifies products according to its nature and scope
+        description: |
+          Classifies products according to its nature and scope
+          For complete list of possible values see [product-kinds](product-classifications.html#product-kinds) enumeration.
         enum:
         - current-account
         - demand-deposit
@@ -842,13 +894,17 @@ definitions:
         - card-access
         - electronic-access
         - service
+        x-asee-enumeration: product-kinds
       status:
         type: string
-        description: Identifies product status from Customer perspective    
+        description: |
+          Identifies product status from Customer perspective
+          For complete list of possible values see [product-statuses](product-classifications.html#product-statuses) enumeration.
         enum:
-        - comming-soon
+        - coming-soon
         - already-used
         - not-used
+        x-asee-enumeration: product-statuses
       campaign-code:
         type: string
         description: Campaign Identifier
@@ -868,9 +924,9 @@ definitions:
         description: Indicate maximal number of instances of bundled component in master product
   bundled-product-list:
     description: List of bundled product which is part of product offering
-    properties: 
-      products: 
-        items: 
+    properties:
+      products:
+        items:
           $ref: "#/definitions/bundled-product-info"
         type: array
   product-documentation:
@@ -882,9 +938,12 @@ definitions:
         description: The unique identifier of a Product
       document-type:
         type: string
-        description: Identifies document type. For complete list of possible values see [document-type]() classification.
+        description: |
+          Identifies document type.
+          For complete list of possible values see [document-type](product-classifications.html#document-type) classification.
+        x-asee-classification: document-type
       work-item-kind:
-        #x-asee-compliance: Is this property used at all? How come that the document has work-item-type, and that the product does not have one? 
+        #x-asee-compliance: Is this property used at all? How come that the document has work-item-type, and that the product does not have one?
         type: string
         description: Identifies Work Item Type for which the document is associated with
       document-review-period:
@@ -899,14 +958,14 @@ definitions:
         description: Identifies Work Item Phase in which a document is introduced
   product-documentation-list:
     description: List of bundled product which is part of product offering
-    properties: 
-      documention: 
-       items: 
+    properties:
+      documention:
+       items:
          $ref: "#/definitions/product-documentation"
        type: array
   product-access-service-channel:
     description: Product Access Service Channel
-    type: object        
+    type: object
     properties:
       channel-code:
         type: string
