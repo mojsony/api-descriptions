@@ -1,3 +1,7 @@
+---
+visibility: internal
+---
+
 <span class="icon"></span>Case API Guide
 =========================
 Customer Case API gives you access to all cases that are associated with some customers and also create new ones.

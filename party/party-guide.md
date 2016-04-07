@@ -1,3 +1,7 @@
+---
+visibility: internal
+---
+
 <span class="icon"></span>Party API
 =========================
 Party API gives you access to individuals and organizations registered with the financial institution whether they are customers or just prospects or related parties. In addition, you can get all party related information like identification documents, contact points and relationships.

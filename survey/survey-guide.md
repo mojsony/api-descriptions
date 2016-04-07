@@ -1,3 +1,6 @@
+---
+visibility: internal
+---
 <span class="icon"></span>Survey API Guide
 =========================
 Survey API gives you access to generated surveys for customer, post captured response to survey and ability to generate surveys based on templates for a customer for capturing customer satisfaction data.

@@ -1,3 +1,7 @@
+---
+visibility: internal
+---
+
 <span class="icon"></span>Profile API Guide
 =========================
 Profile API gives you access to facts on customers, their behavior and usage of arrangements so you can optimize real-time operational decisions and interactions.

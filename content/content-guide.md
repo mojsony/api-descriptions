@@ -1,3 +1,7 @@
+---
+visibility: public
+---
+
 <span class="icon"></span>Content API Guide
 ======================
 

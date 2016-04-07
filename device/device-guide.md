@@ -1,4 +1,8 @@
-﻿<span class="icon"></span>Device API Guide
+﻿---
+visibility: internal
+---
+
+<span class="icon"></span>Device API Guide
 =========================
 Device API manages customer owned devices such as mobile phones and tracks state of bank issued devices such payment cards and authentication devices such as hardware tokens.
 

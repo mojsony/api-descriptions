@@ -1,3 +1,7 @@
+---
+visibility: public
+---
+
 <span class="icon"></span>Reference API Guide
 =========================
 Reference API gives you access to a repository of registries maintained by the financial institution. 
@@ -9,13 +13,15 @@ Reference API gives you access to a repository of registries maintained by the f
    
 Key Resources
 -------------
-Reference API has five top level collection resources: countries, currencies, channels, places and streets.
+Reference API has four top level collection resources: countries, currencies, channels and banks.
 
-Resource | Description
------------ |-----------
-*countries*  | Register of official countries.
-*currencies*      | Register of all currencies that one financial institution can work.
-*channels*    | Identifies a conduit through which products and services are made available to a Customer and by which the Organization and Customers communicate with each other.
+Resource     | Description
+-----------  |-----------
+*countries*  | Reference list of countries.
+*currencies* | Reference list of all currencies that one financial institution can work.
+*channels*   | Reference list of channels that bank uses. Channel represents a conduit through which products and services are made available to a customer and by which the bank and customers communicate with each other.
+*banks*      | Reference list of all banks of interest to financial institutions, all domestic banks and also all foreign banks that banks corresponds with.
+
 
 Getting started tutorial
 ---------------

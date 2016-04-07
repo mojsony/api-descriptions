@@ -1,4 +1,8 @@
-﻿Product API
+﻿---
+visibility: internal
+---
+
+Product API
 ======================
 Product API provides product information needed for channel applications. The main functions are search over product catalog and kind-specific detailed product information. Besides arrangement-based products, product catalog also contains all services bundled into these arrangement-based products.
    

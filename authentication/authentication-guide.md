@@ -1,3 +1,7 @@
+---
+visibility: internal
+---
+
 <span class="icon"></span>Authentication API Guide
 ======================
 Authentication API exposes [OpenID Connect Core 1.0](http://openid.net/specs/openid-connect-core-1_0.html) compatible endpoints for authentication using [ OAuth 2.0](http://tools.ietf.org/html/rfc6749) authorization framework

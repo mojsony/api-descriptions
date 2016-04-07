@@ -1,3 +1,7 @@
+---
+visibility: public
+---
+
 <span class="icon"></span>Account Data API 
 ======================
 Account Data API provides simplified access to balance and histories of customer account arrangements. Beyond traditional access to account balances and transactions, more advanced capabilities such as full text search and geospatial information are available. When PFM feature is present transactions also have spending categories and customer assigned tags. Clients that have capabilities to store data locally can use sync optimized endpoints to transactions that occurred since last synchronization.

@@ -1,3 +1,7 @@
+---
+visibility: public
+---
+
 <span class="icon"></span>Location API Guide
 =======================
 Location API provides information on bank's physical facilities and help work with structured addresses. For facilities you can get addresses, geographic coordinates and other location or relevant data like working hours. You can also find facilities located near place or geographic coordinates. Elements of structured addresses such as official listo of places and streets is available along with option to validate address and get postal address code that is used for optimized postal delivery.
