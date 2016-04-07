@@ -1,4 +1,5 @@
 swagger: "2.0"
+x-asee-visibility: public
 info:
   version: v1
   title: Content API
@@ -294,10 +295,10 @@ paths:
         -
           name: overwrite-if-exists
           in: formData
-          description: If present and true any existing documents having same name will be overwritten 
+          description: If present and true any existing documents having same name will be overwritten
           required: true
           type: boolean
-          default: false          
+          default: false
       responses:
         '201':
           description: Documents uploaded
@@ -310,7 +311,7 @@ paths:
             - [folder-locked](content-problems.html)
             - [folder-archived](content-problems.html)
             - [max-upload-size-exceeded](content-problems.html)
-            - [document-already-exists](content-problems.html)            
+            - [document-already-exists](content-problems.html)
           schema:
             $ref: '#/definitions/business-problem'
         default:
@@ -391,7 +392,7 @@ paths:
         -
           name: overwrite-if-exists
           in: formData
-          description: If present and true any existing documents having same name will be overwritten 
+          description: If present and true any existing documents having same name will be overwritten
           required: true
           type: boolean
           default: false
@@ -444,7 +445,7 @@ paths:
 
             - [folder-locked](content-problems.html)
             - [folder-archived](content-problems.html)
-            - [folder-already-exists](content-problems.html)            
+            - [folder-already-exists](content-problems.html)
           schema:
             $ref: '#/definitions/business-problem'
         default:

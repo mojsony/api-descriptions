@@ -1,4 +1,5 @@
 swagger: '2.0'
+x-asee-visibility: public
 info:
   description: |
     Reference API gives you access to a repository of registries maintained by the financial institution.

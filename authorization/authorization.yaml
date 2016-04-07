@@ -1,4 +1,5 @@
 swagger: '2.0'
+x-asee-visibility: public
 info:
   description: Authorization API enables authorization of sensitive actions performed by customers or agents using 2nd factor authentication. Sensitive action authorizations can be explicitly requested by applications or they can be initiated by APIs during authorization checking. Support for 4 eyes verification and separation of duties will be added in future.
   title: Authorization API
@@ -21,7 +22,7 @@ paths:
       summary: Generate and send SMS one-time password
       tags:
         - OTP
-      x-asee-tags: []    
+      x-asee-tags: []
       operationId: OTP_SendSMS
       parameters:
         - description: Command with details to send SMS OTP
@@ -34,22 +35,22 @@ paths:
         202:
           description: Accepted - SMS sent
           schema:
-            $ref: '#/definitions/verification-id'   
+            $ref: '#/definitions/verification-id'
         440:
           description: |
             Your request was well constructed but it could not be processed. Consider the following possible problems and look into response for more details:
 
-            - [no-such-user]()            
+            - [no-such-user]()
         default:
           $ref: '#/responses/default-error-response'
 
   /otp/sms/verify:
     post:
       operationId: OTP_VerifySMS
-      summary: Verify SMS one-time password 
+      summary: Verify SMS one-time password
       tags:
         - OTP
-      x-asee-tags: []      
+      x-asee-tags: []
       parameters:
         - description: Request with details to verify SMS OTP
           in: body
@@ -63,19 +64,19 @@ paths:
         440:
           description: |
             Your request was well constructed but OTP was be verified. Consider the following possible problems and look into response for more details:
-            
+
             - [bad-otp]()
             - [replayed-otp]()
-            - [no-such-verification]()    
+            - [no-such-verification]()
         default:
           $ref: '#/responses/default-error-response'
 
   /otp/email/send:
     post:
-      summary: Generate and send email with one-time password 
+      summary: Generate and send email with one-time password
       tags:
         - OTP
-      x-asee-tags: []    
+      x-asee-tags: []
       operationId: OTP_SendEmail
       parameters:
         - description: Command with details to send OTP email
@@ -88,22 +89,22 @@ paths:
         202:
           description: Accepted - Email sent
           schema:
-            $ref: '#/definitions/verification-id'   
+            $ref: '#/definitions/verification-id'
         440:
           description: |
             Your request was well constructed but it could not be processed. Consider the following possible problems and look into response for more details:
 
-            - [no-such-user]()            
+            - [no-such-user]()
         default:
           $ref: '#/responses/default-error-response'
-          
+
   /otp/email/verify:
     post:
       operationId: OTP_VerifyEmail
-      summary: Verify email one-time password 
+      summary: Verify email one-time password
       tags:
         - OTP
-      x-asee-tags: []      
+      x-asee-tags: []
       parameters:
         - description: Request with details to verify email OTP
           in: body
@@ -117,20 +118,20 @@ paths:
         440:
           description: |
             Your request was well constructed but OTP was be verified. Consider the following possible problems and look into response for more details:
-            
+
             - [bad-otp]()
             - [replayed-otp]()
-            - [no-such-verification]()    
+            - [no-such-verification]()
         default:
-          $ref: '#/responses/default-error-response'          
+          $ref: '#/responses/default-error-response'
 
   /otp/oath/verify:
     post:
       operationId: OTP_VerifyOATH
-      summary: Verify OATH compliant one-time password 
+      summary: Verify OATH compliant one-time password
       tags:
         - OTP
-      x-asee-tags: []      
+      x-asee-tags: []
       parameters:
         - description: Request with details to verify HOTP or TOTP
           in: body
@@ -149,7 +150,7 @@ paths:
             - [replayed-otp]()
             - [no-such-user]()
           schema:
-            $ref: '#/definitions/business-problem'          
+            $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
 
@@ -179,14 +180,14 @@ definitions:
     properties:
       action:
         type: string
-        description: Optional service code of sensitive action that will be verified 
+        description: Optional service code of sensitive action that will be verified
       message:
         type: string
         description: Optional message to include in SMS sent to user
       phone-number:
         type: string
         format: phone
-        description: Phone number that will receive OTP 
+        description: Phone number that will receive OTP
       user-id:
         type: string
         description: Optional identifier of user who will receive SMS on preferred mobile phone number.
@@ -196,22 +197,22 @@ definitions:
     properties:
       action:
         type: string
-        description: Optional service code of sensitive action that will be verified 
+        description: Optional service code of sensitive action that will be verified
       message:
         type: string
         description: Optional message to include in SMS sent to user
       email:
         type: string
         format: email
-        description: Email that will receive OTP 
+        description: Email that will receive OTP
       user-id:
         type: string
         description: Optional identifier of user who will receive SMS on preferred mobile phone number.
-        
+
   verification-id:
-    description: Identifies SMS OTP verification in progress 
+    description: Identifies SMS OTP verification in progress
     type: string
-    
+
   verify-sms-otp-request:
     description: Request with details to verify SMS OTP
     properties:
@@ -232,12 +233,12 @@ definitions:
       otp:
         type: string
         description: Digits sent via Email
-        
+
   verify-oath-otp-request:
     description: Request with details to verify HOTP or TOTP
     required:
       - user-id
-      - otp    
+      - otp
     properties:
       user-id:
         type: string
@@ -245,7 +246,7 @@ definitions:
       otp:
         type: string
         description: Digits generated by HOTP or TOTP
-        
+
 
 responses:
   default-error-response:

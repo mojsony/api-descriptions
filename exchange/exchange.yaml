@@ -1,4 +1,5 @@
 swagger: '2.0'
+x-asee-visibility: public
 info:
   description: Exchange API provides endpoints to initiate and track currency exchange orders, get one-time tailored offers for specific exchange deals and get latest and historic exchange rates and lists for reference and calculations.
   title: Exchange API
@@ -594,7 +595,7 @@ definitions:
       rates:
         type: array
         description: List of rate records
-        items:  
+        items:
           $ref: '#/definitions/rate-record'
     example:
       total-count: 68
