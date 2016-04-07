@@ -1,4 +1,4 @@
-ASSECO REST API REFERENCE LICENSE
+Asseco REST API Reference License
 =================================
 
 This license governs use of the application programming interface (API) definitions. If you use the API, you accept this license. If you do not accept the license, do not use the API.
