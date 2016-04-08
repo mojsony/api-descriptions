@@ -370,14 +370,14 @@ definitions:
           Classifies products according to its nature and scope
           For complete list of possible values see [product-kinds](product-classifications.html#product-kinds) enumeration.
         enum:
-        - current-account
-        - demand-deposit
-        - term-deposit
-        - term-loan
-        - credit-facility
-        - overdraft-facility
-        - card-access
-        - electronic-access
+        - current-account-product
+        - demand-deposit-product
+        - term-deposit-product
+        - term-loan-product
+        - credit-facility-product
+        - overdraft-facility-product
+        - card-access-product
+        - electronic-access-product
         - service
       name:
         type: string
@@ -450,6 +450,30 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/product'
+    example:
+      products:
+          - product-code: 0011112222
+            kind: electronic-access-product
+            name: Name Electronic Acces
+            status: available
+            primary-currency: EUR
+          - product-code: 0011112233
+            kind: card-access-product
+            name: Name Card Access
+            status: available
+            primary-currency: RSD
+            card-kind: credit-card
+            card-brand: visa
+          - product-code: 0011112244
+            kind: current-account-product
+            name: Name Current Account
+            status: available
+            primary-currency: RSD
+          - product-code: 0011112255
+            kind: service
+            name: Name Service
+            status: available
+            primary-currency: RSD
   card-access-product:
     description: Identifies a Product which allows a Customer to obtain access to a group of services that are related to the card
     type: object
@@ -523,14 +547,11 @@ definitions:
     type: object
     allOf:
       - $ref: '#/definitions/product'
-
-
   demand-deposit-product:
     description: Identifies a particular type of Deposit Product that is used for handling day-to-day transactions and can be used to accumulate savings
     type: object
     allOf:
       - $ref: '#/definitions/product'
-
   term-deposit-product:
     description: Type of Deposit product that allows customer to deposit a certain amount of money to be for a specified term, under certain conditions
     type: object
@@ -545,7 +566,6 @@ definitions:
         description: Minimal term period of the product
         type: string
         format: ISO 8601 duration
-
   term-loan-product:
     description: Is a Finance Service that is characterized by the lending of funds for a fixed term, for the purchase of goods and/or services.
     type: object
@@ -572,7 +592,6 @@ definitions:
           Identifies type of funding for the product.
           For detailed view of possible values see [financing-kind](card-classifications.html#financing-kind) classification
         x-asee-classification: financing-kind
-
   electronic-access-product:
     description: "Identifies a Product Access Service which enables a Product to be accessed by use of an on-line system, such as a computer terminal or telephone."
     type: object

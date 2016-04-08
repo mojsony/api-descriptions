@@ -73,23 +73,22 @@ no-longer-available     | No Longer Available
 temporarily-unavailable | Temporarily Unavailable
 coming-soon             | Coming Soon
 
-
 Product Kinds
 --------------
 
 Classifies products according to its nature and scope
 
-Literal            | Description
--------------------|-----------------------------------------------------
-current-account    | Current Account
-demand-deposit     | Demand Deposit
-term-deposit       | Term Deposit
-term-loan          | Term Loan
-credit-facility    | Credit Facility
-overdraft-facility | Overdraft Facility
-card-access        | Card Access
-electronic-access  | Electronic Access
-service            | Service
+Literal                    | Description
+---------------------------|-----------------------------------------------------
+current-account-product    | Current Account
+demand-deposit-product     | Demand Deposit
+term-deposit-product       | Term Deposit
+term-loan-product          | Term Loan
+credit-facility-product    | Credit Facility
+overdraft-facility-product | Overdraft Facility
+card-access-product        | Card Access
+electronic-access-product  | Electronic Access
+service                    | Service
 
 Interest Rate Kinds
 --------------
