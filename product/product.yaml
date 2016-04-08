@@ -172,6 +172,7 @@ parameters:
       Identifies product status from Customer perspective
       For complete list of possible values see [product-statuses](product-classifications.html#product-statuses) enumeration.
     required: false
+    collectionFormat: csv
     type: array
     items:
       type: string
@@ -184,6 +185,7 @@ parameters:
       Product kind. If set only products of these kinds will be returned otherwise all products will be returned
       For complete list of possible values see [product-kinds](product-classifications.html#product-kinds) enumeration.
     required: false
+    collectionFormat: csv
     type: array
     items:
       type: string
@@ -570,13 +572,13 @@ definitions:
           Identifies type of funding for the product.
           For detailed view of possible values see [financing-kind](card-classifications.html#financing-kind) classification
         x-asee-classification: financing-kind
-  
+
   electronic-access-product:
     description: "Identifies a Product Access Service which enables a Product to be accessed by use of an on-line system, such as a computer terminal or telephone."
     type: object
     allOf:
       - $ref: '#/definitions/product'
-        
+
   product-conditions:
     description: Product terms and conditions
     properties:
