@@ -99,7 +99,7 @@ paths:
         - Shapeable
     post:
       description: |
-        Creating new personal beneficiary.
+        Adds new personal beneficiary.
         It is useful when to have personal beneficiary for someone whom is payed often.
       operationId: PersonalBeneficiaries_Create
       parameters:
@@ -115,7 +115,7 @@ paths:
             $ref: '#/definitions/resource-created-result'
         default:
           $ref: '#/responses/default-error-response'
-      summary: Creates new personal beneficiary.
+      summary: Add new personal beneficiary
       tags:
         - Beneficiaries
       x-asee-tags: []
@@ -151,7 +151,7 @@ paths:
             $ref: '#/definitions/beneficiary'
         default:
           $ref: '#/responses/default-error-response'
-      summary: Get personal beneficiary details.
+      summary: Get personal beneficiary details
       tags:
         - Beneficiaries
       x-asee-tags:
@@ -162,7 +162,7 @@ paths:
         It is useful when some changes are to be made on particular personal beneficiary.
       operationId: PersonalBeneficiaries_Update
       parameters:
-        - description: Update beneficiary command.
+        - description: Update beneficiary command
           in: body
           name: cmd
           required: true
@@ -174,7 +174,7 @@ paths:
           description: No content
         default:
           $ref: '#/responses/default-error-response'
-      summary: Updates personal beneficiary.
+      summary: Modify personal beneficiary
       tags:
         - Beneficiaries
       x-asee-tags: []
@@ -211,7 +211,7 @@ paths:
         - Sortable
     post:
       description: |
-        Creating new payment template.
+        Adds new payment template.
         It is useful because it makes easier future similar payments.
       operationId: Drafts_Create
       parameters:
@@ -228,7 +228,7 @@ paths:
             $ref: '#/definitions/resource-created-result'
         default:
           $ref: '#/responses/default-error-response'
-      summary: Create new draft or template
+      summary: Add new draft or template
       tags:
         - Drafts
       x-asee-tags: []
@@ -261,13 +261,13 @@ paths:
             $ref: '#/definitions/draft'
         default:
           $ref: '#/responses/default-error-response'
-      summary: Gets details of specific draft or template
+      summary: Get details of specific draft or template
       tags:
         - Drafts
       x-asee-tags: []
     put:
       description: |
-        Updating particular payment template.
+        Modifies particular payment template.
         It is useful when some changes are required on selected template.
       operationId: Drafts_Modify
       parameters:
@@ -290,7 +290,7 @@ paths:
   '/transfers':
     get:
       description: |
-        Gets list of customer transfers. This list can be filtered by debtor, creditor, date range, ammount range,
+        List customer's transfers. This list can be filtered by debtor, creditor, date range, ammount range,
         kind... This is useful when is required to view list of transfers by searched criteria, or all transfers.
       operationId: Transfers_GetList
       parameters:
@@ -322,7 +322,7 @@ paths:
             $ref: '#/definitions/transfer-list'
         default:
           $ref: '#/responses/default-error-response'
-      summary: Querying transfers.
+      summary: List transfers
       tags:
         - Transfers
       x-asee-tags:
@@ -332,7 +332,7 @@ paths:
   '/transfers/{transfer-id}':
     get:
       description: |
-        Gets particular transfer details.
+        Gets specific transfer details.
         It is useful when details about particular transfer are required to be seen.
       operationId: Transfers_Get
       parameters:
@@ -346,14 +346,14 @@ paths:
             $ref: '#/definitions/transfer'
         default:
           $ref: '#/responses/default-error-response'
-      summary: Gets transfer's details.
+      summary: Get details of specific transfer
       tags:
         - Transfers
       x-asee-tags:
         - Shapeable
   '/transfers/{transfer-id}/cancel':
     post:
-      description: Cancels transfer. It is useful when transfer is abandoned before it is executed.
+      description: Cancels transfer. It is useful when transfer is abandoned before it is executed
       operationId: Transfers_Cancel
       parameters:
         - $ref: '#/parameters/transfer-id-param'
@@ -364,14 +364,14 @@ paths:
             $ref: '#/definitions/resource-created-result'
         default:
           $ref: '#/responses/default-error-response'
-      summary: Cancels transfer
+      summary: Cancel transfer
       tags:
         - Transfers
       x-asee-tags: []
   '/transfers/{transfer-id}/image':
     put:
       summary: Set transfer's image url
-      description: Set url of image kept for this transfer in [Content API][content-getstarted.html]
+      description: Sets url of image kept for this transfer in [Content API][content-getstarted.html]
       operationId: Transfers_SetImageUrl
       parameters:
         - description: Set transfer image url command
@@ -392,7 +392,7 @@ paths:
   '/transfers/{transfer-id}/geolocation':
     put:
       summary: Set transfer's geolocation
-      description: Set transfer geolocation or update new one instead of previous. It is way to put location where transfer was made, or change previous one, in order to mark specific transfer
+      description: Sets transfer geolocation or update new one instead of previous. It is way to put location where transfer was made, or change previous one, in order to mark specific transfer
       operationId: Transfers_SetGeolocation
       parameters:
         - description: Set transfer geolocation command
@@ -449,7 +449,7 @@ paths:
             $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
-      summary: Initiates balance transfer.
+      summary: Initiate balance transfer
       tags:
         - Transfers
       x-asee-tags: []
@@ -494,7 +494,7 @@ paths:
         #     $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
-      summary: Validates balance transfer.
+      summary: Validate balance transfer
       tags:
         - Transfers
       x-asee-tags: []
@@ -540,7 +540,7 @@ paths:
             $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
-      summary: Initiates credit transfer.
+      summary: Initiate credit transfer
       tags:
         - Transfers
       x-asee-tags: []
@@ -579,7 +579,7 @@ paths:
         #     $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
-      summary: Validates credit transfer.
+      summary: Validate credit transfer
       tags:
         - Transfers
       x-asee-tags: []
@@ -613,7 +613,7 @@ paths:
             $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
-      summary: Initiates cross-border transfer.
+      summary: Initiate cross-border transfer
       tags:
         - Transfers
       x-asee-tags: []
@@ -662,7 +662,7 @@ paths:
         #     $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
-      summary: Validates cross-border transfer.
+      summary: Validates cross-border transfer
       tags:
         - Transfers
       x-asee-tags: []
@@ -721,7 +721,7 @@ paths:
             $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
-      summary: Initiates person to person transfer.
+      summary: Initiate person to person transfer
       tags:
         - Transfers
       x-asee-tags: []
@@ -762,7 +762,7 @@ paths:
             $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
-      summary: Executes person to person transfer.
+      summary: Execute person to person transfer
       tags:
         - Transfers
       x-asee-tags: []
@@ -797,7 +797,7 @@ paths:
         #     $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
-      summary: Validates person to person transfer.
+      summary: Validate person to person transfer
       tags:
         - Transfers
       x-asee-tags: []
@@ -828,7 +828,7 @@ paths:
             $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
-      summary: Initiates top-up transfer.
+      summary: Initiate top-up transfer
       tags:
         - Transfers
       x-asee-tags: []
@@ -923,7 +923,7 @@ paths:
   '/purpose-codes':
     get:
       description: |
-        Displays purpose codes list.
+        Response contains list of appropriate purpose codes.
         It is useful when choosing purpose code for some transfer.
       operationId: PurposeCodes_GetList
       parameters:
@@ -945,7 +945,7 @@ paths:
             $ref: '#/definitions/purpose-code-list'
         default:
           $ref: '#/responses/default-error-response'
-      summary: Gets purpose codes list.
+      summary: List purpose codes
       tags:
         - Purpose codes
       x-asee-tags:

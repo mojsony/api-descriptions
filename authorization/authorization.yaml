@@ -20,6 +20,7 @@ paths:
   /otp/sms/send:
     post:
       summary: Generate and send SMS one-time password
+      description: Generates one-time password and sends it to receipient specified in `user-id` or `phone-number`
       tags:
         - OTP
       x-asee-tags: []
@@ -48,6 +49,7 @@ paths:
     post:
       operationId: OTP_VerifySMS
       summary: Verify SMS one-time password
+      description: Verifies one-time password entered by user for verification in progress
       tags:
         - OTP
       x-asee-tags: []
@@ -74,6 +76,7 @@ paths:
   /otp/email/send:
     post:
       summary: Generate and send email with one-time password
+      description: Generates one-time password and sends it to receipient specified in `user-id` or `email`
       tags:
         - OTP
       x-asee-tags: []
@@ -102,6 +105,7 @@ paths:
     post:
       operationId: OTP_VerifyEmail
       summary: Verify email one-time password
+      description: Verifies one-time password entered by user for verification in progress
       tags:
         - OTP
       x-asee-tags: []
@@ -129,6 +133,7 @@ paths:
     post:
       operationId: OTP_VerifyOATH
       summary: Verify OATH compliant one-time password
+      description: Verifies TOTP or HOTP one-time password entered by user identified with `user-id`
       tags:
         - OTP
       x-asee-tags: []

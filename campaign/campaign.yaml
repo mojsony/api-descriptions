@@ -57,7 +57,8 @@ paths:
         required: true
         type: string
     post:
-      summary: Capture customer response to campaign offer
+      summary: Capture response to campaign offer
+      description: Records customer's response to campaign offer
       tags:
         - Campaigns
       operationId: Campaigns_CaptureResponse
@@ -89,12 +90,13 @@ paths:
         required: true
         type: string
     post:
-      summary: Activates the benefit of the campaign, e.g. enables x free transactions on atm for the customer.
+      summary: Activate campaign benefit
+      description: Activates the benefit of the campaign. For example enables 100 free transactions on atm for the customer
       tags:
         - Campaigns
       operationId: Campaigns_Benefits_Activate
       parameters:
-        - description: Parameters for activation of campaign benefit.
+        - description: Parameters for activation of campaign benefit
           in: body
           name: cmd
           required: true

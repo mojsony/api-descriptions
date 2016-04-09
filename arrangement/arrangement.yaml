@@ -22,13 +22,14 @@ tags:
   - name: Arrangements
     description: Working with sales arrangements
   - name: Installment Plans
-    description: Working with installment plans as sub-resources of sales arrangements
+    description: Working with loan installment plans
   - name: Conditions
-    description: Working with conditions as sub-resources of sales arrangements
+    description: Working with arrangement conditions
 paths:
   /arrangements:
     get:
       summary: List sales arrangements with basic information
+      description: Response contains list of arrangements that match critera
       tags:
         - Arrangements
       x-asee-tags:
@@ -58,7 +59,8 @@ paths:
           $ref: '#/responses/default-error-response'
   /arrangements/{arrangement-number}:
     get:
-      summary: Retrieves sales arrangement general information
+      summary: Get general information on arrangement 
+      description: Response contains general information on specific product arrangements      
       tags:
         - Arrangements
       x-asee-tags:
@@ -77,7 +79,8 @@ paths:
           $ref: '#/responses/default-error-response'
   /arrangements/{arrangement-number}/installment-plan:
     get:
-      summary: Retrieves installment plan for the arrangement with given arrangement-number.
+      summary: Get installment plan for arrangement
+      description: Response contains installment plan for specific loan arrangement      
       tags:
         - Installment Plans
       x-asee-tags:
@@ -99,7 +102,8 @@ paths:
           $ref: '#/responses/default-error-response'
   /arrangements/{arrangement-number}/conditions:
     get:
-      summary: Retrieves terms and conditions for the arrangement with given arrangement-number.
+      summary: Get conditions of specific arrangement
+      description: Response contains terms and conditions for specific arrangement
       tags:
         - Conditions
       x-asee-tags:

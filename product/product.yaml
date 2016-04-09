@@ -28,7 +28,7 @@ tags:
 paths:
   /products:
     get:
-      summary: Returns list of products with general information
+      summary: List products in catalogue
       tags:
         - Products
       x-asee-tags:
@@ -67,7 +67,7 @@ paths:
           $ref: '#/responses/default-error-response'
   /products/{product-code}/conditions:
     get:
-      summary: Get terms and conditions for the product
+      summary: Get terms and conditions for specific product
       tags:
         - Products
       x-asee-tags:

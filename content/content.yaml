@@ -20,14 +20,14 @@ produces:
   - application/json
 tags:
   -
-    name: Documents
-    description: Working with documents
+    name: Repositories
+    description: Working with repositories
   -
     name: Folders
     description: Working with folders
   -
-    name: Repositories
-    description: Working with repositories
+    name: Documents
+    description: Working with documents
   -
     name: Classifications
     description: Working with classifications
@@ -36,6 +36,7 @@ paths:
   /repositories:
     get:
       summary: List available content repositories
+      description: Response contains list of repositories that are available for access. Some repositories offer allow anonimous access to certain folder while other offer access to authenticated users 
       tags:
         - Repositories
       operationId: Repositories_GetList
@@ -51,6 +52,7 @@ paths:
       - $ref: "#/parameters/repository-name"
     get:
       summary: Get information about the specific repository
+      description: Response contain general information about specific content repository
       tags:
         - Repositories
       operationId: Repositories_Get
@@ -91,12 +93,14 @@ paths:
             $ref: '#/definitions/content-item-list'
         default:
           $ref: '#/responses/default-error-response'
+          
   /{repo}/{path}/search:
     parameters:
       - $ref: "#/parameters/repository-name"
       - $ref: "#/parameters/path"
     get:
       summary: Search folder contents by path
+      description: Response contains list of specified folder's contents that match search query. When subfolders parameter is present search includes matching cotent from all subfolders
       tags:
         - Folders
       x-asee-tags:
@@ -125,6 +129,7 @@ paths:
       - $ref: "#/parameters/folder-id-param"
     get:
       summary: Search folder contents
+      description: Response contains list of specified folder's contents that match search query. When subfolders parameter is present search includes matching cotent from all subfolders      
       tags:
         - Folders
       x-asee-tags:
@@ -153,6 +158,7 @@ paths:
       - $ref: "#/parameters/path"
     get:
       summary: Get folder metadata by path
+      description: Response contains metadata for specified folder      
       tags:
         - Folders
       operationId: Folders_GetMetadataByPath
@@ -169,7 +175,8 @@ paths:
       - $ref: "#/parameters/repository-name"
       - $ref: "#/parameters/folder-id-param"
     get:
-      summary: Get folder metadata by id
+      summary: Get folder metadata
+      description: Response contains metadata for specified folder           
       tags:
         - Folders
       operationId: Folders_GetMetadata
@@ -183,6 +190,7 @@ paths:
           $ref: '#/responses/default-error-response'
     put:
       summary: Update folder properties
+      description: Updates writeable metadata for specified folder 
       tags:
         - Folders
       operationId: Folders_UpdateMetadata
@@ -219,8 +227,7 @@ paths:
     post:
       summary: Upload multiple documents to folder in one request
       description: |
-        Multiple documents are uploaded within single request as binary content streams within form-data representation. Once server receives complete request it stores it one by one in a backing repository. Storing files into backing repository is not transactional operation. Content stream size must not exceed `50 MB`. Maximum nuber of documents is `5`. Metadata will be matched with content streams in order they are submitted.
-        >**This endpoint is still `evolving` so breaking changes have `90` days notice.**
+        Uploads multiple documents with single http request as multiple binary content streams within form-data representation. Once server receives complete request it stores it one by one in a backing repository. Storing files into backing repository is not transactional operation. Content stream size must not exceed `50 MB`. Maximum nuber of documents is `5`. Metadata will be matched with content streams in order they are submitted
       tags:
         - Documents
       operationId: Documents_UploadMultiple
@@ -321,9 +328,10 @@ paths:
       - $ref: "#/parameters/repository-name"
       - $ref: "#/parameters/folder-id-param"
     delete:
-      summary: Delete folder.
+      summary: Delete folder
       description: |
-        > **WARNING**: This operation may delete folder with all its contents and subfolders'
+        Deletes specified folder
+        > **WARNING**: Depending on parameters specified and repository policy this operation may delete folder with all its contents and subfolders'
       tags:
         - Folders
       operationId: Folders_Delete
@@ -349,7 +357,7 @@ paths:
           $ref: '#/responses/default-error-response'
     post:
       summary: Upload document to folder
-      description: Content stream size must not exceed 50 MB.
+      description: Uploads document content stream to specified folder. Content stream size must not exceed `50 MB`
       tags:
         - Documents
       operationId: Documents_Upload
@@ -423,6 +431,7 @@ paths:
       - $ref: "#/parameters/repository-name"
     post:
       summary: Create new folder in repository
+      description: Creates new folder under specified parent path
       tags:
         - Folders
       operationId: Folders_Create
@@ -458,6 +467,7 @@ paths:
       - $ref: "#/parameters/file-name"
     get:
       summary: Get document metadata by path and file name
+      description: Response contains metadata for specified document 
       tags:
         - Documents
       operationId: Documents_GetMetadataByPath
@@ -475,6 +485,7 @@ paths:
       - $ref: "#/parameters/file-name"
     get:
       summary: Dowlnoad document content by path
+      description: Response contains document content stream with specific `Content-Type` and `Content-Disposition` headers
       produces:
       - image/jpg
       - image/png
@@ -495,7 +506,8 @@ paths:
       - $ref: "#/parameters/repository-name"
       - $ref: "#/parameters/document-id-param"
     get:
-      summary: Get document metadata by id
+      summary: Get document metadata
+      description: Response contains metadata for specified document      
       tags:
         - Documents
       operationId: Documents_GetMetadata
@@ -508,9 +520,11 @@ paths:
           $ref: '#/responses/default-error-response'
     put:
       summary: Update document metadata
+      description: Updates writeable metadata for specified document       
       tags:
         - Documents
       operationId: Documents_UpdateMetadata
+      
       parameters:
         - $ref: "#/parameters/repository-name"
         - $ref: "#/parameters/document-id-param"
@@ -544,6 +558,7 @@ paths:
       - $ref: "#/parameters/document-id-param"
     get:
       summary: Dowlnoad document content
+      description: Response contains document content stream with specific `Content-Type` and `Content-Disposition` headers      
       produces:
       - image/jpg
       - image/png
@@ -561,7 +576,7 @@ paths:
           $ref: '#/responses/default-error-response'
     delete:
       summary: Delete document
-      description: 'WARNING: This operation deletes both metadata and content stream'
+      description: Deletes both metadata and content stream of specified document
       tags:
         - Documents
       operationId: Documents_Delete
