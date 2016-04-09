@@ -3,8 +3,8 @@ info:
   version: beta
   title: Customer Survey Events
   description: 'Events described here tell you what happens to **surveys** and **survey templates**. To learn more about general approach to event processing see [How to work with events]().'
-host: playground.apistudio.io
-basePath: /try/86501cfa-c99e-4d69-8236-d9fcf41bba7d
+host: bankapi.net
+basePath: /beta/survey
 schemes:
   - http
 produces:

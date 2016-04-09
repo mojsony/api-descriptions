@@ -1,63 +1,63 @@
 swagger: '2.0'
 x-asee-visibility: internal
-basePath: "/v1/fraud"
+basePath: /beta/fraud
 schemes:
   - http
   - https
-host: dev.asseco-see.com
+host: bankapi.net
 
 info:
   title: Fraud API
-  version: v1
-  description: |
-     Fraud API enables to prevent fraud activitis according to legal requirements of financial institution.
-     With Fraud API you can:
-       - Check client AML status
-       - Check whether client is on black list.
+  version: beta
+  description: Fraud API helps detect fraudelent and money laundering activities by checking persons against AML lists and blacklists according to legal requirements.
 
 tags:
   -
     name: AML
     description: Working with AML lists
   -
-    name: Black lists
-    description: Working with Black lists
+    name: Blacklist
+    description: Working with Blacklists
 
 responses:
   default-error-response:
     description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
 
-
 paths:
-  "/aml/status":
+  "/aml/check":
     get:
-      operationId: AML_GetStatus
+      operationId: AML_Check
+      summary: Checks person against AML lists     
+      description: Checks person identity against anti money laundering (AML) person list and returns match rating and reliability 
       parameters:
-      - description: Personal identification number (JMBG).
+      - description: Identification number available (national-id-number, SSN, passport number or similar)
         in: query
-        name: personal-identification-number
+        name: identification-number
         required: true
         type: string
-      - description: First name of the client.
+      - description: First name of the person
         in: query
         name: first-name
         required: true
         type: string
-      - description: Last name of the client.
+      - description: Last name of the person
         in: query
         name: last-name
         required: true
         type: string
-      - description: City where the client lives.
+      - description: City where the person lives
         in: query
         name: city
         required: false
         type: string
-      - description: Country code.
+      - description: ISO 3166-2 country code
         in: query
-        name: country-code
+        name: country
         required: false
         type: string
+        format: ISO 3166-2 
+        minLength: 2
+        maxLength: 2
       responses:
         '200':
           description: Success
@@ -65,93 +65,102 @@ paths:
             $ref: '#/definitions/aml-status'
         default:
           $ref: '#/responses/default-error-response'
-      summary: Checks customer AML status and returns customer rating and reliability.
+
       tags:
         - AML
-  "/black-lists/status":
+  
+  "/blacklist/check":
     get:
-      operationId: BlackLists_GetStatus
+      operationId: BlackList_Check
+      summary: Checks person against blacklists
+      description: Checks person identity against black list and returns match rating and reliability       
       parameters:
-      - description: Personal identification number (JMBG).
+      - description: Identification number available (national-id-number, SSN, passport number or similar)
         in: query
-        name: personal-identification-number
+        name: identification-number
         required: true
         type: string
-      - description: First name of the client.
+      - description: First name of the person
         in: query
         name: first-name
         required: true
         type: string
-      - description: Last name of the client.
+      - description: Last name of the person
         in: query
         name: last-name
         required: true
         type: string
-      - description: City where the client lives.
+      - description: City where the person lives
         in: query
         name: city
         required: false
         type: string
-      - description: Country code.
+      - description: ISO 3166-2 country code
         in: query
-        name: country-code
+        name: country
         required: false
         type: string
+        format: ISO 3166-2 
+        minLength: 2
+        maxLength: 2
       responses:
         '200':
           description: Success
           schema:
               items:
-                $ref: '#/definitions/black-list-status'
+                $ref: '#/definitions/blacklist-status'
               type: array
         default:
           $ref: '#/responses/default-error-response'
-      summary: Checks whether client is on black lists and returns percentages of belonging.
       tags:
-        - Black lists
+        - Blacklist
 
 definitions:
 
   aml-status:
-      description: Indicates the AML rating of a customer.
-      properties:
-        rating-value:
-          x-asee-compliance: Is there some correlation between this property and the one below? Five vs four values in enumeration.
-          description: The evaluation of the acceptability of the customer. Possible values are in range [0-4]
-          type: "string"
-          enum:
-          - 0
-          - 1
-          - 2
-          - 3
-          - 4
-        reliability:
-          description: The presumed accuracy of the assessment result.
-          type: "string"
-          enum:
-          - low-risk
-          - normal-risk
-          - high-risk
-          - unacceptable-risk
-      type: "object"
-      example:
-        rating-value: 0
-        reliability: low-risk
-  black-list-status:
-      description: Indicates the affiliation of a customer to black list.
-      properties:
-        percentage:
-          description: Percent of matching.
-          type: "string"
-        name:
-          description: Name of black list on which client was found.
-          type: "string"
-      type: "object"
-      example:
+    description: AML rating of a person
+    properties:
+      rating:
+        description: The evaluation of the acceptability of the person as a customer. Possible values are in range [0-4]
+        type: integer
+        format: int32
+        minimum: 0
+        maximum: 4
+      reliability:
+        description: The presumed accuracy of the assessment result
+        type: "string"
+        enum:
+        - low-risk
+        - normal-risk
+        - high-risk
+        - unacceptable-risk
+    example:
+      rating-value: 0
+      reliability: low-risk
+
+  blacklist-match:
+    properties:
+      percentage:
+        description: Likelihood of match as percentage
+        type: number
+        format: double
+        minimum: 0
+        maximum: 100
+      name:
+        description: Name of blacklist against where match was found
+        type: "string"    
+  blacklist-status:
+    description: Lists of matches against different blacklists
+    properties:
+      matches:
+        type: array
         items:
-          -
-           percentage: 80
-           name: EU black list
-          -
-           percentage: 75
-           name: UN black list
+          $ref: '#/definitions/blacklist-match'
+    example:
+      matches:
+        -
+         likelihood: 80
+         name: EU blacklist
+        -
+         likelihood: 75
+         name: UN blacklist

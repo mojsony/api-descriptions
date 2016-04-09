@@ -1,6 +1,6 @@
 swagger: '2.0'
 x-asee-visibility: public
-host: dev.aseeco-see.com
+host: bankapi.net
 basePath: /v1/payment
 info:
   description: |
@@ -14,7 +14,7 @@ info:
   version: v1
   contact:
     name: Nikola Stojanovic
-    url: http://dev.asseco-see.com/docs/
+    url: https://bankapi.net/docs/public/payment-getstarted.html
     email: nikola.stojanovic@asseco-see.rs
 schemes:
   - http

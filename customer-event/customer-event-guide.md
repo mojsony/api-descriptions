@@ -36,7 +36,7 @@ Now that you've authenticated your app, you can call the Offer Management API wi
 
 API | URL Root
 --------|---------
-Customer event | `https://api.asse.co/customer-event`
+Customer event | `https://bankapi.net/customer-event`
 
 
 > **Note**: Throughout this documentation, only partial syntax such as: 

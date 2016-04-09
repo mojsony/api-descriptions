@@ -7,9 +7,9 @@ info:
     Correspondence API handles the automated generation of batches of pre-formatted correspondence, typically integrating customer/product specific data in correspondence templates for variable aspects of content. Channel applications can use this API to deliver alerts, reminders, advices, past due notices, announcements, campaign offers, statements and other arrangement reports. Correspondence API also offers rendering of documents in .pdf and .docx formats from predefined templates and supplied data. For self-service applications such as mobile or web, Correspondence API offers virtual mailbox for private exchange of messages between bank and customer.
   contact:
     name: Jovica Filipovic
-    url: http://dev.asseco-see.com/docs/
+    url: https://bankapi.net/docs/public/correspondence-getstarted.html
     email: jovica.filipovic@asseco-see.rs
-host: dev.asseco-see.com
+host: bankapi.net
 basePath: /v1/correspondence
 schemes:
   - http

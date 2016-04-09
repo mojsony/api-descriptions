@@ -6,7 +6,7 @@ info:
   description: Events published by Campaign API
   contact:
     name: Mladen Milenkovic
-    url: http://dev.asseco-see.com/docs/
+    url: https://bankapi.net/docs/campaign-getstarted.html
     email: mladen.milenkovic@asseco-see.rs
 
 paths: {}

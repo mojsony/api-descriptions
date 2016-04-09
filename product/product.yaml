@@ -7,9 +7,9 @@ info:
     Product API provides catalogue of products offered by bank. The main functions are search over product catalog and kind-specific detailed product information. Besides arrangement-based products, product catalog also contains all services bundled into these arrangement-based products.
   contact:
     name: Stefan Sreckovic
-    url: http://dev.asseco-see.com/docs/
+    url: https://bankapi.net/docs/public/product-getstarted.html
     email: strefan.sreckovic@asseco-see.rs
-host: dev.asseco-see.com
+host: bankapi.net
 basePath: /v1/product
 schemes:
   - http

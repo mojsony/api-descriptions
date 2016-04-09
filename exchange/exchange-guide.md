@@ -37,7 +37,7 @@ Exchange API URLs are relative to the following root unless otherwise noted.
 
 API | URL Root
 --------|---------
-Exchange | `https://dev.asseco-see.com/v1/exchange`
+Exchange | `https://bankapi.net/v1/exchange`
 
 > **Note**: Throughout this documentation, only partial syntax such as: 
 `GET /transactions` is used for the sake of brevity. 
@@ -80,8 +80,8 @@ You will get back `200 OK` status code and json representation with a list of tr
 					"picture":null,
 					"has-picture":false,
 					"category":"",
-					"geolocation":{"lat":"","lon":"","mapped-address":""},
-					"uri":"https://api.asse.co/currency-exchange/v2/transactions/99900155225005"},
+					"geolocation":{"lat":"","lon":"","mapped-address":""}
+          },
 					{
 						"source-account":{"currency-code":"RSD",
 						"account-number":"115-0000000050378-56"
@@ -103,8 +103,8 @@ You will get back `200 OK` status code and json representation with a list of tr
 					"picture":null,
 					"has-picture":false,
 					"category":"",
-					"geolocation":{"lat":"","lon":"","mapped-address":""},
-					"uri":"https://api.asse.co/currency-exchange/v2/transactions/99900155225001"},
+					"geolocation":{"lat":"","lon":"","mapped-address":""}
+					},
 					{
 						"source-account":{"currency-code":"RSD","account-number":"115-0000000050378-56"},
 						"destination-account":{"currency-code":"EUR","account-number":"115-0000000050378-56"},
@@ -127,8 +127,8 @@ You will get back `200 OK` status code and json representation with a list of tr
 									"geolocation":{
 													"lat":"",
 													"lon":"",
-													"mapped-address":""},
-													"uri":"https://api.asse.co/currency-exchange/v2/transactions/99900155224001"},
+													"mapped-address":""
+													},
 													{"source-account":{"currency-code":"EUR","account-number":"115-0000000050378-56"},
 													"destination-account":{"currency-code":"RSD",
 													"account-number":"115-0000000050378-56"},
@@ -184,7 +184,7 @@ You will get back `200 OK` status code and json representation with transaction 
 					"lon":"",
 					"mapped-address":""
 				  },
-	"uri":"https://api.asse.co/currency-exchange/v2/transactions/99900155290001"
+	"uri":"https://bankapi.net/currency-exchange/v2/transactions/99900155290001"
 }
 ```
 

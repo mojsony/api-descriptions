@@ -7,9 +7,9 @@ info:
     Campaign API gives you ability to present customers with targetted offers, record their response and activate campaign benefits within campaign response workflow.
   contact:
     name: Mladen Milenkovic
-    url: http://dev.asseco-see.com/docs/
+    url: https://bankapi.net/docs/public/campaign-getstarted.html
     email: mladen.milenkovic@asseco-see.rs
-host: dev.asseco-see.com
+host: bankapi.net
 basePath: /v1/campaign
 schemes:
   - http

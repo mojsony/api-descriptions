@@ -38,7 +38,7 @@ Now that you've authenticated your app, you can call the Content Management API 
 
 API | URL Root
 --------|---------
-Action Authoirization | `https://api.asse.co/...`
+Action Authoirization | `https://bankapi.net/...`
 
 > **Note**: Throughout this documentation, only partial syntax such as: 
 `GET /dms/documents/{id}` is used for the sake of brevity. 

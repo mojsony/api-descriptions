@@ -38,7 +38,7 @@ Now that you've authenticated your app, you can call the Reference API with your
 
 API | URL Root
 --------|---------
-Reference  | `https://dev.asseco-see.com/v1/reference`
+Reference  | `https://bankapi.net/v1/reference`
 
 > **Note**: Throughout this documentation, only partial syntax such as: 
 `GET /places` is used for the sake of brevity. 

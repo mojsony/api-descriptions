@@ -33,7 +33,7 @@ Now that you've authenticated your app, you can call the Device API with your ac
 
 API | URL Root
 --------|---------
-Device  | `https://dev.asseco-see.com/v1/device`
+Device  | `https://bankapi.net/v1/device`
 
 > **Note**: Throughout this documentation, only partial syntax such as: 
 `GET /devices/{imei}` is used for the sake of brevity. 

@@ -35,7 +35,7 @@ Bill Presentment API URLs are relative to the following root unless otherwise no
 
 API | URL Root
 --------|---------
-Bill Presentment | `https://api.asse.co/bill-presentment/v2`
+Bill Presentment | `https://bankapi.net/bill-presentment/v2`
 
 > **Note**: Throughout this documentation, only partial syntax such as: 
 `GET /bills/{id}` is used for the sake of brevity. 

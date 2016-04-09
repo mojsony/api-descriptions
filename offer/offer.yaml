@@ -7,9 +7,9 @@ info:
     Offer API lets you initiate, track and execute offers for loans, deposits, credit facilities and current accounts. It provides simulation of conditions for potential products and services. The offer process it defined primarily by the nature of the product or  service being considered, but can include actions such as document checks, collateral allocation, credit assessments, underwriting decisions, regulatory and procedural checks, eligibility checks, the use of internal and external specialist services (such as evaluations and legal advice).
   contact:
     name: Biljana Nikolic
-    url: http://dev.asseco-see.com/docs/
+    url: https://bankapi.net/docs/public/offer-getstarted.html
     email: biljana.davidovic@asseco-see.rs
-host: dev.asseco-see.com
+host: bankapi.net
 basePath: /v1/offer
 schemes:
   - http

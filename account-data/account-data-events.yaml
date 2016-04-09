@@ -6,7 +6,7 @@ info:
   description: Events published by Account Data API
   contact:
     name: Aleksandar Milosevic
-    url: http://dev.asseco-see.com/docs/
+    url: https://bankapi.net/docs/public/account-data-getstarted.html
     email: aca@asseco-see.rs
 
 

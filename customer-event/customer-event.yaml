@@ -1,7 +1,7 @@
 swagger: '2.0'
 x-asee-visibility: internal
-host: api.asee.co
-basePath: /customer-event
+host: bankapi.net
+basePath: /beta/customer-event
 info:
   description: |
     Customer event API gives you access to all events registered for a customer or you can register new events for customers.

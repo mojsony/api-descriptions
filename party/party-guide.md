@@ -33,7 +33,7 @@ Now that you've authenticated your app, you can call the Customer Survey API wit
 
 API | URL Root
 --------|---------
-Party | `https://dev.asseco-see.com/v1/party`
+Party | `https://bankapi.net/v1/party`
 
 > **Note**: Throughout this documentation, only partial syntax such as: 
 `GET /individuals/{id}` is used for the sake of brevity. 

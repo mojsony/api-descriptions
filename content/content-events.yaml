@@ -6,11 +6,10 @@ info:
   description: 'Events described here tell you what happens to **documents** and **folders** in content respository. To learn more about general approach to event processing see [How to work with events]().'
   contact:
     name: Aleksandar Milosevic
-    url: http://dev.asseco-see.com/docs/content-getstarted.html
+    url: https://bankapi.net/docs/public/content-getstarted.html
     email: aca@see.asseco.com
-# host: playground.apistudio.io
-# basePath: /try/d9049250-72f2-405c-b012-6c5d5a8249f5
-host: playground.apistudio.io
+
+host: bankapi.net
 basePath: /v1/content
 schemes:
   - http

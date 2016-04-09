@@ -32,7 +32,7 @@ Now that you've authenticated your app, you can call the Fraud API with your acc
 
 API | URL Root
 --------|---------
-Fraud  | `https://dev.asseco-see.com/v1/fraud`
+Fraud  | `https://bankapi.net/v1/fraud`
 
 > **Note**: Throughout this documentation, only partial syntax such as: 
 `GET /aml-status` is used for the sake of brevity. 

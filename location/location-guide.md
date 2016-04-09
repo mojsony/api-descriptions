@@ -32,7 +32,7 @@ Now that you've authenticated your app, you can call the Location API with your 
 
 API | Base path
 --------|---------
-Location | `https://dev.asseco-see.com/v2/location`
+Location | `https://bankapi.net/v2/location`
 
 > **Note**: Throughout this documentation, only partial syntax such as: 
 `GET /facilities/{id}` is used for the sake of brevity. 

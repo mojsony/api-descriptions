@@ -36,7 +36,7 @@ Now that you've authenticated your app, you can call the Customer Order API with
 
 API | URL Root
 --------|---------
-Customer Order | `https://api.asse.co/customer-order`
+Customer Order | `https://bankapi.net/customer-order`
 
 > **Note**: Throughout this documentation, only partial syntax such as: 
 `GET /additional-card-issuances/{order-number}` is used for the sake of brevity. 

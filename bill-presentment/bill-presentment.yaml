@@ -1,7 +1,7 @@
 swagger: '2.0'
 x-asee-visibility: internal
-host: dev.asseco-see.com
-basePath: /bill-presentment
+host: bankapi.net
+basePath: /beta/bill-presentment
 info:
   description: Enable users of banking mobile application payment of bills to suppliers of various services using bill presentments (invoices).
   title: Bill Presentment API

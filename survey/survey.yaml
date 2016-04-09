@@ -1,13 +1,13 @@
 swagger: '2.0'
 x-asee-visibility: internal
 info:
-  version: v1
+  version: beta
   title: Survey API
   description: >
     Survey API gives you access to generated surveys for customer, post
     captured response to survey and ability to generate surveys based on
-host: dev.asseco-see.com
-basePath: /v1/survey
+host: bankapi.net
+basePath: /beta/survey
 schemes:
   - http
   - https

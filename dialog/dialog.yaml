@@ -1,7 +1,7 @@
 swagger: '2.0'
 x-asee-visibility: internal
 host: dev.aseeco-see.com
-basePath: /v1/dialog
+basePath: /beta/dialog
 info:
   description: |
             Dialog API enables channel apllications methods for configuration and presenting content that is specific for them.
@@ -23,6 +23,9 @@ consumes:
   - application/json
 produces:
   - application/json
+schemes:
+  - http
+  - https  
 paths:
   /configuration/settings:
     get:
@@ -1055,5 +1058,3 @@ definitions:
 responses:
   default-error-response:
     description: 'Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()'
-schemes:
-  - http

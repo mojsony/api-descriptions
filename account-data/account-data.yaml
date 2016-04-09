@@ -6,9 +6,9 @@ info:
   description: "Account Data API provides simplified access to balance and histories of customer account arrangements. Beyond traditional access to account balances and transactions, more advanced capabilities such as full text search and geospatial information are available. When PFM feature is present transactions also have spending categories and customer assigned tags. Clients that have capabilities to store data locally can use sync optimized endpoints to transactions that occurred since last synchronization."
   contact:
     name: Aleksandar Milosevic
-    url: http://dev.asseco-see.com/docs/
+    url: https://bankapi.net/docs/public/account-data-getstarted.html
     email: aca@asseco-see.rs
-host: dev.asseco-see.com
+host: bankapi.net
 basePath: /v1/account-data
 schemes:
   - http

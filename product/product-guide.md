@@ -31,7 +31,7 @@ Now that you've authenticated your app, you can call the Product API with your a
 
 API | URL Root
 --------|---------
-Product | `https://dev.asseco-see.com/v1/product`
+Product | `https://bankapi.net/v1/product`
 
 > **Note**: Throughout this documentation, only partial syntax such as: 
 `GET /current-account-products/{product-number}` is used for the sake of brevity. 

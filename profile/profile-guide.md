@@ -34,7 +34,7 @@ Now that you've authenticated your app, you can call the Content Management API 
 
 API | URL Root
 --------|---------
-Party Profile | `https://api.asse.co/party-profile`
+Party Profile | `https://bankapi.net/party-profile`
 
 > **Note**: Throughout this documentation, only partial syntax such as: 
 `GET /dms/documents/{id}` is used for the sake of brevity. 

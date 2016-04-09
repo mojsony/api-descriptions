@@ -37,7 +37,7 @@ Dialog API URLs are relative to the following root unless otherwise noted.
 
 API | URL Root
 --------|---------
-Dialog | `https://dev.asseco-see.com/v1/dialog`
+Dialog | `https://bankapi.net/v1/dialog`
 
 > **Note**: Throughout this documentation, only partial syntax such as: 
 `GET /storage-items/{id}` is used for the sake of brevity. 

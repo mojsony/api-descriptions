@@ -37,7 +37,7 @@ Now that you've authenticated your app, you can call the Content API with your a
 
 API | Base URL
 --------|---------
-Content | `https://dev.asseco-see.com/v1/content`
+Content | `https://bankapi.net/v1/content`
 
 > **Note**: Throughout the document, we use relative URLs such as:
 `GET /dms/documents/{id}` for the sake of brevity.

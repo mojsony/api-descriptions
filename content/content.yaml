@@ -7,9 +7,9 @@ info:
     Content API offers alows access to repositories of unstructured content such as documents, templates and images organized into folder structure. API exposes operations to and download content and manipulate its metadata. Document binary content is streamed as appropriate MIME media type.
   contact:
     name: Aleksandar Milosevic
-    url: http://dev.asseco-see.com/docs/content-getstarted.html
+    url: https://bankapi.net/docs/public/content-getstarted.html
     email: aca@see.asseco.com
-host: dev.asseco-see.com
+host: bankapi.net
 basePath: /v1/content
 schemes:
   - http

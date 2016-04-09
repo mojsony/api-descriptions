@@ -8,7 +8,7 @@ info:
     Also you can get all party related information like identification documents, contact points and relationships.
   contact:
     name: Milan Drakulic
-    url: http://dev.asseco-see.com/docs/
+    url: https://bankapi.net/docs/public/party-getstarted.html
     email: milan.drakulic@asseco-see.rs
 host: dev.aseeco-see.com
 basePath: /v1/party

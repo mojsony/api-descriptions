@@ -32,7 +32,7 @@ Now that you've authenticated your app, you can call the Account Data API with y
 
 API | Base URL
 --------|---------
-Account Data | `https://dev.asseco-see.com/v1/account-data`
+Account Data | `https://bankapi.net/v1/account-data`
 
 > **Note**: Throughout the document, we use relative URLs such as: 
 `GET /transactions` for the sake of brevity. 

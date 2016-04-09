@@ -33,7 +33,7 @@ Now that you've authenticated your app, you can call the Content Management API 
 
 API | URL Root
 --------|---------
-Authorization API | `https://dev.asseco-see.com/v1/authorization`
+Authorization API | `https://bankapi.net/v1/authorization`
 
 > **Note**: Throughout this documentation, only partial syntax such as: 
 `GET /otp/sms` is used for the sake of brevity. 

@@ -34,7 +34,7 @@ Now that you've authenticated your app, you can call the Offer API with your acc
 
 API | URL Root
 --------|---------
-Offer      | `https://api.asse.co/offer`
+Offer      | `https://bankapi.net/offer`
 
 > **Note**: Throughout this documentation, only partial syntax such as:
 `GET /applications/{application-number}` is used for the sake of brevity.

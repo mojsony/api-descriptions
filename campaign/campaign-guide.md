@@ -40,7 +40,7 @@ Now that you've authenticated your app, you can call the Campaign API with your 
 
 API | Base path
 --------|---------
-Campaign  | `https://dev.asseco-see.com/v1/campaign`
+Campaign  | `https://bankapi.net/v1/campaign`
 
 > **Note**: Throughout this documentation, only partial syntax such as:
 `GET /campaigns` is used for the sake of brevity.

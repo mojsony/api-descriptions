@@ -34,7 +34,7 @@ Now that you've authenticated your app, you can call the Survey API with your ac
 
 API | URL Root
 --------|---------
-Customer Survey | `https://api.asse.co/customer-survey`
+Customer Survey | `https://bankapi.net/customer-survey`
 
 > **Note**: Throughout this documentation, only partial syntax such as: 
 `GET /dms/documents/{id}` is used for the sake of brevity. 

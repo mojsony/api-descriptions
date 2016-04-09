@@ -39,7 +39,7 @@ Now that you've authenticated your app, you can call the Correspondence API with
 
 API | URL Root
 --------|---------
-Correspondence | `https://dev.asseco-see.com/v1/correspondence`
+Correspondence | `https://bankapi.net/v1/correspondence`
 
 > **Note**: Throughout this documentation, only partial syntax such as:
 `GET /communications` is used for the sake of brevity.

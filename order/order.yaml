@@ -1,12 +1,12 @@
 swagger: "2.0"
 x-asee-visibility: internal
 info:
-  version: v1
+  version: beta
   title: Order API
   description: |
     Customer order API enables you to initiate, track, query and execute self-care orders. You can grant and revoke mandates to self or others, manage communication preferences like notifications, alerts and contacts and manage channels or cards.  All orders are treated like work items and they go through a series of steps until executed.  The time to complete these steps depends on the type of the customer order. 
-host: dev.asseco-see.com
-basePath: /v1/order
+host: bankapi.net
+basePath: /beta/order
 schemes:
   - http
   - https

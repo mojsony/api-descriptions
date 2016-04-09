@@ -32,7 +32,7 @@ Now that you've authenticated your app, you can call the Content Management API 
 
 API | URL Root
 --------|---------
-Payment | `https://dev.asseco-see.com/v1/payment`
+Payment | `https://bankapi.net/v1/payment`
 
 > **Note**: Throughout this documentation, only partial syntax such as: 
 `GET /transfers/{id}` is used for the sake of brevity. 

@@ -21,7 +21,7 @@ Now that you've authenticated your app, you can call the Case API with your acce
 
 API | URL Root
 --------|---------
-Case | `https://dev.asseco-see.com/v1/case`
+Case | `https://bankapi.net/v1/case`
 
 
 > **Note**: Throughout this documentation, only partial syntax such as: 

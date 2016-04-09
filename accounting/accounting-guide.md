@@ -48,7 +48,7 @@ unless otherwise noted.
 
 API | Base URL
 --------|---------
-Accounting | `https://dev.asseco-see.com/v1/accounting`
+Accounting | `https://bankapi.net/v1/accounting`
 
 > **Note**: Throughout the document, we use relative URLs such as:
 > `GET /transactions` for the sake of brevity.
