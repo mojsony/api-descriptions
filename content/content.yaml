@@ -626,7 +626,6 @@ paths:
             $ref: '#/definitions/classification'
         default:
           $ref: '#/responses/default-error-response'
-
       tags:
         - Classifications
 
