@@ -4,42 +4,60 @@ host: bankapi.net
 basePath: /beta/customer-event
 info:
   description: |
-    Customer event API gives you access to all events registered for a customer or you can register new events for customers.
-    The event registration is used only for actions and operations performed by third party system not connected to Multichannel API.
+    Customer Event API provides access to wide range of customer events to build a comprehensive history of customer activity that can support relationship management and behavioral analysis. This includes key sales and offer events, relationship management events, product delivery events, communications, financial transactions, customer service events and possibly externally sourced customer activity such as social media events. In future versions, beyond inquiry over customer event history, API will enable subscribing for server side event delivery using web hooks, in-browser event delivery using websockets and mobile device event delivery using push notifications. Recording of new events is available for systems that cannot publish their events to event bus.
+
   title: Customer Event API
   version: beta
 schemes:
   - http
+  - https
 consumes:
   - application/json
 produces:
   - application/json
 tags:
   - name: Events
-    description: Working with customer events
-  - name: Communication events
-    description: Working with communication events
-  - name: Social events
-    description: Working with social events
-  - name: Accounting transaction events
-    description: Working with accounting transaction events
-  - name: Customer case events
-    description: Working with customer case events
-  - name: Arrangement activity events
-    description: Working with arrangement activity events
-  - name: Profile maintenance events
-    description: Working with profile maintenance events
-  - name: Chargable activity events
-    description: Working with chargable activity events
-  - name: Classifications
-    description: Working with classifications
+    description: Working with events
+
 paths:
-  /events:
+  /me/events:
     get:
-      deprecated: false
-      operationId: Events_GetList
+      summary: List events for authenticated customer
+      description: Response contains events that are related to authenticated customer and match supplied criteria
+      operationId: Events_GetMyList
       parameters:
         - $ref: '#/parameters/event-kind-param'
+        - $ref: '#/parameters/stream-param'        
+        - $ref: '#/parameters/date-from-param'
+        - $ref: '#/parameters/date-to-param'
+        - $ref: '#/parameters/page-size-param'
+        - $ref: '#/parameters/page-param'
+        - $ref: '#/parameters/sort-order-param'
+        - $ref: '#/parameters/sort-by-param'
+        - $ref: '#/parameters/include-param'
+        - $ref: '#/parameters/trim-param'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/event-list'
+        default:
+            $ref: '#/responses/default-error-response'
+      tags:
+        - Events
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+        
+  /events/{stream}:
+    get:
+      summary: List events from a given stream
+      description: Response contains events from specified stream that match supplied criteria
+      operationId: Events_GetStream      
+      parameters:
+        - $ref: '#/parameters/event-kind-param'
+        - $ref: '#/parameters/stream-path-param'            
         - $ref: '#/parameters/customer-number-param'
         - $ref: '#/parameters/date-from-param'
         - $ref: '#/parameters/date-to-param'
@@ -50,253 +68,103 @@ paths:
         - $ref: '#/parameters/include-param'
         - $ref: '#/parameters/trim-param'
       responses:
-        '200':
+        200:
           description: OK
           schema:
             $ref: '#/definitions/event-list'
         default:
             $ref: '#/responses/default-error-response'
-      summary: List all registered events for a customer.
       tags:
         - Events
       x-asee-tags:
         - Pageable
         - Sortable
         - Shapeable
-  '/events/{event-id}':
-    get:
-      deprecated: false
-      operationId: Events_Get
-      parameters:
-        - $ref: '#/parameters/event-id-param'
-        - $ref: '#/parameters/include-param'
-        - $ref: '#/parameters/trim-param'
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/event'
-        default:
-            $ref: '#/responses/default-error-response'
-      summary: Returns basic details for Communication event
-      tags:
-        - Events
-      x-asee-tags:
-        - Shapeable
-  '/communication-events/{event-id}':
-    get:
-      deprecated: false
-      operationId: CommunicationEvents_Get
-      parameters:
-        - $ref: '#/parameters/event-id-param'
-        - $ref: '#/parameters/include-param'
-        - $ref: '#/parameters/trim-param'
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/communication-event'
-        default:
-          $ref: '#/responses/default-error-response'
-      summary: Returns details for Communication event
-      tags:
-        - Communication events
-      x-asee-tags:
-        - Shapeable
-  '/social-events/{event-id}':
-    get:
-      deprecated: false
-      operationId: SocialEvents_Get
-      parameters:
-        - $ref: '#/parameters/event-id-param'
-        - $ref: '#/parameters/include-param'
-        - $ref: '#/parameters/trim-param'
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/social-event'
-        default:
-            $ref: '#/responses/default-error-response'
-      summary: Returns details for Social event
-      tags:
-        - Social events
-      x-asee-tags:
-        - Shapeable
-  '/accounting-transaction-events/{event-id}':
-    get:
-      deprecated: false
-      operationId: AccountingTransactionEvents_Get
-      parameters:
-        - $ref: '#/parameters/event-id-param'
-        - $ref: '#/parameters/include-param'
-        - $ref: '#/parameters/trim-param'
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/accounting-transaction-event'
-        default:
-            $ref: '#/responses/default-error-response'
-      summary: Returns details for Accounting Transaction event
-      tags:
-        - Accounting transaction events
-      x-asee-tags:
-        - Shapeable
-  '/customer-case-events/{event-id}':
-    get:
-      deprecated: false
-      operationId: CustomerCaseEvents_Get
-      parameters:
-        - $ref: '#/parameters/event-id-param'
-        - $ref: '#/parameters/include-param'
-        - $ref: '#/parameters/trim-param'
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/customer-case-event'
-        default:
-            $ref: '#/responses/default-error-response'
-      summary: Returns details for Customer Case event
-      tags:
-        - Customer case events
-      x-asee-tags:
-        - Shapeable
-  '/arrangement-activity-events/{event-id}':
-    get:
-      deprecated: false
-      operationId: ArrangementActivityEvents_Get
-      parameters:
-        - $ref: '#/parameters/event-id-param'
-        - $ref: '#/parameters/include-param'
-        - $ref: '#/parameters/trim-param'
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/arrangement-activity-event'
-        default:
-            $ref: '#/responses/default-error-response'
-      summary: Returns details for Arrangement Activity Event
-      tags:
-        - Arrangement activity events
-      x-asee-tags:
-        - Shapeable
-  '/profile-maintenance-events/{event-id}':
-    get:
-      deprecated: false
-      operationId: ProfileMaintenanceEvents_Get
-      parameters:
-        - $ref: '#/parameters/event-id-param'
-        - $ref: '#/parameters/include-param'
-        - $ref: '#/parameters/trim-param'
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/profile-maintenance-event'
-        default:
-            $ref: '#/responses/default-error-response'
-      summary: Returns details for Profile Maintenance Event
-      tags:
-        - Profile maintenance events
-      x-asee-tags:
-        - Shapeable
-  '/chargable-activity-events/{event-id}':
-    get:
-      deprecated: false
-      operationId: ChargableActivityEvents_Get
-      parameters:
-        - $ref: '#/parameters/event-id-param'
-        - $ref: '#/parameters/include-param'
-        - $ref: '#/parameters/trim-param'
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/chargeable-activity-event'
-        default:
-            $ref: '#/responses/default-error-response'
-      summary: Returns details for Chargable Activity Event
-      tags:
-        - Chargable activity events
-      x-asee-tags:
-        - Shapeable
-  /communication-events:
     post:
-      deprecated: false
-      operationId: CommunicationEvents_Create
+      summary: Record event
+      description: Receords event payload and metadata to a stream. Metadata and payload are scanned for presence of `customer-number` attribute used to index events by customers
+      operationId: Events_Record
       parameters:
-        - description: Details about the new communication event.
+        - $ref: '#/parameters/stream-path-param'      
+        - description: Command with details of recorded event
           in: body
           name: cmd
           required: true
           schema:
-            $ref: '#/definitions/create-communication-event-command'
+            $ref: '#/definitions/record-event-command'
       responses:
-        '200':
+        201:
+          description: Created
+          schema:
+            $ref: '#/definitions/resource-created-result'
+          headers:
+            Location:
+              type: string
+              description: The URL where newly recorded event can be accessed 
+        400:
+          $ref: '#/responses/validation-problem-response'
+        440:
+          description: |
+            Your request was well constructed but it could not be processed. Consider the following possible problems and look into response for more details:
+
+            | Problem | Description |
+            |-|-|
+            | [event-already-recorded](customer-event-problems.html) | Event already recorded |
+            | [unknown-aggregate-kind](customer-event-problems.html) | Unknown aggregate kind |  
+            | [unknown-event-stream](customer-event-problems.html) | Unknown event stream | 
+            | [event-in-the-future](customer-event-problems.html) | Event cannot be recorded as if it occurred in the future |               
+          schema:
+            $ref: '#/definitions/business-problem'
+                      
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+        - Events        
+  /events/{stream}/{event-id}:
+    get:
+      summary: Get event details
+      description: Response contains event metadata and payload
+      operationId: Events_Get
+      parameters:
+        - $ref: '#/parameters/stream-path-param'      
+        - $ref: '#/parameters/event-id-param'
+      responses:
+        200:
           description: OK
           schema:
-            $ref: '#/definitions/command-result'
+            $ref: '#/definitions/event-record'
         default:
             $ref: '#/responses/default-error-response'
-      summary: Register new communication event
       tags:
-        - Communication events
-  '/classifications':
-    get:
-      description: Returns all classification schemas used in this API.
-      operationId: "Classifications_GetList"
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/classification-list'
-        default:
-          $ref: '#/responses/default-error-response'
-      summary: Returns all classification schemas used in this API.
-      tags:
-        - Classifications
+        - Events
       x-asee-tags: []
-  '/classifications/{schema-id}':
-    get:
-      description: Returns all classification values for chosen classification.
-      operationId: Classifications_Get
-      parameters:
-        - $ref: '#/parameters/schema-id-param'
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/classification'
-        default:
-          $ref: '#/responses/default-error-response'
-      summary: Returns the classification values for provided schema.
-      tags:
-        - Classifications
-      x-asee-tags: []
+
 parameters:
   event-id-param:
-    description: Event identifier.
+    description: Globaly unique identifier of event instance
     in: path
     name: event-id
     required: true
     type: string
+    format: uuid
   event-kind-param:
     description: Event kind
     in: query
     name: event-kind
     required: false
-    enum:
-      - communication
-      - social
-      - accounting-transaction
-      - customer-case
-      - arrangement-activity
-      - profile-maintenance
-      - chargeable-activity
     type: string
+  stream-path-param:
+    description: Literal name of event stream
+    name: stream
+    required: true
+    type: string
+    in: path
+  stream-param:
+    description: Literal name of event stream
+    name: stream
+    required: false
+    type: string
+    in: query    
   customer-number-param:
     description: Unique identifier of the customer.
     in: query
@@ -304,534 +172,280 @@ parameters:
     required: false
     type: string
   date-from-param:
-    description: Filters items that have been registered after specified date.
+    description: Filters items that have been registered after specified date
     in: query
     name: date-from
     required: false
     format: date-time
     type: string
   date-to-param:
-    description: Filters items that have been registered before specified date.
+    description: Filters items that have been registered before specified date
     in: query
     name: date-to
     required: false
     format: date-time
     type: string
-  page-size-param:
-    description: 'Number of items on a page. For more information see general guidance on [paging and sorting]().'
-    in: query
-    name: page-size
-    required: false
-    format: int32
-    type: integer
   page-param:
-    description: 'Page index. For more information see general guidance on [paging and sorting]().'
-    in: query
     name: page
-    required: false
-    format: int32
+    in: query
+    description: Page index. For more information see general guidance on [paging](common-getstarted.html#paging)
     type: integer
+    default: 1
+    x-asee-common: true
+  page-size-param:
+    name: page-size
+    in: query
+    description: Number of items on a page. For more information see general guidance on [paging](common-getstarted.html#paging)
+    required: false
+    type: integer
+    default: 10
+    x-asee-common: true
   sort-order-param:
-    description: 'Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]()'
+    description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [sorting](common-getstarted.html#sorting)
     in: query
     name: sort-order
-    required: false
-    enum:
-      - asc
-      - desc
     type: string
+    default: asc
+    enum:
+    - asc
+    - desc
+    x-asee-common: true
   sort-by-param:
-    description: 'Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]().'
+    description: Attribute of the collection item to sort by. For more information see general guidance on [sorting](common-getstarted.html#sorting)
     in: query
     name: sort-by
-    required: false
     type: string
+    x-asee-common: true
   include-param:
-    description: 'List of fields to include in response. For more information see general guidance on [response shaping]()'
+    description: List of fields to include in response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
     in: query
     name: include
-    required: false
-    collectionFormat: csv
+    type: array
     items:
       type: string
-    type: array
+    collectionFormat: csv
+    x-asee-common: true      
   trim-param:
-    description: 'List of fields to trim from response. For more information see general guidance on [response shaping]()'
+    description: List of fields to trim from response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
     in: query
     name: trim
-    required: false
-    collectionFormat: csv
+    type: array
     items:
       type: string
-    type: array
-  schema-id-param:
-    description: Unique classification identifier
-    in: path
-    name: schema-id
-    required: true
-    type: string
+    collectionFormat: csv
+    x-asee-common: true    
+
 definitions:
   event-list:
-    description: Paged list of customer events.
+    description: Paged list of customer events
     allOf:
     - $ref: '#/definitions/paged-list'
     properties:
-      items:
-        description: List of customer events.
-        items:
-          $ref: '#/definitions/event'
+      events:
+        description: List of customer events
         type: array
-    type: object
-  event:
-    description: 'Details about event related to customer (communication event, social event, etc)'
+        items:
+          $ref: '#/definitions/event-record'
+    example:
+      total-count: 13
+      page-size: 2
+      page: 1
+      total-pages: 7
+      sort-order: desc
+      sort-by: metadata.occurred-on
+      events:
+        - 
+          metadata:
+            event-kind: 'content#document-filed'
+            version: 1
+            occurred-on: "2016-01-01T08:00:14.3000Z"
+            event-id: 960ff4a9-dec5-41de-8275-2b4344e93272
+            aggregate-kind: 'content#document'
+            aggregate-id: uDJ18kd2jd
+            customer-number: nodjo001
+          payload:
+            occurred-on: "2016-01-01T08:01:20.1000Z"
+            id: ee48b17534c9
+            changed-on: "2016-01-01T08:01:20.1000Z"
+            created-on: "2016-01-01T08:01:20.1000Z"
+            created-by: JABON0007
+            name: headshot.png
+            path: JABON0007/images
+            kind: document
+            media-type: image/png
+            filing-purpose: profile-photo
+            filing-case-number: JABON0007
+            size-in-bytes: 21231
+        - 
+          metadata:
+            event-kind: 'accounting#statement-generated'
+            version: 1            
+            occurred-on: "2016-01-01T08:00:14.3000Z"
+            event-id: d67cbc86-f83f-4e39-9e18-71320611a982
+            aggregate-kind: 'accounting#account'
+            aggregate-id: 0020100001020104EUR
+            customer-number: nodjo001
+          payload:
+            from-date: 2016-01-01
+            to-date: 2016-01-31
+            account-number: 00210102101
+            sequence-number: 26
+            generated: 2016-02-01T01:25:00
+            document: AS-0021000102101-26
+            total-credits: 1
+            total-debits: 3
+            currency: EUR
+            opening-balance: 20.00
+            closing-balance: 180.00
+            
+  event-record:
+    description: 'Details about event related to customer'
     properties:
-      event-id:
-        description: Event identifier.
-        format: int64
-        type: integer
-      creation-datetime:
-        description: Date and time when event has been created.
-        format: date-time
-        type: string
-      description:
-        description: Description of the event
-        type: string
+      metadata:
+        $ref: '#/definitions/event-metadata'
+      payload:
+        description: Event payload in json format
+        type: object
+        additionalProperties: {}
+    example:
+      metadata:
+        event-kind: 'accounting#statement-generated'
+        version: 1            
+        occurred-on: "2016-01-01T08:00:14.3000Z"
+        event-id: d67cbc86-f83f-4e39-9e18-71320611a982
+        aggregate-kind: 'accounting#account'
+        aggregate-id: 0020100001020104EUR
+        customer-number: nodjo001
+      payload:
+        from-date: 2016-01-01
+        to-date: 2016-01-31
+        account-number: 00210102101
+        sequence-number: 26
+        generated: 2016-02-01T01:25:00
+        document: AS-0021000102101-26
+        total-credits: 1
+        total-debits: 3
+        currency: EUR
+        opening-balance: 20.00
+        closing-balance: 180.00 
+
+  event-metadata:
+    properties:
       event-kind:
-        description: Kind of event
-        enum:
-          - communication
-          - securty-event
-          - customer-profile-event
-          - payment-card-event
-          - maintenance-event
-          - security-data-event
-          - personal-finance-event
-          - arangement-event
-          - device-event
-          - social-network-event
-          - limit-event
         type: string
-      event-data-xml:
-        description: Event related data in form of XML.
-        type: string
-      event-data-values:
-        description: Normalized representation of event related data.
-        items:
-          $ref: '#/definitions/event-data'
-        type: array
-    type: object
-  event-data:
-    description: Normalized representation of event specific data.
-    properties:
-      parent:
-        description: Parent property of this event property.
-        type: string
-      name:
-        description: Name of event property.
-        type: string
-      value:
-        description: Value of event property.
-        type: string
-    type: object
-  communication-event:
-    description: Details about communication event related to customer, i.e. the record of receiving or sending a message between two parties.
-    properties:
-      from:
-        description: Sender of event.
-        type: string
-      title:
-        description: Title of event.
-        type: string
-      referral-communication-id:
-        description: Identifies the reference of previous communication that is related to this communication event.
-        type: string
-      responds-to-id:
-        description: The identification of a Communication as a response to another Communication.
-        type: string
-      communication-type:
-        description: The main purpose of the communication.
-        enum:
-          - general-communication
-          - complaint
-          - feedback
-        type: string
-      resolution-status:
-        description: 'Resolution status of the communication. For complete list of possible values see [resolution-status]() classification.'
-        type: string
-      medium:
-        description: Medium that is used for the communication.
-        enum:
-          - phone
-          - mail
-          - email
-          - fax
-          - face-to-face-meeting
-          - sms
-          - web
-          - wap
-          - instant-message
-          - other-communication-technology
-        type: string
-      event-id:
-        description: Event identifier.
-        format: int64
+        description: "Unique kind of event. Example `content#document-filed`"
+        format: kind          
+      version:
         type: integer
-      creation-datetime:
-        description: Date and time when event has been created.
+        format: int32
+        description: Version of the event payload. Events have new versions when we need to capture different information on event that still has the same nature. Version is integer that is incremented        
+      occurred-on:
+        type: string
         format: date-time
-        type: string
-      description:
-        description: Description of the event
-        type: string
-      event-kind:
-        description: Kind of event
-        enum:
-          - communication
-          - securty-event
-          - customer-profile-event
-          - payment-card-event
-          - maintenance-event
-          - security-data-event
-          - personal-finance-event
-          - arangement-event
-          - device-event
-          - social-network-event
-          - limit-event
-        type: string
-      event-data-xml:
-        description: Event related data in form of XML.
-        type: string
-      event-data-values:
-        description: Normalized representation of event related data.
-        items:
-          $ref: '#/definitions/event-data'
-        type: array
-    type: object
-  social-event:
-    description: Details about social event related to customer.
-    properties:
-      content:
-        description: Content
-        type: string
+        description: Date and time when  event occurred
       event-id:
-        description: Event identifier.
-        format: int64
-        type: integer
-      creation-datetime:
-        description: Date and time when event has been created.
-        format: date-time
+        description: Globaly unique identifier of event instance
+        format: uuid
         type: string
-      description:
-        description: Description of the event
+      aggregate-kind: 
         type: string
-      event-kind:
-        description: Kind of event
-        enum:
-          - communication
-          - securty-event
-          - customer-profile-event
-          - payment-card-event
-          - maintenance-event
-          - security-data-event
-          - personal-finance-event
-          - arangement-event
-          - device-event
-          - social-network-event
-          - limit-event
+        description: "Kind of aggregate (DDD) that this event describes. Example `content#document`"
+        format: kind
+      aggregate-id:
         type: string
-      event-data-xml:
-        description: Event related data in form of XML.
+        description: Unique identifier of aggregate (DDD) that published the event
+      customer-number:
         type: string
-      event-data-values:
-        description: Normalized representation of event related data.
-        items:
-          $ref: '#/definitions/event-data'
-        type: array
-    type: object
-  accounting-transaction-event:
-    description: Details about accounting event related to customer.
-    properties:
-      from:
-        description: Sender of event.
-        type: string
-      title:
-        description: Title of event.
-        type: string
-      transaction-type:
-        description: Type of transaction
-        type: string
-      event-id:
-        description: Event identifier.
-        format: int64
-        type: integer
-      creation-datetime:
-        description: Date and time when event has been created.
-        format: date-time
-        type: string
-      description:
-        description: Description of the event
-        type: string
-      event-kind:
-        description: Kind of event
-        enum:
-          - communication
-          - securty-event
-          - customer-profile-event
-          - payment-card-event
-          - maintenance-event
-          - security-data-event
-          - personal-finance-event
-          - arangement-event
-          - device-event
-          - social-network-event
-          - limit-event
-        type: string
-      event-data-xml:
-        description: Event related data in form of XML.
-        type: string
-      event-data-values:
-        description: Normalized representation of event related data.
-        items:
-          $ref: '#/definitions/event-data'
-        type: array
-    type: object
-  customer-case-event:
-    description: Details about event related to customer case.
-    properties:
-      from:
-        description: Sender of event.
-        type: string
-      title:
-        description: Title of event.
-        type: string
-      event-id:
-        description: Event identifier.
-        format: int64
-        type: integer
-      creation-datetime:
-        description: Date and time when event has been created.
-        format: date-time
-        type: string
-      description:
-        description: Description of the event
-        type: string
-      event-kind:
-        description: Kind of event
-        enum:
-          - communication
-          - securty-event
-          - customer-profile-event
-          - payment-card-event
-          - maintenance-event
-          - security-data-event
-          - personal-finance-event
-          - arangement-event
-          - device-event
-          - social-network-event
-          - limit-event
-        type: string
-      event-data-xml:
-        description: Event related data in form of XML.
-        type: string
-      event-data-values:
-        description: Normalized representation of event related data.
-        items:
-          $ref: '#/definitions/event-data'
-        type: array
-    type: object
-  arrangement-activity-event:
-    description: Details about event related to arrangement activity.
-    properties:
-      from:
-        description: Sender of event.
-        type: string
-      title:
-        description: Title of event.
-        type: string
-      arrangement-number:
-        description: The unique identifier of an Arrangement between the customer and the bank
-        type: string
-      activity-type:
-        description: The type of the activity
-        type: string
-      event-id:
-        description: Event identifier.
-        format: int64
-        type: integer
-      creation-datetime:
-        description: Date and time when event has been created.
-        format: date-time
-        type: string
-      description:
-        description: Description of the event
-        type: string
-      event-kind:
-        description: Kind of event
-        enum:
-          - communication
-          - securty-event
-          - customer-profile-event
-          - payment-card-event
-          - maintenance-event
-          - security-data-event
-          - personal-finance-event
-          - arangement-event
-          - device-event
-          - social-network-event
-          - limit-event
-        type: string
-      event-data-xml:
-        description: Event related data in form of XML.
-        type: string
-      event-data-values:
-        description: Normalized representation of event related data.
-        items:
-          $ref: '#/definitions/event-data'
-        type: array
-    type: object
-  profile-maintenance-event:
-    description: Details about event related to profile maintenance.
-    properties:
-      event-id:
-        description: Event identifier.
-        format: int64
-        type: integer
-      creation-datetime:
-        description: Date and time when event has been created.
-        format: date-time
-        type: string
-      description:
-        description: Description of the event
-        type: string
-      event-kind:
-        description: Kind of event
-        enum:
-          - communication
-          - securty-event
-          - customer-profile-event
-          - payment-card-event
-          - maintenance-event
-          - security-data-event
-          - personal-finance-event
-          - arangement-event
-          - device-event
-          - social-network-event
-          - limit-event
-        type: string
-      event-data-xml:
-        description: Event related data in form of XML.
-        type: string
-      event-data-values:
-        description: Normalized representation of event related data.
-        items:
-          $ref: '#/definitions/event-data'
-        type: array
-    type: object
-  chargeable-activity-event:
-    description: Details about event related to some chargeable activity.
-    properties:
-      from:
-        description: Sender of event.
-        type: string
-      title:
-        description: Title of event.
-        type: string
-      activity-type:
-        description: The type of the activity
-        type: string
-      event-id:
-        description: Event identifier.
-        format: int64
-        type: integer
-      creation-datetime:
-        description: Date and time when event has been created.
-        format: date-time
-        type: string
-      description:
-        description: Description of the event
-        type: string
-      event-kind:
-        description: Kind of event
-        enum:
-          - communication
-          - securty-event
-          - customer-profile-event
-          - payment-card-event
-          - maintenance-event
-          - security-data-event
-          - personal-finance-event
-          - arangement-event
-          - device-event
-          - social-network-event
-          - limit-event
-        type: string
-      event-data-xml:
-        description: Event related data in form of XML.
-        type: string
-      event-data-values:
-        description: Normalized representation of event related data.
-        items:
-          $ref: '#/definitions/event-data'
-        type: array
-    type: object
-  create-communication-event-command:
+        description: "Unique identifier of customer in bank's records"      
+
+  record-event-command:
     description: Parameters for event registration.
     properties:
-      id:
-        description: Command identifier
-        type: string
-      customer-number:
-        description: Customer number
-        type: string
-      related-workitem-number:
-        description: Unique identifier of the workitem to whom the event is related to.
-        type: string
-      description:
-        description: Description of the event
-        type: string
-      from:
-        description: Sender of event.
-        type: string
-      to:
-        description: Recepient of event.
-        type: string
-      title:
-        description: Title of event.
-        type: string
-      medium:
-        description: Medium used for communication
-        enum:
-          - mail
-          - email
-          - fax
-          - face-to-face-meeting
-          - sms
-          - web
-          - wap
-          - instant-message
-          - other-communication-technology
-        type: string
-      purpose:
-        description: Purpose of the communication. For complete list of possible values see [purpose]() classification.
-        type: string
-      return-address:
-        description: Return address
-        type: string
-    required:
-      - customer-number
-      - related-workitem-number
-      - medium
-    type: object
-  command-result:
-    description: The result of the executed command.
+      recorded-event:
+        $ref: '#/definitions/event-record'
+    example:
+      recorded-event:
+        metadata:
+          event-kind: 'accounting#statement-generated'
+          version: 1            
+          occurred-on: "2016-01-01T08:00:14.3000Z"
+          event-id: d67cbc86-f83f-4e39-9e18-71320611a982
+          aggregate-kind: 'accounting#account'
+          aggregate-id: 0020100001020104EUR
+          customer-number: nodjo001
+        payload:
+          from-date: 2016-01-01
+          to-date: 2016-01-31
+          account-number: 00210102101
+          sequence-number: 26
+          generated: 2016-02-01T01:25:00
+          document: AS-0021000102101-26
+          total-credits: 1
+          total-debits: 3
+          currency: EUR
+          opening-balance: 20.00
+          closing-balance: 180.00
+
+  resource-created-result:
+    description: Unique identifier of newly created resource that can be used in future inquires and commands
     properties:
-      id:
-        description: Returns the identifier of created, updated or deleted object.
+      id: 
         type: string
-      created-record-status:
-        description: Status of the object (created, updated, deleted).
+        description: Indetifier
+    example:
+      id: "123jd88j811"
+
+  business-problem:
+    description: Details on specific problem that prevented processing after successfull validation
+    type: object 
+    properties:
+      problem:
+        description: Unique literal that identifies specific problem 
         type: string
-    type: object
+      message:
+        description: Message explaining the situation and optionaly remedies
+        type: string
+      details:
+        description: Optional details supplied for troubleshooting
+        type: string
+    example:
+      problem: document-locked
+      message: Document you are trying to access is locked by another user
+      details: User john.doe has locked the document
+
+  validation-problem:
+    type: array
+    items:
+      type: object
+      properties:
+        field:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              error:
+                type: string
+              message:
+                type: string
+    example:
+      -  
+        field: phone-number
+        errors:
+          -
+            error: invalid-format
+            message: Format for this field is invalid
+          -
+            error: max-length
+            message: Content exceeds maximum alowed length 
+      - 
+        field: account-number
+        errors:
+          -
+            error: check-digit-invalid
+            message: Check digit is invalid for this field      
+  
   paged-list:
     description: List with support for paging
     properties:
@@ -856,96 +470,10 @@ definitions:
       sort-by:
         description: Attribute of the collection item to sort by
         type: string
-    type: object
-  classification-value:
-    description: Classification value
-    example: TO DO
-    properties:
-      code:
-        description: Code of classification value.
-        type: string
-      literal:
-        description: Literal.
-        type: string
-      description:
-        description: Description.
-        type: string
-      id:
-        description: Identifier of classification value.
-        type: string
-      parent-id:
-        description: Parent classification value id.
-        type: string
-      ordinal:
-        description: Ordinal number.
-        type: string
-    type: object
-  classification-list:
-    description: List of classification shemas.
-    properties:
-      items:
-        description: List of all classification schemas.
-        items:
-          $ref: "#/definitions/classification"
-        type: array
-    type: object
-  classification:
-    description: Classification schema used in API contracts.
-    example:
-      API: TO DO
-      description: TO DO
-      schema-id: TO DO
-      name: TO DO
-      values:
-        - code: '0'
-          literal: card-lost
-          description: Card lost and new one should be issued.
-          id:
-          parent-id:
-          ordinal:
-        - code: '1'
-          literal: card-stolen
-          description: Card stollen and new one should be issued.
-          id:
-          parent-id:
-          ordinal:
-        - code: '2'
-          literal: card-damadged
-          description: Card damadged and new one should be issued.
-          id:
-          parent-id:
-          ordinal:
-        - code: '3'
-          literal: emboss-name-changing
-          description: Change emboss name.
-          id:
-          parent-id:
-          ordinal:
-        - code: '4'
-          literal: pin-lost
-          description: PIN code lost and new one should be created.
-          id:
-          parent-id:
-          ordinal:
-    properties:
-      API:
-        description: Name of Api in which classification shema is used.
-        type: string
-      description:
-        description: Shema description.
-        type: string
-      schema-id:
-        description: Unique identifier of the classification.
-        type: string
-      name:
-        description: Name of shema.
-        type: string
-      values:
-        description: List of classification values.
-        items:
-          $ref: "#/definitions/classification-value"
-        type: array
-    type: object
 responses:
+  validation-problem-response:
+    description: Your request was not constructed properly. Response contains the list of validation errors for each invalid element of your request. For complete list of possible validation errors see [validation errors](common-getstarted.html#error-handling).
+    schema: 
+      $ref: '#/definitions/validation-problem'
   default-error-response:
-    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
+    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling](common-getstarted.html#error-handling)
