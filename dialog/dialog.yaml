@@ -456,29 +456,12 @@ definitions:
           setting-group-id: SettingGroupId
           kind: Kind
           value: Value
-      navigations:
-        - href: Href
-          rel: Rel
-      commands:
-        - href: Href
-          rel: Rel
-      uri: Uri
     properties:
       configuration-settings:
         description: List of configuration settings.
         items:
           $ref: '#/definitions/configuration-setting'
         type: array
-      navigations:
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      uri:
-        type: string
     type: object
   configuration-setting:
     description: Application configuration setting
@@ -503,16 +486,6 @@ definitions:
     required:
       - setting-id
     type: object
-  link:
-    example:
-      href: Href
-      rel: Rel
-    properties:
-      href:
-        type: string
-      rel:
-        type: string
-    type: object
   system-messages:
     description: ''
     example:
@@ -521,29 +494,12 @@ definitions:
           language-id: LanguageId
           valid-from: '0001-01-01T00:00:00'
           valid-to: '0001-01-01T00:00:00'
-      navigations:
-        - href: Href
-          rel: Rel
-      commands:
-        - href: Href
-          rel: Rel
-      uri: Uri
     properties:
       items:
         description: Gets or sets the items.
         items:
           $ref: '#/definitions/system-message'
         type: array
-      navigations:
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      uri:
-        type: string
     type: object
   system-message:
     description: System message (maintainance info ...)
@@ -580,13 +536,6 @@ definitions:
           category-id: CategoryId
           question: Question
           answer: Answer
-      navigations:
-        - href: Href
-          rel: Rel
-      commands:
-        - href: Href
-          rel: Rel
-      uri: Uri
     properties:
       total-count:
         description: Total count.
@@ -609,16 +558,6 @@ definitions:
         items:
           $ref: '#/definitions/faq'
         type: array
-      navigations:
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      uri:
-        type: string
     type: object
   faq:
     description: Frequently answered questions
@@ -654,13 +593,6 @@ definitions:
       categories:
         - category-id: CategoryId
           title: Title
-      navigations:
-        - href: Href
-          rel: Rel
-      commands:
-        - href: Href
-          rel: Rel
-      uri: Uri
     properties:
       total-count:
         description: Total count.
@@ -683,16 +615,6 @@ definitions:
         items:
           $ref: '#/definitions/category'
         type: array
-      navigations:
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      uri:
-        type: string
     type: object
   category:
     description: Category
@@ -720,13 +642,6 @@ definitions:
         - language-id: 0
           culture: Culture
           name: Name
-      navigations:
-        - href: Href
-          rel: Rel
-      commands:
-        - href: Href
-          rel: Rel
-      uri: Uri
     properties:
       total-count:
         description: Total count.
@@ -749,16 +664,6 @@ definitions:
         items:
           $ref: '#/definitions/language'
         type: array
-      navigations:
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      uri:
-        type: string
     type: object
   language:
     description: Language
@@ -795,13 +700,6 @@ definitions:
               key-id: 0
               language-id: 0
               value: Value
-      navigations:
-        - href: Href
-          rel: Rel
-      commands:
-        - href: Href
-          rel: Rel
-      uri: Uri
     properties:
       total-count:
         description: Total count.
@@ -824,16 +722,6 @@ definitions:
         items:
           $ref: '#/definitions/localization'
         type: array
-      navigations:
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      uri:
-        type: string
     type: object
   localization:
     description: Localization key
@@ -898,13 +786,6 @@ definitions:
         - item-id: ItemId
           value: Value
           date-created: '0001-01-01T00:00:00'
-      navigations:
-        - href: Href
-          rel: Rel
-      commands:
-        - href: Href
-          rel: Rel
-      uri: Uri
     properties:
       total-count:
         description: Total count.
@@ -927,16 +808,6 @@ definitions:
         items:
           $ref: '#/definitions/storage-item'
         type: array
-      navigations:
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      uri:
-        type: string
     type: object
   storage-item:
     description: Storage item
@@ -996,13 +867,6 @@ definitions:
         - tip-id: TipId
           service-code: ServiceCode
           content: Content
-      navigations:
-        - href: Href
-          rel: Rel
-      commands:
-        - href: Href
-          rel: Rel
-      uri: Uri
     properties:
       total-count:
         description: Total count.
@@ -1025,16 +889,6 @@ definitions:
         items:
           $ref: '#/definitions/tip'
         type: array
-      navigations:
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      commands:
-        items:
-          $ref: '#/definitions/link'
-        type: array
-      uri:
-        type: string
     type: object
   tip:
     description: Application screen tip
