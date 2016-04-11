@@ -185,8 +185,7 @@ paths:
           description: |
             Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
 
-              - [product-not-valid](offer-problems.html)
-              - [deposit-account-opening-maxnumber](offer-problems.html)
+              - [not-allowed-in-status](offer-problems.html)
 
   /applications/{application-number}/cancel:
     post:
@@ -823,10 +822,10 @@ definitions:
       documents:
         type: array
         items:
-          $ref: '#/definitions/document'
+          $ref: '#/definitions/attachment'
 
   attachment:
-    description: Command with details of attachement
+    description: Details of document attachment
     properties:
       attachment-url:
         type: string
@@ -839,6 +838,7 @@ definitions:
         type: string
         x-asse-classification: document-kinds
         description: Specific purpose of this document. For complete list of possible values see [document-kinds](offer-classifications.html#document-kinds) classification.
+ 
   required-documentation-request:
     properties:
       product-code:
