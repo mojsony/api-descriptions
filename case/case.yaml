@@ -3,9 +3,7 @@ x-asee-visibility: internal
 host: bankapi.net
 basePath: /v1/case
 info:
-  description: |
-    Case API is used to register, list and record actions on customer cases.
-    You can register a customer case, get case details, files an history, search through registered customer cases and close them when they are resolved.
+  description: Case API is used to register customer cases and access information on their status and resolution.
   title: Case API
   version: v1
 schemes:
@@ -26,27 +24,22 @@ tags:
     description: Working with service requests
   - name: Classifications
     description: Working with classifications
-paths:
-  /cases:
+paths: 
+  /me/cases:
     get:
-      consumes: []
-      deprecated: false
-      operationId: Cases_GetList
+      summary: List service cases for authenticated customer
+      description: Response containslist of cases that match criteria
+      operationId: Cases_GetListForCustomer
       parameters:
-        - $ref: '#/parameters/case-type-param'
-        - $ref: '#/parameters/case-topic-param'
-        - $ref: '#/parameters/customer-number-param'
-        - $ref: '#/parameters/agent-id-param'
-        - $ref: '#/parameters/date-from-param'
-        - $ref: '#/parameters/date-to-param'
-        - $ref: '#/parameters/state-param'
-        - $ref: '#/parameters/query-param'
-        - $ref: '#/parameters/page-size-param'
-        - $ref: '#/parameters/page-param'
-        - $ref: '#/parameters/sort-order-param'
-        - $ref: '#/parameters/sort-by-param'
-        - $ref: '#/parameters/include-param'
-        - $ref: '#/parameters/trim-param'
+        - $ref: '#/parameters/case-topic-param' 
+        - $ref: "#/parameters/statuses-param"
+        - $ref: '#/parameters/kinds-param'
+        - $ref: "#/parameters/page-param"
+        - $ref: "#/parameters/page-size-param"
+        - $ref: "#/parameters/sort-by-param"
+        - $ref: "#/parameters/sort-order-param"
+        - $ref: "#/parameters/trim-param"
+        - $ref: "#/parameters/include-param"
       responses:
         '200':
           description: OK
@@ -54,203 +47,199 @@ paths:
             $ref: '#/definitions/case-list'
         default:
           $ref: '#/responses/default-error-response'
-      summary: Operation returns list of cases with basic details like registration date current lifecycle state and the name and id of the agent responsible for handling the case. When used without optional parameters all active cases are returned.
       tags:
         - Cases
       x-asee-tags:
         - Pageable
         - Sortable
         - Shapeable
-  '/cases/{case-id}':
+  /cases:
     get:
-      deprecated: false
+      summary: List customer service cases
+      description: Response containslist of cases that match criteria
+      operationId: Cases_GetList
+      parameters:
+        - $ref: '#/parameters/case-topic-param' 
+        - $ref: "#/parameters/statuses-param"
+        - $ref: '#/parameters/kinds-param'
+        - $ref: "#/parameters/customer-number-param"
+        - $ref: "#/parameters/page-param"
+        - $ref: "#/parameters/page-size-param"
+        - $ref: "#/parameters/sort-by-param"
+        - $ref: "#/parameters/sort-order-param"
+        - $ref: "#/parameters/trim-param"
+        - $ref: "#/parameters/include-param"
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/case-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+        - Cases
+      x-asee-tags:
+        - Pageable
+        - Sortable
+        - Shapeable
+        
+  /cases/{case-number}:
+    get:
+      summary: Get details of specific case
+      description: Response contains case details such as registration date current status state and the name of the agent responsible for handling the case
       operationId: Cases_Get
       parameters:
-        - $ref: '#/parameters/case-id-param'
+        - $ref: '#/parameters/case-number-param'
         - $ref: '#/parameters/include-param'
         - $ref: '#/parameters/trim-param'
       responses:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/customer-case'
+            $ref: '#/definitions/case'
         default:
           $ref: '#/responses/default-error-response'
-      summary: Operation returns specific case details.
       tags:
         - Cases
       x-asee-tags:
         - Shapeable
-  '/cases/{case-id}/status':
-    put:
-      deprecated: false
-      operationId: Cases_Update
-      parameters:
-        - $ref: '#/parameters/case-id-param'
-        - description: 'Info about the update (Resolution, State)'
-          in: body
-          name: cmd
-          required: true
-          schema:
-            $ref: '#/definitions/update-case-command'
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/command-result'
-        default:
-          $ref: '#/responses/default-error-response'
-      summary: Operation updates the specified case progress. Operation returns customer case with updated status.
-      tags:
-        - Cases
-  '/cases/{case-id}/history':
-    get:
-      deprecated: false
-      operationId: Cases_GetHistory
-      parameters:
-        - $ref: '#/parameters/case-id-param'
-        - $ref: '#/parameters/page-size-param'
-        - $ref: '#/parameters/page-param'
-        - $ref: '#/parameters/sort-order-param'
-        - $ref: '#/parameters/sort-by-param'
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/case-history'
-        default:
-          $ref: '#/responses/default-error-response'
-      summary: Operation returns list of file details associated with the specific case.
-      tags:
-        - Cases
-      x-asee-tags:
-        - Pageable
-        - Sortable
-  /callback-requests:
+
+  /cases/{case-number}/attachments:
     post:
-      deprecated: false
-      operationId: CallbackRequests_Create
+      summary: Attach documents to case
+      description: Attaches document to specified case      
+      operationId: Cases_AttachDocuments
       parameters:
-        - description: 'Command contains parameters for creating callback request.'
+        - $ref: '#/parameters/case-number-param'
+        - name: cmd
+          description: Comand with details of attached documents
           in: body
-          name: cmd
-          required: true
           schema:
-            $ref: '#/definitions/create-callback-request-command'
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/command-result'
-        default:
-          $ref: '#/responses/default-error-response'
-      summary: Add Callback Request
-      tags:
-        - Callback requests
-  /complaints:
-    post:
-      deprecated: false
-      operationId: Complaints_Create
-      parameters:
-        - description: Command contains parameters for creating new complaint.
-          in: body
-          name: cmd
-          required: true
-          schema:
-            $ref: '#/definitions/create-complaint-command'
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/command-result'
-        default:
-          $ref: '#/responses/default-error-response'
-      summary: Operation opens new customer complaint. Operation returns complaint with assigned case identifier.
-      tags:
-        - Complaints
-  /service-requests:
-    post:
-      deprecated: false
-      operationId: ServiceRequests_Create
-      parameters:
-        - description: Command contains parameters for creating new service request.
-          in: body
-          name: cmd
-          required: true
-          schema:
-            $ref: '#/definitions/create-service-request-command'
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/command-result'
-        default:
-          $ref: '#/responses/default-error-response'
-      summary: Operation opens new customer service request. Operation returns service-request with assigned case identifier.
-      tags:
-        - Service requests
-  '/cases/{case-id}/attachments':
-    post:
-      deprecated: false
-      operationId: Cases_AddAttachment
-      parameters:
-        - $ref: '#/parameters/case-id-param'
-        - description: Id and Name of the document to be attached
-          in: body
-          name: cmd
-          required: true
-          schema:
-            $ref: '#/definitions/add-case-attachment-command'
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/command-result'
-        default:
-          $ref: '#/responses/default-error-response'
-      summary: Operation attaches document/file to the existing Case
-      tags:
-        - Cases
-  '/cases/{case-id}/close':
-    post:
-      deprecated: false
-      operationId: Cases_Close
-      parameters:
-        - $ref: '#/parameters/case-id-param'
-        - description: Info about closing the case (Resolution)
-          in: body
-          name: cmd
-          required: true
-          schema:
-            $ref: '#/definitions/close-case-command'
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/command-result'
-        default:
-          $ref: '#/responses/default-error-response'
-      summary: Operation closes the specified case and returns closed case id.
-      tags:
-        - Cases
-  '/cases/{case-id}/attachments/{file-id}':
-    delete:
-      deprecated: false
-      operationId: Cases_RemoveAttachment
-      parameters:
-        - $ref: '#/parameters/case-id-param'
-        - $ref: '#/parameters/file-id-param'
+            $ref: '#/definitions/attach-documents-command'
       responses:
         '204':
           description: No content
         default:
           $ref: '#/responses/default-error-response'
-      summary: Operation removes attaced file from case.
+        '400':
+          description: |
+            Your request was well not well constructed. Look into validation error in response for more details.
+          schema:
+            $ref: '#/definitions/validation-problem'
+        '440':
+          description: |
+            Your request was well constructed but it does not comply with business policy. Consider the following possible problems and look into response for more details:
+
+              - [not-allowed-in-status](case-problems.html)
       tags:
         - Cases
-  '/classifications':
+
+  /cases/complaints:
+    post:
+      summary: Register new customer complaint
+      description: Records customer complaint and returns assigned case number
+      operationId: Complaints_Register
+      parameters:
+        - description: Command with new complaint
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/register-complaint-command'
+      responses:
+        201:
+          description: Created
+          schema:
+            $ref: '#/definitions/resource-created-result'
+          headers:
+            Location:
+              type: string
+              description: The URL where newly recorded case can be accessed 
+        400:
+          $ref: '#/responses/validation-problem-response'
+        440:
+          description: |
+            Your request was well constructed but it could not be processed. Consider the following possible problems and look into response for more details:
+
+            | Problem | Description |
+            |-|-|
+            | [unknown-arrangement](case-problems.html) | Unknown arrangement |
+          schema:
+            $ref: '#/definitions/business-problem'              
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+        - Complaints
+        
+  /cases/service-requests:
+    post:
+      summary: Register new customer service request
+      description: Records new customer service request and returns assigned case number
+      operationId: ServiceRequests_Register
+      parameters:
+        - description: Command with new service request
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/register-service-request-command'
+      responses:
+        201:
+          description: Created
+          schema:
+            $ref: '#/definitions/resource-created-result'
+          headers:
+            Location:
+              type: string
+              description: The URL where newly recorded case can be accessed 
+        400:
+          $ref: '#/responses/validation-problem-response'
+        440:
+          description: |
+            Your request was well constructed but it could not be processed. Consider the following possible problems and look into response for more details:
+
+            | Problem | Description |
+            |-|-|
+            | [unknown-arrangement](case-problems.html) | Unknown arrangement |
+          schema:
+            $ref: '#/definitions/business-problem'              
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+        - Service requests
+        
+  /cases/callback-requests:
+    post:
+      summary: Register new request for callback
+      description: Records callback request and returns assigned case number
+      operationId: CallbackRequests_Register
+      parameters:
+        - description: 'Command with new callback request'
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/register-callback-request-command'
+      responses:
+        201:
+          description: Created
+          schema:
+            $ref: '#/definitions/resource-created-result'
+          headers:
+            Location:
+              type: string
+              description: The URL where newly recorded case can be accessed 
+        400:
+          $ref: '#/responses/validation-problem-response'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+        - Callback requests
+
+  /classifications: 
     get:
-      description: Returns all classification schemas used in this API.
+      summary: List all classification schemas used by the API
+      description: Some fields and parameters have been restricted to a list of allowed lookup values maintained by the bank. This method lists all schemas used in this API.    
       operationId: "Classifications_GetList"
       responses:
         '200':
@@ -259,12 +248,12 @@ paths:
             $ref: '#/definitions/classification-list'
         default:
           $ref: '#/responses/default-error-response'
-      summary: Returns all classification schemas used in this API.
       tags:
         - Classifications
-      x-asee-tags: []
-  '/classifications/{schema-id}':
+
+  /classifications/{schema-id}:
     get:
+      summary: List values allowed by given classification schema.
       description: Returns all classification values for chosen classification.
       operationId: Classifications_Get
       parameters:
@@ -276,136 +265,113 @@ paths:
             $ref: '#/definitions/classification'
         default:
           $ref: '#/responses/default-error-response'
-      summary: Returns the classification values for provided schema.
       tags:
-        - Classifications
-      x-asee-tags: []
+        - Classifications        
 parameters:
-  case-id-param:
-    description: Unique identifier of customer case.
+  case-number-param:
+    description: Unique identifier of customer case
     in: path
-    name: case-id
+    name: case-number
     required: true
     type: string
-  file-id-param:
-    description: Unique identifier of attachment.
-    in: path
-    name: file-id
-    required: true
-    type: string
-  case-type-param:
-    description: Type of customer case to be retrieved.
-    in: query
-    name: case-type
-    required: false
-    enum:
-      - complaint
-      - service-request
-      - callback-request
-    type: string
+
+
   case-topic-param:
-    description: Topic of the customer's request. For complete list of possible values see [case-topic]() classification.
+    description: Topic of the customer's request. For complete list of possible values see [case-topic](case-classifications.html) classification.
     in: query
     name: case-topic
     required: false
     type: string
+    
   customer-number-param:
     description: Unique identifier of the customer.
     in: query
     name: customer-number
     required: false
     type: string
-  agent-id-param:
-    description: Unique identifier of the agent that opens the case.
-    in: query
-    name: agent-id
-    required: false
-    type: string
-  date-from-param:
-    description: Filters items that have been registered after specified date.
-    in: query
-    name: date-from
-    required: false
-    format: date-time
-    type: string
-  date-to-param:
-    description: Filters items that have been registered before specified date.
-    in: query
-    name: date-to
-    required: false
-    format: date-time
-    type: string
-  state-param:
-    description: States
-    in: query
-    name: states
-    required: false
-    enum:
-      - active
-      - resolved
-      - canceled
-      - closed
-      - accepted
-    type: string
-  query-param:
-    description: Search text for title and details of customer cases.
-    in: query
-    name: query
-    required: false
-    type: string
-  page-size-param:
-    description: 'Number of items on a page. For more information see general guidance on [paging and sorting]().'
-    in: query
-    name: page-size
-    required: false
-    format: int32
-    type: integer
-  page-param:
-    description: 'Page index. For more information see general guidance on [paging and sorting]().'
-    in: query
-    name: page
-    required: false
-    format: int32
-    type: integer
-  sort-order-param:
-    description: 'Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]()'
-    in: query
-    name: sort-order
-    required: false
-    enum:
-      - asc
-      - desc
-    type: string
-  sort-by-param:
-    description: 'Attribute of the collection item to sort by. For more information see general guidance on [paging and sorting]().'
-    in: query
-    name: sort-by
-    required: false
-    type: string
-  include-param:
-    description: 'List of fields to include in response. For more information see general guidance on [response shaping]()'
-    in: query
-    name: include
-    required: false
+
+  statuses-param:
+    name: statuses
+    description: |
+      Case statuses to filter the result. If empty or not present cases having any status are returned
+      For complete list of possible values see [case-statuses](offer-classifications.html#case-statuses) enumeration.
+    type: array
     collectionFormat: csv
+    in: query
     items:
       type: string
+      enum: [accepted, active, rejected, canceled, resolved, closed]
+      x-asee-enumeration: case-statuses
+  kinds-param:
+    name: kinds
+    description: |
+      Case kinds to filter the results. If empty or not present all kinds of cases are returned
+      For complete list of possible values see [case-kinds](offer-classifications.html#case-kinds) enumeration.
     type: array
-  trim-param:
-    description: 'List of fields to trim from response. For more information see general guidance on [response shaping]()'
-    in: query
-    name: trim
-    required: false
     collectionFormat: csv
+    in: query
     items:
       type: string
-    type: array
+      enum:
+        - complaint
+        - service-request
+        - callback-request      
+      x-asee-enumeration: case-kinds
   schema-id-param:
-    description: Schema id
-    in: path
     name: schema-id
+    description: Identifier of classification schema
+    in: path
     required: true
     type: string
+  page-param:
+    name: page
+    in: query
+    description: Page index. For more information see general guidance on [paging](common-getstarted.html#paging)
+    type: integer
+    default: 1
+    x-asee-common: true
+  page-size-param:
+    name: page-size
+    in: query
+    description: Number of items on a page. For more information see general guidance on [paging](common-getstarted.html#paging)
+    required: false
+    type: integer
+    default: 10
+    x-asee-common: true
+  sort-order-param:
+    description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [sorting](common-getstarted.html#sorting)
+    in: query
+    name: sort-order
+    type: string
+    default: asc
+    enum:
+    - asc
+    - desc
+    x-asee-common: true
+  sort-by-param:
+    description: Attribute of the collection item to sort by. For more information see general guidance on [sorting](common-getstarted.html#sorting)
+    in: query
+    name: sort-by
+    type: string
+    x-asee-common: true
+  include-param:
+    description: List of fields to include in response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
+    in: query
+    name: include
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+    x-asee-common: true
+  trim-param:
+    description: List of fields to trim from response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
+    in: query
+    name: trim
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+    x-asee-common: true
 definitions:
   case-list:
     description: Paged list of customer cases.
@@ -415,68 +381,156 @@ definitions:
       items:
         description: List of customer cases.
         items:
-          $ref: '#/definitions/customer-case'
+          $ref: '#/definitions/case'
         type: array
     type: object
-  customer-case:
-    description: Contains details of customer case.
+    
+  case:
+    description: Common information to all kinds of customer cases
+    discriminator: kind
+    required:
+    - kind    
+    properties:
+      case-number:
+        description: Unique identifier of customer case workitem
+        type: string
+      kind:
+        description: |
+          Enumeration that distinguishes different kinds of cases
+          For a list of possible values see [case-kinds](case-classifications.html#case-kinds) enumeration.
+        type: string
+        enum: [complaint, service-request, callback-request]
+      status:
+        description: |
+          Status of the case
+          For a list of possible values see [case-statuses](case-classifications.html#case-statuses) enumeration.
+        type: string
+        enum: [accepted, active, rejected, canceled, resolved, closed]
+        x-asee-enumeration: case-statuses
+        readOnly: true  
+      case-topic:
+        description: Type of the customer's request. For complete list of possible values see [case-topic](case-classifications.html#case-topic) classification.
+        type: string        
+      title:
+        description: Title of the case
+        type: string
+      details:
+        description: Details about the case
+        type: string
+      arrangement-number:
+        description: Arrangement number to which the case is related
+        type: string              
+      customer-number:
+        description: Unique identifier of customer that is linked to the case
+        type: string
+      customer-name:
+        description: Name of the customer that is linked to the case
+        type: string
+      channel:
+        description: Communication channel through which case was received
+        enum:
+          - email
+          - face-to-face
+          - fax
+          - phone
+          - mail
+          - other-communication-technology
+          - web-app
+          - mobile-app
+        type: string        
+      resolution:
+        description: Resolution of the case
+        type: string
+      importance:
+        description: The level of imporance
+        enum: [low, medium, high]
+        type: string        
+      created:
+        description: Date and time when case was recorded in the system
+        format: date-time
+        type: string
+        readOnly: true
+      status-changed:
+        description: Date and time when case status changed
+        format: date-time
+        type: string
+        readOnly: true
+      last-modified:
+        description: Date and time when case was last modified
+        format: date-time
+        type: string
+        readOnly: true
+      attachments:
+        type: array
+        items:
+          $ref: '#/definitions/attachment'
+    
+  attach-documents-command:
+    description: Command with specification of attached documents
+    properties:
+      documents:
+        type: array
+        items:
+          $ref: '#/definitions/attachment'
+
+  attachment:
+    description: Details of document attachement
+    properties:
+      attachment-url:
+        type: string
+        format: url
+        description: URL of document content in DMS
+      attachment-id:
+        type: string
+        description: Unique identifier of document in DMS
+      document-type:
+        type: string
+        x-asse-classification: document-kinds
+        description: Specific purpose of this document. For complete list of possible values see [document-kinds](offer-classifications.html#document-kinds) classification.
+ 
+    
+  register-callback-request-command:
+    description: Registers callback for customer
+    properties:
+      callback-time:
+        description: Preffered callback time set by customer
+        format: date-time
+        type: string
+      category:
+        description: 'Category of callback request. For a complete list of possible values see [callback-category](case-classifications.html#callback-category) classification.'
+        type: string
+      customer-number:
+        description: Unique identifier of the customer that requested callback
+        type: string
+
+  callback-request:
+    allOf:
+      - $ref: '#/definitions/case'
+    description: Request by customer to be called by bank representative
+    properties:
+      callback-time:
+        description: Preffered callback time set by customer
+        format: date-time
+        type: string
+      category:
+        description: 'Category of callback request. For a complete list of possible values see [callback-category](case-classifications.html#callback-category) classification.'
+        type: string
+    
+  register-complaint-command:
+    description: Registers new customr complaint
     properties:
       case-id:
-        description: Unique identifier of customer case.
-        type: string
-      case-topic:
-        description: Type of the customer's request. For complete list of possible values see [case-topic]() classification.
-        type: string
-      case-type:
-        description: Type of the case object.
-        enum:
-          - complaint
-          - service-request
-          - callback-request
-        type: string
-      registered-by-party-number:
-        description: Unique identifier of the party that creates the case.
-        type: string
-      registered-by-party-name:
-        description: Name of the party that opens the case.
-        type: string
-      updated-by-party-number:
-        description: Unique identifier of the party that changed the case.
-        type: string
-      updated-by-party-name:
-        description: Name of the party that changed the case.
+        description: Unique case identifier
         type: string
       customer-number:
         description: Unique identifier of the client.
         type: string
-      customer-name:
-        description: Name of the client that is linked to the case.
-        type: string
-      registration-date:
-        description: Date of opening.
-        format: date-time
-        type: string
-      state:
-        description: State of the case.
-        enum:
-          - active
-          - resolved
-          - canceled
-          - closed
-          - accepted
-        type: string
-      resolution:
-        description: Resolution of the case.
-        type: string
       importance:
-        description: The level of imporance.
+        description: Level of importance.
         enum:
           - low
           - standard
           - very-important
-        type: string
-      title:
-        description: Title of the case.
         type: string
       details:
         description: Details about the case.
@@ -484,260 +538,132 @@ definitions:
       arrangement-number:
         description: Arrangement number to which the case is related.
         type: string
-      attachments:
-        description: Associated case files.
-        items:
-          $ref: '#/definitions/attachment'
-        type: array
-    type: object
-  attachment:
-    description: Reference to file associated with customer case.
-    properties:
-      attachment-id:
-        description: Unique identifier of attachment.
+      title:
+        description: Reason of the related communication.
         type: string
-      attachment-name:
-        description: Meta name of the attachment.
+      reply-address:
+        description: Address for sending the reply to the customer
         type: string
-      attachment-uri:
-        description: URI
+      reply-address-code:
+        description: Address code for sending the reply to the customer
         type: string
-    type: object
-  update-case-command:
-    description: Updates resolution and state of some case.
-    properties:
-      resolution:
-        description: Resolution of the case.
+      case-topic:
+        description: Type of the customer's request. For complete list of possible values see [case-topic]() classification.
         type: string
-      state:
-        description: Current state of the case.
-        enum:
-          - resolved
-          - closed
-          - rejected
+      related-case-id:
+        description: Unique indetifier of related case.
         type: string
-    type: object
-  command-result:
-    description: The result of the executed command.
-    properties:
-      id:
-        description: 'Returns the identifier of created, updated or deleted object.'
-        type: string
-      created-record-status:
-        description: 'Status of the object (created, updated, deleted).'
-        type: string
-    type: object
-  case-history:
-    description: Provides the history of customer case processing.
+
+  complaint:
     allOf:
-    - $ref: '#/definitions/paged-list'
+      - $ref: '#/definitions/case'  
+    description: Issue causing customer's dissatisfaction with bank 
     properties:
-      items:
-        description: List of history entries for the case.
-        items:
-          $ref: '#/definitions/case-history-item'
-        type: array
-    type: object
-  case-history-item:
-    description: Customer case history item
+      reply-address:
+        description: Address for sending the reply to the customer
+        type: string
+      reply-address-code:
+        description: Address code for sending the reply to the customer
+        type: string
+      related-case-id:
+        description: Unique indetifier of related case.
+        type: string
+    
+  register-service-request-command:
+    description: Creates a new service request
     properties:
-      case-id:
-        description: Unique identifier of customer case
-        type: string
-      case-type:
-        description: Type of customer case.
-        enum:
-          - complaint
-          - service-request
-          - callback-request
-        type: string
-      updated-by-party-number:
-        description: Identifier of the party that changed the case.
-        type: string
-      updated-by-party-name:
-        description: Name of the party that changed the case.
+      case-number:
+        description: Unique case identifier
         type: string
       customer-number:
-        description: Unique identifier of the client.
-        type: string
-      registration-date:
-        description: Date of case registration.
-        format: date-time
-        type: string
-      state:
-        description: State of the case.
-        enum:
-          - active
-          - resolved
-          - canceled
-          - closed
-          - accepted
-        type: string
-      resolution:
-        description: Resolution of the case.
+        description: Unique identifier of the customer that asks for service
         type: string
       importance:
-        description: The level of imporance.
+        description: Level of importance
         enum:
           - low
-          - standard
-          - very-important
+          - medium
+          - high
         type: string
       details:
-        description: Details about the case.
+        description: Details about the case
         type: string
       arrangement-number:
         description: Arrangement number to which the case is related
         type: string
-      version-number:
-        description: Change version
+      title:
+        description: Reason of the related communication
         type: string
-      version-date:
-        description: Version date
-        format: date-time
-        type: string
-    type: object
-  create-callback-request-command:
-    description: Creates customer case for callback.
+        
+  service-request:
+    allOf:
+      - $ref: '#/definitions/case'  
+    description: "Request for service that requires bank's assistance"
+
+
+
+  resource-created-result:
+    description: Unique identifier of newly created resource that can be used in future inquires and commands
     properties:
-      callback-request-time:
-        description: Callback request time
-        format: date-time
+      id:
         type: string
-      category:
-        description: 'Category of callback request. For a complete list of possible values see [callback-category]() classification.'
-        type: string
-      customer-number:
-        description: Unique identifier of the client.
-        type: string
-    type: object
-  create-complaint-command:
-    description: Creates new complaint
+        description: identifier
+    example:
+      id: WI00012123
+      
+
+       
+  validation-problem:
+    type: array
+    items:
+      type: object
+      properties:
+        field:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              error:
+                type: string
+              message:
+                type: string
+    example:
+      -  
+        field: phone-number
+        errors:
+          -
+            error: invalid-format
+            message: Format for this field is invalid
+          -
+            error: max-length
+            message: Content exceeds maximum alowed length 
+      - 
+        field: account-number
+        errors:
+          -
+            error: check-digit-invalid
+            message: Check digit is invalid for this field
+  
+  business-problem:
+    description: Details on specific problem that prevented processing after successfull validation
+    type: object 
     properties:
-      case-id:
-        description: Unique case identifier
+      problem:
+        description: Unique literal that identifies specific problem 
         type: string
-      customer-number:
-        description: Unique identifier of the client.
-        type: string
-      importance:
-        description: Level of importance.
-        enum:
-          - low
-          - standard
-          - very-important
+      message:
+        description: Message explaining the situation and optionaly remedies
         type: string
       details:
-        description: Details about the case.
+        description: Optional details supplied for troubleshooting
         type: string
-      arrangement-number:
-        description: Arrangement number to which the case is related.
-        type: string
-      title:
-        description: Reason of the related communication.
-        type: string
-      reply-address:
-        description: Address for sending the reply to the customer.
-        type: string
-      reply-address-code:
-        description: Address code for sending the reply to the customer.
-        type: string
-      communication-channel:
-        description: Communication channel through which case was received.
-        enum:
-          - email
-          - face-to-face-meeting
-          - sms
-          - wap
-          - fax
-          - instant-message
-          - phone
-          - mail
-          - other-communication-technology
-          - web
-        type: string
-      case-topic:
-        description: Type of the customer's request. For complete list of possible values see [case-topic]() classification.
-        type: string
-      related-case-id:
-        description: Unique indetifier of related case.
-        type: string
-    type: object
-  create-service-request-command:
-    description: Creates a new service request
-    properties:
-      case-id:
-        description: Unique case identifier
-        type: string
-      customer-number:
-        description: Unique identifier of the client.
-        type: string
-      importance:
-        description: Level of importance.
-        enum:
-          - low
-          - standard
-          - very-important
-        type: string
-      details:
-        description: Details about the case.
-        type: string
-      arrangement-number:
-        description: Arrangement number to which the case is related.
-        type: string
-      title:
-        description: Reason of the related communication.
-        type: string
-      reply-address:
-        description: Address for sending the reply to the customer.
-        type: string
-      reply-address-code:
-        description: Address code for sending the reply to the customer.
-        type: string
-      communication-channel:
-        description: Communication channel through which case was received.
-        enum:
-          - email
-          - face-to-face-meeting
-          - sms
-          - wap
-          - fax
-          - instant-message
-          - phone
-          - mail
-          - other-communication-technology
-          - web
-        type: string
-      case-topic:
-        description: Type of the customer's request. For complete list of possible values see [case-topic]() classification.
-        type: string
-      related-case-id:
-        description: Unique indetifier of related case.
-        type: string
-    type: object
-  add-case-attachment-command:
-    description: Adds attachment to customer case.
-    properties:
-      case-id:
-        description: Unique identifier of customer case.
-        type: string
-      file-id:
-        description: Unique identifier of the attachment.
-        type: string
-      file-name:
-        description: Name of the attached document.
-        type: string
-      customer-number:
-        description: Unique identifier of the client.
-        type: string
-    type: object
-  close-case-command:
-    description: Closes the customer case.
-    properties:
-      resolution:
-        description: Resolution of the closed case.
-        type: string
-    type: object
+    example:
+      problem: document-locked
+      message: Document you are trying to access is locked by another user
+      details: User john.doe has locked the document
+  
   paged-list:
     description: List with support for paging
     properties:
@@ -763,94 +689,98 @@ definitions:
         description: Attribute of the collection item to sort by
         type: string
   classification-value:
+    type: object
     description: Classification value
-    example: TO DO
     properties:
-      code:
-        description: Code of classification value.
-        type: string
       literal:
-        description: Literal.
+        description: Literal that uniquely identifies classification value
+        type: string
+      code:
+        description: Optional numerical code of classification value
         type: string
       description:
-        description: Description.
+        description: Description of classification value
         type: string
-      id:
-        description: Identifier of classification value.
+      parent-literal:
+        description: Optional literal of parent classification value if schema is hierarchical
         type: string
-      parent-id:
-        description: Parent classification value id.
-        type: string
-      ordinal:
-        description: Ordinal number.
-        type: string
-    type: object
+    example:
+      literal: billing
+      code: 2
+      description: Contact may be used to provide party with details of their liabilities to the bank
+      
   classification-list:
-    description: List of classification shemas.
+    description: List of classification schemas
+    type: object
     properties:
       items:
-        description: List of all classification schemas.
+        description: List of classification schemas
         items:
-          $ref: "#/definitions/classification"
+          $ref: "#/definitions/classification-info"
         type: array
-    type: object
-  classification:
-    description: Classification schema used in API contracts.
     example:
-      API: TO DO
-      description: TO DO
-      schema-id: TO DO
-      name: TO DO
-      values:
-        - code: '0'
-          literal: card-lost
-          description: Card lost and new one should be issued.
-          id:
-          parent-id:
-          ordinal:
-        - code: '1'
-          literal: card-stolen
-          description: Card stollen and new one should be issued.
-          id:
-          parent-id:
-          ordinal:
-        - code: '2'
-          literal: card-damadged
-          description: Card damadged and new one should be issued.
-          id:
-          parent-id:
-          ordinal:
-        - code: '3'
-          literal: emboss-name-changing
-          description: Change emboss name.
-          id:
-          parent-id:
-          ordinal:
-        - code: '4'
-          literal: pin-lost
-          description: PIN code lost and new one should be created.
-          id:
-          parent-id:
-          ordinal:
+      -
+        schema-id: filing-purpose
+        name: Filing Purpose
+        description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture
+      -
+        schema-id: folder-purpose
+        name: Folder Purpose
+        description: List of possible uses of a folder in business context.
+        
+  classification-info:
+    description: Basic information on classification schema
     properties:
-      API:
-        description: Name of Api in which classification shema is used.
-        type: string
-      description:
-        description: Shema description.
-        type: string
       schema-id:
-        description: Unique identifier of the classification.
         type: string
+        description: Unique literal that identifies the classification schema. Always in `lowercase-dash` convention.
       name:
-        description: Name of shema.
         type: string
+        description: User friendly name of classification
+      description:
+        type: string
+        description: Description of a classification
+    example:
+      schema-id: filing-purpose
+      name: Filing Purpose
+      description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture
+      
+  classification:
+    type: object
+    description: Classification schema details
+    properties:
+      schema-id:
+        type: string
+        description: Unique literal that identifies the classification schema. Always in `lowercase-dash` convention.
+      name:
+        type: string
+        description: User friendly name of classification
+      description:
+        type: string
+        description: Description of a classification
       values:
-        description: List of classification values.
+        description: List of allowed classification values
+        type: array
         items:
           $ref: "#/definitions/classification-value"
-        type: array
-    type: object
+    example:
+      schema-id: contact-purpose
+      name: Contact Purpose
+      description: List of possible uses of contact in business context. Commonly used filing purposes are billing, marketing
+      values:
+        - literal: billing
+          code: 1
+          description: Contact may be used to provide party with details of their liabilities to the bank
+        - literal: marketing
+          code: 2
+          description: Contact may be used to provide party with details of offers
+        - literal: reporting
+          code: 3
+          description: Contact may be used to provide party with reports on their account
 responses:
+  validation-problem-response:
+    description: Your request was not constructed properly. Response contains the list of validation errors for each invalid element of your request. For complete list of possible validation errors see [validation errors](common-getstarted.html#error-handling).
+    schema: 
+      $ref: '#/definitions/validation-problem'
   default-error-response:
-    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()
+    description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling](common-getstarted.html#error-handling)
