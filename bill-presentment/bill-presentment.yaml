@@ -3,14 +3,14 @@ x-asee-visibility: public
 host: bankapi.net
 basePath: /beta/bill-presentment
 info:
-  description: Bill Presentment API provides subscription, electronic delivery, and presentation of monthly bills to bank customers. Bill payments are handled in Payment API. 
+  description: Bill Presentment API provides subscription, electronic delivery, and presentation of monthly bills to bank customers. Bill payments are handled in Payment API.
   title: Bill Presentment API
   version: beta
 tags:
   - description: Working with issuers
     name: Issuers
   - description: Working with subscriptions
-    name: Subscriptions    
+    name: Subscriptions
   - description: Working with bills
     name: Bills
 
@@ -20,11 +20,11 @@ produces:
   - application/json
 schemes:
   - http
-  - https  
+  - https
 paths:
   /issuers:
     get:
-      summary: List bill issuers    
+      summary: List bill issuers
       description: Response contains list of bill issuers optionaly filtered by name
       operationId: Issuers_GetList
       parameters:
@@ -48,10 +48,10 @@ paths:
         - Pageable
         - Sortable
         - Shapeable
-        
+
   /issuers/{issuer-id}:
     get:
-      summary: Get specific bill issuer details    
+      summary: Get specific bill issuer details
       description: Response contains all details about specific bill issuer
       operationId: Issuers_Get
       parameters:
@@ -67,7 +67,7 @@ paths:
       tags:
         - Issuers
       x-asee-tags: []
-      
+
   /me/bills:
     get:
       summary: List bills for authenticated customer
@@ -92,10 +92,10 @@ paths:
       x-asee-tags:
         - Sortable
         - Shapeable
-        
+
   /bills/{bill-id}:
     get:
-      summary: Get details of specific bill     
+      summary: Get details of specific bill
       description: Response contains all details available for specified bill
       operationId: Bills_Get
       parameters:
@@ -110,10 +110,10 @@ paths:
       tags:
         - Bills
       x-asee-tags: []
-      
+
   /bills/{bill-id}/snooze:
     post:
-      summary: Snooze the bill    
+      summary: Snooze the bill
       description: Snoozes the bill so that it can be filtered out from unpaid bill list. This is useful when customer has settled the bill in different way
       operationId: Bills_Snooze
       parameters:
@@ -126,15 +126,15 @@ paths:
       tags:
         - Bills
       x-asee-tags: []
-      
+
   /me/subscriptions:
     get:
-      summary: List subscriptions    
+      summary: List subscriptions
       description: Response contains list of bill subscriptions can be filtered by name of issuer and subscription statuses
       operationId: Subscriptions_GetList
       parameters:
         - $ref: '#/parameters/issuer-name-param'
-        - $ref: '#/parameters/subscription-statuses-param'        
+        - $ref: '#/parameters/subscription-statuses-param'
         - $ref: '#/parameters/page-size-param'
         - $ref: '#/parameters/page-param'
         - $ref: '#/parameters/sort-order-param'
@@ -154,7 +154,7 @@ paths:
         - Sortable
         - Shapeable
     post:
-      summary: Register bill subscription  
+      summary: Register bill subscription
       description: Subscribes customer to receive bills from issuer
       operationId: Subscriptions_Register
       parameters:
@@ -172,13 +172,13 @@ paths:
           headers:
             Location:
               type: string
-              description: The URL where newly recorded case can be accessed 
+              description: The URL where newly recorded case can be accessed
         400:
           $ref: '#/responses/validation-problem-response'
         440:
           description: |
             Your request was well constructed but it could bot be processed. Consider the following possible problems and look into response for more details:
-            
+
               - [nickname-already-exists]()
               - [debtor-account-not-active]()
               - [subscription-already-registered]()
@@ -189,7 +189,7 @@ paths:
       tags:
         - Subscriptions
       x-asee-tags: []
-      
+
   '/subscriptions/{subscription-id}':
     get:
       summary: Get specific subscription details
@@ -208,7 +208,7 @@ paths:
         - Subscriptions
       x-asee-tags:
         - Shapeable
-        
+
   '/subscriptions/{subscription-id}/cancel':
     post:
       summary: Cancel active bills subscription
@@ -221,14 +221,14 @@ paths:
           name: cmd
           required: true
           schema:
-            $ref: '#/definitions/cancel-subscription-command'        
+            $ref: '#/definitions/cancel-subscription-command'
       responses:
         '204':
           description: No Content - Canceled
         '440':
           description: |
             Your request was well constructed but it could bot be processed. Consider the following possible problems and look into response for more details:
-            
+
               - [subscription-not-active]()
               - [unpaid-bills-exist]()
               - [standing-order-scheduled]()
@@ -239,11 +239,73 @@ paths:
       tags:
         - Subscriptions
       x-asee-tags: []
-      
+
+
+
+# ****************************************************#
+# ENDPOINTS COMMON WITH OTHER APIs                    #
+# ****************************************************#
+
+  /classifications:
+    get:
+      summary: List all classification schemas used by the API
+      description: Some fields and parameters have been restricted to a list of allowed lookup values maintained by the bank. This method lists all schemas used in this API.
+      operationId: "Classifications_GetList"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/classification-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+        - Classifications
+
+  /classifications/{schema-id}:
+    get:
+      summary: List values allowed by given classification schema.
+      description: Returns all classification values for chosen classification.
+      operationId: Classifications_Get
+      parameters:
+        - $ref: '#/parameters/schema-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/classification'
+        default:
+          $ref: '#/responses/default-error-response'
+
+      tags:
+        - Classifications
+
+
 parameters:
+
+# ****************************************************#
+# PARAMETERS COMMON WITH OTHER APIs                   #
+# ****************************************************#
+  schema-id-param:
+    name: schema-id
+    description: Identifier of classification schema
+    in: path
+    required: true
+    type: string
+  include-param:
+    description: List of fields to include in response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
+    in: query
+    name: include
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+    x-asee-common: true
+
   bill-statuses-param:
     name: statuses
-    description: Statuses of the bill
+    description: |
+      Statuses of the bill
+      For a list of possible values see [bill-statuses](bill-presentment-classifications.html#bill-statuses) enumeration.
     type: array
     collectionFormat: csv
     in: query
@@ -251,17 +313,18 @@ parameters:
       type: string
       enum: [all, paid, not-paid, pending]
       x-asee-enumeration: bill-statuses
-    
+
   issuer-name-param:
     description: Name of bill issuer.
     in: query
     name: issuer-name
     required: false
     type: string
-    
 
   subscription-statuses-param:
-    description: Statuses of bill subscription
+    description: |
+      Statuses of bill subscription
+      For a list of possible values see [subscription-statuses](bill-presentment-classifications.html#subscription-statuses) enumeration.
     name: statuses
     required: false
     type: array
@@ -300,15 +363,6 @@ parameters:
     name: sort-by
     required: false
     type: string
-  include-param:
-    description: 'List of fields to include in response. For more information see general guidance on [response shaping]()'
-    in: query
-    name: include
-    required: false
-    collectionFormat: csv
-    items:
-      type: string
-    type: array
   trim-param:
     description: 'List of fields to trim from response. For more information see general guidance on [response shaping]()'
     in: query
@@ -336,10 +390,10 @@ parameters:
     name: subscription-id
     required: true
     type: string
-    
-    
-    
-    
+
+
+
+
 responses:
   validation-problem-response:
     description: "Your request was not constructed properly. Response contains the list of validation errors for each invalid element of your request. For complete list of possible validation errors see [validation errors](common-getstarted.html#error-handling)."
@@ -347,8 +401,104 @@ responses:
       $ref: '#/definitions/validation-problem'
   default-error-response:
     description: "Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling](common-getstarted.html#error-handling)"
-    
+
 definitions:
+
+  # ****************************************************#
+  # MODELS COMMON WITH OTHER APIs                       #
+  # ****************************************************#
+
+  classification-value:
+    type: object
+    description: Classification value
+    properties:
+      literal:
+        description: Literal that uniquely identifies classification value
+        type: string
+      code:
+        description: Optional, yet unique code of classification value
+        type: string
+      description:
+        description: Description of classification value
+        type: string
+      parent-literal:
+        description: Optional literal of parent classification value if schema is hierarchical
+        type: string
+    example:
+      literal: billing
+      code: 2
+      description: Contact may be used to provide party with details of their liabilities to the bank
+  classification-list:
+    description: List of classification schemas
+    type: object
+    properties:
+      items:
+        description: List of classification schemas
+        items:
+          $ref: "#/definitions/classification-info"
+        type: array
+    example:
+      -
+        schema-id: filing-purpose
+        name: Filing Purpose
+        description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture
+      -
+        schema-id: folder-purpose
+        name: Folder Purpose
+        description: List of possible uses of a folder in business context.
+  classification-info:
+    description: Basic information on classification schema
+    properties:
+      schema-id:
+        type: string
+        description: Unique literal that identifies the classification schema. Always in `lowercase-dash` convention.
+      name:
+        type: string
+        description: User friendly name of classification
+      description:
+        type: string
+        description: Description of a classification
+    example:
+      schema-id: filing-purpose
+      name: Filing Purpose
+      description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture
+  classification:
+    type: object
+    description: Classification schema details
+    properties:
+      schema-id:
+        type: string
+        description: Unique literal that identifies the classification schema. Always in `lowercase-dash` convention.
+      name:
+        type: string
+        description: User friendly name of classification
+      description:
+        type: string
+        description: Description of a classification
+      values:
+        description: List of allowed classification values
+        type: array
+        items:
+          $ref: "#/definitions/classification-value"
+    example:
+      schema-id: contact-purpose
+      name: Contact Purpose
+      description: List of possible uses of contact in business context. Commonly used filing purposes are billing, marketing
+      values:
+        - literal: billing
+          code: 1
+          description: Contact may be used to provide party with details of their liabilities to the bank
+        - literal: marketing
+          code: 2
+          description: Contact may be used to provide party with details of offers
+        - literal: reporting
+          code: 3
+          description: Contact may be used to provide party with reports on their account
+
+# ****************************************************#
+# MODELS SPECIFIC FOR BILL PRESENTMENT APIs                 #
+# ****************************************************#
+
 
   bill-list:
     description: Bill list
@@ -357,20 +507,20 @@ definitions:
     example:
       sort-order: asc
       sort-by:
-      total-amount-due: 
+      total-amount-due:
         amount: 8732.17
         code: RSD
       bills:
-        - 
+        -
           bill-id: "9990015520900120151103"
           subscription-id: 771771912313
           amount-due:
-            amount: 4327.50      
+            amount: 4327.50
             code: RSD
-          payment-status: not-paid        
+          payment-status: not-paid
           invoicing-date: '2015-11-03T00:00:00'
           due-date: '2015-11-10T00:00:00'
-          bill-presentation-url: http://www.telenor.rs/mojracun?id=9990015520900120151103 
+          bill-presentation-url: http://www.telenor.rs/mojracun?id=9990015520900120151103
     properties:
       total-amount-due:
         description: Sum of bills payment amount
@@ -387,7 +537,7 @@ definitions:
       bill-id:
         description: Bill identifier.
         type: string
-      subscription-id: 
+      subscription-id:
         type: string
         description: Unique identifier of bill subscription
       amount-due:
@@ -403,11 +553,11 @@ definitions:
       due-date:
         description: Date and time when bill is due for payment
         format: date-time
-        type: string        
+        type: string
       bill-presentation-url:
         description: URL where bill presentation can be rendered
         type: string
-        format: url        
+        format: url
       bill-reference:
         description: Optional bill payment reference for this bill if different than standard specified in for issuer
         type: string
@@ -418,13 +568,13 @@ definitions:
       bill-id: "9990015520900120151103"
       subscription-id: 771771912313
       amount-due:
-        amount: 4327.50      
+        amount: 4327.50
         code: RSD
-      payment-status: not-paid        
+      payment-status: not-paid
       invoicing-date: '2015-11-03T00:00:00'
       due-date: '2015-11-10T00:00:00'
       bill-presentation-url: http://www.telenor.rs/mojracun?id=9990015520900120151103
-      
+
 
   debtor:
     description: Person who is debtor on a bill
@@ -442,9 +592,9 @@ definitions:
       name: Nikola Stojanovic
       address: King Alexandar's Boulevard 101
       city: Belgrade
-      
 
-    
+
+
   geolocation:
     description: 'Geolocation details - Latitude, Longitude, Mapped address'
     example:
@@ -461,7 +611,7 @@ definitions:
       mapped-address:
         description: Mapped address from GPS coordinates
         type: string
-    
+
   issuer-list:
     description: Bill issuer list.
     allOf:
@@ -478,7 +628,7 @@ definitions:
       page-number: 0
       total-pages: 6
       sort-order: asc
-      sort-by: name 
+      sort-by: name
       issuers:
         -
           issuer-id: 36
@@ -491,7 +641,7 @@ definitions:
           account-number: 845-0000000137849-61
           invoicing-day: 20
           due-day: 30
-          issuing-period: monthly      
+          issuing-period: monthly
           due-date-in-file: false
           payment-slip-specimen-url: /v1/content/public/documents/jud73278783
           biller-reference:
@@ -499,8 +649,8 @@ definitions:
             max-length: 20
             min-length: 20
             format: "\\d{12}-d{5}-d{1}"
-            edit-mask: 'nnnnnnnnnnnnn-nnnnn-n'   
-    
+            edit-mask: 'nnnnnnnnnnnnn-nnnnn-n'
+
   issuer:
     description: "Service provider that issues bills to it's clients"
     properties:
@@ -510,7 +660,7 @@ definitions:
       logo-url:
         description: Issuer logo URL
         type: string
-        format: url        
+        format: url
       group-id:
         description: Group identifier
         type: string
@@ -534,21 +684,24 @@ definitions:
         description: Account number of bill issuer
         type: string
       invoicing-day:
-        description: Day of month on which bills (invoices) are issued 
+        description: Day of month on which bills (invoices) are issued
         type: integer
         format: int32
         minimum: 1
-        maximum: 31           
+        maximum: 31
       due-day:
         description: Day of month on which bills are usually due for this issuer
         type: integer
         format: int32
         minimum: 1
-        maximum: 31   
+        maximum: 31
       issuing-period:
-        description: "Issuing period of bill. Commonly used value is `monthly`"
+        description: |
+          "Issuing period of bill. Commonly used value is `monthly`"
+          For a list of possible values see [issuing-periods](bill-presentment-classifications.html#issuing-periods) enumeration.
         type: string
-        enum: [monthly, yearly, quarterly] 
+        enum: [monthly, yearly, quarterly]
+        x-asee-enumeration: issuing-periods
       due-date-in-file:
         description: Due date delivered in file
         type: boolean
@@ -556,7 +709,7 @@ definitions:
         $ref: '#/definitions/reference-spec'
       payment-slip-specimen-url:
         description: URL of image with payment slip specimen
-        type: string   
+        type: string
     example:
       issuer-id: 36
       group-id: 6
@@ -568,7 +721,7 @@ definitions:
       account-number: 845-0000000137849-61
       invoicing-day: 20
       due-day: 30
-      issuing-period: monthly      
+      issuing-period: monthly
       due-date-in-file: false
       payment-slip-specimen-url: /v1/content/public/documents/jud73278783
       biller-reference:
@@ -576,8 +729,8 @@ definitions:
         max-length: 20
         min-length: 20
         format: "\\d{12}-d{5}-d{1}"
-        edit-mask: 'nnnnnnnnnnnnn-nnnnn-n'        
-        
+        edit-mask: 'nnnnnnnnnnnnn-nnnnn-n'
+
   reference-spec:
     properties:
       model:
@@ -587,7 +740,7 @@ definitions:
       min-length:
         description: Minimum allowed length of biller reference
         format: int32
-        type: integer        
+        type: integer
       max-length:
         description: Minimum allowed length of biller reference
         format: int32
@@ -614,18 +767,18 @@ definitions:
       sort-order: asc
       sort-by: friendly-name
       subscriptions:
-        - 
+        -
           subscription-id: "99900000735001"
           friendly-name: Appartment utilility bill
           issuer-id: 17
-          status: active      
+          status: active
           debtor:
             name: Nikola Stojanovic
             address: King Alexandar Blvd 86
             city: Belgrade
           debtor-account: "115-1000100019578-10"
-          bill-payment-kind: transfer       
-    
+          bill-payment-kind: transfer
+
   subscription:
     description: Bill subscription
     properties:
@@ -639,15 +792,19 @@ definitions:
         description: Unique identifier of bill issuer
         type: string
       issuer-reference:
-        description: Issuer's reference is unique identification of service, subscription, agreement or subscriber. It is usually the value that is specified in payment order beneficiary reference number field.
-        type: string        
+        description: |
+          Issuer's reference is unique identification of service, subscription, agreement or subscriber. It is usually the value that is specified in payment order beneficiary reference number field.
+        type: string
       status:
-        description: Subscription status
+        description: |
+          Subscription status
+          For a list of possible values see [subscription-statuses](bill-presentment-classifications.html#subscription-statuses) enumeration.
         enum:
           - pending
           - active
           - canceled
           - closed
+        x-asee-enumeration: subscription-statuses
         type: string
       debtor:
         description: Party that pays bills to issuer
@@ -656,16 +813,19 @@ definitions:
         description: Account number from which bill will be paid
         type: string
       bill-payment-kind:
-        description: Kind of bill payment selected for this subscription
+        description: |
+          Kind of bill payment selected for this subscription
+          For a list of possible values see [bill-payment-kinds](bill-presentment-classifications.html#bill-payment-kinds) enumeration.
         enum:
           - transfer
           - standing-order
         type: string
+        x-asee-enumeration: bill-payment-kinds
     example:
       subscription-id: "99900000735001"
       friendly-name: Appartment utilility bill
       issuer-id: 17
-      status: active      
+      status: active
       debtor:
         name: Nikola Stojanovic
         address: King Alexandar Blvd 86
@@ -703,9 +863,12 @@ definitions:
         description: Account number from which bill will be paid
         type: string
       bill-payment-kind:
-        description: Kind of bill payment selected for this subscription
+        description: |
+          Kind of bill payment selected for this subscription
+          For a list of possible values see [bill-payment-kinds](bill-presentment-classifications.html#bill-payment-kinds) enumeration.
         enum: [transfer, standing-order]
         type: string
+        x-asee-enumeration: bill-payment-kinds
       effective-date:
         description: Effective date and time for standing order
         format: date-time
@@ -739,7 +902,7 @@ definitions:
       bill-reference: '28187871213-123123-4'
       debtor-account-number: 115-0000000050378-56
       attachments:
-        - 
+        -
           attachment-id: 8771293
           name: Scanned copy of the bill for January 2016
           content-url: /v1/content/hub/documents/jdta7282ewE
@@ -761,22 +924,22 @@ definitions:
     example:
       attachment-id: 8771293
       name: Scanned copy of the bill for January 2016
-      content-url: /v1/content/hub/documents/jdta7282ewE        
+      content-url: /v1/content/hub/documents/jdta7282ewE
 
   currency:
     description: Currency amount and code
-    type: object  
+    type: object
     required:
-      - amount    
-      - code      
+      - amount
+      - code
     example:
-      amount: 200.00    
+      amount: 200.00
       code: EUR
     properties:
       amount:
         description: Amount
         format: double
-        type: number    
+        type: number
       code:
         description: ISO 4217 3 letter currency code
         type: string
@@ -809,7 +972,7 @@ definitions:
               message:
                 type: string
     example:
-      -  
+      -
         field: phone-number
         errors:
           -
@@ -817,20 +980,20 @@ definitions:
             message: Format for this field is invalid
           -
             error: max-length
-            message: Content exceeds maximum alowed length 
-      - 
+            message: Content exceeds maximum alowed length
+      -
         field: account-number
         errors:
           -
             error: check-digit-invalid
             message: Check digit is invalid for this field
-  
+
   business-problem:
     description: Details on specific problem that prevented processing after successfull validation
-    type: object 
+    type: object
     properties:
       problem:
-        description: Unique literal that identifies specific problem 
+        description: Unique literal that identifies specific problem
         type: string
       message:
         description: Message explaining the situation and optionaly remedies
@@ -842,7 +1005,7 @@ definitions:
       problem: document-locked
       message: Document you are trying to access is locked by another user
       details: User john.doe has locked the document
-  
+
   paged-list:
     description: List with support for paging
     properties:
@@ -867,5 +1030,3 @@ definitions:
       sort-by:
         description: Attribute of the collection item to sort by
         type: string
-
-     
