@@ -838,7 +838,7 @@ paths:
       description: Initiates new wallet transfer that will either add funds to wallet or withdraw funds to linked current account.
       operationId: WalletTransfers_Initiate
       parameters:
-        - description: Initiate wallt transfer command
+        - description: Initiate wallet transfer command
           in: body
           name: cmd
           required: true
@@ -853,9 +853,9 @@ paths:
           description: |
             Your request was well constructed but it could not be processed. Consider the following possible problems and look into response for more details:
             
-            [amount-above-limit](payment-problems.html)
-            [blocked-account](payment-problems.html)
-            [insufficient-available-balance](payment-problems.html)
+            - [amount-above-limit](payment-problems.html)
+            - [blocked-account](payment-problems.html)
+            - [insufficient-available-balance](payment-problems.html)
           schema:
             $ref: '#/definitions/business-problem'
         default:
@@ -2125,14 +2125,14 @@ definitions:
       - instructed-amount
       - direction
     example:
-kind: wallet-transfer
-customer-number: nodjo0001
-wallet-number: MW008819020     
-linked-account: 361003000091091095
-instructed-amount:
-  amount: 5000.00
-  code: RSD
-direction: top-up
+      kind: wallet-transfer
+      customer-number: nodjo0001
+      wallet-number: MW008819020     
+      linked-account: 361003000091091095
+      instructed-amount:
+        amount: 5000.00
+        code: RSD
+      direction: top-up
 
   transfer-list:
     description: List of transfers.
@@ -2338,7 +2338,7 @@ direction: top-up
         description: Description of a classification
       values:
         description: List of allowed classification values
-        type: array
+        type: array 
         items:
           $ref: "#/definitions/classification-value"
     example:
