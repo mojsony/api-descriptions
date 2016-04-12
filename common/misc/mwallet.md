@@ -11,7 +11,7 @@ Integration use cases (provided by mt:s team)
 3.	Customer Fund Out via Bank Account -> Reverse of 2.
 4.	Other use cases as necessary ...
 
-> **IMPORTANT** Use case outlined in this document reflect our current understanding of bank's needs. 
+> **IMPORTANT** Use cases outlined in this document reflect our current understanding of bank's needs. 
 Document will be updated as new requirements are specified during gap analysis. 
 This document assumes that proper authentication is established and gives examples for *happy path* scenario where everything goes as expected. Possible errors are listed in reference documentation.
 
