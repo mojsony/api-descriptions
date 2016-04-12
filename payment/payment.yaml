@@ -832,6 +832,38 @@ paths:
       tags:
         - Transfers
       x-asee-tags: []
+  '/transfers/wallet-transfers':
+    post:
+      summary: Initiate wallet transfer    
+      description: Initiates new wallet transfer that will either add funds to wallet or withdraw funds to linked current account.
+      operationId: WalletTransfers_Initiate
+      parameters:
+        - description: Initiate wallt transfer command
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/wallet-transfer-instruction'
+      responses:
+        '202':
+          description: Accepted
+          schema:
+            $ref: '#/definitions/resource-created-result'
+        '440':
+          description: |
+            Your request was well constructed but it could not be processed. Consider the following possible problems and look into response for more details:
+            
+            [amount-above-limit](payment-problems.html)
+            [blocked-account](payment-problems.html)
+            [insufficient-available-balance](payment-problems.html)
+          schema:
+            $ref: '#/definitions/business-problem'
+        default:
+          $ref: '#/responses/default-error-response'
+
+      tags:
+        - Transfers
+      x-asee-tags: []      
   '/transfers/bill-payments':
     post:
       description: |
@@ -868,6 +900,7 @@ paths:
       tags:
         - Transfers
       x-asee-tags: []
+      
   '/transfers/incoming':
     get:
       summary: List incoming cross-border transfers
@@ -1667,6 +1700,7 @@ definitions:
           - p2p-transfer
           - topup
           - bill-payment
+          - wallet-transfer
       media:
         $ref: '#/definitions/media'
       geolocation:
@@ -2062,6 +2096,44 @@ definitions:
       - debtor-account
       - operator-code
       - msisdn
+
+  wallet-transfer-instruction:
+    description: Command provides parameters for initiating wallet transfer
+    type: object
+    allOf:
+      - $ref: '#/definitions/instruction'
+    properties:
+      customer-number:
+        description: Unique identifier of the customer that is wallet holder
+        type: string
+      wallet-number:
+        description: Unique identifier of the wallet
+        type: string        
+      linked-account:
+        description: Unique identifier of transactional account linked to wallet
+        type: string
+      instructed-amount:
+        description: Currency amount.
+        $ref: '#/definitions/currency'
+      direction:
+        type: string
+        enum: [top-up, withdrawal]
+    required:
+      - customer-number
+      - wallet-number
+      - linked-account
+      - instructed-amount
+      - direction
+    example:
+kind: wallet-transfer
+customer-number: nodjo0001
+wallet-number: MW008819020     
+linked-account: 361003000091091095
+instructed-amount:
+  amount: 5000.00
+  code: RSD
+direction: top-up
+
   transfer-list:
     description: List of transfers.
     allOf:
