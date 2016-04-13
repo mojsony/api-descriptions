@@ -27,8 +27,8 @@ paths:
   "/aml/check":
     get:
       operationId: AML_Check
-      summary: Checks person against AML lists     
-      description: Checks person identity against anti money laundering (AML) person list and returns match rating and reliability 
+      summary: Checks person against AML lists
+      description: Checks person identity against anti money laundering (AML) person list and returns match rating and reliability
       parameters:
       - description: Identification number available (national-id-number, SSN, passport number or similar)
         in: query
@@ -55,7 +55,7 @@ paths:
         name: country
         required: false
         type: string
-        format: ISO 3166-2 
+        format: ISO 3166-2
         minLength: 2
         maxLength: 2
       responses:
@@ -68,12 +68,12 @@ paths:
 
       tags:
         - AML
-  
+
   "/blacklist/check":
     get:
       operationId: BlackList_Check
       summary: Checks person against blacklists
-      description: Checks person identity against black list and returns match rating and reliability       
+      description: Checks person identity against black list and returns match rating and reliability
       parameters:
       - description: Identification number available (national-id-number, SSN, passport number or similar)
         in: query
@@ -100,7 +100,7 @@ paths:
         name: country
         required: false
         type: string
-        format: ISO 3166-2 
+        format: ISO 3166-2
         minLength: 2
         maxLength: 2
       responses:
@@ -127,13 +127,16 @@ definitions:
         minimum: 0
         maximum: 4
       reliability:
-        description: The presumed accuracy of the assessment result
-        type: "string"
+        description: |
+          The presumed accuracy of the assessment result
+          For a list of possible values see [reliabilities](fraud-classifications.html#reliabilities) enumeration.
+        type: string
         enum:
         - low-risk
         - normal-risk
         - high-risk
         - unacceptable-risk
+        x-asee-enumeration: reliabilities
     example:
       rating-value: 0
       reliability: low-risk
@@ -148,7 +151,7 @@ definitions:
         maximum: 100
       name:
         description: Name of blacklist against where match was found
-        type: "string"    
+        type: "string"
   blacklist-status:
     description: Lists of matches against different blacklists
     properties:

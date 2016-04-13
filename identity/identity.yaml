@@ -969,6 +969,7 @@ definitions:
           - active
           - locked
         type: string
+        x-asee-enumeration: user-statuses
 
   linked-login:
     description: Login from social provider

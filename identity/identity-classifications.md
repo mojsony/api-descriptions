@@ -7,7 +7,7 @@ Identity API Enumerations
 User Statuses
 -----
 
-Literal       | Description
---------------|------------
-active | Active
-locked | Locked
+Literal     | Description
+------------|------------
+active      | Active
+locked      | Locked

@@ -4,7 +4,7 @@ visibility: public
 Offer API Classifications
 ========
 
-cancelation-reasons
+Cancelation Reasons
 --------------
 
 This classification represents customer's reason to cancel active application.
@@ -15,7 +15,7 @@ Literal                  | Code  | Description
 `customer-second-thought`| 1     | Customer Second Thought
 `other`                  | 2     | Other
 
-document-kinds
+Document Kinds
 --------------
 
 Specific purpose of document.
@@ -36,7 +36,7 @@ Literal                                     | Code  | Description
 `product-application-activation-phase-checklist`| 11    | Application activation phase checklist
 `withdraw-conscent-for-credit-bureau-report`    | 12    | Withdraw conscent for credit bureau report
 
-installment-activity-kinds
+Installment Activity Kinds
 --------------
 
 This classification represents status of request.
@@ -47,7 +47,7 @@ Literal                 | Code  | Description
 `interest-repayment`    | 1     | Interest repayment
 `principal-repayment`   | 2     | Principal repayment
 
-loan-kinds
+Loan Kinds
 -----
 
 This classification represents loan types.
@@ -60,7 +60,7 @@ Literal           | Code  | Description
 `letter-of-credit`|3      | Letter of credit
 `overdraft`       |4      | Overdraft
 
-employment-position-categories
+Employment Position Categories
 -----
 
 This classification represents employment positions categories
@@ -78,7 +78,7 @@ Literal                   | Code  | Description
 `teaching-employee`       |8      | Teaching employee
 `medical-employee`        |9      | Medical employee
 
-education-levels
+Education Levels
 -----
 
 Literal                | Code  | Description
@@ -93,7 +93,7 @@ Literal                | Code  | Description
 `bachelor`             |7      | Bachelor
 `not-disclosed`        |8      | Not disclosed
 
-employment-kinds
+Employment Kinds
 -----
 
 Literal           | Code  | Description
@@ -104,7 +104,7 @@ Literal           | Code  | Description
 `selfEmployed`    |3      | Self employed
 `unemployed`      |4      | Unemployed
 
-employer-kinds
+Employer Kinds
 -----
 
 Literal                         | Code  | Description
@@ -118,7 +118,7 @@ Literal                         | Code  | Description
 Offer API Enumerations
 ===============
 
-income-sources
+Income Sources
 ------
 
 Literal           | Description
@@ -132,7 +132,7 @@ Literal           | Description
 `board-membership`  | Board Membership
 `separation-allowance` | Separation Allowance
 
-application-statuses
+Application Statuses
 ------
 
 Literal              | Description
@@ -144,7 +144,7 @@ Literal              | Description
 `approved` | Approved
 `expired`  | Expired
 
-application-kinds
+Application Kinds
 -----
 
 Literal                 | Description
@@ -153,7 +153,7 @@ Literal                 | Description
 `current-account-opening` | Current Account Opening
 `loan-origination`        | Loan Origination
 
-deposit-opening-kinds
+Deposit Opening Kinds
 ----
 
 Literal               | Description
@@ -162,7 +162,7 @@ Literal               | Description
 `sight-deposit`       | Sight Deposit
 `current-account`     | Current Account
 
-signing-options
+Signing Options
 -------
 
 Indicates how and where customer chose to sign agreement documents
@@ -173,7 +173,7 @@ Literal           | Description
 `courier`         | Courier
 `online`          | Online
 
-loan-origination-kinds
+Loan Origination Kinds
 -----
 
 Literal           | Description
@@ -183,7 +183,7 @@ Literal           | Description
 `credit-card`     | Credit Card
 `mortgage`        | Mortgage
 
-home-ownerships
+Home Ownerships
 -----
 
 Literal           | Description
@@ -193,7 +193,7 @@ Literal           | Description
 `lives-with-relatives` | Lives With Relatives
 `not-disclosed`   | Not Disclosed
 
-car-ownerships
+Car Ownerships
 -----
 
 Literal           | Description
