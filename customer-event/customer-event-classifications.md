@@ -1,20 +1,28 @@
    
-Classifications
-===============
-
-Resolution Status
------------------ 
-This classification declares the posible resolution status of the event.
-
-Literal                       | Code   | Description
-------------------------------|--------|-------------------------------------------
+Customer Event API Enumerations
+======================================
 
 
-Purpose
+Event Kind
 ----------
-This classification declares the purpose of registering new event.
+This enumeration is comprised of event kinds defined in all separate APIs
 
-Literal                       | Code   | Description
-------------------------------|--------|-------------------------------------------
+###Content events
 
+Literal                       | Description
+------------------------------|----------------------------
+document-uploaded             | Document was uploaded to repository
+folder-created                |
+folder-deleted                |
+document-deleted              | 
+document-modified             |
+document-replaced             |
 
+###Accounting events
+
+Literal                       | Description
+------------------------------|----------------------------
+account-credited              | Account was debited
+account-debited               |
+transaction-voided            |
+statement-generated           | 

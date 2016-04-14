@@ -157,7 +157,7 @@ If your supply well-formed and valid transfer instruction but it cannot be proce
 > For more information visit [method reference](https://bankapi.net/docs/public/payment.html#post-transfers-wallet-transfers)
 
 ### 4. Synchronize transactions from mt:s account
-In order to synchronize wallet funding and withdrawal transactions from bank, mWallet application needs to poll for all new transactions on mt:s special purpose account since some point marked by timestamp.
+In order to synchronize wallet funding and withdrawal transactions from bank, mWallet application needs to poll for all new transactions on mt:s special purpose account since some point marked by timestamp. For more details on how synchronization and timestamps work see [synchronization](https://bankapi.net/docs/public/common-getstarted.html#synchronization) section in general guide.
 
 You can get bulk list of transactions for `360000000000000121` mt:s account by sending following request: 
 ```http
