@@ -27,7 +27,7 @@ paths:
       operationId: Events_GetMyList
       parameters:
         - $ref: '#/parameters/event-kind-param'
-        - $ref: '#/parameters/stream-param'        
+        - $ref: '#/parameters/stream-param'
         - $ref: '#/parameters/date-from-param'
         - $ref: '#/parameters/date-to-param'
         - $ref: '#/parameters/page-size-param'
@@ -49,15 +49,16 @@ paths:
         - Pageable
         - Sortable
         - Shapeable
-        
+
   /events/{stream}:
+    parameters:
+      - $ref: '#/parameters/stream-path-param'
     get:
       summary: List events from a given stream
       description: Response contains events from specified stream that match supplied criteria
-      operationId: Events_GetStream      
+      operationId: Events_GetStream
       parameters:
         - $ref: '#/parameters/event-kind-param'
-        - $ref: '#/parameters/stream-path-param'            
         - $ref: '#/parameters/customer-number-param'
         - $ref: '#/parameters/date-from-param'
         - $ref: '#/parameters/date-to-param'
@@ -85,7 +86,6 @@ paths:
       description: Receords event payload and metadata to a stream. Metadata and payload are scanned for presence of `customer-number` attribute used to index events by customers
       operationId: Events_Record
       parameters:
-        - $ref: '#/parameters/stream-path-param'      
         - description: Command with details of recorded event
           in: body
           name: cmd
@@ -100,7 +100,7 @@ paths:
           headers:
             Location:
               type: string
-              description: The URL where newly recorded event can be accessed 
+              description: The URL where newly recorded event can be accessed
         400:
           $ref: '#/responses/validation-problem-response'
         440:
@@ -110,23 +110,24 @@ paths:
             | Problem | Description |
             |-|-|
             | [event-already-recorded](customer-event-problems.html) | Event already recorded |
-            | [unknown-aggregate-kind](customer-event-problems.html) | Unknown aggregate kind |  
-            | [unknown-event-stream](customer-event-problems.html) | Unknown event stream | 
-            | [event-in-the-future](customer-event-problems.html) | Event cannot be recorded as if it occurred in the future |               
+            | [unknown-aggregate-kind](customer-event-problems.html) | Unknown aggregate kind |
+            | [unknown-event-stream](customer-event-problems.html) | Unknown event stream |
+            | [event-in-the-future](customer-event-problems.html) | Event cannot be recorded as if it occurred in the future |
           schema:
             $ref: '#/definitions/business-problem'
-                      
+
         default:
           $ref: '#/responses/default-error-response'
       tags:
-        - Events        
+        - Events
   /events/{stream}/{event-id}:
+    parameters:
+      - $ref: '#/parameters/stream-path-param'
     get:
       summary: Get event details
       description: Response contains event metadata and payload
       operationId: Events_Get
       parameters:
-        - $ref: '#/parameters/stream-path-param'      
         - $ref: '#/parameters/event-id-param'
       responses:
         200:
@@ -138,6 +139,43 @@ paths:
       tags:
         - Events
       x-asee-tags: []
+
+# ****************************************************#
+# ENDPOINTS COMMON WITH OTHER APIs                    #
+# ****************************************************#
+
+  /classifications:
+    get:
+      summary: List all classification schemas used by the API
+      description: Some fields and parameters have been restricted to a list of allowed lookup values maintained by the bank. This method lists all schemas used in this API.
+      operationId: "Classifications_GetList"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/classification-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+        - Classifications
+
+  /classifications/{schema-id}:
+    get:
+      summary: List values allowed by given classification schema.
+      description: Returns all classification values for chosen classification.
+      operationId: Classifications_Get
+      parameters:
+        - $ref: '#/parameters/schema-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/classification'
+        default:
+          $ref: '#/responses/default-error-response'
+
+      tags:
+        - Classifications
 
 parameters:
   event-id-param:
@@ -164,7 +202,7 @@ parameters:
     name: stream
     required: false
     type: string
-    in: query    
+    in: query
   customer-number-param:
     description: Unique identifier of the customer.
     in: query
@@ -224,7 +262,7 @@ parameters:
     items:
       type: string
     collectionFormat: csv
-    x-asee-common: true      
+    x-asee-common: true
   trim-param:
     description: List of fields to trim from response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
     in: query
@@ -233,7 +271,13 @@ parameters:
     items:
       type: string
     collectionFormat: csv
-    x-asee-common: true    
+    x-asee-common: true
+  schema-id-param:
+    name: schema-id
+    description: Identifier of classification schema
+    in: path
+    required: true
+    type: string
 
 definitions:
   event-list:
@@ -254,7 +298,7 @@ definitions:
       sort-order: desc
       sort-by: metadata.occurred-on
       events:
-        - 
+        -
           metadata:
             event-kind: 'content#document-filed'
             version: 1
@@ -276,10 +320,10 @@ definitions:
             filing-purpose: profile-photo
             filing-case-number: JABON0007
             size-in-bytes: 21231
-        - 
+        -
           metadata:
             event-kind: 'accounting#statement-generated'
-            version: 1            
+            version: 1
             occurred-on: "2016-01-01T08:00:14.3000Z"
             event-id: d67cbc86-f83f-4e39-9e18-71320611a982
             aggregate-kind: 'accounting#account'
@@ -297,7 +341,7 @@ definitions:
             currency: EUR
             opening-balance: 20.00
             closing-balance: 180.00
-            
+
   event-record:
     description: 'Details about event related to customer'
     properties:
@@ -310,7 +354,7 @@ definitions:
     example:
       metadata:
         event-kind: 'accounting#statement-generated'
-        version: 1            
+        version: 1
         occurred-on: "2016-01-01T08:00:14.3000Z"
         event-id: d67cbc86-f83f-4e39-9e18-71320611a982
         aggregate-kind: 'accounting#account'
@@ -327,18 +371,18 @@ definitions:
         total-debits: 3
         currency: EUR
         opening-balance: 20.00
-        closing-balance: 180.00 
+        closing-balance: 180.00
 
   event-metadata:
     properties:
       event-kind:
         type: string
         description: "Unique kind of event. Example `content#document-filed`"
-        format: kind          
+        format: kind
       version:
         type: integer
         format: int32
-        description: Version of the event payload. Events have new versions when we need to capture different information on event that still has the same nature. Version is integer that is incremented        
+        description: Version of the event payload. Events have new versions when we need to capture different information on event that still has the same nature. Version is integer that is incremented
       occurred-on:
         type: string
         format: date-time
@@ -347,7 +391,7 @@ definitions:
         description: Globaly unique identifier of event instance
         format: uuid
         type: string
-      aggregate-kind: 
+      aggregate-kind:
         type: string
         description: "Kind of aggregate (DDD) that this event describes. Example `content#document`"
         format: kind
@@ -356,7 +400,7 @@ definitions:
         description: Unique identifier of aggregate (DDD) that published the event
       customer-number:
         type: string
-        description: "Unique identifier of customer in bank's records"      
+        description: "Unique identifier of customer in bank's records"
 
   record-event-command:
     description: Parameters for event registration.
@@ -367,7 +411,7 @@ definitions:
       recorded-event:
         metadata:
           event-kind: 'accounting#statement-generated'
-          version: 1            
+          version: 1
           occurred-on: "2016-01-01T08:00:14.3000Z"
           event-id: d67cbc86-f83f-4e39-9e18-71320611a982
           aggregate-kind: 'accounting#account'
@@ -389,7 +433,7 @@ definitions:
   resource-created-result:
     description: Unique identifier of newly created resource that can be used in future inquires and commands
     properties:
-      id: 
+      id:
         type: string
         description: Indetifier
     example:
@@ -397,10 +441,10 @@ definitions:
 
   business-problem:
     description: Details on specific problem that prevented processing after successfull validation
-    type: object 
+    type: object
     properties:
       problem:
-        description: Unique literal that identifies specific problem 
+        description: Unique literal that identifies specific problem
         type: string
       message:
         description: Message explaining the situation and optionaly remedies
@@ -430,7 +474,7 @@ definitions:
               message:
                 type: string
     example:
-      -  
+      -
         field: phone-number
         errors:
           -
@@ -438,14 +482,14 @@ definitions:
             message: Format for this field is invalid
           -
             error: max-length
-            message: Content exceeds maximum alowed length 
-      - 
+            message: Content exceeds maximum alowed length
+      -
         field: account-number
         errors:
           -
             error: check-digit-invalid
-            message: Check digit is invalid for this field      
-  
+            message: Check digit is invalid for this field
+
   paged-list:
     description: List with support for paging
     properties:
@@ -470,10 +514,101 @@ definitions:
       sort-by:
         description: Attribute of the collection item to sort by
         type: string
+
+  classification-value:
+    type: object
+    description: Classification value
+    properties:
+      literal:
+        description: Literal that uniquely identifies classification value
+        type: string
+      code:
+        description: Optional numerical code of classification value
+        type: string
+      description:
+        description: Description of classification value
+        type: string
+      parent-literal:
+        description: Optional literal of parent classification value if schema is hierarchical
+        type: string
+    example:
+      literal: billing
+      code: 2
+      description: Contact may be used to provide party with details of their liabilities to the bank
+
+  classification-list:
+    description: List of classification schemas
+    type: object
+    properties:
+      items:
+        description: List of classification schemas
+        items:
+          $ref: "#/definitions/classification-info"
+        type: array
+    example:
+      -
+        schema-id: filing-purpose
+        name: Filing Purpose
+        description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture
+      -
+        schema-id: folder-purpose
+        name: Folder Purpose
+        description: List of possible uses of a folder in business context.
+
+  classification-info:
+    description: Basic information on classification schema
+    properties:
+      schema-id:
+        type: string
+        description: Unique literal that identifies the classification schema. Always in `lowercase-dash` convention.
+      name:
+        type: string
+        description: User friendly name of classification
+      description:
+        type: string
+        description: Description of a classification
+    example:
+      schema-id: filing-purpose
+      name: Filing Purpose
+      description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture
+
+  classification:
+    type: object
+    description: Classification schema details
+    properties:
+      schema-id:
+        type: string
+        description: Unique literal that identifies the classification schema. Always in `lowercase-dash` convention.
+      name:
+        type: string
+        description: User friendly name of classification
+      description:
+        type: string
+        description: Description of a classification
+      values:
+        description: List of allowed classification values
+        type: array
+        items:
+          $ref: "#/definitions/classification-value"
+    example:
+      schema-id: contact-purpose
+      name: Contact Purpose
+      description: List of possible uses of contact in business context. Commonly used filing purposes are billing, marketing
+      values:
+        - literal: billing
+          code: 1
+          description: Contact may be used to provide party with details of their liabilities to the bank
+        - literal: marketing
+          code: 2
+          description: Contact may be used to provide party with details of offers
+        - literal: reporting
+          code: 3
+          description: Contact may be used to provide party with reports on their account
+
 responses:
   validation-problem-response:
     description: Your request was not constructed properly. Response contains the list of validation errors for each invalid element of your request. For complete list of possible validation errors see [validation errors](common-getstarted.html#error-handling).
-    schema: 
+    schema:
       $ref: '#/definitions/validation-problem'
   default-error-response:
     description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling](common-getstarted.html#error-handling)

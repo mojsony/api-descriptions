@@ -24,14 +24,14 @@ tags:
     description: Working with service requests
   - name: Classifications
     description: Working with classifications
-paths: 
+paths:
   /me/cases:
     get:
       summary: List service cases for authenticated customer
       description: Response containslist of cases that match criteria
       operationId: Cases_GetListForCustomer
       parameters:
-        - $ref: '#/parameters/case-topic-param' 
+        - $ref: '#/parameters/case-topic-param'
         - $ref: "#/parameters/statuses-param"
         - $ref: '#/parameters/kinds-param'
         - $ref: "#/parameters/page-param"
@@ -59,7 +59,7 @@ paths:
       description: Response containslist of cases that match criteria
       operationId: Cases_GetList
       parameters:
-        - $ref: '#/parameters/case-topic-param' 
+        - $ref: '#/parameters/case-topic-param'
         - $ref: "#/parameters/statuses-param"
         - $ref: '#/parameters/kinds-param'
         - $ref: "#/parameters/customer-number-param"
@@ -82,7 +82,7 @@ paths:
         - Pageable
         - Sortable
         - Shapeable
-        
+
   /cases/{case-number}:
     get:
       summary: Get details of specific case
@@ -107,7 +107,7 @@ paths:
   /cases/{case-number}/attachments:
     post:
       summary: Attach documents to case
-      description: Attaches document to specified case      
+      description: Attaches document to specified case
       operationId: Cases_AttachDocuments
       parameters:
         - $ref: '#/parameters/case-number-param'
@@ -154,7 +154,7 @@ paths:
           headers:
             Location:
               type: string
-              description: The URL where newly recorded case can be accessed 
+              description: The URL where newly recorded case can be accessed
         400:
           $ref: '#/responses/validation-problem-response'
         440:
@@ -165,12 +165,12 @@ paths:
             |-|-|
             | [unknown-arrangement](case-problems.html) | Unknown arrangement |
           schema:
-            $ref: '#/definitions/business-problem'              
+            $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
       tags:
         - Complaints
-        
+
   /cases/service-requests:
     post:
       summary: Register new customer service request
@@ -191,7 +191,7 @@ paths:
           headers:
             Location:
               type: string
-              description: The URL where newly recorded case can be accessed 
+              description: The URL where newly recorded case can be accessed
         400:
           $ref: '#/responses/validation-problem-response'
         440:
@@ -202,12 +202,12 @@ paths:
             |-|-|
             | [unknown-arrangement](case-problems.html) | Unknown arrangement |
           schema:
-            $ref: '#/definitions/business-problem'              
+            $ref: '#/definitions/business-problem'
         default:
           $ref: '#/responses/default-error-response'
       tags:
         - Service requests
-        
+
   /cases/callback-requests:
     post:
       summary: Register new request for callback
@@ -228,7 +228,7 @@ paths:
           headers:
             Location:
               type: string
-              description: The URL where newly recorded case can be accessed 
+              description: The URL where newly recorded case can be accessed
         400:
           $ref: '#/responses/validation-problem-response'
         default:
@@ -236,10 +236,10 @@ paths:
       tags:
         - Callback requests
 
-  /classifications: 
+  /classifications:
     get:
       summary: List all classification schemas used by the API
-      description: Some fields and parameters have been restricted to a list of allowed lookup values maintained by the bank. This method lists all schemas used in this API.    
+      description: Some fields and parameters have been restricted to a list of allowed lookup values maintained by the bank. This method lists all schemas used in this API.
       operationId: "Classifications_GetList"
       responses:
         '200':
@@ -266,7 +266,8 @@ paths:
         default:
           $ref: '#/responses/default-error-response'
       tags:
-        - Classifications        
+        - Classifications
+
 parameters:
   case-number-param:
     description: Unique identifier of customer case
@@ -277,12 +278,15 @@ parameters:
 
 
   case-topic-param:
-    description: Topic of the customer's request. For complete list of possible values see [case-topic](case-classifications.html) classification.
+    description: |
+      Topic of the customer's request.
+      For complete list of possible values see [case-topics](case-classifications.html#case-topics) classification.
     in: query
     name: case-topic
     required: false
     type: string
-    
+    x-asee-classification: case-topics
+
   customer-number-param:
     description: Unique identifier of the customer.
     in: query
@@ -294,7 +298,7 @@ parameters:
     name: statuses
     description: |
       Case statuses to filter the result. If empty or not present cases having any status are returned
-      For complete list of possible values see [case-statuses](offer-classifications.html#case-statuses) enumeration.
+      For complete list of possible values see [case-statuses](case-classifications.html#case-statuses) enumeration.
     type: array
     collectionFormat: csv
     in: query
@@ -306,7 +310,7 @@ parameters:
     name: kinds
     description: |
       Case kinds to filter the results. If empty or not present all kinds of cases are returned
-      For complete list of possible values see [case-kinds](offer-classifications.html#case-kinds) enumeration.
+      For complete list of possible values see [case-kinds](case-classifications.html#case-kinds) enumeration.
     type: array
     collectionFormat: csv
     in: query
@@ -315,7 +319,7 @@ parameters:
       enum:
         - complaint
         - service-request
-        - callback-request      
+        - callback-request
       x-asee-enumeration: case-kinds
   schema-id-param:
     name: schema-id
@@ -384,12 +388,12 @@ definitions:
           $ref: '#/definitions/case'
         type: array
     type: object
-    
+
   case:
     description: Common information to all kinds of customer cases
     discriminator: kind
     required:
-    - kind    
+    - kind
     properties:
       case-number:
         description: Unique identifier of customer case workitem
@@ -400,6 +404,7 @@ definitions:
           For a list of possible values see [case-kinds](case-classifications.html#case-kinds) enumeration.
         type: string
         enum: [complaint, service-request, callback-request]
+        x-asee-enumeration: case-kinds
       status:
         description: |
           Status of the case
@@ -407,10 +412,13 @@ definitions:
         type: string
         enum: [accepted, active, rejected, canceled, resolved, closed]
         x-asee-enumeration: case-statuses
-        readOnly: true  
+        readOnly: true
       case-topic:
-        description: Type of the customer's request. For complete list of possible values see [case-topic](case-classifications.html#case-topic) classification.
-        type: string        
+        description: |
+          Type of the customer's request.
+          For complete list of possible values see [case-topics](case-classifications.html#case-topics) classification.
+        type: string
+        x-asee-classification: case-topics
       title:
         description: Title of the case
         type: string
@@ -419,7 +427,7 @@ definitions:
         type: string
       arrangement-number:
         description: Arrangement number to which the case is related
-        type: string              
+        type: string
       customer-number:
         description: Unique identifier of customer that is linked to the case
         type: string
@@ -427,7 +435,9 @@ definitions:
         description: Name of the customer that is linked to the case
         type: string
       channel:
-        description: Communication channel through which case was received
+        description: |
+          Communication channel through which case was received
+          For a list of possible values see [case-channels](case-classifications.html#case-channels) enumeration.
         enum:
           - email
           - face-to-face
@@ -437,14 +447,18 @@ definitions:
           - other-communication-technology
           - web-app
           - mobile-app
-        type: string        
+        type: string
+        x-asee-enumeration: case-channels
       resolution:
         description: Resolution of the case
         type: string
       importance:
-        description: The level of imporance
+        description: |
+          The level of importance
+          For a list of possible values see [case-importances](case-classifications.html#case-importances) enumeration.
         enum: [low, medium, high]
-        type: string        
+        type: string
+        x-asee-enumeration: case-importances
       created:
         description: Date and time when case was recorded in the system
         format: date-time
@@ -464,7 +478,7 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/attachment'
-    
+
   attach-documents-command:
     description: Command with specification of attached documents
     properties:
@@ -485,10 +499,12 @@ definitions:
         description: Unique identifier of document in DMS
       document-type:
         type: string
-        x-asse-classification: document-kinds
-        description: Specific purpose of this document. For complete list of possible values see [document-kinds](offer-classifications.html#document-kinds) classification.
- 
-    
+        x-asee-classification: document-kinds
+        description: |
+          Specific purpose of this document.
+          For complete list of possible values see [document-kinds](offer-classifications.html#document-kinds) classification.
+
+
   register-callback-request-command:
     description: Registers callback for customer
     properties:
@@ -497,8 +513,11 @@ definitions:
         format: date-time
         type: string
       category:
-        description: 'Category of callback request. For a complete list of possible values see [callback-category](case-classifications.html#callback-category) classification.'
+        description: |
+          Category of callback request.
+          For a complete list of possible values see [callback-categories](case-classifications.html#callback-categories) classification.
         type: string
+        x-asee-classification: callback-categories
       customer-number:
         description: Unique identifier of the customer that requested callback
         type: string
@@ -513,9 +532,12 @@ definitions:
         format: date-time
         type: string
       category:
-        description: 'Category of callback request. For a complete list of possible values see [callback-category](case-classifications.html#callback-category) classification.'
+        description: |
+          Category of callback request.
+          For a complete list of possible values see [callback-categories](case-classifications.html#callback-categories) classification.
         type: string
-    
+        x-asee-classification: callback-categories
+
   register-complaint-command:
     description: Registers new customr complaint
     properties:
@@ -526,12 +548,15 @@ definitions:
         description: Unique identifier of the client.
         type: string
       importance:
-        description: Level of importance.
+        description: |
+          Level of importance.
+          For a list of possible values see [complaint-importances](case-classifications.html#complaint-importances) enumeration.
         enum:
           - low
           - standard
           - very-important
         type: string
+        x-asee-enumeration: complaint-importances
       details:
         description: Details about the case.
         type: string
@@ -548,16 +573,19 @@ definitions:
         description: Address code for sending the reply to the customer
         type: string
       case-topic:
-        description: Type of the customer's request. For complete list of possible values see [case-topic]() classification.
+        description: |
+          Type of the customer's request.
+          For complete list of possible values see [case-topics](case-classifications.html#case-topics) classification.
         type: string
+        x-asee-classification: case-topics
       related-case-id:
         description: Unique indetifier of related case.
         type: string
 
   complaint:
     allOf:
-      - $ref: '#/definitions/case'  
-    description: Issue causing customer's dissatisfaction with bank 
+      - $ref: '#/definitions/case'
+    description: Issue causing customer's dissatisfaction with bank
     properties:
       reply-address:
         description: Address for sending the reply to the customer
@@ -568,7 +596,7 @@ definitions:
       related-case-id:
         description: Unique indetifier of related case.
         type: string
-    
+
   register-service-request-command:
     description: Creates a new service request
     properties:
@@ -579,12 +607,15 @@ definitions:
         description: Unique identifier of the customer that asks for service
         type: string
       importance:
-        description: Level of importance
+        description: |
+          Level of importance
+          For a list of possible values see [service-request-importances](case-classifications.html#service-request-importances) enumeration.
         enum:
           - low
           - medium
           - high
         type: string
+        x-asee-enumeration: service-request-importances
       details:
         description: Details about the case
         type: string
@@ -594,10 +625,10 @@ definitions:
       title:
         description: Reason of the related communication
         type: string
-        
+
   service-request:
     allOf:
-      - $ref: '#/definitions/case'  
+      - $ref: '#/definitions/case'
     description: "Request for service that requires bank's assistance"
 
 
@@ -610,9 +641,9 @@ definitions:
         description: identifier
     example:
       id: WI00012123
-      
 
-       
+
+
   validation-problem:
     type: array
     items:
@@ -630,7 +661,7 @@ definitions:
               message:
                 type: string
     example:
-      -  
+      -
         field: phone-number
         errors:
           -
@@ -638,20 +669,20 @@ definitions:
             message: Format for this field is invalid
           -
             error: max-length
-            message: Content exceeds maximum alowed length 
-      - 
+            message: Content exceeds maximum alowed length
+      -
         field: account-number
         errors:
           -
             error: check-digit-invalid
             message: Check digit is invalid for this field
-  
+
   business-problem:
     description: Details on specific problem that prevented processing after successfull validation
-    type: object 
+    type: object
     properties:
       problem:
-        description: Unique literal that identifies specific problem 
+        description: Unique literal that identifies specific problem
         type: string
       message:
         description: Message explaining the situation and optionaly remedies
@@ -663,7 +694,7 @@ definitions:
       problem: document-locked
       message: Document you are trying to access is locked by another user
       details: User john.doe has locked the document
-  
+
   paged-list:
     description: List with support for paging
     properties:
@@ -708,7 +739,7 @@ definitions:
       literal: billing
       code: 2
       description: Contact may be used to provide party with details of their liabilities to the bank
-      
+
   classification-list:
     description: List of classification schemas
     type: object
@@ -727,7 +758,7 @@ definitions:
         schema-id: folder-purpose
         name: Folder Purpose
         description: List of possible uses of a folder in business context.
-        
+
   classification-info:
     description: Basic information on classification schema
     properties:
@@ -744,7 +775,7 @@ definitions:
       schema-id: filing-purpose
       name: Filing Purpose
       description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture
-      
+
   classification:
     type: object
     description: Classification schema details
@@ -780,7 +811,7 @@ definitions:
 responses:
   validation-problem-response:
     description: Your request was not constructed properly. Response contains the list of validation errors for each invalid element of your request. For complete list of possible validation errors see [validation errors](common-getstarted.html#error-handling).
-    schema: 
+    schema:
       $ref: '#/definitions/validation-problem'
   default-error-response:
     description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling](common-getstarted.html#error-handling)
