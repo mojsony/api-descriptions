@@ -1396,6 +1396,12 @@ definitions:
       product-name:
         description: The primary name assigned to the product used in reports and documents
         type: string
+      signing-option:
+        description: |
+          Indicates how and where customer chose to sign agreement documents
+          For complete list of possible values see [signing-options](offer-classifications.html#signing-options) enumeration.
+        type: string
+        enum: [branch, courier, online]        
       created:
         description: Date and time when application was recorded in the system
         format: date-time
@@ -1490,12 +1496,6 @@ definitions:
       is-refinancing:
         description: Indicator if this is the refinancing loan.
         type: boolean
-      signing-option:
-        description: |
-          Indicates how and where customer chose to sign agreement documents
-          For a list of possible values see [signing-options](offer-classifications.html#signing-options) enumeration.
-        type: string
-        enum: [branch, courier, online]
       credit-bureau-consent:
         description: Consent for credit bureau inquiry
         type: boolean
