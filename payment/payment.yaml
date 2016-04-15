@@ -17,8 +17,8 @@ info:
     url: https://bankapi.net/docs/public/payment-getstarted.html
     email: nikola.stojanovic@asseco-see.rs
 schemes:
-  - http
   - https
+  - http
 tags:
   - description: Working with beneficiaries
     name: Beneficiaries
