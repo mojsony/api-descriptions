@@ -14,8 +14,8 @@ consumes:
 produces:
   - application/json
 schemes:
-  - http
   - https
+  - http
 paths:
   /otp/sms/send:
     post:
