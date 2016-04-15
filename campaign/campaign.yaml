@@ -12,8 +12,8 @@ info:
 host: bankapi.net
 basePath: /v1/campaign
 schemes:
-  - http
   - https
+  - http
 consumes:
   - application/json
 produces:
