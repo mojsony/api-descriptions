@@ -11,6 +11,7 @@ info:
 host: bankapi.net
 basePath: /v1/account-data
 schemes:
+  - https
   - http
 consumes:
   - application/json
