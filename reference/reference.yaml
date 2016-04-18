@@ -12,8 +12,8 @@ info:
 host: bankapi.net
 basePath: /v1/reference
 schemes:
-  - http
   - https
+  - http
 consumes:
   - application/json
 produces:
@@ -51,7 +51,6 @@ paths:
             $ref: '#/definitions/country-list'
         default:
           $ref: '#/responses/default-error-response'
-
   /currencies:
     get:
       summary: Get list of currencies
@@ -73,7 +72,6 @@ paths:
             $ref: '#/definitions/currency-list'
         default:
           $ref: '#/responses/default-error-response'
-
   /channels:
     get:
       summary: Get list of channels
@@ -237,13 +235,13 @@ definitions:
         literal: SMS
         description: SMS
         parent-channel-id: 38733
-        is-leaf: 1
+        is-leaf: true
       -
         code: mobile
         literal: Mobile
         description: Mobile
         parent-channel-id: 38733
-        is-leaf: 1
+        is-leaf: true
   channel:
     description: Channel basic information
     properties:
@@ -257,7 +255,7 @@ definitions:
         description: Channel Description
         type: string
       parent-channel-id:
-        description: "Id of parent channel, null if parent don't exist"
+        description: "Id of parent channel, null if parent doesn't exist"
         format: int64
         type: integer
       is-leaf:
@@ -410,6 +408,25 @@ definitions:
           $ref: '#/definitions/bank'
         type: array
     type: object
+    example:
+      total-count: 6205
+      page-size: 3
+      page-number: 1
+      total-pages: 2069
+      items:
+        - swift-code: 'CHAS-SR-33-213'
+          bank-name: First Bank
+          bank-address: ul. Resavska br. 2
+          bank-city: Beograd
+          country: Serbia
+          residency: domestic
+        - swift-code: 'CHAS-SR-33-213'
+          bank-name: National Bank
+          bank-address: ul. Resavska br. 123
+          bank-city: Beograd
+          country: Beograd
+          residency: foreign
+
   bank:
     description: Info about bank
     properties:
@@ -435,6 +452,14 @@ definitions:
           - foreign
         type: string
     type: object
+    example:
+      swift-code: 'CHAS-SR-33-213'
+      bank-name: National Bank
+      bank-address: ul. Resavska br. 123
+      bank-city: Beograd
+      country: Beograd
+      residency: foreign
+
 responses:
   default-error-response:
     description: Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()

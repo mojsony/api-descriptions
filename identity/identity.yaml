@@ -18,8 +18,8 @@ consumes:
 produces:
   - application/json
 schemes:
-  - http
   - https
+  - http
 paths:
 
   '/policy/password-requirements':
@@ -612,6 +612,12 @@ definitions:
       digit:
         type: boolean
         description: A flag indicating if passwords must contain a digit
+    example:
+      length: 10
+      non-alphanumeric: true
+      lowercase: true
+      uppercase: false
+      digit: false
 
   register-linked-login-command:
     description: Contains parameters for adding new external login provider
@@ -738,7 +744,7 @@ definitions:
   register-phone-number-command:
     description: Contains parameters for changing phone number
     example:
-      phone-number: 381634323876
+      phone-number: "381634323876"
     properties:
       new-phone-number:
         description: New phone number to register
@@ -767,6 +773,23 @@ definitions:
         items:
           $ref: '#/definitions/security-question'
         type: array
+    example:
+      - question-id: "13424"
+        question: What is your pet's name?
+        description: Provide an answer about your pet's name
+        answer-format-type: AnswerFormatType1
+        answer-format: AnswerFormat1
+        available-answers:
+          - value: Value1
+            text: Text1
+      - question-id: "121324"
+        question: What is your first teachers name?
+        description: Description2
+        answer-format-type: AnswerFormatType2
+        answer-format: AnswerFormat2
+        available-answers:
+          - value: Value2
+            text: Text2
 
 
   security-question:
@@ -841,7 +864,7 @@ definitions:
   security-answer:
     description: Answer to security question.
     example:
-      question-id: 75
+      question-id: "75"
       answer: Blue
     properties:
       question-id:
@@ -855,13 +878,13 @@ definitions:
   register-user-command:
     description: Contains parameters for regitration of new user
     example:
-      customer-number: 2012034
+      customer-number: "2012034"
       first-name: Test User
       last-name: Test
       username: test.user
       password: Test.Password
       email: test.user@asse.com
-      phone-number: 0569963512
+      phone-number: "0569963512"
       hint-picture-url: /v1/content/hub/documents/7dkEiu883ks
     properties:
       customer-number:
@@ -900,9 +923,10 @@ definitions:
     example:
       last-login-on: '2016-01-01T00:00:00'
       name: TestUser
-      customer-id: 2012034
+      customer-id: "2012034"
       email: testuser@asee.com
-      phone-number: 0569963512
+      username: test.user
+      phone-number: "0569963512"
       external-login-providers:
         - facebook
       status: active

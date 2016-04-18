@@ -728,16 +728,16 @@ definitions:
     items:
       $ref: '#/definitions/account'
     example:
-      - account-number: 00210102101
-        effective-date: 2016-01-01
-        status-date: 2016-01-01
+      - account-number: "00210102101"
+        effective-date: "2016-01-01"
+        status-date: "2016-01-01"
         currency: EUR
         status: open
         posting-status: post-all
         kind: demand-deposit
-      - account-number: 00210102101
-        effective-date: 2016-01-01
-        status-date: 2016-01-01
+      - account-number: "00210102101"
+        effective-date: "2016-01-01"
+        status-date: "2016-01-01"
         currency: RSD
         status: open
         posting-status: post-all
@@ -803,15 +803,15 @@ definitions:
         items:
           $ref: '#/definitions/balance'
     example:
-      account-number: 00210102101
-      effective-date: 2016-01-01
-      status-date: 2016-01-01
+      account-number: "00210102101"
+      effective-date: "2016-01-01"
+      status-date: "2016-01-01"
       currency: EUR
       status: open
       posting-status: post-all
       kind: current-account
       balances:
-        - account-number: 00210102101
+        - account-number: "00210102101"
           amount: 100.00
           amount-local: 12283.50
           currency: EUR
@@ -826,8 +826,8 @@ definitions:
     example:
       - from-date: 2016-01-01
         to-date: 2016-01-31
-        account-number: 00210102101
-        sequence-number: 26
+        account-number: "00210102101"
+        sequence-number: "26"
         generated: 2016-02-01T01:25:00
         document: AS-0021000102101-26
         total-credits: 1
@@ -837,8 +837,8 @@ definitions:
         closing-balance: 180.00
       - from-date: 2015-12-01
         to-date: 2015-12-31
-        account-number: 00210102101
-        sequence-number: 25
+        account-number: "00210102101"
+        sequence-number: "25"
         generated: 2016-01-01T01:27:00
         document: AS-0021000102101-25
         total-credits: 2
@@ -891,8 +891,8 @@ definitions:
     example:
       from-date: 2016-01-01
       to-date: 2016-01-31
-      account-number: 00210102101
-      sequence-number: 26
+      account-number: "00210102101"
+      sequence-number: "26"
       generated: 2016-02-01T01:25:00
       document: AS-0021000102101-26
       total-credits: 1
@@ -906,14 +906,14 @@ definitions:
     items:
       $ref: '#/definitions/balance'
     example:
-      - account-number: 00210102101
+      - account-number: "00210102101"
         amount: 100.00
         amount-local: 12283.50
         currency: EUR
         direction: d
         balance-kind: available
         calculated: 2016-02-23T15:50:00
-      - account-number: 00210102101
+      - account-number: "00210102101"
         amount: 100.00
         amount-local: 12283.50
         currency: EUR
@@ -963,7 +963,7 @@ definitions:
         type: string
         format: date-time
     example:
-      account-number: 00210102101
+      account-number: "00210102101"
       amount: 100.00
       amount-local: 12283.50
       currency: EUR
@@ -1123,7 +1123,7 @@ definitions:
       instructed-amount:
         $ref: '#/definitions/currency'
     example:
-      transfer-id: 8661821617671
+      transfer-id: "8661821617671"
       origination-channel: "web"
       creditor-name: "Asseco SEE d.o.o."
       creditor-address:
@@ -1275,16 +1275,16 @@ definitions:
       - transactions.coordinates
       - transactions.media
       - transactions.pfm
-  transactions:
-    type: array
-    description: List of transactions
-    items:
-      $ref: '#/definitions/transaction'
     example:
-      - account-number: 00210102101
-        transaction-id: 6525671616121
-        instruction-id: 6525671616121
-        statement-number: 26
+      total-count: 6205
+      page-size: 3
+      page-number: 1
+      total-pages: 2069
+      transactions:
+      - account-number: "00210102101"
+        transaction-id: "6525671616121"
+        instruction-id: "6525671616121"
+        statement-number: "26"
         source: brn
         amount: 100.00
         amount-local: 12283.50
@@ -1295,23 +1295,23 @@ definitions:
         book-date: 2016-02-23
         transaction-time: 2016-02-23T11:25:00
         description: Branch cash withdrawal
-        transaction-code: 212
+        transaction-code: "212"
         transaction-kind: wdw
-        sync-timestamp: 26447476
+        sync-timestamp: "26447476"
         branch:
           branch-code: "2120"
         coordinates:
           lat: 44.807112185659996
           long: 20.429377555847164
         pfm:
-          category-id: 27
+          category-id: "27"
           category: "Cash"
         media:
           image: /v1/conent/mchub/documents/mj20b12534r4
-      - account-number: 00210102101
-        transaction-id: 6525671614332
-        instruction-id: 8661821617671
-        statement-number: 26
+      - account-number: "00210102101"
+        transaction-id: "6525671614332"
+        instruction-id: "8661821617671"
+        statement-number: "26"
         source: pmt
         amount: 12222.00
         amount-local: 12222.00
@@ -1322,14 +1322,87 @@ definitions:
         book-date: 2016-02-23
         transaction-time: 2016-02-23T11:25:00
         description: Credit transfer
-        transaction-code: 212
+        transaction-code: "212"
         transaction-kind: pmt
-        sync-timestamp: 26447476
+        sync-timestamp: "26447476"
         coordinates:
           lat: 44.807112185659996
           long: 20.429377555847164
         pfm:
-          category-id: 27
+          category-id: "27"
+          category: "Utilities"
+        media:
+          image: /v1/conent/mchub/documents/mj20b12534r4
+        transfer:
+          transfer-id: 8661821617671
+          origination-channel: "web"
+          creditor-name: "Asseco SEE d.o.o."
+          creditor-account: "160-75177167-22"
+          debtor-name: "Elektrodistribucija JP."
+          debtor-account: "120-1123121-54"
+          purpose: "Bezgotovinsko plaćanje roba i usluga"
+          purpose-code: "221"
+          transfer-kind: "credit-transfer"
+          debtor-reference: "97-12399123123-2"
+          instructed-amount:
+            amount: 12222.00
+            code: "RSD"
+
+  transactions:
+    type: array
+    description: List of transactions
+    items:
+      $ref: '#/definitions/transaction'
+    example:
+      - account-number: "00210102101"
+        transaction-id: "6525671616121"
+        instruction-id: "6525671616121"
+        statement-number: "26"
+        source: brn
+        amount: 100.00
+        amount-local: 12283.50
+        currency: EUR
+        direction: d
+        status: b
+        value-date: 2016-02-23
+        book-date: 2016-02-23
+        transaction-time: 2016-02-23T11:25:00
+        description: Branch cash withdrawal
+        transaction-code: "212"
+        transaction-kind: wdw
+        sync-timestamp: "26447476"
+        branch:
+          branch-code: "2120"
+        coordinates:
+          lat: 44.807112185659996
+          long: 20.429377555847164
+        pfm:
+          category-id: "27"
+          category: "Cash"
+        media:
+          image: /v1/conent/mchub/documents/mj20b12534r4
+      - account-number: "00210102101"
+        transaction-id: "6525671614332"
+        instruction-id: "8661821617671"
+        statement-number: "26"
+        source: pmt
+        amount: 12222.00
+        amount-local: 12222.00
+        currency: RSD
+        direction: d
+        status: b
+        value-date: 2016-02-23
+        book-date: 2016-02-23
+        transaction-time: 2016-02-23T11:25:00
+        description: Credit transfer
+        transaction-code: "212"
+        transaction-kind: pmt
+        sync-timestamp: "26447476"
+        coordinates:
+          lat: 44.807112185659996
+          long: 20.429377555847164
+        pfm:
+          category-id: "27"
           category: "Utilities"
         media:
           image: /v1/conent/mchub/documents/mj20b12534r4
@@ -1458,10 +1531,10 @@ definitions:
       party:
         $ref: '#/definitions/party'
     example:
-      account-number: 00210102101
-      transaction-id: 6525671616121
-      instruction-id: 6525671616121
-      statement-number: 26
+      account-number: "00210102101"
+      transaction-id: "6525671616121"
+      instruction-id: "6525671616121"
+      statement-number: "26"
       source: brn
       amount: 100.00
       amount-local: 12283.50
@@ -1472,16 +1545,16 @@ definitions:
       book-date: 2016-02-23
       transaction-time: 2016-02-23T11:25:00
       description: Branch cash withdrawal
-      transaction-code: 212
+      transaction-code: "212"
       transaction-kind: wdw
-      sync-timestamp: 26447476
+      sync-timestamp: "26447476"
       branch:
         branch-code: "2120"
       coordinates:
         lat: 44.807112185659996
         long: 20.429377555847164
       pfm:
-        category-id: 27
+        category-id: "27"
         category: cash
       media:
         image: /v1/conent/mchub/documents/mj20b12534r4
