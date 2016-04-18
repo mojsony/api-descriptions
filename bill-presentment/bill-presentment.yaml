@@ -513,14 +513,14 @@ definitions:
       bills:
         -
           bill-id: "9990015520900120151103"
-          subscription-id: 771771912313
+          subscription-id: "771771912313"
           amount-due:
             amount: 4327.50
             code: RSD
           payment-status: not-paid
           invoicing-date: '2015-11-03T00:00:00'
           due-date: '2015-11-10T00:00:00'
-          bill-presentation-url: http://www.telenor.rs/mojracun?id=9990015520900120151103
+          bill-presentation-url: http://www.mybank.rs/mybill?id=9990015520900120151103
     properties:
       total-amount-due:
         description: Sum of bills payment amount
@@ -566,14 +566,14 @@ definitions:
         type: string
     example:
       bill-id: "9990015520900120151103"
-      subscription-id: 771771912313
+      subscription-id: "771771912313"
       amount-due:
         amount: 4327.50
         code: RSD
       payment-status: not-paid
       invoicing-date: '2015-11-03T00:00:00'
       due-date: '2015-11-10T00:00:00'
-      bill-presentation-url: http://www.telenor.rs/mojracun?id=9990015520900120151103
+      bill-presentation-url: http://www.mybank.rs/mybill?id=9990015520900120151103
 
 
   debtor:
@@ -630,27 +630,42 @@ definitions:
       sort-order: asc
       sort-by: name
       issuers:
-        -
-          issuer-id: 36
-          group-id: 6
+        - issuer-id: "36"
+          group-id: "6"
           name: Electrical Power Supply JP
           address: Nemanjina 33
           city: Begrade
           country: RS
-          payment-description: Payment of electricity bill
           account-number: 845-0000000137849-61
           invoicing-day: 20
           due-day: 30
           issuing-period: monthly
           due-date-in-file: false
           payment-slip-specimen-url: /v1/content/public/documents/jud73278783
-          biller-reference:
+          issuer-reference:
             model: 11
             max-length: 20
             min-length: 20
             format: "\\d{12}-d{5}-d{1}"
             edit-mask: 'nnnnnnnnnnnnn-nnnnn-n'
-
+        - issuer-id: "37"
+          group-id: "6"
+          name: Housing Consolodated
+          address: Danijelova 33
+          city: Begrade
+          country: RS
+          account-number: 845-0000000137849-61
+          invoicing-day: 20
+          due-day: 30
+          issuing-period: monthly
+          due-date-in-file: false
+          payment-slip-specimen-url: /v1/content/public/documents/jud73278783
+          issuer-reference:
+            model: 11
+            max-length: 20
+            min-length: 20
+            format: "\\d{12}-d{5}-d{1}"
+            edit-mask: 'nnnnnnnnnnnnn-nnnnn-n'
   issuer:
     description: "Service provider that issues bills to it's clients"
     properties:
@@ -711,20 +726,19 @@ definitions:
         description: URL of image with payment slip specimen
         type: string
     example:
-      issuer-id: 36
-      group-id: 6
+      issuer-id: "36"
+      group-id: "6"
       name: Electrical Power Supply JP
       address: Nemanjina 33
       city: Begrade
       country: RS
-      payment-description: Payment of electricity bill
       account-number: 845-0000000137849-61
       invoicing-day: 20
       due-day: 30
       issuing-period: monthly
       due-date-in-file: false
       payment-slip-specimen-url: /v1/content/public/documents/jud73278783
-      biller-reference:
+      issuer-reference:
         model: 11
         max-length: 20
         min-length: 20
@@ -750,10 +764,10 @@ definitions:
         type: string
       edit-mask:
         description: String describing the edit mask to identify a valid billing reference for that biller. The client applications use the account edit mask to assist the user in entering the reference
+        type: string
 
   subscription-list:
     description: Subscription list (list of bill subscriptions)
-
     allOf:
     - $ref: '#/definitions/paged-list'
     properties:
@@ -770,7 +784,7 @@ definitions:
         -
           subscription-id: "99900000735001"
           friendly-name: Appartment utilility bill
-          issuer-id: 17
+          issuer-id: "17"
           status: active
           debtor:
             name: Nikola Stojanovic
@@ -824,7 +838,7 @@ definitions:
     example:
       subscription-id: "99900000735001"
       friendly-name: Appartment utilility bill
-      issuer-id: 17
+      issuer-id: "17"
       status: active
       debtor:
         name: Nikola Stojanovic
@@ -893,14 +907,14 @@ definitions:
       - issuer-reference
       - debtor-account
     example:
-      nickname: My subscription for cell phone.
-      issuer-id: 24
+      friendly-name: My subscription for cell phone.
+      issuer-id: "24"
       debtor:
         name: 'Nikola Stojanovic'
         address: King Alexandar's Blvd. 76
         city: 'Belgrade'
-      bill-reference: '28187871213-123123-4'
-      debtor-account-number: 115-0000000050378-56
+      issuer-reference: '28187871213-123123-4'
+      debtor-account: "115-0000000050378-56"
       attachments:
         -
           attachment-id: 8771293
