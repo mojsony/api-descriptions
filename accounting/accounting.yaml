@@ -339,22 +339,22 @@ definitions:
     items:
       $ref: '#/definitions/account'
     example:
-      - account-number: 00210102101
+      - account-number: "00210102101"
         effective-date: 2016-01-01
         status-date: 2016-01-01
         currency: EUR
         status: open
         posting-status: post-all
         kind: demand-deposit
-        sync-timestamp: 25722121
-      - account-number: 00210102101
+        sync-timestamp: "25722121"
+      - account-number: "00210102101"
         effective-date: 2016-01-01
         status-date: 2016-01-01
         currency: RSD
         status: open
         posting-status: post-all
         kind: current-account
-        sync-timestamp: 24732399
+        sync-timestamp: "24732399"
   account:
     description: Record of transactions in specific types of arrangement, maintained by a bank party on behalf of one or more owning parties.
     type: object
@@ -414,14 +414,14 @@ definitions:
         description: Monotonically increasing timestamp of account record used for incremental synchronization with client application
         type: string
     example:
-      account-number: 00210102101
+      account-number: "00210102101"
       effective-date: 2016-01-01
       status-date: 2016-01-01
       currency: EUR
       status: open
       posting-status: post-all
       kind: current-account
-      sync-timestamp: 26447476
+      sync-timestamp: "26447476"
   statements:
     type: array
     description: List of statements
@@ -430,8 +430,8 @@ definitions:
     example:
       - from-date: 2016-01-01
         to-date: 2016-01-31
-        account-number: 00210102101
-        sequence-number: 26
+        account-number: "00210102101"
+        sequence-number: "26"
         generated: 2016-02-01T01:25:00
         document: AS-0021000102101-26
         total-credits: 1
@@ -439,11 +439,11 @@ definitions:
         currency: EUR
         opening-balance: 20.00
         closing-balance: 180.00
-        sync-timestamp: 26447476
+        sync-timestamp: "26447476"
       - from-date: 2015-12-01
         to-date: 2015-12-31
-        account-number: 00210102101
-        sequence-number: 25
+        account-number: "00210102101"
+        sequence-number: "25"
         generated: 2016-01-01T01:27:00
         document: AS-0021000102101-25
         total-credits: 2
@@ -451,7 +451,7 @@ definitions:
         currency: EUR
         opening-balance: 45.00
         closing-balance: 20.00
-        sync-timestamp: 25244711
+        sync-timestamp: "25244711"
   statement:
     type: object
     description: Report of entries booked against the account in specified period of time
@@ -500,8 +500,8 @@ definitions:
     example:
       from-date: 2016-01-01
       to-date: 2016-01-31
-      account-number: 00210102101
-      sequence-number: 26
+      account-number: "00210102101"
+      sequence-number: "26"
       generated: 2016-02-01T01:25:00
       document: AS-0021000102101-26
       total-credits: 1
@@ -509,29 +509,29 @@ definitions:
       currency: EUR
       opening-balance: 20.00
       closing-balance: 180.00
-      sync-timestamp: 26447476
+      sync-timestamp: "26447476"
   balances:
     type: array
     description: List of balances
     items:
       $ref: '#/definitions/balance'
     example:
-      - account-number: 00210102101
+      - account-number: "00210102101"
         amount: 100.00
         amount-local: 12283.50
         currency: EUR
         direction: d
         balance-kind: available
         calculated: 2016-02-23T15:50:00
-        sync-timestamp: 26447476
-      - account-number: 00210102101
+        sync-timestamp: "26447476"
+      - account-number: "00210102101"
         amount: 100.00
         amount-local: 12283.50
         currency: EUR
         direction: d
         balance-kind: current
         calculated: 2016-02-23T11:25:00
-        sync-timestamp: 26447211
+        sync-timestamp: "26447211"
   balance:
     type: object
     description: Monetary value tracked on the account.
@@ -578,14 +578,14 @@ definitions:
         description: Monotonically increasing timestamp of balance record used for incremental synchronization with client application. If balance is calculated that timestamp of last transaction that affected balance should be used.
         type: string
     example:
-      account-number: 00210102101
+      account-number: "00210102101"
       amount: 100.00
       amount-local: 12283.50
       currency: EUR
       direction: d
       balance-kind: available
       calculated: 2016-02-23T11:25:00
-      sync-timestamp: 26447476
+      sync-timestamp: "26447476"
 
   transactions:
     type: array
@@ -593,10 +593,10 @@ definitions:
     items:
       $ref: '#/definitions/transaction'
     example:
-      - account-number: 00210102101
-        transaction-id: 6525671616121
-        instruction-id: 6525671616121
-        statement-number: 26
+      - account-number: "00210102101"
+        transaction-id: "6525671616121"
+        instruction-id: "6525671616121"
+        statement-number: "26"
         source: brn
         amount: 100.00
         amount-local: 12283.50
@@ -607,13 +607,13 @@ definitions:
         book-date: 2016-02-23
         transaction-time: 2016-02-23T11:25:00
         description: Branch cash withdrawal
-        transaction-code: 212
+        transaction-code: "212"
         transaction-kind: wdw
-        sync-timestamp: 26447476
-      - account-number: 00210102101
-        transaction-id: 652567161100
-        instruction-id: 712531288123121
-        statement-number: 26
+        sync-timestamp: "26447476"
+      - account-number: "00210102101"
+        transaction-id: "652567161100"
+        instruction-id: "712531288123121"
+        statement-number: "26"
         source: pmt
         amount: 340000.00
         amount-local: 340000.00
@@ -624,9 +624,9 @@ definitions:
         book-date: 2016-02-22
         transaction-time: 2016-02-22T15:50:00
         description: Payment received from Asseco SEE d.o.o.
-        transaction-code: 722
+        transaction-code: "722"
         transaction-kind: pmt
-        sync-timestamp: 26447479
+        sync-timestamp: "26447479"
   transaction:
     description: Event that affected balance of interest to customers - principal, outstanding debt, advance, available
     type: object
@@ -724,10 +724,10 @@ definitions:
         description: Monotonically increasing timestamp of transaction record used for incremental synchronization with client application
         type: string
     example:
-      account-number: 00210102101
-      transaction-id: 6525671616121
-      instruction-id: 6525671616121
-      statement-number: 26
+      account-number: "00210102101"
+      transaction-id: "6525671616121"
+      instruction-id: "6525671616121"
+      statement-number: "26"
       source: brn
       amount: 100.00
       amount-local: 12283.50
@@ -738,6 +738,6 @@ definitions:
       book-date: 2016-02-23
       transaction-time: 2016-02-23T11:25:00
       description: Branch cash withdrawal
-      transaction-code: 212
+      transaction-code: "212"
       transaction-kind: wdw
-      sync-timestamp: 26447476
+      sync-timestamp: "26447476"
