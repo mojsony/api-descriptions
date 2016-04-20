@@ -59,8 +59,8 @@ paths:
           $ref: '#/responses/default-error-response'
   /arrangements/{arrangement-number}:
     get:
-      summary: Get general information on arrangement 
-      description: Response contains general information on specific product arrangements      
+      summary: Get general information on arrangement
+      description: Response contains general information on specific product arrangements
       tags:
         - Arrangements
       x-asee-tags:
@@ -80,7 +80,7 @@ paths:
   /arrangements/{arrangement-number}/installment-plan:
     get:
       summary: Get installment plan for arrangement
-      description: Response contains installment plan for specific loan arrangement      
+      description: Response contains installment plan for specific loan arrangement
       tags:
         - Installment Plans
       x-asee-tags:
@@ -335,7 +335,7 @@ definitions:
         type: string
     example:
       literal: billing
-      code: 2
+      code: "2"
       description: Contact may be used to provide party with details of their liabilities to the bank
   classification-list:
     description: List of classification schemas
@@ -395,13 +395,13 @@ definitions:
       description: List of possible uses of contact in business context. Commonly used filing purposes are billing, marketing
       values:
         - literal: billing
-          code: 1
+          code: "1"
           description: Contact may be used to provide party with details of their liabilities to the bank
         - literal: marketing
-          code: 2
+          code: "2"
           description: Contact may be used to provide party with details of offers
         - literal: reporting
-          code: 3
+          code: "3"
           description: Contact may be used to provide party with reports on their account
 
 # ****************************************************#
@@ -542,7 +542,7 @@ definitions:
         - sub-account
         - other
     example:
-      account-number: 0042201082794
+      account-number: "0042201082794"
       role-kind: primary-account
   arrangement:
     description: Basic arrangement information
@@ -619,7 +619,7 @@ definitions:
           - personal
         description: Contract delivery method, the way contract is deliverd to the customer.
     example:
-      arrangement-number: 0042201082794
+      arrangement-number: "0042201082794"
       kind: term-loan
       product-code: RT-LN-CAR-002
       status: effective
@@ -644,10 +644,10 @@ definitions:
           role-status: current
       accounts:
         -
-          account-number: 0042201082794
+          account-number: "0042201082794"
           role-kind: primary-account
         -
-          account-number: 0000100002378
+          account-number: "0000100002378"
           role-kind: settlement-account
       term:
         period: 4
@@ -671,13 +671,18 @@ definitions:
           items:
             $ref: '#/definitions/arrangement'
     example:
+      total-count: 455
+      page-size: 10
+      page-number: 1
+      total-pages: 46
+      items:
       -
-        arrangement-number: 0000100002378
+        arrangement-number: "0000100002378"
         kind: current-account
         product-code: RT-CA-STD-001
         status: effective
       -
-        arrangement-number: 0042201082794
+        arrangement-number: "0042201082794"
         kind: term-loan
         product-code: RT-LN-CAR-002
         status: effective
@@ -793,6 +798,11 @@ definitions:
           items:
             $ref: '#/definitions/installment-plan-row'
     example:
+      total-count: 450
+      page-size: 10
+      page-number: 1
+      total-pages: 45
+      items:
       -
         ordinal: 0
         date: 2013-10-21T00:00:00

@@ -164,6 +164,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/party-relationship'
+
         default:
           $ref: '#/responses/default-error-response'
   '/parties/{party-number}/id-documents':
@@ -185,6 +186,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/identification-document'
+
         default:
           $ref: '#/responses/default-error-response'
   '/parties/{party-number}/contact-preference':
@@ -456,6 +458,120 @@ definitions:
     properties:
       parties:
         $ref: '#/definitions/party'
+    example:
+      total-count: 1250
+      page-size: 50
+      page-number: 1
+      total-pages: 25
+      parties:
+        - kind: individual
+          party-number: ID001
+          contact-name: John Doe
+          contact-preference:
+            - preferred-language: ENG
+              opt-ins: billing,relationship-management
+              opt-outs: advertising,marketing
+            - preferred-language: SRB
+              opt-ins: billing,relationship-management
+              opt-outs: advertising,marketing
+          primary-id:
+            number: TX12345678
+            kind: tax-id-number
+          country-of-residence: RS
+          profile-image-url: http://www.mybank.rs/docs?id=99911115522345560151103
+          customer:
+            kind: domestic-resident
+            status: active
+            segment: professional
+          contact-points:
+            - id: CP110
+              method: email
+              usage: default
+              address:
+                kind: email-address
+                formatted: test.user@mybank.com
+              contact-preference:
+                preferred-language: ENG
+                opt-ins: billing,relationship-management
+                opt-outs: advertising,marketing
+            - id: CP111
+              method: postal
+              usage: home
+              address:
+                kind: postal-address
+                formatted: 1389 Sunset blvd. Belgrade
+              contact-preference:
+                preferred-language: ENG
+                opt-ins: billing,relationship-management
+                opt-outs: advertising,marketing
+
+          relationships:
+            - kind: marriage
+              role: spouse
+              to-party:
+                number: "PAR001"
+                name: Linda Doe
+                kind: individual
+            - kind: family
+              role: child
+              to-party:
+                number: "PAR002"
+                name: John jr.
+                kind: individual
+        - kind: individual
+          party-number: ID002
+          contact-name: Linda Doe
+          contact-preference:
+            - preferred-language: ENG
+              opt-ins: billing,relationship-management
+              opt-outs: advertising,marketing
+            - preferred-language: SRB
+              opt-ins: billing,relationship-management
+              opt-outs: advertising,marketing
+          primary-id:
+            number: TX12300000
+            kind: tax-id-number
+          country-of-residence: RS
+          profile-image-url: http://www.mybank.rs/docs?id=999111155444445560151103
+          customer:
+            kind: domestic-resident
+            status: active
+            segment: professional
+          contact-points:
+            - id: CP113
+              method: email
+              usage: default
+              address:
+                kind: email-address
+                formatted: test.user2@mybank.com
+              contact-preference:
+                preferred-language: ENG
+                opt-ins: billing,relationship-management
+                opt-outs: advertising,marketing
+            - id: CP114
+              method: postal
+              usage: home
+              address:
+                kind: postal-address
+                formatted: 1389 Sunset blvd. Belgrade
+              contact-preference:
+                preferred-language: ENG
+                opt-ins: billing,relationship-management
+                opt-outs: advertising,marketing
+
+          relationships:
+            - kind: marriage
+              role: spouse
+              to-party:
+                number: "PAR001"
+                name: John Doe
+                kind: individual
+            - kind: family
+              role: child
+              to-party:
+                number: "PAR002"
+                name: John Jr.
+                kind: individual
   party:
     description: Command with details for party registration
     type: object
@@ -498,6 +614,63 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/party-relationship'
+    example:
+      kind: individual
+      party-number: ID001
+      contact-name: John Doe
+      contact-preference:
+        - preferred-language: ENG
+          opt-ins: billing,relationship-management
+          opt-outs: advertising,marketing
+        - preferred-language: SRB
+          opt-ins: billing,relationship-management
+          opt-outs: advertising,marketing
+      primary-id:
+        number: TX12345678
+        kind: tax-id-number
+      country-of-residence: RS
+      profile-image-url: http://www.mybank.rs/docs?id=99911115522345560151103
+      customer:
+        kind: domestic-resident
+        status: active
+        segment: professional
+      contact-points:
+        - id: CP110
+          method: email
+          usage: default
+          address:
+            kind: email-address
+            formatted: test.user@mybank.com
+          contact-preference:
+            preferred-language: ENG
+            opt-ins: billing,relationship-management
+            opt-outs: advertising,marketing
+        - id: CP111
+          method: postal
+          usage: home
+          address:
+            kind: postal-address
+            formatted: 1389 Sunset blvd. Belgrade
+          contact-preference:
+            preferred-language: ENG
+            opt-ins: billing,relationship-management
+            opt-outs: advertising,marketing
+
+      relationships:
+        - kind: marriage
+          role: spouse
+          to-party:
+            number: "PAR001"
+            name: Linda
+            kind: individual
+        - kind: family
+          role: child
+          to-party:
+            number: "PAR002"
+            name: John
+            kind: individual
+
+
   organization:
     description: Organization
     type: object
@@ -705,6 +878,17 @@ definitions:
       contact-preference:
         $ref: '#/definitions/contact-preference'
     type: object
+    example:
+      id: CP110
+      method: email
+      usage: default
+      address:
+        kind: email-address
+        formatted: test.user@mybank.com
+      contact-preference:
+        preferred-language: ENG
+        opt-ins: billing,relationship-management
+        opt-outs: advertising,marketing
   address:
     description: Structured address for communication. Used as a common base for postal-address, phone-number and email-address
     type: object
@@ -858,6 +1042,15 @@ definitions:
         type: string
         format: url
     type: object
+    example:
+      kind: national-id-card
+      serial-number: "010011002345"
+      issued: 2016-01-01
+      valid-until: 2026-01-01
+      status: active
+      place-of-issue: Beograd
+      issuing-authority: MUP Novi Beograd
+      content-url: http://www.mybank.rs/docs?id=9990015520900120151103
 
   employment-status:
     description: |
@@ -1014,6 +1207,7 @@ definitions:
   resource-created-result:
     description: Unique identifier of newly created resource that can be used in future inquires and commands
     type: string
+    example: "ID12345"
   validation-problem:
     type: array
     items:
@@ -1208,8 +1402,8 @@ parameters:
     required: false
     items:
       type: string
+      enum: [postal, pstn, gsm, fax, facebook, email, web]
     type: array
-    enum: [postal, pstn, gsm, fax, facebook, email, web]
     collectionFormat: csv
   usage-param:
     description: |
@@ -1220,8 +1414,8 @@ parameters:
     required: false
     items:
       type: string
+      enum: [default, home, business, work, seasonal, assistant, delivery, legal]
     type: array
-    enum: [default, home, business, work, seasonal, assistant, delivery, legal]
     collectionFormat: csv
 
   latitude-param:

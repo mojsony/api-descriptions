@@ -93,13 +93,11 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/change-account-nickname-command'
-
       responses:
         '200':
           description: OK - The nickname was changed
         default:
           $ref: '#/responses/default-error-response'
-
       tags:
         - Accounts
       x-asee-tags: []
@@ -475,18 +473,18 @@ parameters:
     type: array
     items:
       type: string
+      enum:
+        - available
+        - current
+        - expected
+        - blocked
+        - outstanding
+        - advance
+        - opening
+        - closing
     in: query
     collectionFormat: csv
     x-asee-enum: balance-kind
-    enum:
-      - available
-      - current
-      - expected
-      - blocked
-      - outstanding
-      - advance
-      - opening
-      - closing
   amount-low-param:
     description: Lower limit of amount for matching transactions. Transactions with amount higher than this limit will be included in the result.
     in: query
@@ -1559,5 +1557,5 @@ definitions:
       media:
         image: /v1/conent/mchub/documents/mj20b12534r4
       party:
-        name: null
-        identifier: null
+        name: John
+        identifier: Doe

@@ -12,8 +12,8 @@ info:
 host: bankapi.net
 basePath: /v1/correspondence
 schemes:
-  - http
   - https
+  - http
 consumes:
   - application/json
 produces:
@@ -319,29 +319,29 @@ parameters:
     in: query
     name: statuses
     required: true
-    collectionFormat: csv
-    enum:
-      - pending
-      - sent
-      - delivered
-      - delivery-failed
-      - archived
     items:
       type: string
+      enum:
+        - pending
+        - sent
+        - delivered
+        - delivery-failed
+        - archived
     type: array
+    collectionFormat: csv
   mailbox-statuses-param:
     description: Mailbox status of the communication
     in: query
     name: statuses
     required: true
-    collectionFormat: csv
-    enum:
-      - received
-      - read
-      - archived
     items:
       type: string
+      enum:
+        - received
+        - read
+        - archived
     type: array
+    collectionFormat: csv
   customer-number-param:
     description: Customer number
     in: query
@@ -381,6 +381,61 @@ definitions:
           $ref: '#/definitions/communication'
         type: array
     type: object
+    example:
+      total-count: 455
+      page-size: 10
+      page-number: 1
+      total-pages: 46
+      items:
+      -
+        communication-id: id1
+        contact: contact1
+        customer-number: "143434"
+        created: 2016-02-01T01:25:00
+        status: sent
+        sent: 2016-02-01T01:26:00
+        expires: 2016-02-02T01:25:00
+        message-kind: kind1
+        priority: low
+        retry-count: 5
+        message:
+          title: Text/image contents
+          body:
+            content-type: text/html
+            content: MessageContent1
+          attachments:
+            items:
+              - content-type: image/png
+                name: Image content
+                content-url: https://www.content_1.com/con?v=NHdGvx9gZts
+              - content-type: text/plain
+                name: Text content
+                content-url: https://www.content_2.com/con?v=NHdGdfsfsdfgZts
+      -
+        communication-id: id2
+        contact: contact2
+        customer-number: "423423"
+        created: 2016-02-01T01:28:00
+        status: pending
+        sent: 2016-02-01T01:30:00
+        expires: 2016-02-01T01:31:00
+        message-kind: kind2
+        priority: medium
+        retry-count: 5
+        message:
+          title: Text/image contents
+          body:
+            content-type: text/plain
+            content: MessageContent1
+          attachments:
+            items:
+              - content-type: image/png
+                name: Image content
+                content-url: https://www.content_3.com/con?v=NHdrhrtgZts
+              - content-type: text/plain
+                name: Text Content
+                content-url: https://www.content_4.com/con?v=NHdGvx9g234sdfsdfsg
+
   communication:
     description: "Identifies a record of the receiving or sending (or the intention to send) of a message between bank and its customers.  Content of the communication is linked to the communication record.  A communication can use any contact-medium such as a telephone call, a letter, a fax, an e-mail, electronic message, a meeting, etc. It may have occurred or be planned to occur in the future.  In each case, a discrete occurrence of a communication is identifiable. Correspondence which takes place over a period of time is not a single communication but is modeled as a series of individual related communications."
     properties:
@@ -432,6 +487,30 @@ definitions:
         description: Message to be sent.
         $ref: '#/definitions/formatted-message'
     type: object
+    example:
+      communication-id: id1
+      contact: contact1
+      customer-number: "432845"
+      created: 2016-02-01T01:25:00
+      status: sent
+      sent: 2016-02-01T01:28:00
+      expires: 2016-03-01T01:25:00
+      message-kind: kind1
+      priority: low
+      retry-count: 5
+      message:
+        title: Text/image contents
+        body:
+          content-type: text/html
+          content: MessageContent1
+        attachments:
+          items:
+            - content-type: image/png
+              name: Image content
+              content-url: https://www.content_1.com/con?v=NHdGvx9gZts
+            - content-type: text/plain
+              name: Text content
+              content-url: https://www.content_2.com/con?v=NHdGdfsfsdfgZts
   contact:
     description: Information about contact.
     properties:
@@ -474,6 +553,61 @@ definitions:
           $ref: '#/definitions/mailbox-message'
         type: array
     type: object
+    example:
+      total-count: 455
+      page-size: 10
+      page-number: 1
+      total-pages: 46
+      items:
+      -
+        message-id: id1
+        customer-number: "123782"
+        received: 2016-02-01T01:25:00
+        status: received
+        mailbox-folder: folder1
+        message-kind: kind1
+        urgency: urgent
+        message:
+          title: Text/image contents
+          body:
+            content-type: text/html
+            content: TextContents
+          attachments:
+            items:
+              - content-type: image/png
+                name: Text content
+                content-url: https://www.content_1.com/con?v=NHdGvx9gZts
+              - content-type: text/plain
+                name: Text content
+                content-url: https://www.content_2.com/con?v=NHdGdfsfsdfgZts
+        message-category: cat1
+        has-attachments: true
+        is-read: true
+      -
+        message-id: id2
+        customer-number: "234924"
+        received: 2016-02-01T01:55:00
+        status: archived
+        mailbox-folder: folder2
+        message-kind: kind2
+        urgency: normal
+        message:
+          title: Text/image contents
+          body:
+            content-type: text/html
+            content: ImageContents
+          attachments:
+            items:
+              - content-type: image/png
+                name: Image content
+                content-url: https://www.content_1.com/con?v=NHdGvx9gZts
+              - content-type: text/plain
+                name: Image content
+                content-url: https://www.content_2.com/con?v=NHdGdfsfsdfgZts
+        message-category: cat2
+        has-attachments: false
+        is-read: true
+
   mailbox-message:
     type: object
     description: "Message in users virtual mailbox"
@@ -515,6 +649,31 @@ definitions:
         type: boolean
       is-read:
         type: boolean
+    example:
+      message-id: id2
+      customer-number: "234924"
+      received: 2016-02-01T01:55:00
+      status: archived
+      mailbox-folder: folder2
+      message-kind: kind2
+      urgency: normal
+      message:
+        title: Text/image contents
+        body:
+          content-type: text/html
+          content: ImageContents
+        attachments:
+          items:
+            - content-type: image/png
+              name: Image content
+              content-url: https://www.content_1.com/con?v=NHdGvx9gZts
+            - content-type: text/plain
+              name: Image content
+              content-url: https://www.content_2.com/con?v=NHdGdfsfsdfgZts
+      message-category: cat2
+      has-attachments: false
+      is-read: true
+
   formatted-message:
     description: Message consisting of a subject, body and attachments.
     properties:
@@ -704,6 +863,13 @@ definitions:
           $ref: '#/definitions/status-count'
         type: array
     type: object
+    example:
+      total-count: 500
+      items:
+        - status: status1
+          count: 100
+        - status: status2
+          count: 100
   status-count:
     description: Summary item contains total count and count of messages for each status
     properties:
