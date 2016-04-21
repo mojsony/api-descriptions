@@ -12,8 +12,8 @@ info:
 host: bankapi.net
 basePath: /v1/offer
 schemes:
-  - http
   - https
+  - http
 consumes:
   - application/json
 produces:
@@ -838,7 +838,7 @@ definitions:
         type: string
         x-asse-classification: document-kinds
         description: Specific purpose of this document. For complete list of possible values see [document-kinds](offer-classifications.html#document-kinds) classification.
- 
+
   required-documentation-request:
     properties:
       product-code:
@@ -856,6 +856,27 @@ definitions:
       documention:
         items:
           $ref: "#/definitions/document"
+    example:
+      items:
+        - product-code: "2349827348"
+          work-item-type: ItemType1
+          work-item-phase: Phase1
+          document-type: pdf
+          is-mandatory: true
+          is-printable: true
+          is-uploadable: false
+          template-name: Template1
+          template-uri: https://www.templates.com/watch?v=d4TCyP9V33M&ebc=ANyZVfeqZw
+        - product-code: "5468945865"
+          work-item-type: ItemType1
+          work-item-phase: Phase4
+          document-type: pdf
+          is-mandatory: true
+          is-printable: false
+          is-uploadable: false
+          template-name: Template3
+          template-uri: https://www.templates.com/watch?v=754968734592678fdsfsdf&ebc=ANyZVfeqZw
+
   document:
     description: Document related to product or workitem
     type: object
@@ -938,7 +959,12 @@ definitions:
         description: Number of remaining fee waivers for calculated service
         format: int32
         type: integer
-
+    example:
+      fee-amount:
+        amount: 200.00
+        code: EUR
+      rate: 5
+      remaining-fee-waivers: 10
   deposit-terms-request:
     description: Request with details neccessery to calculate deposit offer
     properties:
@@ -1003,6 +1029,19 @@ definitions:
         format: double
         type: number
         description: Payout amount
+    example:
+      principal-amount: 100
+      term: 1Y
+      nominal-interest-rate:
+        period: P20080915T155300
+        percentage: 3
+      interest-calculation-method: compounding
+      interest-calculation-basis: actual-360
+      efective-interest-rate: 7
+      tax-rate: 2
+      interest-amount: 200
+      tax-amount: 50
+      payout-amount: 20
 
   lending-terms-request:
     description: Request with details neccessery to calculate lending terms
@@ -1056,6 +1095,35 @@ definitions:
       total-fees:
         description: Represents calculated fees
         $ref: '#/definitions/currency'
+    example:
+      amount:
+        amount: 200.00
+        code: EUR
+      indexation-amount:
+        amount: 100.00
+        code: EUR
+      local-amount:
+        amount: 50.00
+        code: EUR'
+      term: P20080915T155300
+      nominal-interest-rate:
+        period: P20080925T255355
+        percentage: 4
+      interest-calculation-method: proportional
+      interest-calculation-basis: actual-actual
+      efective-interest-rate: 3
+      monthly-repayment:
+        amount: 10.00
+        code: EUR
+      total-interest:
+        amount: 220.00
+        code: EUR
+      total-repayment:
+        amount: 10.00
+        code: EUR
+      total-fees:
+        amount: 15.00
+        code: EUR
 
   installment-plan-request:
     description: Request with details neccessery to calculate offered lending terms
@@ -1096,6 +1164,64 @@ definitions:
         items:
           $ref: '#/definitions/installment-plan-row'
         type: array
+    example:
+      terms:
+        amount:
+          amount: 200.00
+          code: EUR
+        indexation-amount:
+          amount: 100.00
+          code: EUR
+        local-amount:
+          amount: 50.00
+          code: EUR'
+        term: P20080915T155300
+        nominal-interest-rate:
+          period: P20080925T255355
+          percentage: 4
+        interest-calculation-method: proportional
+        interest-calculation-basis: actual-actual
+        efective-interest-rate: 3
+        monthly-repayment:
+          amount: 10.00
+          code: EUR
+        total-interest:
+          amount: 220.00
+          code: EUR
+        total-repayment:
+          amount: 10.00
+          code: EUR
+        total-fees:
+          amount: 15.00
+          code: EUR
+      number-of-installments: 10
+      installments:
+        - ordinal: 0
+          date: 2013-10-21T00:00:00
+          activity-kind: disbursement
+          description: Loan disbursement and fee
+          disbursement: 8000.00
+          starting-balance: 0.00
+          principal-repayment: 0.00
+          interest-repayment: 0.00
+          annuity: 0.00
+          fee: 80.00
+          outstanding-balance: 8000.00
+          net-cash-flow: -7920.00
+          discounted-net-cash-flow: -7920.00
+        - ordinal: 1
+          date: 2015-10-21T00:00:00
+          activity-kind: disbursement
+          description: Deposit
+          disbursement: 5000.00
+          starting-balance: 0.00
+          principal-repayment: 0.00
+          interest-repayment: 0.00
+          annuity: 0.00
+          fee: 80.00
+          outstanding-balance: 5000.00
+          net-cash-flow: -5430.00
+          discounted-net-cash-flow: -5430.00
   installment-plan-row:
     description: Scheduled payment - row in installment plan.
     type: object
@@ -1314,6 +1440,35 @@ definitions:
       overdraft-repayment-conditions:
         description: Overdraft repayment conditions (1b 4.3) (OE 4.5)
         type: string
+    example:
+      common:
+        bank-name: First Bank
+        bank-addres: Ustanicka br.54, Beograd
+        customer-name: Marko Zivojinovic
+        customer-address: Ustanicka br.122, Beograd
+        personal-id-number: "534534592427"
+        product-display-name: ProductName
+        term: Term
+        currency:
+          amount: 200
+          code: EUR
+        nominal-interest-rate: "4"
+        effective-interest-rate: "3"
+        interest-calculation-method: Method
+        related-costs: costs
+        early-termination-conditions: conditions
+        complaint-contact-point: contact-point
+      borrowed-amount: "3000"
+      deposit-amount: "2000"
+      repayments: "200"
+      sureties: sureties
+      penalty-interest-rate: "2"
+      approval-requirements: Requirements
+      card-fees: Fees
+      early-repayment-conditions: Conditions
+      delinquency-consequences: Consequences
+      overdraft-repayment-conditions: Conditions
+
   deposit-offer-text:
     description: Deposit offer text
     properties:
@@ -1334,6 +1489,14 @@ definitions:
       insured-deposit-amount:
         description: Insured deposit amount (1a OE 4.3)
         type: string
+    example:
+      common:
+        $ref: '#/definitions/common-offer-text'
+      deposit-amount: "2000"
+      tax-information: tax-info
+      unconditional-benefits: benefits
+      automatic-rollover-conditions: conditions
+      insured-deposit-amount: "3000"
 
   application-list:
     description: Product account opening list
@@ -1346,6 +1509,46 @@ definitions:
           $ref: '#/definitions/application'
         type: array
     type: object
+    example:
+      total-count: 455
+      page-size: 10
+      page-number: 1
+      total-pages: 46
+      items:
+        -
+          application-number: "2334"
+          kind: deposit-opening
+          status: accepted
+          customer-number: "23534"
+          customer-name: Marko Rasic
+          product-code: "597234587"
+          product-name: Product1
+          signing-option: courier
+          created: 2016-02-01T01:25:00
+          request-date: 2016-03-01T01:25:00
+          expiration-date: 2017-02-01T01:25:00
+          status-changed: 2016-02-01T01:55:00
+          last-modified: 2016-04-01T01:25:00
+          created-by-name: Stefan Miric
+          comments: Comments
+          workitem-phase: Phase1
+        -
+          application-number: "45345"
+          kind: loan-origination
+          status: rejected
+          customer-number: "657576"
+          customer-name: David Markovic
+          product-code: "659765896"
+          product-name: Product2
+          signing-option: branch
+          created: 2016-02-01T01:25:00
+          request-date: 2016-03-01T01:25:00
+          expiration-date: 2017-02-01T01:25:00
+          status-changed: 2016-02-01T01:55:00
+          last-modified: 2016-04-01T01:25:00
+          created-by-name: Goran Mitrovic
+          comments: Comments
+          workitem-phase: Phase2
 
   draft:
     description: Draft of incomplete product application
@@ -1358,6 +1561,26 @@ definitions:
       editing-step:
         description: Editing step in entry ui flow (wizard) where draft was saved
         type: string
+    example:
+      draft-id: "43255234"
+      aplication:
+              application-number: "2334"
+              kind: deposit-opening
+              status: accepted
+              customer-number: "23534"
+              customer-name: Marko Rasic
+              product-code: "597234587"
+              product-name: Product1
+              signing-option: courier
+              created: 2016-02-01T01:25:00
+              request-date: 2016-03-01T01:25:00
+              expiration-date: 2017-02-01T01:25:00
+              status-changed: 2016-02-01T01:55:00
+              last-modified: 2016-04-01T01:25:00
+              created-by-name: Stefan Miric
+              comments: Comments
+              workitem-phase: Phase1
+      editing-step: Editing-step1
 
   application:
     description: Common information to all kinds of product applications
@@ -1401,7 +1624,7 @@ definitions:
           Indicates how and where customer chose to sign agreement documents
           For complete list of possible values see [signing-options](offer-classifications.html#signing-options) enumeration.
         type: string
-        enum: [branch, courier, online]        
+        enum: [branch, courier, online]
       created:
         description: Date and time when application was recorded in the system
         format: date-time
@@ -1434,10 +1657,28 @@ definitions:
       comments:
         description: Comments
         type: string
+
       workitem-phase:
         description: Work item phase name.
         type: string
         readOnly: true
+    example:
+      application-number: "2334"
+      kind: deposit-opening
+      status: accepted
+      customer-number: "23534"
+      customer-name: Marko Rasic
+      product-code: "597234587"
+      product-name: Product1
+      signing-option: courier
+      created: 2016-02-01T01:25:00
+      request-date: 2016-03-01T01:25:00
+      expiration-date: 2017-02-01T01:25:00
+      status-changed: 2016-02-01T01:55:00
+      last-modified: 2016-04-01T01:25:00
+      created-by-name: Stefan Miric
+      comments: Comments
+      workitem-phase: Phase1
   deposit-opening:
     description: Deposit account opening application
     allOf:
@@ -1806,6 +2047,7 @@ definitions:
   resource-created-result:
     description: Unique identifier of newly created resource that can be used in future inquires and commands
     type: string
+    example: Created
   validation-problem:
     type: array
     items:
@@ -1899,7 +2141,7 @@ definitions:
         type: string
     example:
       literal: billing
-      code: 2
+      code: "2"
       description: Contact may be used to provide party with details of their liabilities to the bank
 
   classification-list:
@@ -1962,11 +2204,11 @@ definitions:
       description: List of possible uses of contact in business context. Commonly used filing purposes are billing, marketing
       values:
         - literal: billing
-          code: 1
+          code: "1"
           description: Contact may be used to provide party with details of their liabilities to the bank
         - literal: marketing
-          code: 2
+          code: "2"
           description: Contact may be used to provide party with details of offers
         - literal: reporting
-          code: 3
+          code: "3"
           description: Contact may be used to provide party with reports on their account

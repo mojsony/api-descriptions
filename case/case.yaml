@@ -388,6 +388,53 @@ definitions:
           $ref: '#/definitions/case'
         type: array
     type: object
+    example:
+      total-count: 455
+      page-size: 10
+      page-number: 1
+      total-pages: 46
+      items:
+      -
+        case-number: "35"
+        kind: service-request
+        status: accepted
+        case-topic: service-request
+        title: Title1
+        details: Details1
+        arrangement-number: "2344"
+        customer-number: "234823847"
+        customer-name: Milica Petrovic
+        channel: email
+        resolution: Resolution1
+        importance: high
+        created: 2016-02-01T01:25:00
+        status-changed: 2016-02-01T01:55:00
+        last-modified: 2016-03-01T01:25:00
+        attachments:
+          - attachment-url: https://www.firstbank.rs/docs?q=customer+nWGM%3A
+            attachment-id: "321324"
+            document-type: contract
+      -
+        case-number: "36"
+        kind: callback-request
+        status: active
+        case-topic: general-enquiry
+        title: Title1
+        details: Details1
+        arrangement-number: "2344"
+        customer-number: "234823847"
+        customer-name: Marija Stevovic
+        channel: phone
+        resolution: Resolution1
+        importance: low
+        created: 2016-02-01T01:25:00
+        status-changed: 2016-02-01T01:55:00
+        last-modified: 2016-03-01T01:25:00
+        attachments:
+          - attachment-url: https://www.nationlbank.rs/docs?q=customer+nWGM%24fsr34rr34few
+            attachment-id: "321324"
+            document-type: statement
+
 
   case:
     description: Common information to all kinds of customer cases
@@ -478,6 +525,26 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/attachment'
+    example:
+      case-number: "35"
+      kind: service-request
+      status: accepted
+      case-topic: service-request
+      title: Title1
+      details: Details1
+      arrangement-number: "2344"
+      customer-number: "234823847"
+      customer-name: Milica Petrovic
+      channel: email
+      resolution: Resolution1
+      importance: high
+      created: 2016-02-01T01:25:00
+      status-changed: 2016-02-01T01:55:00
+      last-modified: 2016-03-01T01:25:00
+      attachments:
+        - attachment-url: https://www.firstbank.rs/docs?q=customer+nWGM%3A
+          attachment-id: "321324"
+          document-type: contract
 
   attach-documents-command:
     description: Command with specification of attached documents
@@ -737,7 +804,7 @@ definitions:
         type: string
     example:
       literal: billing
-      code: 2
+      code: "2"
       description: Contact may be used to provide party with details of their liabilities to the bank
 
   classification-list:
@@ -800,13 +867,13 @@ definitions:
       description: List of possible uses of contact in business context. Commonly used filing purposes are billing, marketing
       values:
         - literal: billing
-          code: 1
+          code: "1"
           description: Contact may be used to provide party with details of their liabilities to the bank
         - literal: marketing
-          code: 2
+          code: "2"
           description: Contact may be used to provide party with details of offers
         - literal: reporting
-          code: 3
+          code: "3"
           description: Contact may be used to provide party with reports on their account
 responses:
   validation-problem-response:

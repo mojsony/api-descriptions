@@ -2,8 +2,8 @@ swagger: '2.0'
 x-asee-visibility: internal
 basePath: /beta/fraud
 schemes:
-  - http
   - https
+  - http
 host: bankapi.net
 
 info:
@@ -107,9 +107,7 @@ paths:
         '200':
           description: Success
           schema:
-              items:
-                $ref: '#/definitions/blacklist-status'
-              type: array
+            $ref: '#/definitions/blacklist-status'
         default:
           $ref: '#/responses/default-error-response'
       tags:
@@ -138,7 +136,7 @@ definitions:
         - unacceptable-risk
         x-asee-enumeration: reliabilities
     example:
-      rating-value: 0
+      rating: 0
       reliability: low-risk
 
   blacklist-match:
@@ -161,9 +159,10 @@ definitions:
           $ref: '#/definitions/blacklist-match'
     example:
       matches:
-        -
-         likelihood: 80
-         name: EU blacklist
-        -
-         likelihood: 75
-         name: UN blacklist
+        items:
+          -
+           percentage: 80
+           name: EU blacklist
+          -
+           percentage: 75
+           name: UN blacklist

@@ -9,8 +9,8 @@ info:
 host: bankapi.net
 basePath: /beta/survey
 schemes:
-  - http
   - https
+  - http
 consumes:
   - application/json
 produces:
@@ -183,6 +183,73 @@ definitions:
           $ref: '#/definitions/survey-info'
         type: array
     type: object
+    example:
+      total-count: 455
+      page-size: 10
+      page-number: 1
+      total-pages: 46
+      items:
+        - survey-id: "34e54353f34"
+          date-created: 2016-02-01T01:25:00
+          info:
+            template-id: "3542drt265"
+            title: Title
+            description: Survey description
+            date-published: 2016-03-01T01:25:00
+          sections:
+            section-id: "t4723tg23"
+            order: 12
+            title: Section title
+            description: Section description
+            questions:
+              - question-id: "32"
+                order: 4
+                title: Question title
+                description: Question description
+                kind: multiple-options, options
+                possible-options:
+                  additionalProperties: Properties
+                is-mandatory: true
+                answer:
+                  question-id: "32"
+                  text-value: Answer
+                  bool-value: false
+                  numeric-value: 213
+                  date-value: 2016-02-01T01:25:00
+                  selected-option:
+                    id: "34r939"
+                    value: option
+        - survey-id: "4545hjg44uit54"
+          date-created: 2016-05-01T01:25:00
+          info:
+            template-id: "fsd89fs9wrw"
+            title: Title
+            description: Survey description
+            date-published: 2016-07-01T01:25:00
+          sections:
+            section-id: "fsd89sdfs876"
+            order: 14
+            title: Section title
+            description: Section description
+            questions:
+              - question-id: "35"
+                order: 6
+                title: Question title
+                description: Question description
+                kind: multiple-options, options
+                possible-options:
+                  additionalProperties: Properties
+                is-mandatory: true
+                answer:
+                  question-id: "35"
+                  text-value: Answer
+                  bool-value: false
+                  numeric-value: 4565
+                  date-value: 2017-01-01T01:25:00
+                  selected-option:
+                    id: "fsd8sd98"
+                    value: option
+
   survey:
     description: Definition of survey with questions and answers. Answers are filled-in if customer has already submitted survey.
     properties:
@@ -202,6 +269,37 @@ definitions:
           $ref: '#/definitions/survey-section'
         type: array
     type: object
+    example:
+      survey-id: "34e54353f34"
+      date-created: 2016-02-01T01:25:00
+      info:
+        template-id: "3542drt265"
+        title: Title
+        description: Survey description
+        date-published: 2016-03-01T01:25:00
+      sections:
+        section-id: "t4723tg23"
+        order: 12
+        title: Section title
+        description: Section description
+        questions:
+          - question-id: "32"
+            order: 4
+            title: Question title
+            description: Question description
+            kind: multiple-options, options
+            possible-options:
+              additionalProperties: Properties
+            is-mandatory: true
+            answer:
+              question-id: "32"
+              text-value: Answer
+              bool-value: false
+              numeric-value: 213
+              date-value: 2016-02-01T01:25:00
+              selected-option:
+                id: "34r939"
+                value: option
   survey-info:
     description: Basic information about survey template.
     properties:
@@ -332,6 +430,9 @@ definitions:
         description: 'Gets or sets the created, updated, deleted record status.'
         type: string
     type: object
+    example:
+      id: "ffd7s6fd8s6f"
+      created-record-status: CREATED
   validation-problem:
     x-asee-compliance: Missing description of object and its properties.
     type: array

@@ -22,8 +22,8 @@ consumes:
 produces:
 - application/json
 schemes:
-- http
 - https
+- http
 paths:
   /mandates:
     get:
@@ -341,7 +341,7 @@ definitions:
         type: string
     example:
       literal: billing
-      code: 2
+      code: "2"
       description: Contact may be used to provide party with details of their liabilities to the bank
 
   classification-list:
@@ -404,13 +404,13 @@ definitions:
       description: List of possible uses of contact in business context. Commonly used filing purposes are billing, marketing
       values:
         - literal: billing
-          code: 1
+          code: "1"
           description: Contact may be used to provide party with details of their liabilities to the bank
         - literal: marketing
-          code: 2
+          code: "2"
           description: Contact may be used to provide party with details of offers
         - literal: reporting
-          code: 3
+          code: "3"
           description: Contact may be used to provide party with reports on their account
 
   currency:
@@ -437,7 +437,91 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/mandate'
-
+    example:
+      items:
+      -
+        mandate-id: "234235"
+        arrangement-number: "4293742374923"
+        arrangement-kind: current-account
+        customer-number: "979908"
+        applicable-channels:
+          items:
+            - online
+            - branch
+        allowed-services:
+          items:
+            - bank-service1
+            - bank-service2
+        effective-date: 2016-02-21T01:25:00
+        end-date: 2016-03-21T01:25:00
+        required-signatures-number: 24
+        signature-order: true
+        mandate-holders:
+          items:
+            - customer-number: "23453452"
+              customer-name: John
+              is-owner: true
+              signature-order: true
+              limits:
+                - per-transaction:
+                    amount: 200.00
+                    code: EUR
+                  period-limits:
+                    kind: amount-in-period
+                    period: P20080915T155300
+            - customer-number: "23452131"
+              customer-name: Marco
+              is-owner: false
+              signature-order: false
+              limits:
+                - per-transaction:
+                    amount: 200.00
+                    code: EUR
+                  period-limits:
+                    kind: count-in-period
+                    period: P20080915T155300
+      -
+        mandate-id: "2342355"
+        arrangement-number: "23942937492374"
+        arrangement-kind: overdraft-facility
+        customer-number: "890800"
+        applicable-channels:
+          items:
+            - call-center
+            - atm
+            - vpos
+        allowed-services:
+          items:
+            - bank-service3
+            - bank-service4
+        effective-date: 2016-02-01T01:25:00
+        end-date: 2016-10-21T01:25:00
+        required-signatures-number: 15
+        signature-order: false
+        mandate-holders:
+          items:
+            - customer-number: "23453452"
+              customer-name: Maria
+              is-owner: true
+              signature-order: true
+              limits:
+                - per-transaction:
+                    amount: 200.00
+                    code: EUR
+                  period-limits:
+                    kind: amount-in-period
+                    period: P20080915T155300
+            - customer-number: "23452131"
+              customer-name: Alexandar
+              is-owner: false
+              signature-order: false
+              limits:
+                - per-transaction:
+                    amount: 200.00
+                    code: EUR
+                  period-limits:
+                    kind: count-in-period
+                    period: P20080915T155300
   mandate:
     description: Entitlement of mandate holder to access services for an arrangement
     required:
@@ -515,7 +599,7 @@ definitions:
 
     example:
       mandate-number: 171-2015
-      arrangement-number: 00301000121312
+      arrangement-number: "00301000121312"
       arrangement-kind: current-account
       applicable-channels: [any]
       allowed-services: [any]
@@ -544,6 +628,32 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/limit-balance'
+    example:
+      items:
+        -
+          arrangement-number: "1312314239917217"
+          arrangment-kind: card-access-arrangement
+          customer-number: nodjo001
+          limit-kind: amount-per-period
+          used-amount: 100.00
+          remaining-amount: 1234.00
+          currency: EUR
+          service: withdrawal
+          channel: atm
+          period-end: 2016-04-03
+          period: P20080915T251305
+        -
+          arrangement-number: "432577279917217"
+          arrangment-kind: term-loan
+          customer-number: sdf23432
+          limit-kind: count-in-period
+          used-amount: 100.00
+          remaining-amount: 1234.00
+          currency: EUR
+          service: withdrawal
+          channel: call-center
+          period-end: 2016-02-01T01:25:00
+          period: P20080915T155300
 
   limit-balance:
     description: Balance of the limit
@@ -622,7 +732,7 @@ definitions:
         type: string
         format: ISO 8601 duration
     example:
-      arrangement-number: 432577279917217
+      arrangement-number: "432577279917217"
       arrangment-kind: card-access-arrangement
       customer-number: nodjo001
       limit-kind: amount-per-period
@@ -631,8 +741,8 @@ definitions:
       currency: EUR
       service: withdrawal
       channel: atm
-      period-end: 2016-04-03
-      period: P1D
+      period-end: 2016-02-01T01:25:00
+      period: P20080915T155300
 
   mandate-holder:
     description: Holder of the mandate

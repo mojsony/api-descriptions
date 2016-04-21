@@ -12,8 +12,8 @@ info:
 host: bankapi.net
 basePath: /v1/content
 schemes:
-  - http
   - https
+  - http
 consumes:
   - application/json
 produces:
@@ -36,7 +36,7 @@ paths:
   /repositories:
     get:
       summary: List available content repositories
-      description: Response contains list of repositories that are available for access. Some repositories offer allow anonimous access to certain folder while other offer access to authenticated users 
+      description: Response contains list of repositories that are available for access. Some repositories offer allow anonimous access to certain folder while other offer access to authenticated users
       tags:
         - Repositories
       operationId: Repositories_GetList
@@ -93,7 +93,7 @@ paths:
             $ref: '#/definitions/content-item-list'
         default:
           $ref: '#/responses/default-error-response'
-          
+
   /{repo}/{path}/search:
     parameters:
       - $ref: "#/parameters/repository-name"
@@ -129,7 +129,7 @@ paths:
       - $ref: "#/parameters/folder-id-param"
     get:
       summary: Search folder contents
-      description: Response contains list of specified folder's contents that match search query. When subfolders parameter is present search includes matching cotent from all subfolders      
+      description: Response contains list of specified folder's contents that match search query. When subfolders parameter is present search includes matching cotent from all subfolders
       tags:
         - Folders
       x-asee-tags:
@@ -158,7 +158,7 @@ paths:
       - $ref: "#/parameters/path"
     get:
       summary: Get folder metadata by path
-      description: Response contains metadata for specified folder      
+      description: Response contains metadata for specified folder
       tags:
         - Folders
       operationId: Folders_GetMetadataByPath
@@ -176,7 +176,7 @@ paths:
       - $ref: "#/parameters/folder-id-param"
     get:
       summary: Get folder metadata
-      description: Response contains metadata for specified folder           
+      description: Response contains metadata for specified folder
       tags:
         - Folders
       operationId: Folders_GetMetadata
@@ -190,7 +190,7 @@ paths:
           $ref: '#/responses/default-error-response'
     put:
       summary: Update folder properties
-      description: Updates writeable metadata for specified folder 
+      description: Updates writeable metadata for specified folder
       tags:
         - Folders
       operationId: Folders_UpdateMetadata
@@ -467,7 +467,7 @@ paths:
       - $ref: "#/parameters/file-name"
     get:
       summary: Get document metadata by path and file name
-      description: Response contains metadata for specified document 
+      description: Response contains metadata for specified document
       tags:
         - Documents
       operationId: Documents_GetMetadataByPath
@@ -507,7 +507,7 @@ paths:
       - $ref: "#/parameters/document-id-param"
     get:
       summary: Get document metadata
-      description: Response contains metadata for specified document      
+      description: Response contains metadata for specified document
       tags:
         - Documents
       operationId: Documents_GetMetadata
@@ -520,11 +520,11 @@ paths:
           $ref: '#/responses/default-error-response'
     put:
       summary: Update document metadata
-      description: Updates writeable metadata for specified document       
+      description: Updates writeable metadata for specified document
       tags:
         - Documents
       operationId: Documents_UpdateMetadata
-      
+
       parameters:
         - $ref: "#/parameters/repository-name"
         - $ref: "#/parameters/document-id-param"
@@ -558,7 +558,7 @@ paths:
       - $ref: "#/parameters/document-id-param"
     get:
       summary: Dowlnoad document content
-      description: Response contains document content stream with specific `Content-Type` and `Content-Disposition` headers      
+      description: Response contains document content stream with specific `Content-Type` and `Content-Disposition` headers
       produces:
       - image/jpg
       - image/png
@@ -1004,15 +1004,15 @@ definitions:
   content-item-list:
     description: List of content items
     allOf:
-    - $ref: '#/definitions/paged-list'
-    - type: object
-      properties:
-        items:
-          type: array
+      - $ref: '#/definitions/paged-list'
+      - type: object
+        properties:
           items:
-            $ref: '#/definitions/content-item'
-      example:
-        items:
+            type: array
+            items:
+              $ref: '#/definitions/content-item'
+    example:
+      items:
         -
           id: ee48b17534c9
           changed-on: 2015-10-20T23:22:10
@@ -1029,12 +1029,12 @@ definitions:
           name: headshot.png
           path: JABON0007/images/archived
           kind: folder
-        total-count: 2
-        page-size: 10
-        page: 1
-        total-pages: 1
-        sort-order: desc
-        sort-by: created-on
+      total-count: 2
+      page-size: 10
+      page: 1
+      total-pages: 1
+      sort-order: desc
+      sort-by: created-on
   document-list:
     description: List of documents
     properties:
@@ -1043,75 +1043,76 @@ definitions:
         items:
           $ref: '#/definitions/document'
     example:
-      -
-        id: ee48b17534c9
-        changed-on: 2015-10-20T23:22:10
-        created-on: 2015-11-23T07:08:30
-        created-by: JABON0007
-        name: headshot.png
-        path: JABON0007/images
-        kind: document
-      -
-        id: ee48b17534c9
-        changed-on: 2015-10-20T23:22:10
-        created-on: 2015-11-23T07:08:30
-        created-by: JABON0007
-        name: headshot.png
-        path: JABON0007/images/archived
-        kind: folder
+      documents:
+        -
+          id: ee48b17534c9
+          changed-on: 2015-10-20T23:22:10
+          created-on: 2015-11-23T07:08:30
+          created-by: JABON0007
+          name: headshot.png
+          path: JABON0007/images
+          kind: document
+        -
+          id: ee48b17534c9
+          changed-on: 2015-10-20T23:22:10
+          created-on: 2015-11-23T07:08:30
+          created-by: JABON0007
+          name: headshot.png
+          path: JABON0007/images/archived
+          kind: folder
   folder:
     type: object
     description: A container for documents and child folders.
     allOf:
-    - $ref: '#/definitions/content-item'
-    - type: object
-      properties:
-        folder-purpose:
-          type: string
-          readOnly: false
-          description: Classification explaining intended use of folder in business context. Commonly used values include generic-folder, client-folder, arrangement-folder, case-folder, order-folder. For a complete list of possible values see [folder-purpose](content-classifications.html#folder-purpose) classification
-      example:
-        id: ee48b17534c9
-        changed-on: 2015-10-20T23:22:10
-        created-on: 2015-11-23T07:08:30
-        created-by: JABON0007
-        name: images
-        path: JABON0007/images
-        kind: folder
-        folder-purpose: generic-folder
+      - $ref: '#/definitions/content-item'
+      - type: object
+        properties:
+          folder-purpose:
+            type: string
+            readOnly: false
+            description: Classification explaining intended use of folder in business context. Commonly used values include generic-folder, client-folder, arrangement-folder, case-folder, order-folder. For a complete list of possible values see [folder-purpose](content-classifications.html#folder-purpose) classification
+    example:
+      id: ee48b17534c9
+      changed-on: 2015-10-20T23:22:10
+      created-on: 2015-11-23T07:08:30
+      created-by: JABON0007
+      name: images
+      path: JABON0007/images
+      kind: folder
+      folder-purpose: generic-folder
   document:
     type: object
     description: Represents elementary information entity managed by the repository
     allOf:
-    - $ref: '#/definitions/content-item'
-    - type: object
-      properties:
-        media-type:
-          type: string
-          description: |
-            MIME Media Type that describes format of the docuements content stream as deﬁned by RFC2045 and RFC2046.
-            Commonly used media type examples are image/png, image/jpg, application/pdf and application/msword.
-            Complete list can be found at [IANA Media Types](http://www.iana.org/assignments/media-types/media-types.xhtml).
-        filing-purpose:
-          type: string
-          description: Classification explaining what intended use of the document within business. Commonly used filing purposes are arrangement-document, mandate-document and profile-photo. For a complete list of possible values see [filing-purpose](content-classifications.html#filing-purpose) classification.
-        filing-case-number:
-          type:
-            string
-          description: Identifies the case related to the document such as arrangment, loan application or complaint. Having this file enables flat folder structure where documents in one folder can belong to different cases.
-        size-in-bytes:
-          type: integer
-          description: Size of the document in bytes
-          readOnly: true
-      example:
-        id: ee48b17534c9
-        changed-on: 2015-10-20T23:22:10
-        created-on: 2015-11-23T07:08:30
-        created-by: JABON0007
-        name: headshot.png
-        path: JABON0007/images
-        kind: document
-        media-type: image/png
-        filing-purpose: profile-photo
-        filing-case-number: JABON0007
-        size-in-bytes: 21231
+      - $ref: '#/definitions/content-item'
+      - type: object
+        properties:
+          media-type:
+            type: string
+            description: |
+              MIME Media Type that describes format of the docuements content stream as deﬁned by RFC2045 and RFC2046.
+              Commonly used media type examples are image/png, image/jpg, application/pdf and application/msword.
+              Complete list can be found at [IANA Media Types](http://www.iana.org/assignments/media-types/media-types.xhtml).
+          filing-purpose:
+            type: string
+            description: Classification explaining what intended use of the document within business. Commonly used filing purposes are arrangement-document, mandate-document and profile-photo. For a complete list of possible values see [filing-purpose](content-classifications.html#filing-purpose) classification.
+          filing-case-number:
+            type:
+              string
+            description: Identifies the case related to the document such as arrangment, loan application or complaint. Having this file enables flat folder structure where documents in one folder can belong to different cases.
+          size-in-bytes:
+            type: integer
+            description: Size of the document in bytes
+            readOnly: true
+    example:
+      id: ee48b17534c9
+      changed-on: 2015-10-20T23:22:10
+      created-on: 2015-11-23T07:08:30
+      created-by: JABON0007
+      name: headshot.png
+      path: JABON0007/images
+      kind: document
+      media-type: image/png
+      filing-purpose: profile-photo
+      filing-case-number: JABON0007
+      size-in-bytes: 21231
