@@ -27,14 +27,14 @@ Literal                                     | Code  | Description
 `instruction`                               | 2     | Instruction
 `statement`                                 | 3     | Statement
 `installment-plan`                          | 4     | Installment plan
-`employment-cerificate`                     | 5     | Employment certificate
+`employment-certificate`                    | 5     | Employment certificate
 `business-register-excerpt`                 | 6     | Business register excerpt
 `transaction-certificate`                   | 7     | Transaction certificate
 `product-application-acceptance-phase checklist`| 8     | Application acceptance phase checklist
 `product-application-creation-phase-checklist`  | 9     | Application creation phase checklist
 `product-application-approval-phase-checklist`  | 10    | Application approval phase checklist
 `product-application-activation-phase-checklist`| 11    | Application activation phase checklist
-`withdraw-conscent-for-credit-bureau-report`    | 12    | Withdraw conscent for credit bureau report
+`withdraw-consent-for-credit-bureau-report`     | 12    | Withdraw consent for credit bureau report
 
 Installment Activity Kinds
 --------------
