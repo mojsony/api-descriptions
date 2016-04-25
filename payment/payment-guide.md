@@ -5,7 +5,7 @@ visibility: internal
 <span class="icon"></span>Payment API Guide
 ======================
 Payment API provides access to documents stored in content management repositories. Any form of unstructured content (files) such as documents, templates and images can be organized into a folder structure that follows conventions understood by applications. API exposes operations to upload and download content and manipulate its metadata.
-   
+
 Key Resources
 -------------
 Payment API has four top level collection resources: transfers, beneficiaries, drafts and templates.
@@ -34,12 +34,12 @@ API | URL Root
 --------|---------
 Payment | `https://bankapi.net/v1/payment`
 
-> **Note**: Throughout this documentation, only partial syntax such as: 
-`GET /transfers/{id}` is used for the sake of brevity. 
+> **Note**: Throughout this documentation, only partial syntax such as:
+`GET /transfers/{id}` is used for the sake of brevity.
 Prefix the path with the correct root URL in order to obtain the full resource path or URL.
 
 ###3. Query transfers
-It is 
+It is
 ```
 GET /transfers
 ```
@@ -50,19 +50,36 @@ You will get back `200 OK` status code and json representation with a list of tr
   "page-size": 10,
   "page-number": 1,
   "total-pages": 0,
-  "items": [],
-  "navigations": [
+  "items": [
     {
-      "href": null,
-      "rel": "first"
+      "transfer-id": "1283724237",
+      "status": "scheduled",
+      "status-date": "2016-02-01T01:25:00",
+      "originated": "2016-03-01T01:25:00",
+      "instruction": {
+        "kind": "credit-transfer"},
+      "transfer-kind": "balance-transfer",
+      "direction": "outpayment"
     },
     {
-      "href": null,
-      "rel": "previuos"
+      "transfer-id": "42834298374",
+      "status": "pending",
+      "status-date": "2016-02-01T01:25:00",
+      "originated": "2016-03-01T01:25:00",
+      "instruction": {
+        "kind": "credit-transfer"},
+      "transfer-kind": "nonresident-transfer",
+      "direction": "inpayment"
     },
     {
-      "href": null,
-      "rel": "self"
+      "transfer-id": "67856463523",
+      "status": "scheduled",
+      "status-date": "2016-02-01T01:25:00",
+      "originated": "2016-03-01T01:25:00",
+      "instruction": {
+        "kind": "credit-transfer"},
+      "transfer-kind": "balance-transfer",
+      "direction": "outpayment"
     }
   ]
 }
@@ -79,9 +96,9 @@ POST /dms/folders
 
 ```json
 {
-  "kind": "folder", 
+  "kind": "folder",
   "name": "jabon0007",
-  "path": "customers", 
+  "path": "customers",
   "folder-purpose": "customer-profile"
 }
 ```
@@ -97,8 +114,8 @@ Location: http://api.asse.co/content/dms/folders/ee48b17534c9
   "path": "customers",
   "folder-purpose": "customer-profile",
   "id": "ee48b17534c9",
-  "created-on": "2015-11-23T07:08:30.000Z", 
-  "created-by": "jabon007", 
+  "created-on": "2015-11-23T07:08:30.000Z",
+  "created-by": "jabon007",
   "changed-on": "2015-11-23T07:08:30.000Z"
 }
 ```
@@ -152,11 +169,11 @@ You will get back `200 OK` status code and json representation with a list of re
       "created-by": "jabon0007"
     }
   ],
-  "total-count": 1, 
+  "total-count": 1,
   "page-size": 10,
   "page": 1,
   "total-pages": 1,
-  "sort-order": "asc", 
+  "sort-order": "asc",
   "sort-by": "created-on"  
 }
 ```
@@ -170,6 +187,6 @@ You will get back `200 OK` and binary content stream with appropriate Content Ty
 ```
 Content-Type: image/png
 Content-Disposition: attachment; filename="headshot.png"
-``` 
+```
 
 **Congratulations!** You have completed getting started tutorial on most common steps when working with Content Management API. To learn more look at the reference documentation for [available operations](swagger-ui).

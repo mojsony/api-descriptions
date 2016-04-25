@@ -78,8 +78,8 @@ HTTP/1.1 200 Ok
 Content-Type: text/csv
 
 account-number,effective-date,status-date,currency,status,posting-status,kind,sync-timestamp
-00210102101,2016-01-01,2016-01-01,EUR,open,post-all,demand-deposit,25722121
-00210102101,2016-01-01,2016-01-01,RSD,open,post-all,current-account,24732399
+00210102101,2016-01-01,2016-02-01T01:25:00,EUR,open,post-all,demand-deposit-account,25722121
+00210102101,2016-01-01,2016-02-01T01:25:00,RSD,open,post-all,current-account,24732399
 ...
 
 ```
@@ -115,7 +115,7 @@ Content-Type: application/json
     "currency": "RSD",
     "direction": "d",
     "balance-kind": "available",
-    "calculated": "2016-02-23T15:50:00.000Z",
+    "calculated": "2016-02-01T01:25:00",
     "sync-timestamp": 26447476
   },
   {
@@ -125,7 +125,7 @@ Content-Type: application/json
     "currency": "EUR",
     "direction": "d",
     "balance-kind": "available",
-    "calculated": "2016-02-23T11:25:00.000Z",
+    "calculated": "2016-02-01T01:25:00",
     "sync-timestamp": 26447211
   }
 ]

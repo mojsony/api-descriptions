@@ -728,18 +728,34 @@ definitions:
     example:
       - account-number: "00210102101"
         effective-date: "2016-01-01"
-        status-date: "2016-01-01"
+        status-date: "2016-02-01T01:25:00"
         currency: EUR
         status: open
         posting-status: post-all
-        kind: demand-deposit
+        kind: demand-deposit-account
+        balances:
+          - account-number: "00310003334"
+            amount: 700.00
+            amount-local: 85400.00
+            currency: RSD
+            direction: d
+            balance-kind: available
+            calculated: 2016-02-23T11:25:00
       - account-number: "00210102101"
         effective-date: "2016-01-01"
-        status-date: "2016-01-01"
+        status-date: "2016-02-01T01:25:00"
         currency: RSD
         status: open
         posting-status: post-all
         kind: current-account
+        balances:
+          - account-number: "00210102101"
+            amount: 200.00
+            amount-local: 32400.00
+            currency: RSD
+            direction: d
+            balance-kind: available
+            calculated: 2016-02-23T11:25:00
 
   account:
     description: Record of transactions in specific types of arrangement, maintained by a bank party on behalf of one or more owning parties.

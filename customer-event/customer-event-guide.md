@@ -6,12 +6,12 @@ visibility: internal
 Customer Event API v2
 =========================
 Customer event API gives you access to all events registered for a customer and also you can register new events for customers.
-   
+
 Key Resources
 -------------
 Customer event has several types of events that can be associated with customers.  
 
-- communication 
+- communication
 - social
 - accounting transaction
 - customer case
@@ -39,17 +39,17 @@ API | URL Root
 Customer event | `https://bankapi.net/customer-event`
 
 
-> **Note**: Throughout this documentation, only partial syntax such as: 
-`GET /customer-event/events` is used for the sake of brevity. 
+> **Note**: Throughout this documentation, only partial syntax such as:
+`GET /customer-event/events` is used for the sake of brevity.
 Prefix the path with the correct root URL in order to obtain the full resource path or URL.
 
 
 ###3. Get list of all events for some customer
 Let's assume that we have some customer number and we want to retrieve all the customer events that are associated with that customer.
-To get the list of events you must get To create current account request 
+To get the list of events you must get To create current account request
 
 ```
-GET /customer-event/events
+GET /customer-event/me/events
 ```
 
 For this example we are using customer-number 1400269
@@ -69,34 +69,22 @@ You will get back `200 OK` status code and the list of events. Note that every e
     "total-pages": 115,
     "items": [
         {
-            "event-id": 258242,
-            "creation-datetime": "2014-10-10T12:34:36.69",
-            "description": null,
-            "event-kind": "SecurtyEvent",
-            "uri": "http://localhost:62233/customer-event/v2.0/events/258242"
+            "event-id": "258242",
+            "coccurred-on": "2016-02-01T01:25:00",
+            "event-kind": "SecurtyEvent"
         },
         {
-            "event-id": 258220,
-            "creation-datetime": "2014-10-10T11:21:01.49",
-            "description": null,
-            "event-kind": "SecurtyEvent",
-            "uri": "http://localhost:62233/customer-event/v2.0/events/258220"
+            "event-id": "258220",
+            "occurred-on": "2016-02-01T01:25:00",
+            "event-kind": "SecurtyEvent"
         },
         ...
 		...
 		...
         {
-            "event-id": 256102,
-            "creation-datetime": "2014-10-07T14:38:22.197",
-            "description": null,
-            "event-kind": "SecurtyEvent",
-            "uri": "http://localhost:62233/customer-event/v2.0/events/256102"
-        }
-    ],
-    "navigations": [
-        {
-            "href": "http://localhost:62233/customer-event/v2.0/events?page-size=20&page-number=2&customer-number=1400269",
-            "rel": "next"
+            "event-id": "256102",
+            "occurred-on": "2016-02-01T01:25:00",
+            "event-kind": "SecurtyEvent"
         }
     ]
 }
@@ -107,7 +95,7 @@ You will get back `200 OK` status code and the list of events. Note that every e
 Using this API you're able to receive details about some event by its Id
 
 ```
-GET /customer-event/events/{event-id}
+GET /customer-event/events/{stream}/{event-id}
 ```
 
 For this example we are using event with id = 258242
@@ -121,43 +109,9 @@ You will get back `200 OK` status code and json representation with the details 
 
 ```json
 {
-    "event-id": 258242,
-    "creation-datetime": "2014-10-10T12:34:36.69",
-    "description": null,
-    "event-kind": "SecurtyEvent",
-    "event-data-xml": "<customer-login><customer-id>1400269</customer-id><event-id>a65ebbb2-5f23-42de-b0b2-b2362a03b392</event-id><occured-on>2014-10-10T12:34:28.203063+02:00</occured-on><user-id>8001186336</user-id><login-type>authorization-code</login-type><channel>mobile</channel></customer-login>",
-    "event-data-key-values": [
-        {
-            "event-data-xml-parent-key": "customer-login",
-            "event-data-xml-key": "customer-id",
-            "event-data-xml-value": "1400269"
-        },
-        {
-            "event-data-xml-parent-key": "customer-login",
-            "event-data-xml-key": "event-id",
-            "event-data-xml-value": "a65ebbb2-5f23-42de-b0b2-b2362a03b392"
-        },
-        {
-            "event-data-xml-parent-key": "customer-login",
-            "event-data-xml-key": "occured-on",
-            "event-data-xml-value": "2014-10-10T12:34:28.203063+02:00"
-        },
-        {
-            "event-data-xml-parent-key": "customer-login",
-            "event-data-xml-key": "user-id",
-            "event-data-xml-value": "8001186336"
-        },
-        {
-            "event-data-xml-parent-key": "customer-login",
-            "event-data-xml-key": "login-type",
-            "event-data-xml-value": "authorization-code"
-        },
-        {
-            "event-data-xml-parent-key": "customer-login",
-            "event-data-xml-key": "channel",
-            "event-data-xml-value": "mobile"
-        }
-    ]
+    "event-id": "256102",
+    "occurred-on": "2016-02-01T01:25:00",
+    "event-kind": "SecurtyEvent"
 }
 ```
 ###5. Get details about communication event
@@ -167,7 +121,7 @@ Using this request you're able to retrieve details about communication event.
 GET /customer-event/communication-events/{event-id}
 ```
 
-You will get back  `200 OK` status code and json representation with the details. 
+You will get back  `200 OK` status code and json representation with the details.
 
 ###6. Get details about social event
 Using this request you're able to retrieve details about communication event.
@@ -235,7 +189,7 @@ POST /customer-event/communication-events
 ```json
 {
   "customer-number": "1400269",
-  "workitem-id": "WI0000492929", 
+  "workitem-id": "WI0000492929",
   "description": "some description",
   "from": "Joe",
   "to": "Tom",

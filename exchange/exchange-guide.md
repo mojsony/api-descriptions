@@ -2,11 +2,11 @@
 visibility: internal
 ---
 
-<span class="icon"></span>Exchange API Guide 
+<span class="icon"></span>Exchange API Guide
 ======================
-Exchange API provides endpoints to initiate and track currency exchange orders, get one-time tailored offers for specific exchange deals and get latest and historic exchange rates and lists for reference and calculations. 
-   
-   
+Exchange API provides endpoints to initiate and track currency exchange orders, get one-time tailored offers for specific exchange deals and get latest and historic exchange rates and lists for reference and calculations.
+
+
 > ##THIS API GUIDE IS UNDER CONSTRUCTION. COME BACK SOON.
 
 Key Resources
@@ -17,7 +17,7 @@ Resource | Description
 ----------- |-----------
 *orders*  | Exchange orders to buy or sell foreign currency
 *offers* | One time offers of tailored rates for specific deals based on amount and customer standing in bank
-*rates* | Currency exchange rates 
+*rates* | Currency exchange rates
 *lists* | Latest and historical lists of exchange rates published by bank and central bank
 
 
@@ -39,8 +39,8 @@ API | URL Root
 --------|---------
 Exchange | `https://bankapi.net/v1/exchange`
 
-> **Note**: Throughout this documentation, only partial syntax such as: 
-`GET /transactions` is used for the sake of brevity. 
+> **Note**: Throughout this documentation, only partial syntax such as:
+`GET /transactions` is used for the sake of brevity.
 Prefix the path with the correct root URL in order to obtain the full resource path or URL.
 
 
@@ -128,18 +128,18 @@ You will get back `200 OK` status code and json representation with a list of tr
 													"lat":"",
 													"lon":"",
 													"mapped-address":""
-													},
+													}},
 													{"source-account":{"currency-code":"EUR","account-number":"115-0000000050378-56"},
 													"destination-account":{"currency-code":"RSD",
 													"account-number":"115-0000000050378-56"},
 													"currency":{"code":"EUR","amount":0.02},
 													"client-id":"1402682"
-													
+												  }
     ...
-    
+  ]
+
+}
 ```
-
-
 
 ###4. Get transaction details
 
@@ -190,7 +190,7 @@ You will get back `200 OK` status code and json representation with transaction 
 
 ###5. Get curency exchange rates history
 
-User can get curency exchange rates history. 
+User can get curency exchange rates history.
 
 ```
 GET /rates/history
@@ -212,7 +212,7 @@ You will get back `200 OK` status code and json representation with rates histor
 					"page-number":0,
 					"total-pages":0,
 					"items":[
-							
+
 							]
 				}
 			]
@@ -309,5 +309,5 @@ You will get back `200 OK` status code and json representation with details of e
 ```
 
 
-**Congratulations!** You have completed getting started tutorial on most common steps when working with Exchange API. 
+**Congratulations!** You have completed getting started tutorial on most common steps when working with Exchange API.
 To learn more look at the reference documentation for [available operations](swagger-ui).

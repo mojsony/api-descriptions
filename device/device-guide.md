@@ -15,7 +15,7 @@ Device API has only two top-level collection resources: `owned-devices` and `iss
 Resource | Description
 ----------- |-----------
 *owned-devices*  | Devices owned by customer such as mobile phone, smart watch or tablet. Devices are registered in order to enhance security during authorization checking and to enable push notifications.
-*issued-devices* | Devices issued by bank such as payment cards and hardware tokens. Besides basic details, resource exposes status of the device. 
+*issued-devices* | Devices issued by bank such as payment cards and hardware tokens. Besides basic details, resource exposes status of the device.
 
 
 Getting started tutorial
@@ -35,8 +35,8 @@ API | URL Root
 --------|---------
 Device  | `https://bankapi.net/v1/device`
 
-> **Note**: Throughout this documentation, only partial syntax such as: 
-`GET /devices/{imei}` is used for the sake of brevity. 
+> **Note**: Throughout this documentation, only partial syntax such as:
+`GET /devices/{imei}` is used for the sake of brevity.
 Prefix the path with the correct root URL in order to obtain the full resource path or URL.
 
 ###3. Register Device
@@ -46,14 +46,14 @@ POST /owned-devices
 ```
 ```json
 {
-  "external-device-identifier": "990000862471854",
+  "external-device-id": "990000862471854",
   "operating-system": "iOS 9.x",
   "nickname": "My Phone",
   "brand-name": "Apple IPhone",
   "model-name": "IP-6S"
 }
 ```
-You will get back `200 OK` status code device IMEI and device status. 
+You will get back `200 OK` status code device IMEI and device status.
 
 ```json
 {
@@ -65,23 +65,30 @@ You will get back `200 OK` status code device IMEI and device status.
 ###4. Retreive details for registred device
 Now lets preview registred device from step 3:
 ```
-GET /devices/990000862471854
+GET /owned-devices/990000862471854
 ```
 
-You will get back `200 OK` status code and json representation for fetched request. 
-```
+You will get back `200 OK` status code and json representation for fetched request.
+
 ```json
 {
-      "imei": "990000862471854"
-      "customer-id": "MIGR00002"
-      "status": "active"
-      "nickname": "My Phone"
-      "operating-system": "iOS 9.x"
-      "brand-name": "Apple IPhone",
-      "model-name": "IP-6S"
-      "installation-id": 
-      "push-id": 
-      "push-expiration-date": 
+  "device-id": "2333423",
+  "external-device-id": "2342356345242",
+  "external-device-id-kind": "imei",
+  "owner-id": "fsdsf23442",
+  "capabilities": {
+    "items": [
+       "hmac",
+       "pki",
+       "sms"]
+    },
+  "status": "active",
+  "nickname": "Nickname1",
+  "operating-system": "Linux",
+  "manufacturer": "manufacturer1",
+  "model": "m1",
+  "push-registered": true,
+  "push-handle-expiration": "2016-02-01T01:25:00"
 }
 ```
 
@@ -91,7 +98,7 @@ Let's unregister device from step 4:
 POST /devices/990000862471854/unregister
 ```
 
-You will get back `202 OK` status code. 
+You will get back `202 OK` status code.
 
 
 **Congratulations!** You have completed getting started tutorial on most common steps when working with Device API. To learn more look at the reference documentation for [available operations](swagger-ui).

@@ -7,7 +7,7 @@ visibility: internal
 Fraud API enables to prevent fraud activitis according to legal requirements of finanacial institution. With Fraud API you can:
         - Check client AML status
         - Check whether client is on banks black list
-   
+
 Key Resources
 -------------
 Fraud API has two top level collection resources: aml , black lists
@@ -34,29 +34,29 @@ API | URL Root
 --------|---------
 Fraud  | `https://bankapi.net/v1/fraud`
 
-> **Note**: Throughout this documentation, only partial syntax such as: 
-`GET /aml-status` is used for the sake of brevity. 
+> **Note**: Throughout this documentation, only partial syntax such as:
+`GET /aml-status` is used for the sake of brevity.
 Prefix the path with the correct root URL in order to obtain the full resource path or URL.
 
 ###3. Check customer AML status
 Let's assume that you want to check client aml risk assessment. You can do that at following endpoint:
 ```
-GET /aml/status?personal-identification-number=0607983130013&first-name=Branislav&last-name=Vuković
+GET /aml/check?identification-number=0607983130013&first-name=Branislav&last-name=Vukovic
 ```
-You will get back `200 OK` status code and json representation for fetched request. 
+You will get back `200 OK` status code and json representation for fetched request.
 
 ```json
 {
-  "rating-value": "0",
+  "rating": "0",
   "reliability": "low-risk"
 }
 ```
 ###4. Check whether client is on black lists
 Let's assume that you want to check whether client is on any black list and if so what is the percentage of the match. You can do that at following endpoint
 ```
-GET/black-lists/status?personal-identification-number=0607983130013&first-name=Branislav&last-name=Vuković
+GET /blacklists/check?identification-number=0607983130013&first-name=Branislav&last-name=Vukovic
 ```
-You will get back `200 OK` status code and json representation for fetched request. 
+You will get back `200 OK` status code and json representation for fetched request.
 ```json
 {
   "items": [

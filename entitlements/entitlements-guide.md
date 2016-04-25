@@ -19,7 +19,7 @@ Resource | Description
 *mandates* | Entitlements that allow mandate holders to access to services within arrangements
 *limit-balances/card-limits* | Remaining and used balance of limits set for payment cards
 *limit-balances/account-limits* | Remaining and used balance of limits set for account arrangements
-*limit-balances/online-limits* | Remaining and used balance of limits set for online access 
+*limit-balances/online-limits* | Remaining and used balance of limits set for online access
 
 Getting started tutorial
 ---------------
@@ -40,8 +40,8 @@ API | URL Root
 --------|---------
 Action Authoirization | `https://bankapi.net/...`
 
-> **Note**: Throughout this documentation, only partial syntax such as: 
-`GET /dms/documents/{id}` is used for the sake of brevity. 
+> **Note**: Throughout this documentation, only partial syntax such as:
+`GET /dms/documents/{id}` is used for the sake of brevity.
 Prefix the path with the correct root URL in order to obtain the full resource path or URL.
 
 ###3. Get mandates list for customer
@@ -144,7 +144,8 @@ You will get back `200 OK` status code and json representation with a list of ma
       "registration-status": null,
       "service-code": "bill-list"
     },
-
+]
+}
 ```
 
 ###4. Check authorization
@@ -156,7 +157,7 @@ GET authorization/check/
 You will get back `200 OK` status code and json representation with a list available authentication types.
 
 ```json
-To Do 
+To Do
 ```
 
 ###4. Initiate new authorization
@@ -168,7 +169,7 @@ GET authorization/intiate/
 You will get back `200 OK` status code and json representation with authorization number.
 
 ```json
-To Do 
+To Do
 ```
 
 **Congratulations!** You have completed getting started tutorial on most common steps when working with Entitlements API. To learn more look at the reference documentation for [available operations](swagger-ui).

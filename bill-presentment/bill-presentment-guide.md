@@ -2,11 +2,11 @@
 visibility: internal
 ---
 
-Bill Presentment API 
+Bill Presentment API
 ======================
 Bill Presentment API presents info about bill issuers, subscriptions and bills. It also provides way to subscribe and unsubscribe for bills at bill issuers, and to snooze bills.  
 
-  
+
 Key Resources
 -------------
 Bill Presentment has three top level collection resources: bills, issuers and subscriptions.
@@ -16,7 +16,7 @@ Resource        | Description
 *bills*         | Provides way to view info about bills and to snooze particular bills. It is usefull because it is possible to filter list of own bills by search criteria: name, address and/or status.
 *issuers*       | Serves for gettin info about bills issuers.
 *subscriptions* | Allows to view info about subscriptions, subscribe for new and unsubscribe from old ones at bills issuers. It is usefull when it is needed to pay bills from the account or through standing orders.
- 
+
 Getting started tutorial
 ---------------
 To get started follow these steps:
@@ -37,8 +37,8 @@ API | URL Root
 --------|---------
 Bill Presentment | `https://bankapi.net/bill-presentment/v2`
 
-> **Note**: Throughout this documentation, only partial syntax such as: 
-`GET /bills/{id}` is used for the sake of brevity. 
+> **Note**: Throughout this documentation, only partial syntax such as:
+`GET /bills/{id}` is used for the sake of brevity.
 Prefix the path with the correct root URL in order to obtain the full resource path or URL.
 
 ###3. Get bill issuers list
@@ -59,22 +59,17 @@ You will get back `200 OK` status code and json representation with a bill issue
     {
       "issuer-id": "36",
       "group-id": "6",
-      "issuer": 
-      {
-        "name": "Electro Suplies Company",
-        "address": "Nemanjina 33",
-        "city": "Beograd"
-      }
+      "name": "Electro Suplies Company",
+      "address": "Nemanjina 33",
+      "city": "Beograd"
      },
     {
       "issuer-id": "30",
       "group-id": "6",
-      "issuer": 
-      {
-        "name": "TELENOR",
-        "address": "Omladinskih brigada 90",
-        "city": "Novi Beograd"
-      }  
+      "name": "TELENOR",
+      "address": "Omladinskih brigada 90",
+      "city": "Novi Beograd"
+    }  
         ...
              ]
 }
@@ -94,15 +89,12 @@ You will get back `200 OK` status code and json representation of bill issuer de
 {
   "issuer-id": "36",
   "group-id": "6",
-  "issuer": 
-            {
-                "name": "Electro Supply company",
-                "address": "Nemanjina 33",
-                "city": "Beograd"
-                ...
-            }
+  "name": "Electro Supply company",
+  "address": "Nemanjina 33",
+  "city": "Beograd"
+  ...
 }
-  
+
 ```
 
 ###5. Get bill list
@@ -110,29 +102,20 @@ You will get back `200 OK` status code and json representation of bill issuer de
 If You already subscribed for bills at some issuer, You can view list of bills that are issued to You when they received for payment. It is usefull when You want to view all Your bills.
 
 ```
-GET /bills
+GET /me/bills
 
 ```
 You will get back `200 OK` status code and json representation of bill list. Here exists only one bill in the example.
 
 ```json
 {
-  "bills-payment-amount-sum": 1202,
-  "bills-fee-sum": 0,
   "total-count": 1,
   "page-size": 10,
   "page-number": 1,
   "total-pages": 1,
   "items": [
     {
-      "bill-id": "9990015521100120150424",
-      "nickname": "MyService",
-      "bill-issuer": {
-        "name": "TELENOR",
-        "address": "Omladinskih brigada 90",
-        "city": "Novi Beograd",
-        ...
-                    }
+      "bill-id": "9990015521100120150424"
      },
      ...
            ]
@@ -151,17 +134,19 @@ You will get back `200 OK` status code and json representation with a bill detai
 ```json
 {
   "bill-id": "9990015521100120150424",
-  "nickname": "MyService",
-  "bill-issuer": {
-    "name": "TELENOR",
-    "address": "Omladinskih brigada 90",
-    "city": "Novi Beograd",
-    "country-code": "",
-    ...
-                  }
+  "subscription-id": "771771912313",
+  "amount-due": {
+    "amount": 4327.50,
+    "code": "RSD"
+  },
+  "payment-status": "not-paid",
+  "invoicing-date": "2015-11-03T00:00:00",
+  "due-date": "2015-11-10T00:00:00",
+  "bill-presentation-url": "http://www.mybank.rs/mybill?id=9990015520900120151103"
+
    ...
 }
 ```
 
-**Congratulations!** You have completed getting started tutorial on most common steps when working with Bill Presentment API. 
+**Congratulations!** You have completed getting started tutorial on most common steps when working with Bill Presentment API.
 To learn more look at the reference documentation for [available operations](swagger-ui).

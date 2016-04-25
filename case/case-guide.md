@@ -24,14 +24,14 @@ API | URL Root
 Case | `https://bankapi.net/v1/case`
 
 
-> **Note**: Throughout this documentation, only partial syntax such as: 
-`GET /cases` is used for the sake of brevity. 
+> **Note**: Throughout this documentation, only partial syntax such as:
+`GET /cases` is used for the sake of brevity.
 Prefix the path with the correct root URL in order to obtain the full resource path or URL.
 
 
 ###3. Get list of all events
 Operation returns list of cases with basic details like registration date current lifecycle state and the name and id of the agent responsible for handling the case. When used without optional parameters all active cases are returned.
-To get the list of events you must get To create current account request 
+To get the list of events you must get To create current account request
 
 ```
 GET /cases
@@ -45,65 +45,53 @@ You will get back `200 OK` status code and the list of events. Note that every e
     "page-size": 20,
     "page-number": 1,
     "total-pages": 73,
-    "Items": [
+    "items": [
         {
-            "case-id": "WI0000497288",
-            "case-type": "Complaint",
-            "case-class": "Complaint",
-            "registered-by-id": null,
-            "registered-by-name": "Stevan.Kostoski",
-            "updated-by-id": null,
-            "updated-by-name": "Stevan.Kostoski",
-            "customer-id": "1104977710344",
-            "customer-name": "Ime237069 Prezime23706",
-            "customer-ident-num": null,
-            "registration-date": "2015-11-13T16:26:24.853",
-            "state": "Accepted",
-            "resolution": null,
-            "importance": "Standard",
-            "title": null,
-            "details": null,
-            "arrangement-num": null,
+            "case-number": "WI0000497288",
+            "kind": "complaint",
+            "customer-number": "1104977710344",
+            "customer-name": "Marko Petrovic",
+            "status": "accepted",
+            "resolution": "Resolution1",
+            "importance": "low",
+            "title": "Title1",
+            "details": "Details1",
+            "arrangement-number": "2344",
+            "created": "2016-02-01T01:25:00",
+            "status-changed": "2016-02-01T01:55:00",
+            "last-modified": "2016-03-01T01:25:00",
             "attachments": []
         },
         {
-            "case-id": "WI0000497285",
-            "case-type": "Complaint",
-            "case-class": "Complaint",
-            "registered-by-id": null,
-            "registered-by-name": "Stevan.Kostoski",
-            "updated-by-id": null,
-            "updated-by-name": "Stevan.Kostoski",
-            "customer-id": "1104977710344",
-            "customer-name": "Ime237069 Prezime23706",
-            "customer-ident-num": null,
-            "registration-date": "2015-11-13T13:30:40.39",
-            "state": "Accepted",
-            "resolution": null,
-            "importance": "Standard",
-            "title": null,
-            "details": null,
-            "arrangement-num": null,
+            "case-number": "WI0000497285",
+            "kind": "complaint",
+            "customer-number": "1104977710344",
+            "customer-name": "Stefan Rasic",
+            "status": "accepted",
+            "resolution": "Resolution2",
+            "importance": "high",
+            "title": "Title2",
+            "details": "Details2",
+            "arrangement-number": "24256",
+            "created": "2016-02-01T01:25:00",
+            "status-changed": "2016-02-01T01:55:00",
+            "last-modified": "2016-03-01T01:25:00",
             "attachments": []
         },
         {
-            "case-id": "WI0000497284",
-            "case-type": "Complaint",
-            "case-class": "Complaint",
-            "registered-by-id": null,
-            "registered-by-name": "Stevan.Kostoski",
-            "updated-by-id": null,
-            "updated-by-name": "Stevan.Kostoski",
-            "customer-id": "1104977710344",
-            "customer-name": "Ime237069 Prezime23706",
-            "customer-ident-num": null,
-            "registration-date": "2015-11-13T13:07:06.62",
-            "state": "Accepted",
-            "resolution": null,
-            "importance": "Standard",
-            "title": null,
-            "details": null,
-            "arrangement-num": null,
+            "case-number": "WI0000497284",
+            "kind": "complaint",
+            "customer-number": "1104977710344",
+            "customer-name": "David Tomic",
+            "status": "accepted",
+            "resolution": "Resolution3",
+            "importance": "medium",
+            "title": "Title3",
+            "details": "Details3",
+            "arrangement-number": "45432",
+            "created": "2016-02-01T01:25:00",
+            "status-changed": "2016-02-01T01:55:00",
+            "last-modified": "2016-03-01T01:25:00",
             "attachments": []
         }        
     ]
@@ -123,24 +111,20 @@ You will get back `200 OK` status code and json representation with the details 
 
 ```json
 {
-    "case-id": "WI0000497282",
-    "case-type": "Complaint",
-    "case-class": "Complaint",
-    "registered-by-id": null,
-    "registered-by-name": "Stevan.Kostoski",
-    "updated-by-id": null,
-    "updated-by-name": "Stevan.Kostoski",
-    "customer-id": "1104977710344",
-    "customer-name": "Ime237069 Prezime23706",
-    "customer-ident-num": null,
-    "registration-date": "2015-11-13T11:14:17.697",
-    "state": "Resolved",
-    "resolution": "tetete",
-    "importance": "Standard",
-    "title": null,
-    "details": "Menja status predmeta",
-    "arrangement-num": null,
-    "attachments": []
+  "case-number": "WI0000497284",
+  "kind": "complaint",
+  "customer-number": "1104977710344",
+  "customer-name": "David Tomic",
+  "status": "accepted",
+  "resolution": "Resolution1",
+  "importance": "medium",
+  "title": "Title1",
+  "details": "Details1",
+  "arrangement-number": "34534",
+  "created": "2016-02-01T01:25:00",
+  "status-changed": "2016-02-01T01:55:00",
+  "last-modified": "2016-03-01T01:25:00",
+  "attachments": []
 }
 ```
 ###5. Get history for some customer case
@@ -150,7 +134,7 @@ Operation returns list of history changes associated with the specific case.
 GET /cases/WI0000497282/history
 ```
 
-You will get back  `200 OK` status code and json representation with the details. 
+You will get back  `200 OK` status code and json representation with the details.
 
 ```json
 {
@@ -184,26 +168,21 @@ You will get back  `200 OK` status code and json representation with the details
 Operation opens new customer complaint. Operation returns complaint identifier.
 
 ```
-POST /complaints
+POST /cases/complaints
 ```
 
 ```json
 {
-  "case-id": "string",
-  "registered-by-id": "string",
-  "registered-by-name": "string",
-  "customer-id": "string",
-  "customer-name": "string",
-  "customer-ident-num": "string",
-  "importance": "Low",
-  "details": "string",
-  "arrangement-num": "string",
-  "comm-reason": "string",
-  "comm-reply-address": "string",
-  "comm-reply-address-code": "string",
-  "comm-type": "Email",
-  "case-type": "string",
-  "rel-case-id": "string"
+  "case-id": "23423423",
+  "customer-number": "3456547",
+  "importance": "low",
+  "details": "Details1",
+  "arrangement-number": "24721",
+  "title": "Title1",
+  "reply-address": "Resavska br.3, Beograd",
+  "reply-address-code": "11000",
+  "case-topic": "Topic",
+  "related-case-id": "string"
 }
 ```
 
@@ -211,8 +190,7 @@ You will get back  `201 Created` status code and json representation with the de
 
 ```json
 {
-  "id": "string",
-  "created-record-status": "string"
+  "id": "string"
 }
 ```
 
@@ -220,26 +198,17 @@ You will get back  `201 Created` status code and json representation with the de
 Operation opens new customer service request. Operation returns service-request identifier.
 
 ```
-POST /service-requests
+POST /cases/service-requests
 ```
 
 ```json
 {
-  "case-id": "string",
-  "registered-by-id": "string",
-  "registered-by-name": "string",
-  "customer-id": "string",
-  "customer-name": "string",
-  "customer-ident-num": "string",
+  "case-number": "345467",
+  "customer-number": "42342",
   "importance": "Low",
-  "details": "string",
-  "arrangement-num": "string",
-  "comm-reason": "string",
-  "comm-reply-address": "string",
-  "comm-reply-address-code": "string",
-  "comm-type": "Email",
-  "case-type": "string",
-  "rel-case-id": "string"
+  "details": "Details",
+  "arrangement-number": "string",
+  "title": "Title"
 }
 ```
 
@@ -247,8 +216,7 @@ You will get back  `201 Created` status code and json representation with the de
 
 ```json
 {
-  "id": "string",
-  "created-record-status": "string"
+  "id": "string"
 }
 ```
 
@@ -256,14 +224,14 @@ You will get back  `201 Created` status code and json representation with the de
 Operation opens new customer callback-request. Operation returns callback-request identifier.
 
 ```
-POST /callback-requests
+POST /cases/callback-requests
 ```
 
 ```json
 {
-  "callback-request-time": "2015-12-22T13:33:17.588Z",
+  "callback-time": "2016-02-01T01:25:00 ",
   "categorry": "Cards",
-  "party-id": "string"
+  "customer-number": "23424"
 }
 ```
 
@@ -271,8 +239,7 @@ You will get back  `201 Created` status code and json representation with the de
 
 ```json
 {
-  "id": "string",
-  "created-record-status": "string"
+  "id": "string"
 }
 ```
 
@@ -280,15 +247,14 @@ You will get back  `201 Created` status code and json representation with the de
 Operation attach document/file to the existing Case
 
 ```
-POST /cases/{case-id}/attachments
+POST /cases/{case-number}/attachments
 ```
 
 ```json
 {
-  "case-id": "string",
-  "file-id": "string",
-  "file-name": "string",
-  "customer-id": "string"
+  "attachment-url": "https://www.atturl.com/pom?v=8nm3sdfwGASryA",
+  "attachment-id": "2342342",
+  "document-type": "pdf"
 }
 ```
 
@@ -296,8 +262,7 @@ You will get back  `200 OK` status code and json representation with the details
 
 ```json
 {
-  "id": "string",
-  "created-record-status": "string"
+  "id": "string"
 }
 ```
 

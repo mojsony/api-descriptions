@@ -55,55 +55,51 @@ GET /communications
 You will get back `200 OK` status code and json representation with a list of communication items.
 ```json
 [
-  {
-      "communication-id": null,
+      {
+      "communication-id": "234234",
       "contact": {
-        "usage": null,
-        "kind": "",
+        "usage": "assistant",
+        "kind": "email",
         "details": "",
         "contact-preference": {
-          "preferred-language": null,
+          "preferred-language": "English",
           "opt-ins": null,
           "opt-outs": null
         }
       },
-      "customer-number": null,
-      "date-created": "2015-12-28T08:29:38.6794345+01:00",
+      "customer-number": "23525",
+      "date-created": "2016-02-01T01:25:00",
       "status": "pending",
-      "sent": "2015-12-30T08:29:38.6794345+01:00",
-      "expires": "2016-01-28T08:29:38.6794345+01:00",
+      "sent": "2016-02-01T01:35:00",
+      "expires": "2016-03-01T01:25:00",
       "data": "",
-      "message-type": null,
-      "priority": null,
-      "reference-number": null,
+      "message-kind": "kind",
+      "priority": "high",
       "retry-count": 0,
-      "message": null,
-      "conversation-type": null
+      "message": null
     },
     {
-      "communication-id": null,
+      "communication-id": "78686",
       "contact": {
-        "usage": null,
-        "kind": "",
+        "usage": "home",
+        "kind": "sms",
         "details": "",
         "contact-preference": {
-          "preferred-language": null,
+          "preferred-language": "German",
           "opt-ins": null,
           "opt-outs": null
         }
       },
-      "customer-number": null,
-      "date-created": "2015-12-28T08:29:38.6794345+01:00",
+      "customer-number": "43536",
+      "date-created": "2016-02-01T01:25:00",
       "status": "pending",
-      "sent": "2015-12-30T08:29:38.6794345+01:00",
-      "expires": "2016-01-28T08:29:38.6794345+01:00",
+      "sent": "2016-02-01T01:35:00",
+      "expires": "2016-03-01T01:25:00",
       "data": "",
-      "message-type": null,
-      "priority": null,
-      "reference-number": null,
+      "message-kind": "kind",
+      "priority": "low",
       "retry-count": 0,
-      "message": null,
-      "conversation-type": null
+      "message": null
     }
 ]
 ```
@@ -119,29 +115,27 @@ You will get back `200 OK` status code and json representation with a communicat
 
 ```json
 {
-  "communication-id": null,
+  "communication-id": "78686",
   "contact": {
-    "usage": null,
-    "kind": "",
+    "usage": "home",
+    "kind": "sms",
     "details": "",
     "contact-preference": {
-      "preferred-language": null,
+      "preferred-language": "German",
       "opt-ins": null,
       "opt-outs": null
     }
   },
-  "customer-number": null,
-  "date-created": "2015-12-28T10:21:18.3451808+01:00",
+  "customer-number": "43536",
+  "date-created": "2016-02-01T01:25:00",
   "status": "pending",
-  "sent": "2015-12-30T10:21:18.3451808+01:00",
-  "expires": "2016-01-28T10:21:18.3451808+01:00",
+  "sent": "2016-02-01T01:35:00",
+  "expires": "2016-03-01T01:25:00",
   "data": "",
-  "message-type": null,
-  "priority": null,
-  "reference-number": null,
-  "retry-count": 1,
-  "message": null,
-  "conversation-type": null
+  "message-kind": "kind",
+  "priority": "low",
+  "retry-count": 0,
+  "message": null
 }
 ```
 

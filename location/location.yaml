@@ -3,8 +3,8 @@ x-asee-visibility: public
 host: bankapi.net
 basePath: /v1/location
 schemes:
-  - http
   - https
+  - http
 consumes:
   - application/json
 produces:
@@ -383,12 +383,12 @@ definitions:
         $ref: "#/definitions/address"
     type: object
     example:
-      postal-address-code: 191216
+      postal-address-code: "191216"
       address:
         formatted: Milutina Milankovića 19g, 11070 Novi Beograd, RS
         street: Milutina Milankovića
         street-number: 19g
-        postal-code: 11070
+        postal-code: "11070"
         locality: Novi Beograd
         country: RS
   address:
@@ -455,14 +455,14 @@ definitions:
       items:
       - id: 40733
         name: Airport City
-        type: ATM
-        capabilities: [cash-withdrawal]
+        kind: atm
+        services: cash-deposit
         address:
           text: Omladinskih brigada 90
           street: Omladinskih brigada
           building: '90'
-          door:
-          floor:
+          door: 11
+          floor: 4
           city: Beograd
           place: '11070'
           place-name: Novi Beograd
@@ -471,23 +471,23 @@ definitions:
           location:
             latitude: 44.8112911
             longitude: 20.398722799999973
-        working-hours:
+        availability:
         - period-description: Radnim danom
           working-time: 08-16h
         - period-description: Subotom
           working-time: 09-13h
-        phone-number:
-        email:
+        phone-number: "+38111456343"
+        email: branch4@bank.com
       - id: 41737
         name: Banjica
-        type: ATM
-        capabilities: [cash-withdrawal]
+        kind: branch
+        services: cash-withdrawal
         address:
           text: Paunova 24
           street: Paunova
           building: '24'
-          door:
-          floor:
+          door: 12
+          floor: 4
           city: Beograd
           place: '11010'
           place-name: Beograd Vozdovac
@@ -500,18 +500,18 @@ definitions:
         working-hours:
         - period-description: Radnim danom
           working-time: 08-17h
-        phone-number:
-        email:
+        phone-number: "+38111454543"
+        email: branch3@bank.com
       - id: 40734
         name: Banovo brdo
-        type: ATM
-        capabilities: [cash-withdrawal]
+        kind: branch
+        services: cash-withdrawal
         address:
           text: Požeška 108a
           street: Požeška
           building: 108a
-          door:
-          floor:
+          door: 14
+          floor: 5
           city: Beograd
           place: '11030'
           place-name: Beograd Cukarica
@@ -520,13 +520,13 @@ definitions:
           location:
             latitude: 44.773886
             longitude: 20.413765
-        working-hours:
-        phone-number:
-        email:
+        availability: 08-17h
+        phone-number: "+38111456673"
+        email: branch2@bank.com
       - id: 10073
         name: BAPOKanal0
-        type: Branch
-        capabilities: [cash-deposit,cash-withdrawal]
+        kind: atm
+        services: cash-deposit
         address:
           text: Bulevar Mihajla Pupina 1
           street: Bulevar Mihajla Pupina
@@ -547,7 +547,7 @@ definitions:
               working-time: 08-16h
             - period-description: Subotom
               working-time: 09-13h
-        phone-number: +(381) 011 123-4567
+        phone-number: "+(381) 011 123-4567"
         email: branch1@bank.com
   place:
     type: object
@@ -627,6 +627,32 @@ definitions:
         description: Facility e-mail
         type: string
         readOnly: false
+    example:
+      id: 40733
+      name: Airport City
+      kind: atm
+      services: facility-services
+      address:
+        text: Omladinskih brigada 90
+        street: Omladinskih brigada
+        building: '90'
+        door: 10
+        floor: 5
+        city: Beograd
+        place: '11070'
+        place-name: Novi Beograd
+        country-code: RS
+        country-name: SRBIJA
+      coordinates:
+        latitude: 44.8112911
+        longitude: 20.398722799999973
+      availability:
+      - period-description: Radnim danom
+        working-time: 08-16h
+      - period-description: Subotom
+        working-time: 09-13h
+      phone-number: "+38111453321"
+      email: airportcity@gmail.rs
 
   street-list:
     description: List of street results
@@ -678,25 +704,25 @@ definitions:
       items:
       - code: '800015'
         name: ADA
-        translation-name:
+        translation-name: Name1
         postal-code: '24430'
         gps-location:
         place-type: City
         administrative-division-name: ADA
         administrative-division-code: '80012'
-        ship-to-order-flag:
+        ship-to-order-flag: false
       - code: '804916'
         name: ADAŠEVCI
-        translation-name:
+        translation-name: Name2
         postal-code: '22240'
         gps-location:
         place-type: City
         administrative-division-name: ŠID
         administrative-division-code: '80497'
-        ship-to-order-flag:
+        ship-to-order-flag: true
       - code: '909394'
         name: ADE
-        translation-name:
+        translation-name: Name3
         postal-code: '38211'
         gps-location:
         place-type: Town
@@ -766,7 +792,7 @@ definitions:
         type: string
     example:
       literal: billing
-      code: 2
+      code: "2"
       description: Contact may be used to provide party with details of their liabilities to the bank
   classification-list:
     description: List of classification schemas
@@ -826,13 +852,13 @@ definitions:
       description: List of possible uses of contact in business context. Commonly used filing purposes are billing, marketing
       values:
         - literal: billing
-          code: 1
+          code: "1"
           description: Contact may be used to provide party with details of their liabilities to the bank
         - literal: marketing
-          code: 2
+          code: "2"
           description: Contact may be used to provide party with details of offers
         - literal: reporting
-          code: 3
+          code: "3"
           description: Contact may be used to provide party with reports on their account
   paged-list:
     description: List with support for paging

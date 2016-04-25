@@ -105,17 +105,17 @@ paths:
           type: array
           items:
             type: string
+            enum:
+              - available
+              - current
+              - expected
+              - blocked
+              - outstanding
+              - advance
+              - opening
+              - closing
           in: query
           collectionFormat: csv
-          enum:
-            - available
-            - current
-            - expected
-            - blocked
-            - outstanding
-            - advance
-            - opening
-            - closing
         - $ref: "#/parameters/accounts-param"
         - $ref: "#/parameters/sync-timestamp-param"
       responses:

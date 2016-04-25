@@ -55,7 +55,7 @@ POST /applications/deposit-openings
   "customer-number": "1400054",
   "product-code": "TMCY_0001",
   "requested-account-number": "33333333333333",
-  "campaign-id": "",
+  "campaign-code": "",
   "signing-option": "branch"
 }
 ```
@@ -90,17 +90,14 @@ You will get back `200 OK` status code and json representation of created curren
     "customer-name": "Milutin Cvetkovic",
     "product-code": "TMCY_0001",
     "product-name": "Multivalutni rn - PAKET 1",
-    "created": "2015-12-10T10:16:56.8807659+01:00",
-    "request-date": "2015-12-10T10:16:56.8807659+01:00",
-    "expiration-date": "2015-22-10T10:16:56.8807659+01:00",
-    "status-changed": "2015-12-10T10:16:56.8807659+01:00",
-    "last-modified ": "2015-12-10T10:16:56.8807659+01:00",
+    "created": "2016-02-01T01:25:00",
+    "request-date": "2016-02-01T03:35:00",
+    "expiration-date": "2017-02-01T01:25:00",
+    "status-changed": "2016-02-01T01:55:00",
+    "last-modified ": "2016-02-01T20:25:00",
     "created-by-name": "Biljana Davidovic",
     "comments": "Novi racun za klijenta",
-    "workitem-phase": "",
-    "primary-currency": "RSD",
-    "request-date": "2015-12-10T10:16:56.8807659+01:00",
-    "requested-account-number": "33333333333333"
+    "workitem-phase": ""
   }
 ]
 ```
@@ -124,19 +121,16 @@ You will get back  `200 OK` status code and json representation with a list of p
       "customer-name": "Milutin Cvetkovic",
       "product-code": "TMCY_0001",
       "product-name": "Multivalutni rn - PAKET 1",
-      "created": "2015-12-10T10:16:56.8807659+01:00",
-      "request-date": "2015-12-10T10:16:56.8807659+01:00",
-      "expiration-date": "2015-22-10T10:16:56.8807659+01:00",
-      "status-changed": "2015-12-10T10:16:56.8807659+01:00",
-      "last-modified ": "2015-12-10T10:16:56.8807659+01:00",
+      "created": "2016-02-01T01:25:00",
+      "request-date": "2016-02-01T03:35:00",
+      "expiration-date": "2017-02-01T01:25:00",
+      "status-changed": "2016-02-01T01:55:00",
+      "last-modified ": "2016-02-01T20:25:00",
       "created-by-name": "Biljana Davidovic",
       "comments": "Novi racun za klijenta",
-      "workitem-phase": "",
-      "primary-currency": "RSD",
-      "request-date": "2015-12-10T10:16:56.8807659+01:00",
-      "requested-account-number": "33333333333333"
+      "workitem-phase": ""
   }
-    }
+
   ],
   "total-count": 1,
   "page-size": 10,

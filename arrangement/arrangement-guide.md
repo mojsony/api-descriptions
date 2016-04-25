@@ -65,7 +65,7 @@ specified by party-role-param.
 You can list arrangements at following endpoint:
 
 ```
-GET /arrangements
+GET /arrangements?customer-id=432872
 ```
 
 You will receive `200 OK` status code and json representation with a list
@@ -97,7 +97,7 @@ number. We will use include-param to include party-role and
 arrangement-account-info subresources (under parties and accounts properties):
 
 ```
-GET /arrangements/0042201082794?include=parties, accounts
+GET /arrangements/0042201082794?include=parties,accounts
 ```
 
 You will receive `200 OK` status code and json representation with

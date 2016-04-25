@@ -4,21 +4,21 @@ visibility: internal
 
 <span class="icon"></span>Dialog API Guide
 ======================
-Dialog API provides various methods for 
+Dialog API provides various methods for
 
 Key Resources
 -------------
-Dialog API has nine top level collection resources: Analitics controller, Application storage controller, Configuration controller, FAQ controller, Localization controller, 
+Dialog API has nine top level collection resources: Analitics controller, Application storage controller, Configuration controller, FAQ controller, Localization controller,
 Orchestration controller, Tips controller, UI controller, UIFlow controller.
 
 Resource | Description
 ----------- |-----------
 *application storage* | Contains CRUD operations for values that are stored in database.
 *configuration* | Channel applications configuration data
-*FAQ* | (FAQ) Frequently Asked Questions 
+*FAQ* | (FAQ) Frequently Asked Questions
 *Localization* | Repository of localized values
 *orchestration* | Presents more complex scenarios for testing several methods at once.
-*tips* | Tips and tricks for 
+*tips* | Tips and tricks for
 *UI* | Definition of UI (pages, zones, part)
 
 Getting started tutorial
@@ -39,8 +39,8 @@ API | URL Root
 --------|---------
 Dialog | `https://bankapi.net/v1/dialog`
 
-> **Note**: Throughout this documentation, only partial syntax such as: 
-`GET /storage-items/{id}` is used for the sake of brevity. 
+> **Note**: Throughout this documentation, only partial syntax such as:
+`GET /storage-items/{id}` is used for the sake of brevity.
 Prefix the path with the correct root URL in order to obtain the full resource path or URL.
 
 ###3. Add storage value
@@ -60,7 +60,7 @@ You will get back `200 OK` status code and json representation with Id of added 
 
 ###4. Query storage values
 
-Let's assume that You inserted some values and now want to query them. 
+Let's assume that You inserted some values and now want to query them.
 
 ```
 GET /storage-items/
@@ -78,13 +78,13 @@ You will get back `200 OK` status code and json representation with values that 
       "item-id": "baad5130-ceab-49bc-a4b8-4bf57e43a16e",
       "value": "val4",
       "date-created": "2015-12-16T09:56:09",
-      "date-modified": null
+      "date-modified": "2015-12-16T11:56:09"
     },
     {
       "item-id": "6ff3ea18-16ab-4c9c-962a-73ea1a330da4",
       "value": "val5",
       "date-created": "2015-12-16T09:58:02",
-      "date-modified": null
+      "date-modified": "2015-12-16T10:56:09"
     }
   ]
 }
@@ -105,7 +105,7 @@ You will get back `200 OK` status code and json representation with details for 
   "item-id": "6ff3ea18-16ab-4c9c-962a-73ea1a330da4",
   "value": "val5",
   "date-created": "2015-12-16T09:58:02",
-  "date-modified": null
+  "date-modified": "2015-12-16T09:59:09"
 }
 
 ```

@@ -6,7 +6,7 @@ visibility: internal
 Customer Order API v2
 =========================
 Customer order API enables you to initiate, track, query and execute “Self-Care” orders. You can issue orders for opening new accounts, set up the terms and conditions of the existing and new accounts, grant and revoke mandates to self or others, manage communication preferences like notifications, alerts and contacts and manage channels or cards. All orders are treated like work items and they go through a series of steps until executed. The time to complete these steps depends on the type of the customer order.
-   
+
 Key Resources
 -------------
 Customer Order API has six top level collection resources:
@@ -14,12 +14,12 @@ Customer Order API has six top level collection resources:
 Resource | Description
 ----------- |-----------
 *additional card issuences*  | Workitem used to capture details of client request for a additional card. WorkItem status changes throught phases and states, from active to complete/rejected.
-*card activations*    | Includes changing card status to active throught activation card request and previewing details of that request. 
+*card activations*    | Includes changing card status to active throught activation card request and previewing details of that request.
 *card blockades*    | Includes changing card status to suspended throught blockade card request and previewing details of that request.
-*card deblockades*    | Includes changing card status from suspended to active throught deblockade card request and previewing details of that request. 
-*card terminations*    | Includes changing card status to terminated throught termination card request and previewing details of that request. 
+*card deblockades*    | Includes changing card status from suspended to active throught deblockade card request and previewing details of that request.
+*card terminations*    | Includes changing card status to terminated throught termination card request and previewing details of that request.
 *card replacements*    | Initiates issuing of new card depending on replacement reason throught replacement card request and previewing details of that request.
-*classifications*    | Identifies a structure used to organize and manage business information by defining categories that satisfy certain criteria or form a group subject to a human decision. 
+*classifications*    | Identifies a structure used to organize and manage business information by defining categories that satisfy certain criteria or form a group subject to a human decision.
 
 Getting started tutorial
 ---------------
@@ -38,8 +38,8 @@ API | URL Root
 --------|---------
 Customer Order | `https://bankapi.net/customer-order`
 
-> **Note**: Throughout this documentation, only partial syntax such as: 
-`GET /additional-card-issuances/{order-number}` is used for the sake of brevity. 
+> **Note**: Throughout this documentation, only partial syntax such as:
+`GET /additional-card-issuances/{order-number}` is used for the sake of brevity.
 Prefix the path with the correct root URL in order to obtain the full resource path or URL.
 
 ###3. Create request for additional card
@@ -53,7 +53,7 @@ POST /additional-card-issuances
   "arrangement-number": "0064200001930"
 }
 ```
-You will get back `202 Accepted` status code and workitem number of created request. 
+You will get back `202 Accepted` status code and workitem number of created request.
 
 ```json
 {
@@ -68,20 +68,20 @@ Now lets preview details for created request from step 3:
 GET /additional-card-issuances/WI0000492475
 ```
 
-You will get back `200 OK` status code and json representation for fetched request. 
-```
+You will get back `200 OK` status code and json representation for fetched request.
+
 ```json
 {
-      "id": "WI0000499335"
-      "authorized-customer-number": "MIGR00002"
-      "authorized-customer-name": "Mileva Grujic"
-      "owner-customer-number": "BRVU00002"
-      "owner-customer-name": "Branislav Vukovic"
-      "arrangement-number": "0064200001930"
-      "product-code": "MasterCard"
-      "description": 
-      "status": "proposed"
-      "customer-friendly-status": "active"
+      "id": "WI0000499335",
+      "authorized-customer-number": "MIGR00002",
+      "authorized-customer-name": "Mileva Grujic",
+      "owner-customer-number": "BRVU00002",
+      "owner-customer-name": "Branislav Vukovic",
+      "arrangement-number": "0064200001930",
+      "product-code": "MasterCard",
+      "description": ,
+      "status": "proposed",
+      "customer-friendly-status": "active",
       "creation-date": "2015-10-20T23:22:10"
 }
 ```
@@ -92,7 +92,7 @@ Let's cancel previewed request from step 4:
 PUT /additional-card-issuances/WI0000492475/cancel
 ```
 
-You will get back `204 No content` status code. 
+You will get back `204 No content` status code.
 
 
 **Congratulations!** You have completed getting started tutorial on most common steps when working with Customer Order API. To learn more look at the reference documentation for [available operations](swagger-ui).

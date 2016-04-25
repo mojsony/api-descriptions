@@ -7,7 +7,7 @@ visibility: internal
 Party API gives you access to individuals and organizations registered with the financial institution whether they are customers or just prospects or related parties. In addition, you can get all party related information like identification documents, contact points and relationships.
 
 > ## THIS GUIDE IS UNDER CONSTRUCION, PLEASE COME BACK SOON!
-   
+
 Key Resources
 -------------
 Party API has on top-level collection resources: parties that specializes into individuals and organizations subresources for the purpose of specific commands. Party also composes identification documents, contact points and relationships as sub-resources.
@@ -35,8 +35,8 @@ API | URL Root
 --------|---------
 Party | `https://bankapi.net/v1/party`
 
-> **Note**: Throughout this documentation, only partial syntax such as: 
-`GET /individuals/{id}` is used for the sake of brevity. 
+> **Note**: Throughout this documentation, only partial syntax such as:
+`GET /individuals/{id}` is used for the sake of brevity.
 Prefix the path with the correct root URL in order to obtain the full resource path or URL.
 
 ###3. Get list of individuals
@@ -47,13 +47,13 @@ GET /individuals
 ```
 You will get back `200 Success` status code and json representation with a list of individual customers with information of the regitered individual customers.
 ```json
-items: 
+items:
     {
       "party-id": "314",
       "full-name": "Dalibor Davidovic",
       "gender": "Male",
-      "birth-date": "1974-11-22 00:00:00.000"
-      "place-of-birth": "MILOŠEVAC"
+      "birth-date": "1974-11-22 00:00:00.000",
+      "place-of-birth": "MILOŠEVAC",
       "country-of-birth": "Srbija",
       "category": "Resident Individuals",
       "status": "Former",
@@ -64,7 +64,7 @@ items:
       "legal-address": "",
       "marital-status": "unmarried-individual",
       "employment-status": "employed",
-      "contacts": 
+      "contacts":
                 {
                  "id": "",
                  "contact-id": "",
@@ -83,9 +83,9 @@ items:
                                   "municipality": "",
                                   "postal-code": "",
                                   "locality-code": "",
-                                  "street-code": "" 
-                                 }
-                 "contact-preference": 
+                                  "street-code": ""
+                                },
+                 "contact-preference":
                                 {
                                   "contact-preference-id": "",
                                   "preferred-language": "",
@@ -95,10 +95,10 @@ items:
                                   "opt-ins": "",
                                   "opt-outs": "",
                                   "uri": ""
-                                }
+                                },
                  "is-primary": "",
                  "uri": ""
-                }
+               },
       "arrangements":
                 {
                  "arrangement-number": "",
@@ -109,18 +109,18 @@ items:
                                   {
                                    "href": "",
                                    "rel": ""
-                                  } 
-                              } 
+
+                              },
                  "commands":
                               {
                                link:
                                   {
                                    "href": "",
                                    "rel": ""
-                                  } 
-                              }
+                                  }
+                              },
                  "uri": ""  
-                }
+               },
      "mandates":
               {
                "mandate":
@@ -130,13 +130,13 @@ items:
                                               {
                                                "category": "",
                                                "limit": ""
-                                              }
+                                             },
                              "arrangement-number": "",
                              "effective-date": "",
                              "end-date": "",
-                             "uri": "" 
-                            } 
-              }
+                             "uri": ""
+                            }
+              },
       "postal-legal-address":
               {
                "common-postal-address":
@@ -151,10 +151,11 @@ items:
                                   "municipality": "",
                                   "postal-code": "",
                                   "locality-code": "",
-                                  "street-code": "" 
+                                  "street-code": ""
                                  }
               }        
-    },
+    }
+}
 
 ```
 
@@ -170,77 +171,64 @@ POST /individuals/
 ```json
 cmd-register-telecommunication-number:
 {
-  "first-name": "string *",
-  "last-name": "string *",
-  "telecommunication-number": 
+  "given-name": "Marko",
+  "surname": "Stefanovic",
+  "mobile-phone":
               {
-                "usage": "string *",
-                "is-primary": "true",
+                "number": "234235 *",
+                "area-code": "69",
                 "category": "mobile-phone",
-                "number": "1122334",
-                "areacode": "69",
-                "countrycode": "381",
+                "country-code": "381",
                 "extension": null
-              }
-  "electronic-address":
+              },
+  "email-address":
               {
-                "is-primary": "false",
-                "usage": "business",
-                "category": "electronic-address",
-                "address-text": "ddalibor@itc.com" 
-              }
-  "identity-card":
+                "kind": "email-address",
+                "formatted": "electronic-address"
+              },
+  "id-document":
               {
-                "card-number": "001234567",
-                "identity-card-category": "Personal identification card",
-                "issuing-date": "2010-07-03 00:00:00.000",
-                "end-date":  "2020-07-03 00:00:00.000",
-                "start-date": "2010-07-03 00:00:00.000",
-                "issuing-place": "Beograd",
-                "authority": "MUP Beograd" 
-              } 
-  "personal-identification-number": "2211974852509",
-  "birth-place-locality-code": "string",
-  "birth-place-locality-name": "string",
-  "birth-country-code": "SRB",
-  "middle-name": "Petar",
-  "country-of-residence": "string",
+                "serial-number": "001234567",
+                "kind": "passport",
+                "issued": "2010-07-03",
+                "valid-until":  "2020-07-03",
+                "place-of-issue": "Beograd",
+                "issuing-authority": "MUP Beograd"
+              },
+  "id-number": {
+              "number": "2211974852509",
+              "kind" :"registration-number"
+              },
+  "birth-place": "Beograd",
+  "birth-country": "SR",
+  "maiden-name": "",
+  "country-of-residence": "SR",
   "legal-address":
               {
-                "country-code": "SRB",
-                "locality-code": "string",
-                "street-name": "Nemanjina",
-                "street-code": "string",
-                "building": "22",
-                "floor": "3",
-                "apartment": "12"
-              } 
-  "contact-address": 
+                "country": "SR",
+                "postal-code": "string",
+                "street": "Nemanjina",
+                "street-number": "32",
+                "locality": "Beograd"
+              },
+  "contact-address":
               {       
-                "country-code": "SRB",
-                "locality-code": "string",
-                "street-name": "Nemanjina",
-                "street-code": "string",
-                "building": "22",
-                "floor": "3",
-                "apartment": "12"
-              } 
-  "delivery-address": 
+                "country": "SR",
+                "postal-code": "string",
+                "street": "Nemanjina",
+                "street-number": "32",
+                "locality": "Beograd"
+              },
+  "delivery-address":
               {       
-                "country-code": "SRB",
-                "locality-code": "string",
-                "street-name": "Nemanjina",
-                "street-code": "string",
-                "building": "22",
-                "floor": "3",
-                "apartment": "12"
-              }
-  "employment-status": "employed",
-  "foreign-official": "false",
-  "foregin-official-family-member": "false",
-  "customer-number": "DALDA03",
-  "residential-status": "resident"
-} 
+                "country": "SR",
+                "postal-code": "string",
+                "street": "Nemanjina",
+                "street-number": "32",
+                "locality": "Beograd"
+              },
+  "employment-status": "employed"
+}
 
 ```
 You will get back `200 Success` status code and json representation with an Id of the newly created individual customer and 'created' record status.
@@ -264,7 +252,7 @@ register-telecommunication-number-contact-command
   "is-primary": "false",
   "category": "phone",
   "number": "2244556",
-  "end-date": null;
+  "end-date": null
 }  
 
 ```

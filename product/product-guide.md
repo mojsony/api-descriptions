@@ -5,10 +5,10 @@ visibility: internal
 Product API
 ======================
 Product API provides product information needed for channel applications. The main functions are search over product catalog and kind-specific detailed product information. Besides arrangement-based products, product catalog also contains all services bundled into these arrangement-based products.
-   
+
 Key Resources
 -------------
-Product Matching has `products` top-level collection with `bundled-products` and `documents` as sub-resources. 
+Product Matching has `products` top-level collection with `bundled-products` and `documents` as sub-resources.
 
 Resource | Description
 ----------- |-----------
@@ -33,12 +33,12 @@ API | URL Root
 --------|---------
 Product | `https://bankapi.net/v1/product`
 
-> **Note**: Throughout this documentation, only partial syntax such as: 
-`GET /current-account-products/{product-number}` is used for the sake of brevity. 
+> **Note**: Throughout this documentation, only partial syntax such as:
+`GET /current-account-products/{product-number}` is used for the sake of brevity.
 Prefix the path with the correct root URL in order to obtain the full resource path or URL.
 
 ###3. List product catalog
-Operation returns list of products available through product catalog. 
+Operation returns list of products available through product catalog.
 Following params are user to filer product catalog result:
 - `kind`	- Product types to be shown. If set, only products of these kinds will be returned, if not - none will be returned.
 - `status` 	- Customer centric statuses to be shown. If set, only products of these statuses will be returned, if not - none will be returned.
@@ -51,10 +51,10 @@ Following params are user to filer product catalog result:
 - `sort-type`	- Attribute of the collection item to sort by.
 
 ```
-GET/products?status=coming-soon, already-used-by-client, not-used-by-client&page-number=1&page-size=100&kind=deposit, current-account, demand-deposit, term-deposit, finance-service, term-loan, credit-facility, product-access&channel-code=web
+GET /products?status=coming-soon, already-used-by-client, not-used-by-client&page-number=1&page-size=100&kind=deposit, current-account, demand-deposit, term-deposit, finance-service, term-loan, credit-facility, product-access&channel-code=web
 ```
 
-You will get back `200 OK` status code and json representation with a list of products. 
+You will get back `200 OK` status code and json representation with a list of products.
 ```json
 {
 	"total-count": 23,
@@ -63,33 +63,20 @@ You will get back `200 OK` status code and json representation with a list of pr
 	"total-pages": 23,
 	"items":[  
       {  
-         "product-number":"TMCY_0001",
+         "product-code":"TMCY_0001",
          "name":"Multivalutni rn - PAKET 1",
          "description":"Multivalutni rn - PAKET 1",
          "market-features":"Uz viševalutni tekući račun klijent ima mogućnost korišćenja sledećih usluga:  • Visa classic debitna kartica  • Štednja po viđenju u domaćoj valuti  ",
          "family-name":"Multivalutni rn - PAKET 1",
-         "status":"not-used-by-client",
-         "kind":"current-account",
+         "status":"available",
+         "kind":"service",
          "primary-market-segment-name":"PREPAID",
          "is-package":false,
-         "image": null,
          "application-process-description":"Proces apliciranja preko web-a",
          "required-documentation":"Ponesite ličnu kartu",
-         "allowed-currencies":[  
-            {  
-               "alphanumeric-code":"EUR",
-               "currency-code":978
-            },
-            {  
-               "alphanumeric-code":"RSD",
-               "currency-code":941
-            },
-            {  
-               "alphanumeric-code":"USD",
-               "currency-code":840
-            }
-         ],
-         "is-recommended":false,
+         "allowed-currencies":{
+           "items":["EUR", "RSD", "USD"]
+         },
          "campaign-code":null
       }
    ]
@@ -102,7 +89,7 @@ To overview specific product details, which in this example is type of `current-
 GET/current-account-products/TMCY_0001
 ```
 
-You will get back `200 OK` status code and json representation for fetched request. 
+You will get back `200 OK` status code and json representation for fetched request.
 ```json
 {  
    "product-number":"TMCY_0001",
@@ -174,7 +161,7 @@ To get list of all budled products for specific master product:
 ```
 GET/current-account-products/TMCY_0001/bundled-products
 ```
-You will get back `200 OK` status code and json representation for fetched request. 
+You will get back `200 OK` status code and json representation for fetched request.
 ```json
 {  
    "items":[  

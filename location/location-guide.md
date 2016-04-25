@@ -5,10 +5,10 @@ visibility: public
 <span class="icon"></span>Location API Guide
 =======================
 Location API provides information on bank's physical facilities and help work with structured addresses. For facilities you can get addresses, geographic coordinates and other location or relevant data like working hours. You can also find facilities located near place or geographic coordinates. Elements of structured addresses such as official listo of places and streets is available along with option to validate address and get postal address code that is used for optimized postal delivery.
-   
+
 Key Resources
 -------------
-Location API has four top-level resources: facilities, addresses, places and streets. 
+Location API has four top-level resources: facilities, addresses, places and streets.
 
 Resource | Description
 ----------- |-----------
@@ -34,8 +34,8 @@ API | Base path
 --------|---------
 Location | `https://bankapi.net/v2/location`
 
-> **Note**: Throughout this documentation, only partial syntax such as: 
-`GET /facilities/{id}` is used for the sake of brevity. 
+> **Note**: Throughout this documentation, only partial syntax such as:
+`GET /facilities/{id}` is used for the sake of brevity.
 Prefix the path with the correct root URL in order to obtain the full resource path or URL.
 
 ###3. Get list of facilities searched by place code
@@ -43,7 +43,7 @@ Let's assume that you want to preview list of all facilities in financial instit
 ```
 GET /facilities?place-code=791091
 ```
-You will get back `200 OK` status code and json representation for fetched request. 
+You will get back `200 OK` status code and json representation for fetched request.
 
 ```json
 {
@@ -55,74 +55,66 @@ You will get back `200 OK` status code and json representation for fetched reque
     {
       "id": 40733,
       "name": "Airport City",
-      "type": "ATM",
-      "capabilities": [],
+      "kind": "atm",
+      "services": [],
       "address": {
-        "text": "Omladinskih brigada 90",
+        "formatted": "Omladinskih brigada 90",
         "street": "Omladinskih brigada",
-        "building": "90",
-        "door": null,
-        "floor": null,
-        "city": "Beograd",
-        "place": "11070",
-        "place-name": "Novi Beograd",
-        "country-code": "SRB",
-        "country-name": "SRBIJA",
-        "state": null,
-        "location": {
-          "latitude": 44.8112911,
-          "longitude": 20.398722799999973
-        }
+        "street-number": "90",
+        "locality": "Beograd",
+        "postal-code": "11070",
+        "country": "SR"
       },
-      "working-hours": [
+      "coordinates": {
+        "lat": 44.7567628,
+        "long": 20.476506100000051
+      },
+      "availability": [
         {
-          "period-description": "Radnim danom",
-          "working-time": "08-16h"
+          "period": "Radnim danom",
+          "hours": "08-16h"
         },
         {
-          "period-description": "Subotom",
-          "working-time": "09-13h"
+          "period": "Subotom",
+          "hours": "09-13h"
         }
       ],
-      "phone-number": null,
-      "email": null
+      "phone-number": "0115344332",
+      "email": "mailaddr@gmail.com"
     },
     {
       "id": 41737,
       "name": "Banjica",
-      "type": "ATM",
-      "capabilities": [],
+      "kind": "atm",
+      "services": [],
       "address": {
-        "text": "Paunova 24",
+        "formatted": "Paunova 24",
         "street": "Paunova",
-        "building": "24",
-        "door": null,
-        "floor": null,
-        "city": "Beograd",
-        "place": "11010",
-        "place-name": "Beograd Vozdovac",
-        "country-code": "SRB",
-        "country-name": "SRBIJA",
-        "state": null,
-        "location": {
-          "latitude": 44.7567628,
-          "longitude": 20.476506100000051
-        }
+        "street-number": "24",
+        "locality": "Beograd",
+        "postal-code": "11010",
+        "country": "SR"
       },
-      "working-hours": [
+      "coordinates": {
+        "lat": 44.7567628,
+        "long": 20.476506100000051
+      },
+      "availability": [
         {
-          "period-description": "Radnim danom",
-          "working-time": "08-17h"
+          "period": "Radnim danom",
+          "hours": "08-17h"
         }
       ],
-      "phone-number": null,
-      "email": null
-    },
+      "phone-number": "01123423424",
+      "email": "mailaddr@gmail.com"
+    }
+]
+}
 ```
-###4. Get list of facilities searched by GPS coordinates of the location 
+###4. Get list of facilities searched by GPS coordinates of the location
 Let's assume that you want to preview list of all facilities in financial institution by GPS coordinates of the location. You can do that at following endpoint
 ```
-GET/facilities?latitude=44.3&longitude=20.3&search-radius=100
+GET /facilities?latitude=44.3&longitude=20.3&search-radius=100
 ```
 You will get back `200 OK` status code and json representation for fetched request.
 
@@ -132,108 +124,40 @@ You will get back `200 OK` status code and json representation for fetched reque
   "page-size": 10,
   "page-number": 1,
   "total-pages": 2,
-  "items": [
+  "id": 41737,
+  "name": "Banjica",
+  "kind": "atm",
+  "services": [],
+  "address": {
+    "formatted": "Paunova 24",
+    "street": "Paunova",
+    "street-number": "24",
+    "locality": "Beograd",
+    "postal-code": "11010",
+    "country": "SR"
+  },
+  "coordinates": {
+    "lat": 44.7567628,
+    "long": 20.476506100000051
+  },
+  "availability": [
     {
-      "id": 40733,
-      "name": "Airport City",
-      "type": "ATM",
-      "capabilities": [],
-      "address": {
-        "text": "Omladinskih brigada 90",
-        "street": "Omladinskih brigada",
-        "building": "90",
-        "door": null,
-        "floor": null,
-        "city": "Beograd",
-        "place": "11070",
-        "place-name": "Novi Beograd",
-        "country-code": "SRB",
-        "country-name": "SRBIJA",
-        "state": null,
-        "location": {
-          "latitude": 44.8112911,
-          "longitude": 20.398722799999973
-        }
-      },
-      "working-hours": [
-        {
-          "period-description": "Radnim danom",
-          "working-time": "08-16h"
-        },
-        {
-          "period-description": "Subotom",
-          "working-time": "09-13h"
-        }
-      ],
-      "phone-number": null,
-      "email": null
-    },
-    {
-      "id": 41737,
-      "name": "Banjica",
-      "type": "ATM",
-      "capabilities": [],
-      "address": {
-        "text": "Paunova 24",
-        "street": "Paunova",
-        "building": "24",
-        "door": null,
-        "floor": null,
-        "city": "Beograd",
-        "place": "11010",
-        "place-name": "Beograd Vozdovac",
-        "country-code": "SRB",
-        "country-name": "SRBIJA",
-        "state": null,
-        "location": {
-          "latitude": 44.7567628,
-          "longitude": 20.47650610000005
-        }
-      },
-      "working-hours": [
-        {
-          "period-description": "Radnim danom",
-          "working-time": "08-17h"
-        }
-      ],
-      "phone-number": null,
-      "email": null
-    },
-    {
-      "id": 40734,
-      "name": "Banovo brdo",
-      "type": "ATM",
-      "capabilities": [],
-      "address": {
-        "text": "Požeška 108a",
-        "street": "Požeška",
-        "building": "108a",
-        "door": null,
-        "floor": null,
-        "city": "Beograd",
-        "place": "11030",
-        "place-name": "Beograd Cukarica",
-        "country-code": "SRB",
-        "country-name": "SRBIJA",
-        "state": null,
-        "location": {
-          "latitude": 44.773886,
-          "longitude": 20.413765
-        }
-      },
-      "working-hours": null,
-      "phone-number": null,
-      "email": null
+      "period": "Radnim danom",
+      "hours": "08-17h"
     }
-```
+  ],
+  "phone-number": "01123423424",
+  "email": "mailaddr@gmail.com"
+}
 
+```
 
 ###5. Get list of streets
 Let's assume you want to preview list of streets for specifed place name, page number and page size.
 You can do that at following endpoint:
 
 ```
-GET/streets?place-name=Subotica&page-size=3&page=1
+GET /streets?place-name=Subotica&page-size=3&page=1
 ```
 You will get back 200 OK status code and json representation for fetched request.
 ```json
@@ -246,23 +170,23 @@ You will get back 200 OK status code and json representation for fetched request
     {
       "name": "A B ŠIMIĆA",
       "alternative-names": [],
-      "code": "823605531",
+      "street-code": "823605531",
       "place-name": "SUBOTICA",
-      "country-name": "SRBIJA"
+      "country": "SR"
     },
     {
       "name": "ACINA ULICA",
       "alternative-names": [],
-      "code": "609702737",
+      "street-code": "609702737",
       "place-name": "SUBOTICA",
-      "country-name": "SRBIJA"
+      "country": "SR"
     },
     {
       "name": "ADAČKA",
       "alternative-names": [],
-      "code": "823605546",
+      "street-code": "823605546",
       "place-name": "SUBOTICA",
-      "country-name": "SRBIJA"
+      "country": "SR"
     }
   ]
 }
