@@ -811,6 +811,9 @@ definitions:
           - credit-facility-account
           - credit-card-account
           - investment-account
+      nickname:
+        decription: Friendly name of account set by customer
+        type: string
       balances:
         type: array
         description: List of account balances
