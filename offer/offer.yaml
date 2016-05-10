@@ -1010,7 +1010,15 @@ definitions:
         enum:
           - ACH
           - RTGS
-        type: string        
+        type: string    
+      charge:
+        description: |
+          The party that is charged for the transfer fee.
+          For a list of possible values see [charged-parties](payment-classifications.html#charged-parties) enumeration.
+        enum:
+          - ordering-customer
+          - shared
+          - beneficiary            
       debtor-account:
         description: Debtor account number
         type: string
