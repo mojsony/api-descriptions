@@ -407,7 +407,7 @@ definitions:
       is-package:
         type: boolean
         description: Is the product package
-      image-utl:
+      image-url:
         type: string
         description: Product image URL in content management
       cover-image-url:
