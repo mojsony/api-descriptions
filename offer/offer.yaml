@@ -342,7 +342,7 @@ paths:
 
   /calculations/service-fee:
     get:
-      summary: Calculate fees and taxes for the service
+      summary: Determine fees for the service
       tags:
         - Calculations
       deprecated: false
@@ -366,6 +366,33 @@ paths:
             $ref: '#/definitions/validation-problem'
         default:
           $ref: '#/responses/default-error-response'
+
+  /calculations/transaction-fee:
+    get:
+      summary: Calculate fee for transaction
+      tags:
+        - Calculations
+      deprecated: false
+      operationId: Calculations_TransactionFee
+      parameters:
+        - description: Parameters for transaction fee calculation
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/transaction-fee-request'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/transaction-fee-calculation'
+        '400':
+          description: |
+            Your request was well not well constructed. Look into validation error in response for more details.
+          schema:
+            $ref: '#/definitions/validation-problem'
+        default:
+          $ref: '#/responses/default-error-response'          
 
   /calculations/deposit-terms:
     get:
@@ -838,7 +865,7 @@ definitions:
         type: string
         x-asse-classification: document-kinds
         description: Specific purpose of this document. For complete list of possible values see [document-kinds](offer-classifications.html#document-kinds) classification.
-
+ 
   required-documentation-request:
     properties:
       product-code:
@@ -876,7 +903,7 @@ definitions:
           is-uploadable: false
           template-name: Template3
           template-uri: https://www.templates.com/watch?v=754968734592678fdsfsdf&ebc=ANyZVfeqZw
-
+                    
   document:
     description: Document related to product or workitem
     type: object
@@ -908,8 +935,45 @@ definitions:
         type: string
         format: url
 
-  service-fee-calculation-request:
+  service-fee-request:
     description: Service fee calculation request.
+    properties:
+      customer-number:
+        description: Customer number of client who is requesting the service.
+        type: string
+      arrangement-number:
+        description: Optional number of arrangement that covers the service for which fee is calculated
+        type: string
+      service-code:
+        description: Service code uniquely identifies service offered to clients such as transfer, currency exchange etc. List of service codes is maintained by [Product API](product-getstarted.html).
+        type: string
+      channel-code:
+        description: Channel code
+        type: string
+        
+  service-fee-calculation:
+    description: Service fee calculation.
+    properties:
+      fee-amount:
+        description: Fee amount
+        $ref: '#/definitions/currency'
+      min-amount:
+        description: Minimal fee amount
+        $ref: '#/definitions/currency'      
+      max-amount:
+        description: Maximal fee amount
+        $ref: '#/definitions/currency'            
+      rate:
+        description: Fee rate as percentage
+        format: double
+        type: number
+      remaining-fee-waivers:
+        description: Number of remaining fee waivers for calculated service
+        format: int32
+        type: integer
+
+  transaction-fee-calculation-request:
+    description: Transaction fee calculation request
     properties:
       customer-number:
         description: Customer number of client who is requesting the service.
@@ -935,36 +999,42 @@ definitions:
       purpose-code:
         description: Purpose code
         type: string
+      value-date:
+        description: Value date for transaction
+        type: string
+        format: date
+      urgency:
+        description: |
+          Urgency of transfer. Determines whether transfer is expedited via RTGS or is sent to ACH in next clearing cycle.
+          For a list of possible values see [transfer-urgencies](payment-classifications.html#transfer-urgencies) enumeration.
+        enum:
+          - ACH
+          - RTGS
+        type: string        
       debtor-account:
         description: Debtor account number
         type: string
-      debtor-country:
-        description: Debtor country code
+      creditor-account:
+        description: Creditor account number
+        type: string        
+      creditor-country:
+        description: Creditor country code
         type: string
         format: ISO 3166-1 alpha-2
-      debtor-bank-swift:
-        description: Debtor swift bank address
-        type: string
-  service-fee-calculation:
-    description: Service fee calculation.
+      creditor-bank-swift:
+        description: Creditor swift bank address
+        type: string        
+  transaction-fee-calculation:
+    description: Transaction fee calculation
     properties:
       fee-amount:
         description: Charge amount
         $ref: '#/definitions/currency'
-      rate:
-        description: Fee rate as percentage
-        format: double
-        type: number
       remaining-fee-waivers:
-        description: Number of remaining fee waivers for calculated service
+        description: Number of remaining fee waivers for transaction
         format: int32
-        type: integer
-    example:
-      fee-amount:
-        amount: 200.00
-        code: EUR
-      rate: 5
-      remaining-fee-waivers: 10
+        type: integer   
+             
   deposit-terms-request:
     description: Request with details neccessery to calculate deposit offer
     properties:
@@ -1029,7 +1099,7 @@ definitions:
         format: double
         type: number
         description: Payout amount
-    example:
+            example:
       principal-amount: 100
       term: 1Y
       nominal-interest-rate:
@@ -1095,7 +1165,7 @@ definitions:
       total-fees:
         description: Represents calculated fees
         $ref: '#/definitions/currency'
-    example:
+            example:
       amount:
         amount: 200.00
         code: EUR
@@ -1164,7 +1234,7 @@ definitions:
         items:
           $ref: '#/definitions/installment-plan-row'
         type: array
-    example:
+            example:
       terms:
         amount:
           amount: 200.00
@@ -1440,7 +1510,7 @@ definitions:
       overdraft-repayment-conditions:
         description: Overdraft repayment conditions (1b 4.3) (OE 4.5)
         type: string
-    example:
+            example:
       common:
         bank-name: First Bank
         bank-addres: Ustanicka br.54, Beograd
@@ -1468,7 +1538,7 @@ definitions:
       early-repayment-conditions: Conditions
       delinquency-consequences: Consequences
       overdraft-repayment-conditions: Conditions
-
+      
   deposit-offer-text:
     description: Deposit offer text
     properties:
@@ -1496,7 +1566,7 @@ definitions:
       tax-information: tax-info
       unconditional-benefits: benefits
       automatic-rollover-conditions: conditions
-      insured-deposit-amount: "3000"
+      insured-deposit-amount: "3000"        
 
   application-list:
     description: Product account opening list
@@ -1549,6 +1619,7 @@ definitions:
           created-by-name: Goran Mitrovic
           comments: Comments
           workitem-phase: Phase2
+    
 
   draft:
     description: Draft of incomplete product application
@@ -1580,7 +1651,7 @@ definitions:
               created-by-name: Stefan Miric
               comments: Comments
               workitem-phase: Phase1
-      editing-step: Editing-step1
+      editing-step: Editing-step1        
 
   application:
     description: Common information to all kinds of product applications
@@ -1624,7 +1695,7 @@ definitions:
           Indicates how and where customer chose to sign agreement documents
           For complete list of possible values see [signing-options](offer-classifications.html#signing-options) enumeration.
         type: string
-        enum: [branch, courier, online]
+        enum: [branch, courier, online]        
       created:
         description: Date and time when application was recorded in the system
         format: date-time
@@ -1657,7 +1728,6 @@ definitions:
       comments:
         description: Comments
         type: string
-
       workitem-phase:
         description: Work item phase name.
         type: string
@@ -1678,7 +1748,7 @@ definitions:
       last-modified: 2016-04-01T01:25:00
       created-by-name: Stefan Miric
       comments: Comments
-      workitem-phase: Phase1
+      workitem-phase: Phase1        
   deposit-opening:
     description: Deposit account opening application
     allOf:
@@ -2047,7 +2117,7 @@ definitions:
   resource-created-result:
     description: Unique identifier of newly created resource that can be used in future inquires and commands
     type: string
-    example: Created
+    example: 83278879192    
   validation-problem:
     type: array
     items:
@@ -2141,7 +2211,7 @@ definitions:
         type: string
     example:
       literal: billing
-      code: "2"
+      code: 002
       description: Contact may be used to provide party with details of their liabilities to the bank
 
   classification-list:
@@ -2204,11 +2274,11 @@ definitions:
       description: List of possible uses of contact in business context. Commonly used filing purposes are billing, marketing
       values:
         - literal: billing
-          code: "1"
+          code: 001
           description: Contact may be used to provide party with details of their liabilities to the bank
         - literal: marketing
-          code: "2"
+          code: 002
           description: Contact may be used to provide party with details of offers
         - literal: reporting
-          code: "3"
+          code: 003
           description: Contact may be used to provide party with reports on their account
