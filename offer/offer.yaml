@@ -353,7 +353,7 @@ paths:
           name: cmd
           required: true
           schema:
-            $ref: '#/definitions/service-fee-calculation-request'
+            $ref: '#/definitions/service-fee-request'
       responses:
         '200':
           description: OK
@@ -972,7 +972,7 @@ definitions:
         format: int32
         type: integer
 
-  transaction-fee-calculation-request:
+  transaction-fee-request:
     description: Transaction fee calculation request
     properties:
       customer-number:
@@ -1107,7 +1107,7 @@ definitions:
         format: double
         type: number
         description: Payout amount
-            example:
+    example:
       principal-amount: 100
       term: 1Y
       nominal-interest-rate:
@@ -1173,7 +1173,7 @@ definitions:
       total-fees:
         description: Represents calculated fees
         $ref: '#/definitions/currency'
-            example:
+    example:
       amount:
         amount: 200.00
         code: EUR
@@ -1242,7 +1242,7 @@ definitions:
         items:
           $ref: '#/definitions/installment-plan-row'
         type: array
-            example:
+    example:
       terms:
         amount:
           amount: 200.00
@@ -1518,7 +1518,7 @@ definitions:
       overdraft-repayment-conditions:
         description: Overdraft repayment conditions (1b 4.3) (OE 4.5)
         type: string
-            example:
+    example:
       common:
         bank-name: First Bank
         bank-addres: Ustanicka br.54, Beograd
