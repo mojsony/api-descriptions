@@ -410,6 +410,7 @@ definitions:
 
   classification-value:
     type: object
+    x-ms-external: true
     description: Classification value
     properties:
       literal:
@@ -430,6 +431,7 @@ definitions:
       description: Contact may be used to provide party with details of their liabilities to the bank
   classification-list:
     description: List of classification schemas
+    x-ms-external: true
     type: object
     properties:
       items:
@@ -448,6 +450,7 @@ definitions:
         description: List of possible uses of a folder in business context.
   classification-info:
     description: Basic information on classification schema
+    x-ms-external: true
     properties:
       schema-id:
         type: string
@@ -464,6 +467,7 @@ definitions:
       description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture
   classification:
     type: object
+    x-ms-external: true
     description: Classification schema details
     properties:
       schema-id:

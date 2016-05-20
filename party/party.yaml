@@ -10,11 +10,11 @@ info:
     name: Milan Drakulic
     url: https://bankapi.net/docs/public/party-getstarted.html
     email: milan.drakulic@asseco-see.rs
-host: dev.aseeco-see.com
+host: bankapi.net
 basePath: /v1/party
 schemes:
-  - http
   - https
+  - http
 consumes:
   - application/json
 produces:
