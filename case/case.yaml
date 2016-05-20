@@ -7,8 +7,8 @@ info:
   title: Case API
   version: v1
 schemes:
-  - http
   - https
+  - http
 consumes:
   - application/json
 produces:

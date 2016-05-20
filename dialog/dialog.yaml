@@ -1,6 +1,6 @@
 swagger: '2.0'
 x-asee-visibility: internal
-host: dev.aseeco-see.com
+host: bankapi.net
 basePath: /beta/dialog
 info:
   description: |

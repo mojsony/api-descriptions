@@ -1,6 +1,6 @@
 ﻿swagger: '2.0'
 x-asee-visibility: public
-host: api.asee.co
+host: bankapi.net
 basePath: /v1/device
 info:
   description: "Device API manages customer owned devices such as mobile phones and tracks state of bank issued devices such payment cards and authentication devices such as hardware tokens."
