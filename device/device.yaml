@@ -579,7 +579,7 @@ definitions:
   set-device-nickname-command:
     description: Device nick name
     properties:
-      nick-name:
+      nickname:
         description: New nickname for device
         type: string
 
