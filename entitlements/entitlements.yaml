@@ -117,7 +117,7 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/mandate-list'
+            $ref: '#/definitions/limit-balance-list'
         default:
           $ref: '#/responses/default-error-response'
       tags:
@@ -144,7 +144,7 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/mandate-list'
+            $ref: '#/definitions/limit-balance-list'
         default:
           $ref: '#/responses/default-error-response'
       tags:
