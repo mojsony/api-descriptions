@@ -45,6 +45,8 @@ paths:
       - $ref: "#/parameters/longitude-param"
       - $ref: "#/parameters/search-radius-param"
       - $ref: "#/parameters/place-code-param"
+      - $ref: "#/parameters/page-size-param"
+      - $ref: "#/parameters/page-param"
       - $ref: "#/parameters/sort-by-param"
       - $ref: "#/parameters/sort-order-param"
       - $ref: "#/parameters/include-param"
@@ -128,6 +130,8 @@ paths:
         type: string
         minLength: 2
         maxLength: 2
+      - "$ref": "#/parameters/page-size-param"
+      - "$ref": "#/parameters/page-param"
       - "$ref": "#/parameters/sort-by-param"
       - "$ref": "#/parameters/sort-order-param"
       - "$ref": "#/parameters/include-param"
@@ -171,6 +175,8 @@ paths:
         name: Accept-Language
         required: false
         type: string
+      - "$ref": "#/parameters/page-size-param"
+      - "$ref": "#/parameters/page-param"
       - "$ref": "#/parameters/sort-by-param"
       - "$ref": "#/parameters/sort-order-param"
       - "$ref": "#/parameters/include-param"
@@ -229,21 +235,21 @@ parameters:
 # ****************************************************#
 # PARAMS COMMON WITH OTHER APIs                       #
 # ****************************************************#
-  # page-param:
-  #   name: page
-  #   in: query
-  #   description: Page index. For more information see general guidance on [paging and sorting]()
-  #   type: integer
-  #   default: 1
-  #   x-asee-common: true
-  # page-size-param:
-  #   name: page-size
-  #   in: query
-  #   description: Number of items on a page. For more information see general guidance on [paging and sorting]()
-  #   required: false
-  #   type: integer
-  #   default: 10
-  #   x-asee-common: true
+  page-param:
+    name: page
+    in: query
+    description: Page index. For more information see general guidance on [paging and sorting]()
+    type: integer
+    default: 1
+    x-asee-common: true
+  page-size-param:
+    name: page-size
+    in: query
+    description: Number of items on a page. For more information see general guidance on [paging and sorting]()
+    required: false
+    type: integer
+    default: 10
+    x-asee-common: true
   sort-order-param:
     description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [paging and sorting]()
     in: query
