@@ -265,8 +265,6 @@ definitions:
   country-list:
     type: object
     description: List of countries
-    allOf:
-    - $ref: "#/definitions/paged-list"
     properties:
       items:
         type: array
@@ -343,8 +341,6 @@ definitions:
   currency-list:
     type: object
     description: List of currencies
-    allOf:
-    - $ref: "#/definitions/paged-list"
     properties:
       items:
         type: array
