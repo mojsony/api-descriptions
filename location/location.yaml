@@ -31,7 +31,7 @@ info:
     email: natasa.tasic@asseco-see.rs
 paths:
 # ****************************************************#
-# ENDPOINTS SPECIFIC TO LOCATION API                  #
+# ENDPOINTS SPECIFIC TO LOCATION API                  # 
 # ****************************************************#
   /facilities:
     get:
