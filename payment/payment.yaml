@@ -1780,6 +1780,10 @@ definitions:
           - topup
           - bill-payment
           - wallet-transfer
+      transfer-id:
+        type: string
+        description: Unique transfer identifier assigned by bank
+        readOnly: true
       media:
         $ref: '#/definitions/media'
       geolocation:
