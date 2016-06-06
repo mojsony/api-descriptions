@@ -814,6 +814,9 @@ definitions:
         description: Requested activation date
         format: date-time
         type: string
+      repayment-account:
+        description: Transactional account that will be used for repayments
+        type: string
       loan-purposes:
         description: List of loan purposes.
         items:
@@ -1803,6 +1806,9 @@ definitions:
         description: Requested activation date
         format: date-time
         type: string
+      repayment-account:
+        description: Transactional account that will be used for repayments
+        type: string        
       loan-purposes:
         description: List of loan purposes.
         items:
