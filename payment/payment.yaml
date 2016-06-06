@@ -1952,6 +1952,11 @@ definitions:
         description: Date when transfer is expected to be executed
         format: date-time
         type: string
+      actual-value-date:
+        description: Date when transfer was actually executed. It can be different from originaly requested value date due to holiday, non-working day or similar reason.
+        format: date-time
+        type: string
+        readOnly: true
       funds-reservation:
         description: Indicates if funds for transfer are going to be reserved by bank to secure execution on value date
         type: string
