@@ -1640,6 +1640,11 @@ definitions:
         readOnly: true
       application:
         $ref: '#/definitions/application'
+      bundled-applications:
+        description: List of additional applications bundled with main product application
+        type: array
+        items:
+          $ref: '#/definitions/application'
       editing-step:
         description: Editing step in entry ui flow (wizard) where draft was saved
         type: string
