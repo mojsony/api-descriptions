@@ -457,7 +457,10 @@ definitions:
       - $ref: '#/definitions/paged-list'
     properties:
       parties:
-        $ref: '#/definitions/party'
+        description: Collection of parties
+        type: array
+        items:      
+          $ref: '#/definitions/party'
     example:
       total-count: 1250
       page-size: 50
