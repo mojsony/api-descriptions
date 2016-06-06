@@ -179,4 +179,12 @@ Here is the partial list of APIs ordered by requests for clarification coming fr
 | Register device for push notifications | N/A | PUT /owned-devices/{param}/push-notification-handle | ... |
 | Unregister device | N/A | POST device/owned-devices/{param}/unregister | ... |
 | Block device | N/A | POST device/owned-devices/{param}/block | ... |
-
+| List account termination orders |  GET customer-order/account-termination-requests | GET order/me/orders | Generalized for all self-service orders |
+| List arrangement amendment orders | GET customer-order/amendment-requests | GET order/me/orders | Generalized for all self-service orders |
+| List mandate assignment orders | GET customer-order/mandate-requests | GET order/me/orders | Generalized for all self-service orders |
+| List documentation for specific product | GET product-matching/products/{param}/documentation | GET product/products/{param}/documentation | Renamed API|
+| List documentation for specific product | GET product-matching/products/{param}/documentation | GET product/products/{param}/documentation | Renamed API|
+| Get current accout product information | GET product-matching/current-account-products/{param} | GET product/products/{param} | Generalized for all kinds of products |
+| Get credit facility product information | GET product-matching/credit-facility-products/{param} | GET product/products/{param} | Generalized for all kinds of products |
+| Cancel credit limit request | POST customer-order/credit-limit/cancel-request | POST offer/applications/{param}/cancel | Generalized for all kinds of applications |
+| Cancel ammendment request | POST offer-management/cancel-amendment-request | POST offer/applications/{param}/cancel | Generalized for all kinds of applications |
