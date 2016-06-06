@@ -1876,8 +1876,8 @@ definitions:
           Urgency of transfer
           For a list of possible values see [transfer-urgencies](payment-classifications.html#transfer-urgencies) enumeration.
         enum:
-          - ACH
-          - RTGS
+          - ach
+          - rtgs
         type: string
       instrument-code:
         description: Classifcation that explains kinds of instrument used acording to payment operational rules and regulations
@@ -1898,6 +1898,10 @@ definitions:
         description: Date when transfer is expected to be executed
         format: date-time
         type: string
+      funds-reservation:
+        description: Indicates if funds for transfer are going to be reserved by bank to secure execution on value date
+        type: string
+        enum: [none, immediate]
     required:
       - creditor-name
       - debtor-name
@@ -1948,6 +1952,10 @@ definitions:
         description: Date when transfer is expected to be executed
         format: date-time
         type: string
+      funds-reservation:
+        description: Indicates if funds for transfer are going to be reserved by bank to secure execution on value date
+        type: string
+        enum: [none, immediate]        
       attachments:
         description: Attached documents required by cross-border payment regulations
         items:
