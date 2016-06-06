@@ -276,6 +276,26 @@ paths:
           $ref: '#/responses/default-error-response'
       tags:
       - Issued devices
+  '/issued-devices/payment-cards/{device-id}/pin':
+    put:
+      summary: Set payment card pin
+      deprecated: false
+      operationId: PaymentCards_SetPin
+      parameters:
+      - $ref: "#/parameters/device-id-param"
+      - description: Command with new PIN to set
+        in: body
+        name: cmd
+        required: true
+        schema:
+          $ref: '#/definitions/set-payment-card-pin-command'
+      responses:
+        '204':
+          description: No content - PIN set
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+      - Issued devices      
 
 
   /classifications:
@@ -581,6 +601,13 @@ definitions:
     properties:
       nickname:
         description: New nickname for device
+        type: string
+
+  set-payment-card-pin-command:
+    description: Command with details to set payment card PIN
+    properties:
+      new-pin:
+        description: New PIN for payment card
         type: string
 
   register-push-notifications-command:
