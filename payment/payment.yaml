@@ -1757,9 +1757,18 @@ definitions:
       status-date: 2016-02-01T01:25:00
       originated: 2016-03-01T01:25:00
       instruction:
-        kind: credit-transfer
-      transfer-kind: balance-transfer
-      direction: inpayment
+        kind: wallet-transfer
+        instruction-id: 9992918812121
+        customer-number: nodjo0001
+        wallet-number: MW008819020
+        linked-account: "361003000091091095"
+        instructed-amount:
+          amount: 5000.00
+          code: RSD
+        direction: top-up
+      transfer-kind: wallet-transfer
+      direction: internal
+
 
   instruction:
     description: Transfer instruction
@@ -1780,10 +1789,9 @@ definitions:
           - topup
           - bill-payment
           - wallet-transfer
-      transfer-id:
+      instruction-id:
         type: string
-        description: Unique transfer identifier assigned by bank
-        readOnly: true
+        description: Unique identification as assigned by an instructing party to unambiguously identify the instruction.
       media:
         $ref: '#/definitions/media'
       geolocation:
