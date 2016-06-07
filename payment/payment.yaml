@@ -370,8 +370,8 @@ paths:
       x-asee-tags: []
   '/transfers/{transfer-id}/image':
     put:
-      summary: Set transfer's image url
-      description: Sets url of image kept for this transfer in [Content API][content-getstarted.html]
+      summary: Set image url for specific transfer
+      description: Sets image url for specific transfer. Image content is stored in [Content API](content-getstarted.html)
       operationId: Transfers_SetImageUrl
       parameters:
         - description: Set transfer image url command
@@ -391,8 +391,8 @@ paths:
       x-asee-tags: []
   '/transfers/{transfer-id}/geolocation':
     put:
-      summary: Set transfer's geolocation
-      description: Sets transfer geolocation or update new one instead of previous. It is way to put location where transfer was made, or change previous one, in order to mark specific transfer
+      summary: Set geolocation for specific transfer
+      description: Sets geolocation to indicate location where transfer was made
       operationId: Transfers_SetGeolocation
       parameters:
         - description: Set transfer geolocation command
