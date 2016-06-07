@@ -1725,8 +1725,6 @@ definitions:
         description: Date and time when the transfer was originated
         format: date-time
         type: string
-      instruction:
-        $ref: '#/definitions/instruction'
       transfer-kind:
         description: |
           Type of the transfer
@@ -1749,6 +1747,8 @@ definitions:
           - outpayment
           - internal
         type: string
+      instruction:
+        $ref: '#/definitions/instruction'        
     required:
       - transfer-id
     example:
