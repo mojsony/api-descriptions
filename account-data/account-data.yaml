@@ -166,6 +166,60 @@ paths:
             $ref: '#/definitions/transaction'
         default:
           $ref: '#/responses/default-error-response'
+
+  /transactions/{transaction-id}/image:
+    put:
+      summary: Set image url for specific transaction
+      description: Sets image url for specific transaction. Image content is usually stored using [Content API](content-getstarted.html)
+      operationId: Transactions_SetImageUrl
+      parameters:
+        - name: transaction-id
+          description: Unique identifier of the transaction in the core system
+          type: string
+          in: path
+          required: true      
+        - description: Set transaction image url command
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/set-transaction-image-url-command'
+      responses:
+        '204':
+          description: No content
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+        - Transactions
+      x-asee-tags: []
+      
+  /transactions/{transaction-id}/geolocation:
+    put:
+      summary: Set geolocation for specific transaction
+      description: Sets geolocation for this transaction in [Content API](content-getstarted.html)
+      operationId: Transactions_SetGeolocation
+      parameters:
+        - name: transaction-id
+          description: Unique identifier of the transaction in the core system
+          type: string
+          in: path
+          required: true      
+        - description: Set transaction geolocation url command
+          in: body
+          name: cmd
+          required: true
+          schema:
+            $ref: '#/definitions/set-transaction-geolocation-command'
+      responses:
+        '204':
+          description: No content
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+        - Transactions
+      x-asee-tags: []
+      
+          
   /transactions/sync:
     get:
       summary: Sync latest customer transactions
@@ -719,6 +773,22 @@ definitions:
     required:
       - nickname
     type: object
+    
+  set-transaction-image-url-command:
+    description: Command with image url to set
+    properties:
+      image-url:
+        description: Transaction's image url kept in [Content API](content-getstarted.html)
+        type: string
+    type: object
+    
+  set-transaction-geolocation-command:
+    description: Command with geolocation to set
+    properties:
+       geolocation:
+        description: Geographic coordinates and optional mapped adress
+        $ref: '#/definitions/coordinates'
+    type: object
 
   accounts:
     type: array
@@ -812,7 +882,7 @@ definitions:
           - credit-card-account
           - investment-account
       nickname:
-        decription: Friendly name of account set by customer
+        description: Friendly name of account set by customer
         type: string
       balances:
         type: array
