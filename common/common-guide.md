@@ -110,46 +110,37 @@ Error is always indicated with standard 4xx and 5xx http status codes. With stat
 ### 400 - Validation errors
 When request fails server validation, response contains list of validation errors for each invalid field. Validation error is uniquely identified by its literal and is not specific to APIs.
 
-Example problem response payload (json):
+Example validation problem payload (json):
 ```json
 {
-  [
+  "errors": [
     {
-      "field": "phone-number",
-      "errors": [
-          {
-              "error":"invalid-format",
-              "message":"Data supplied for the field is in invalid format"
-          },
-          {
-              "error":"max-length",
-              "message":"Data supplied for the field exceeds maximum allowed length"
-          }
-      ]
+      "tag": "phone-number",
+      "error": "invalid-format",
+      "message": "Format for this field is invalid"
     },
     {
-      "field": "account-number",
-      "errors": [
-          {
-              "error":"check-digit-invalid",
-              "message":"Check digit is invalid for this field"
-          }
-      ]
-    }    
-      
+      "tag": "phone-number",
+      "error": "max-length",
+      "message": "Content exceeds maximum alowed length"
+    },
+    {
+      "tag": "account-number",
+      "error": "check-digit-invalid",
+      "message": "Check digit is invalid for this field"
+    }
   ]
 }
 ```
 
-Elements of validation errors model:
+Elements of validation problem model:
 
 | Property Name	| Type/Format |	Description  |
 |-|-|-|
-|`[]`|array| List of fields with errors |
-|`[].field`|string| Name of the field that has some validation errors  |
-|`[].errors[]`|array| List of validation errors for a specific field |
-|`[].errors[].error`|string| Unique literal that identifies validation error |
-|`[].errors[].message`|string| Message explaining failed validation. |
+|`errors[]`|array of object| List of validation errors |
+|`errors[].tag`|string| Name of input element (field or parameter) that is in invalid. If missing or null it is interpreted that validation error refers to entire request rather than to specific element |
+|`errors[].error`|string| Unique literal that identifies validation error |
+|`errors[].message`|string| MMessage that explains failed validation |
 
 Validation errors:
 
