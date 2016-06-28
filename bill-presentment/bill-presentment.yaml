@@ -974,37 +974,37 @@ definitions:
       id: WI00012123
 
   validation-problem:
-    type: array
-    items:
-      type: object
-      properties:
-        field:
-          type: string
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              error:
-                type: string
-              message:
-                type: string
+    description: Details of failed validation
+    properties:
+      errors:
+        description: List of validation errors
+        type: array
+        items:
+          type: object
+          properties:
+            tag:
+              description: Name of input element (field or parameter) that is in invalid. If missing or null it is interpreted that validation error refers to entire request rather than to specific element. 
+              type: string          
+            error:
+              description: Unique literal that identifies kind of validation error               
+              type: string
+            message:
+              description: Message that explains failed validation. To support translation message may embed variable parameters in curly brackets. 
+              type: string
     example:
-      -
-        field: phone-number
-        errors:
-          -
-            error: invalid-format
-            message: Format for this field is invalid
-          -
-            error: max-length
-            message: Content exceeds maximum alowed length
-      -
-        field: account-number
-        errors:
-          -
-            error: check-digit-invalid
-            message: Check digit is invalid for this field
+      errors:
+        -
+          tag: phone-number
+          error: invalid-format
+          message: Format for this field is invalid
+        -
+          tag: phone-number        
+          error: max-length
+          message: Content exceeds maximum alowed length 
+        -
+          tag: account-number
+          error: check-digit-invalid
+          message: Check digit is invalid for this field
 
   business-problem:
     description: Details on specific problem that prevented processing after successfull validation
