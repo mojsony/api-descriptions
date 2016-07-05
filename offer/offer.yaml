@@ -224,6 +224,25 @@ paths:
         default:
           $ref: '#/responses/default-error-response'
 
+  /applications/{application-number}/signing-option:
+    put:
+      summary: Set contract signing option 
+      tags:
+        - Applications
+      operationId: Applications_SetSigningOption
+      parameters:
+        - $ref: '#/parameters/application-number-param'
+        - name: cmd
+          description: Comand with details of cancelation
+          in: body
+          schema:
+            $ref: '#/definitions/set-signing-option-command'
+      responses:
+        '204':
+          description: No content
+        default:
+          $ref: '#/responses/default-error-response'
+
   /applications/deposit-openings:
     post:
       deprecated: false
@@ -759,6 +778,18 @@ definitions:
         enum: [deposit-opening, current-account-opening, loan-origination]
         x-asee-enumeration: application-kinds
     type: object
+
+  set-signing-option-command:
+    description:  Parameters to set signing option
+    properties:
+      signing-option:
+        description: |
+          Indicates how and where customer chose to sign agreement documents
+          For complete list of possible values see [signing-options](offer-classifications.html#signing-options) enumeration.
+        type: string
+        enum: [branch, courier, online]
+    type: object
+
 
   initiate-deposit-opening-command:
     description: Parameters for initiate deposit account opening.
