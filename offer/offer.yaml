@@ -158,7 +158,25 @@ paths:
         default:
           $ref: '#/responses/default-error-response'
 
-  /applications/{application-number}/attachments:
+  /applications/{application-number}/documents:
+    get:
+      summary: List documents for specific application
+      description: Provides list of documents for specific application. List can be filtered according to document upload status - pending or uploaded.
+      tags:
+        - Applications
+      operationId: Applications_GetDocuments
+      parameters:
+        - $ref: "#/parameters/application-number-param"
+        - $ref: "#/parameters/upload-status-param"
+        - $ref: "#/parameters/trim-param"
+        - $ref: "#/parameters/include-param"
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/document-list'
+        default:
+          $ref: '#/responses/default-error-response'  
     put:
       summary: Add additional documents to application
       tags:
@@ -542,7 +560,7 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/required-documentation'
+            $ref: '#/definitions/document-list'
         '400':
           description: |
             Your request was well not well constructed. Look into validation error in response for more details.
@@ -617,6 +635,18 @@ parameters:
       type: string
       enum: [accepted, active, rejected, canceled, approved]
       x-asee-enumeration: application-statuses
+  upload-status-param:
+    name: upload-status
+    description: |
+      Document upload statuses to filter the result. If empty or not present documents having any status are returned
+      For complete list of possible values see [upload-statuses](offer-classifications.html#upload-statuses) enumeration.
+    type: array
+    collectionFormat: csv
+    in: query
+    items:
+      type: string
+      enum: [pending, uploaded]
+      x-asee-enumeration: upload-statuses      
   kinds-param:
     name: kinds
     description: |
@@ -881,7 +911,7 @@ definitions:
       work-item-phase:
         type: string
         description: Identifies Work Item Phase in which a document is introduced
-  required-documentation:
+  document-list:
     properties:
       documention:
         items:
@@ -914,14 +944,10 @@ definitions:
       product-code:
         type: string
         description: The unique identifier of a Product
-      work-item-type:
-        x-asee-compliance: Is this property used at all? How come that the document has work-item-type, and that the product does not have one?
-        type: string
-        description: Identifies Work Item Type for which the document is associated with
       work-item-phase:
         type: string
         description: Identifies Work Item Phase in which a document is introduced
-      document-type:
+      document-kind:
         type: string
         description: Identifies document type. For complete list of possible values see [document-kinds](offer-classifications.html#document-kinds) classification.
         x-asse-classification: document-kinds
@@ -937,6 +963,21 @@ definitions:
       template-uri:
         type: string
         format: url
+      attachment-uri:
+        type: string
+        format: url
+        description: URL of document content in DMS
+      attachment-id:
+        type: string
+        description: Unique identifier of document in DMS
+      upload-status:
+        type: string
+        enum: [pending, uploaded]
+      verification-comment:
+        type: string
+      last-uploaded:
+        type: string
+        format: date
 
   service-fee-request:
     description: Service fee calculation request.
