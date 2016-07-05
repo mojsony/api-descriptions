@@ -807,6 +807,9 @@ definitions:
       campaign-code:
         description: A code by which a campaign can be identified.
         type: string
+      parent-application-number:
+        description: Unique identifier for parent application that bundles this application workitem
+        type: string        
     required:
       - amount
       - customer-number
@@ -871,6 +874,9 @@ definitions:
       applicant:
         description: Applicant data
         $ref: '#/definitions/applicant-info'
+      parent-application-number:
+        description: Unique identifier for parent application that bundles this application workitem
+        type: string
       attachments:
         type: array
         items:
@@ -1738,6 +1744,10 @@ definitions:
         enum: [accepted, active, rejected, canceled, approved]
         x-asee-enumeration: application-statuses
         readOnly: true
+      parent-application-number:
+        description: Unique identifier for parent application that bundles this application workitem
+        type: string
+        readOnly: true        
       customer-number:
         description: Customer number
         type: string
