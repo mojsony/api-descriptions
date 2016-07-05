@@ -1171,6 +1171,9 @@ definitions:
       borrowed-amount:
         description: Amount borrowed
         $ref: '#/definitions/currency'
+      product-code:
+        description: Unique identifier of product in bank catalogue
+        type: string        
       term:
         description: The term of loan. For overdafts, revolving limits and other open ended facilities  `1Y` is expected
         type: string
