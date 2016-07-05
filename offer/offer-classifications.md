@@ -153,6 +153,14 @@ Literal                 | Description
 `current-account-opening` | Current Account Opening
 `loan-origination`        | Loan Origination
 
+Upload Statuses
+------
+
+Literal              | Description
+---------------------|------------------------
+`pending` | Document upload is pending
+`uploaded`  | Document uploaded
+
 Deposit Opening Kinds
 ----
 
