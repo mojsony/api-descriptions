@@ -341,7 +341,7 @@ paths:
           $ref: '#/responses/default-error-response'
 
   /calculations/service-fee:
-    get:
+    post:
       summary: Determine fees for the service
       tags:
         - Calculations
@@ -350,7 +350,7 @@ paths:
       parameters:
         - description: Parameters for service fee calculation
           in: body
-          name: cmd
+          name: rq
           required: true
           schema:
             $ref: '#/definitions/service-fee-request'
@@ -368,7 +368,7 @@ paths:
           $ref: '#/responses/default-error-response'
 
   /calculations/transaction-fee:
-    get:
+    post:
       summary: Calculate fee for transaction
       tags:
         - Calculations
@@ -377,7 +377,7 @@ paths:
       parameters:
         - description: Parameters for transaction fee calculation
           in: body
-          name: cmd
+          name: rq
           required: true
           schema:
             $ref: '#/definitions/transaction-fee-request'
@@ -395,7 +395,7 @@ paths:
           $ref: '#/responses/default-error-response'          
 
   /calculations/deposit-terms:
-    get:
+    post:
       summary: Calculate deposit offer terms for specific customer
       tags:
         - Calculations
@@ -403,7 +403,7 @@ paths:
       parameters:
         - description: Parameters for calculating deposit offer terms
           in: body
-          name: cmd
+          name: rq
           required: true
           schema:
             $ref: '#/definitions/deposit-terms-request'
@@ -421,7 +421,7 @@ paths:
           $ref: '#/responses/default-error-response'
 
   /calculations/lending-terms:
-    get:
+    post:
       summary: Calculate lending offer terms for specific customer
       tags:
         - Calculations
@@ -429,7 +429,7 @@ paths:
       parameters:
         - description: Parameters for calculating lending offer terms
           in: body
-          name: cmd
+          name: rq
           required: true
           schema:
             $ref: '#/definitions/lending-terms-request'
@@ -447,7 +447,7 @@ paths:
           $ref: '#/responses/default-error-response'
 
   /calculations/installment-plan:
-    get:
+    post:
       summary: Calculate installment plan
       description: Response contains repayment plan with amortization table
       tags:
@@ -456,7 +456,7 @@ paths:
       parameters:
         - description: Parameters to calculate installment plan and EIR
           in: body
-          name: cmd
+          name: rq
           required: true
           schema:
             $ref: '#/definitions/installment-plan-request'
@@ -474,7 +474,7 @@ paths:
           $ref: '#/responses/default-error-response'
 
   /calculations/deposit-offer-text:
-    get:
+    post:
       summary: Prepare deposit offer text for specific customer
       tags:
         - Calculations
@@ -482,7 +482,7 @@ paths:
       parameters:
         - description: Parameters for preparing deposit offer text
           in: body
-          name: cmd
+          name: rq
           required: true
           schema:
             $ref: '#/definitions/deposit-offer-text-request'
@@ -500,7 +500,7 @@ paths:
           $ref: '#/responses/default-error-response'
 
   /calculations/lending-offer-text:
-    get:
+    post:
       summary: Prepare deposit offer text for specific customer
       tags:
         - Calculations
@@ -508,7 +508,7 @@ paths:
       parameters:
         - description: Parameters for preparing deposit offer text
           in: body
-          name: cmd
+          name: rq
           required: true
           schema:
             $ref: '#/definitions/lending-offer-text-request'
@@ -526,7 +526,7 @@ paths:
           $ref: '#/responses/default-error-response'
 
   /calculations/required-documents:
-    get:
+    post:
       summary: Determine required documents for application
       tags:
         - Calculations
@@ -534,7 +534,7 @@ paths:
       parameters:
         - description: Parameters to determine required documents
           in: body
-          name: cmd
+          name: rq
           required: true
           schema:
             $ref: '#/definitions/required-documentation-request'
