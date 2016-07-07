@@ -979,6 +979,9 @@ definitions:
           description: |
             Classification of interest rates due to their purpose. Note that penalty interest applies to loans while early withdrawal interest applies to deposits.
             For a list of possible values see [interest-rate-kinds](arrangement-classifications.html#interest-rate-kinds) enumeration.
+        currency:
+          type: string
+          description: Currency to which current interest rate condition applies.
         is-compound:
           type: boolean
           description: If true, interest calculation method is compound, else it is simle.
