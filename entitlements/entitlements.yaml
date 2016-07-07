@@ -3,7 +3,7 @@ x-asee-visibility: public
 host: bankapi.net
 basePath: /v1/entitlements
 info:
-  description: "Entitlements API lets you check and enforce access entitlements with customer mandates and limits. Mandates are given per arrangement and can specify allowed services, applicable channels and any limits set for each mandate holder. Mandate model is aligned with ISO 20022"
+  description: "Entitlements API lets you check and enforce access entitlements with customer mandates and limits. Mandates are given per arrangement and can specify allowed services, applicable channels and any limits set for each mandate holder. Mandate model is aligned with ISO 20022. Setting preferred limits is possible in two modes - free and constrained. Free mode lets you set any limit value within acceptable range while constrained mode makes you pick from a predefined limits and limit groups. "
   title: Entitlements API
   version: v1
   contact:
