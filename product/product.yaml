@@ -483,9 +483,9 @@ definitions:
             primary-currency: RSD
   card-access-product:
     description: Identifies a Product which allows a Customer to obtain access to a group of services that are related to the card
-    type: object
     allOf:
       - $ref: '#/definitions/product'
+      - type: object
         properties:
           card-kind:
             #x-asee-compliance: We should probaby rename this to card-type. Also, maybe it is better to have this property as enum, not classification, because there are only few possible types influencing behaviour of the card .. debit, credit, prepaid, gift. [Stefan] This classification in Experience is defined as open. It makes sense to be enumeration, but I would not make changes right now, not to violated balance with EXP. Also, as with some others compliance, it remains free to change with next iteration ot implementation.
@@ -518,9 +518,9 @@ definitions:
               $ref: '#/definitions/product-access-service-channel'
   credit-facility-product:
     description: Identifies a Loan product where the Customer is approved a certain amount, that is available without a precise definition of the repayment of the same, but with the definition of interest rate.
-    type: object
     allOf:
       - $ref: '#/definitions/product'
+      - type: object
         properties:
           minimal-repayment-amount:
             description: Minimal repayment currency amount of the product
@@ -538,9 +538,9 @@ definitions:
             #x-asee-compliance: This property should either be related to classification or to the enum. It cannot be related to both. In this case, classification is probably the better choice. Also, mentioned classification is not defined in classification file. [Stefan] This classification potentially will be expanding with new values. I will change it to be open classification.
   overdraft-facility-product:
     description:  An overdraft facility allows you to withdraw cash from your current account up to the overdraft limit approved. It is a short-term standby credit facility which is usually renewable on a specified time period.
-    type: object
     allOf:
       - $ref: '#/definitions/product'
+      - type: object
         properties:
           minimal-repayment-amount:
             description: Minimal repayment amount of the product
@@ -551,19 +551,19 @@ definitions:
             type: number
   current-account-product:
     description: "Is a financial facility that represents the general checking account facility at the core of the consumer and small business banking activity. There is a range of supporting features that make up the standard facility (checks/cheques, standing orders, debit cards, phone and on-line banking services etc.). The fulfillment will include a range of optional services, fees and interest payments and penalties and will often be bundled and or underlie/support other financial facilities and financial transactions"
-    type: object
     allOf:
       - $ref: '#/definitions/product'
+      - type: object
   demand-deposit-product:
     description: Identifies a particular type of Deposit Product that is used for handling day-to-day transactions and can be used to accumulate savings
-    type: object
     allOf:
       - $ref: '#/definitions/product'
+      - type: object
   term-deposit-product:
     description: Type of Deposit product that allows customer to deposit a certain amount of money to be for a specified term, under certain conditions
-    type: object
     allOf:
       - $ref: '#/definitions/product'
+      - type: object
         properties:
           maximal-term:
             description: Maximal term period of the product
@@ -575,9 +575,9 @@ definitions:
             format: ISO 8601 duration
   term-loan-product:
     description: Is a Finance Service that is characterized by the lending of funds for a fixed term, for the purchase of goods and/or services.
-    type: object
     allOf:
       - $ref: '#/definitions/product'
+      - type: object
         properties:
           maximal-term:
             description: Maximal term period of the product
@@ -601,9 +601,9 @@ definitions:
             x-asee-classification: financing-kind
   electronic-access-product:
     description: "Identifies a Product Access Service which enables a Product to be accessed by use of an on-line system, such as a computer terminal or telephone."
-    type: object
     allOf:
       - $ref: '#/definitions/product'
+      - type: object
 
   product-conditions:
     description: Product terms and conditions
