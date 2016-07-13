@@ -486,69 +486,69 @@ definitions:
     type: object
     allOf:
       - $ref: '#/definitions/product'
-    properties:
-      card-kind:
-        #x-asee-compliance: We should probaby rename this to card-type. Also, maybe it is better to have this property as enum, not classification, because there are only few possible types influencing behaviour of the card .. debit, credit, prepaid, gift. [Stefan] This classification in Experience is defined as open. It makes sense to be enumeration, but I would not make changes right now, not to violated balance with EXP. Also, as with some others compliance, it remains free to change with next iteration ot implementation.
-        type: string
-        x-asee-enumeration: card-kinds
-        description: |
-          Enumeration that distinguishes between card kinds according to the manner in which use of or access to the Product Arrangement is facilitated.
-          For complete list of possible values see [card-kinds](product-classifications.html#card-kinds) enumeration.
-        enum: [debit-card, credit-card, prepaid-card, charge-card, stored-value-card]
-      card-brand:
-        #x-asee-compliance: In customer-account and other APIs we have this specified through two separate properties.. card-brand and card-kind (e.g. brand is visa, kind is electron). Can we have two properties with relevant classifications here too? [Stefan] In Exp, there is only one classification for this. Is not modeled in this way, and I think, we will not need this separation, because these is only few values.
-        type: string
-        x-asee-classification: card-brands
-        description: |
-          Identifies the set of types of Financial Transaction Cards that are available.
-          For complete list of possible values see [card-brands](product-classifications.html#card-brands) classification.
-      daily-limit:
-        #x-asee-compliance: Why are only daily limit amount and number exposed? There are also many other relevant properties that could have been exposed too periodic limit, membership fee, withdrawal, transaction, many other types of fees.
-         #Stefan | Conclution| We agreed that this is light functionality, not complete one. It expose only a basic set of data for some functionality. We will developed (complete) this with a specific need for it, and/or in next iteration/implementation project.
-        description: Identifies a limit on the total value of Accounting Transactions that may ocur through this access service over a given 24 hour period, where applicable
-        $ref: "#/definitions/currency"
-      daily-transactions-limit:
-        type: integer
-        description: Limit on the number of transactions that may ocur through this access service over a given 24 hour period, where applicable
-        format: int32
-      card-access-product-channels:
-        type: array
-        description: List with basic informations about Product Access Service Channels
-        items:
-          $ref: '#/definitions/product-access-service-channel'
+        properties:
+          card-kind:
+            #x-asee-compliance: We should probaby rename this to card-type. Also, maybe it is better to have this property as enum, not classification, because there are only few possible types influencing behaviour of the card .. debit, credit, prepaid, gift. [Stefan] This classification in Experience is defined as open. It makes sense to be enumeration, but I would not make changes right now, not to violated balance with EXP. Also, as with some others compliance, it remains free to change with next iteration ot implementation.
+            type: string
+            x-asee-enumeration: card-kinds
+            description: |
+              Enumeration that distinguishes between card kinds according to the manner in which use of or access to the Product Arrangement is facilitated.
+              For complete list of possible values see [card-kinds](product-classifications.html#card-kinds) enumeration.
+            enum: [debit-card, credit-card, prepaid-card, charge-card, stored-value-card]
+          card-brand:
+            #x-asee-compliance: In customer-account and other APIs we have this specified through two separate properties.. card-brand and card-kind (e.g. brand is visa, kind is electron). Can we have two properties with relevant classifications here too? [Stefan] In Exp, there is only one classification for this. Is not modeled in this way, and I think, we will not need this separation, because these is only few values.
+            type: string
+            x-asee-classification: card-brands
+            description: |
+              Identifies the set of types of Financial Transaction Cards that are available.
+              For complete list of possible values see [card-brands](product-classifications.html#card-brands) classification.
+          daily-limit:
+            #x-asee-compliance: Why are only daily limit amount and number exposed? There are also many other relevant properties that could have been exposed too periodic limit, membership fee, withdrawal, transaction, many other types of fees.
+             #Stefan | Conclution| We agreed that this is light functionality, not complete one. It expose only a basic set of data for some functionality. We will developed (complete) this with a specific need for it, and/or in next iteration/implementation project.
+            description: Identifies a limit on the total value of Accounting Transactions that may ocur through this access service over a given 24 hour period, where applicable
+            $ref: "#/definitions/currency"
+          daily-transactions-limit:
+            type: integer
+            description: Limit on the number of transactions that may ocur through this access service over a given 24 hour period, where applicable
+            format: int32
+          card-access-product-channels:
+            type: array
+            description: List with basic informations about Product Access Service Channels
+            items:
+              $ref: '#/definitions/product-access-service-channel'
   credit-facility-product:
     description: Identifies a Loan product where the Customer is approved a certain amount, that is available without a precise definition of the repayment of the same, but with the definition of interest rate.
     type: object
     allOf:
       - $ref: '#/definitions/product'
-    properties:
-      minimal-repayment-amount:
-        description: Minimal repayment currency amount of the product
-        $ref: "#/definitions/currency"
-      minimal-repayment-percentage:
-        description: Minimal repayment percentage of the product
-        format: double
-        type: number
-      financing-kind:
-        type: string
-        description: |
-          Identifies type of funding for the product.
-          For detailed view of possible values see [financing-kind](card-classifications.html#financing-kind) classification
-        x-asee-classification: financing-kind
-        #x-asee-compliance: This property should either be related to classification or to the enum. It cannot be related to both. In this case, classification is probably the better choice. Also, mentioned classification is not defined in classification file. [Stefan] This classification potentially will be expanding with new values. I will change it to be open classification.
+        properties:
+          minimal-repayment-amount:
+            description: Minimal repayment currency amount of the product
+            $ref: "#/definitions/currency"
+          minimal-repayment-percentage:
+            description: Minimal repayment percentage of the product
+            format: double
+            type: number
+          financing-kind:
+            type: string
+            description: |
+              Identifies type of funding for the product.
+              For detailed view of possible values see [financing-kind](card-classifications.html#financing-kind) classification
+            x-asee-classification: financing-kind
+            #x-asee-compliance: This property should either be related to classification or to the enum. It cannot be related to both. In this case, classification is probably the better choice. Also, mentioned classification is not defined in classification file. [Stefan] This classification potentially will be expanding with new values. I will change it to be open classification.
   overdraft-facility-product:
     description:  An overdraft facility allows you to withdraw cash from your current account up to the overdraft limit approved. It is a short-term standby credit facility which is usually renewable on a specified time period.
     type: object
     allOf:
       - $ref: '#/definitions/product'
-    properties:
-      minimal-repayment-amount:
-        description: Minimal repayment amount of the product
-        $ref: "#/definitions/currency"
-      minimal-repayment-percentage:
-        description: Minimal repayment percentage of the product
-        format: double
-        type: number
+        properties:
+          minimal-repayment-amount:
+            description: Minimal repayment amount of the product
+            $ref: "#/definitions/currency"
+          minimal-repayment-percentage:
+            description: Minimal repayment percentage of the product
+            format: double
+            type: number
   current-account-product:
     description: "Is a financial facility that represents the general checking account facility at the core of the consumer and small business banking activity. There is a range of supporting features that make up the standard facility (checks/cheques, standing orders, debit cards, phone and on-line banking services etc.). The fulfillment will include a range of optional services, fees and interest payments and penalties and will often be bundled and or underlie/support other financial facilities and financial transactions"
     type: object
@@ -564,41 +564,41 @@ definitions:
     type: object
     allOf:
       - $ref: '#/definitions/product'
-    properties:
-      maximal-term:
-        description: Maximal term period of the product
-        type: string
-        format: ISO 8601 duration
-      minimal-term:
-        description: Minimal term period of the product
-        type: string
-        format: ISO 8601 duration
+        properties:
+          maximal-term:
+            description: Maximal term period of the product
+            type: string
+            format: ISO 8601 duration
+          minimal-term:
+            description: Minimal term period of the product
+            type: string
+            format: ISO 8601 duration
   term-loan-product:
     description: Is a Finance Service that is characterized by the lending of funds for a fixed term, for the purchase of goods and/or services.
     type: object
     allOf:
       - $ref: '#/definitions/product'
-    properties:
-      maximal-term:
-        description: Maximal term period of the product
-        type: string
-        format: ISO 8601 duration
-      minimal-term:
-        description: Minimal term period of the product
-        type: string
-        format: ISO 8601 duration
-      minimal-downpayment-percentage:
-        #x-asee-compliance: Ok, this is participation percent. But where is declaration of minimum deposit percent and other needed collaterals for the product? We also need these declarations for credit-facility and overdraft-facility products.
-        #This is light exposed functionality. So for the whole functionality to be expose, we need to add more fields. This will not be developt right now,  without concrete need. So we will leave it as it is, with the remark that it shoulf be done in the next iteration.
-        description: Minimal downpayment percentage for the product
-        format: double
-        type: number
-      financing-kind:
-        type: string
-        description: |
-          Identifies type of funding for the product.
-          For detailed view of possible values see [financing-kind](card-classifications.html#financing-kind) classification
-        x-asee-classification: financing-kind
+        properties:
+          maximal-term:
+            description: Maximal term period of the product
+            type: string
+            format: ISO 8601 duration
+          minimal-term:
+            description: Minimal term period of the product
+            type: string
+            format: ISO 8601 duration
+          minimal-downpayment-percentage:
+            #x-asee-compliance: Ok, this is participation percent. But where is declaration of minimum deposit percent and other needed collaterals for the product? We also need these declarations for credit-facility and overdraft-facility products.
+            #This is light exposed functionality. So for the whole functionality to be expose, we need to add more fields. This will not be developt right now,  without concrete need. So we will leave it as it is, with the remark that it shoulf be done in the next iteration.
+            description: Minimal downpayment percentage for the product
+            format: double
+            type: number
+          financing-kind:
+            type: string
+            description: |
+              Identifies type of funding for the product.
+              For detailed view of possible values see [financing-kind](card-classifications.html#financing-kind) classification
+            x-asee-classification: financing-kind
   electronic-access-product:
     description: "Identifies a Product Access Service which enables a Product to be accessed by use of an on-line system, such as a computer terminal or telephone."
     type: object
