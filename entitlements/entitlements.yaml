@@ -3,18 +3,18 @@ x-asee-visibility: public
 host: bankapi.net
 basePath: /v1/entitlements
 info:
-  description: "Entitlements API lets you check and enforce access entitlements with customer mandates and limits. Mandates are given per arrangement and can specify allowed services, applicable channels and any limits set for each mandate holder. Mandate model is aligned with ISO 20022. Setting preferred limits is possible in two modes - unconstrained and constrained. Unconstrained mode lets you set any limit value within acceptable range while constrained mode makes you pick from a predefined list of limits and limit groups."
+  description: "Entitlements API lets you check and enforce access entitlements with customer mandates and limits. Mandates are given per arrangement and can specify allowed services, applicable channels and any limits set for each mandate holder. Mandate model is aligned with ISO 20022. Setting preferred limits is possible in two modes - *unconstrained* and *constrained*. Unconstrained mode lets you set any limit value within acceptable range while constrained mode makes you pick from a predefined list of limits and limit groups."
   title: Entitlements API
   version: v1
   contact:
-    name: Nikola Stojanovic
+    name: Branko Serbula
     url: https://bankapi.net/docs/public/entitlements-getstarted.html
-    email: nikola.stojanovic@asseco-see.rs
+    email: branko.serbula@asseco-see.rs
 tags:
-- description: Working with mandates
-  name: Mandates
-- description: Working with limit balances
-  name: Limit balances
+- name: Limits
+  description: Working with limits 
+- name: Mandates
+  description: Working with mandates  
 - name: Classifications
   description: Working with classifications
 consumes:
@@ -33,10 +33,6 @@ paths:
       parameters:
         - $ref: '#/parameters/arrangements-param'
         - $ref: '#/parameters/customers-param'
-        - $ref: '#/parameters/channels-param'
-        - $ref: '#/parameters/services-param'
-        - $ref: '#/parameters/sort-order-param'
-        - $ref: '#/parameters/sort-by-param'
         - $ref: '#/parameters/include-param'
         - $ref: '#/parameters/trim-param'
       responses:
@@ -49,7 +45,6 @@ paths:
       tags:
         - Mandates
       x-asee-tags:
-        - Sortable
         - Shapeable
 
   /mandates/{mandate-number}:
@@ -71,87 +66,232 @@ paths:
         - Mandates
       x-asee-tags:
         - Shapeable
-
-  /limit-balances/card-limits:
+  
+  /limits/policy:
     get:
-      summary: Get balances of card limits for specifc customer or card
-      description: "Response contains details of specific mandate with holders, their optional limits and possible list of applicable channels and allowed services"
-      operationId: CardLimitBalances_GetList
-      parameters:
-        - $ref: '#/parameters/arrangements-param'
-        - $ref: '#/parameters/customer-number-param'
-        - $ref: '#/parameters/channels-param'
-        - $ref: '#/parameters/services-param'
-        - $ref: '#/parameters/sort-order-param'
-        - $ref: '#/parameters/sort-by-param'
-        - $ref: '#/parameters/include-param'
-        - $ref: '#/parameters/trim-param'
+      summary: Get limit setting policy
+      description: Response contains policy that determines whether limit setting is constrained or unconstrained
+      operationId: Limits_GetPolicy
       responses:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/limit-balance-list'
+            $ref: '#/definitions/limit-setting-policy'
         default:
           $ref: '#/responses/default-error-response'
       tags:
-        - Limit balances
-      x-asee-tags:
-        - Sortable
-        - Shapeable
+        - Limits  
 
-  /limit-balances/account-limits:
+  /limits/predefined:
     get:
-      summary: Get balances of account limits for specific customer or account
-      description: "Response contains details of specific mandate with holders, their optional limits and possible list of applicable channels and allowed services"
-      operationId: AccountLimitBalances_GetList
+      summary: Get groups of predefined limits for specific product
+      operationId: Limits_GetPredefinedGroups
+      description: Response contains list of predefined limit groups for specific product
       parameters:
-        - $ref: '#/parameters/arrangements-param'
-        - $ref: '#/parameters/customer-number-param'
-        - $ref: '#/parameters/channels-param'
-        - $ref: '#/parameters/services-param'
-        - $ref: '#/parameters/sort-order-param'
-        - $ref: '#/parameters/sort-by-param'
-        - $ref: '#/parameters/include-param'
-        - $ref: '#/parameters/trim-param'
+        - name: product-code
+          description: Unique identifier of the product (online service product, card product) for which groups are predefined
+          in: query
+          required: true
+          type: string
       responses:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/limit-balance-list'
+            $ref: '#/definitions/limit-group-list'
         default:
           $ref: '#/responses/default-error-response'
       tags:
-        - Limit balances
-      x-asee-tags:
-        - Sortable
-        - Shapeable
+        - Limits   
 
-  /limit-balances/online-limits:
+
+  /limits/card-access/{card-number}:
     get:
-      summary: Get balances of online limits for specific customer or account
-      description: "Response contains detail on limit usage for online channels"
-      operationId: OnlineLimitBalances_GetList
+      summary: Get limits for specific card
+      description: "Response contains effective limits and their usage for specific card"
+      operationId: CardLimits_GetList
       parameters:
-        - $ref: '#/parameters/arrangements-param'
-        - $ref: '#/parameters/customer-number-param'
-        - $ref: '#/parameters/channels-param'
-        - $ref: '#/parameters/services-param'
-        - $ref: '#/parameters/sort-order-param'
-        - $ref: '#/parameters/sort-by-param'
-        - $ref: '#/parameters/include-param'
-        - $ref: '#/parameters/trim-param'
+        - $ref: '#/parameters/card-number-param'
       responses:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/limit-balance-list'
+            $ref: '#/definitions/limit-list'
         default:
           $ref: '#/responses/default-error-response'
       tags:
-        - Limit balances
-      x-asee-tags:
-        - Sortable
-        - Shapeable
+        - Limits
+    post:
+      summary: Set card limit
+      description: "Sets new value of card limit"
+      operationId: CardLimits_SetLimit
+      parameters:
+        - $ref: '#/parameters/card-number-param'      
+        - name: cmd
+          schema:
+            $ref: '#/definitions/set-limit-command'
+          in: body
+          required: true
+      responses:
+        204:
+          description: No content - Limit set
+        440:
+          description: |
+            Your request was well constructed but it could not be processed. Consider the following possible problems and look into response for more details:
+
+            | Problem | Description |
+            |-|-|
+            | [invalid-service-channel-combination]() | {service} service is not available via {channel} channel |
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+        - Limits
+
+  /limits/card-access/{card-number}/groups:
+    get:
+      summary: Get groups of card limits for specific card
+      description: Response contains list of effective limit groups for specific card
+      operationId: CardLimits_Groups_Get     
+      parameters:
+        - $ref: '#/parameters/card-number-param'
+        - name: categories
+          description: List of limit categories to filter the results 
+          in: query
+          required: false
+          type: array
+          minItems: 1
+          uniqueItems: true
+          collectionFormat: csv
+          items:
+            type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/limit-group-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+        - Limits   
+    post:
+      summary: Set group of limits for specific card
+      description: "Sets the selected group of cars limits for specific card"
+      operationId: CardLimits_Groups_Set
+      parameters:
+        - $ref: '#/parameters/card-number-param'
+        - name: cmd
+          schema:
+            $ref: '#/definitions/set-limit-group-command'
+          in: body
+          required: true
+      responses:
+        204:
+          description: No content - Limit group set
+        440:
+          description: |
+            Your request was well constructed but it could not be processed. Consider the following possible problems and look into response for more details:
+
+            | Problem | Description |
+            |-|-|
+            | [group-not-applicable]() | Group {group} is not applicable to {product} product |
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+        - Limits        
+
+  /limits/online-access/{customer-number}:
+    get:
+      summary: Get online limits for specific customer
+      description: "Response contains effective limits and their usage for online channels"
+      operationId: OnlineLimits_GetList
+      parameters:
+        - $ref: '#/parameters/customer-number-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/limit-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+        - Limits
+    post:
+      summary: Set online limit
+      description: "Sets new value of online limit"
+      operationId: OnlineLimits_SetLimit
+      parameters:
+        - $ref: '#/parameters/customer-number-param'
+        - name: cmd
+          schema:
+            $ref: '#/definitions/set-limit-command'
+          in: body
+          required: true
+      responses:
+        204:
+          description: No content - Limit set
+        440:
+          description: |
+            Your request was well constructed but it could not be processed. Consider the following possible problems and look into response for more details:
+
+            | Problem | Description |
+            |-|-|
+            | [invalid-service-channel-combination]() | {service} service is not available via {channel} channel |
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+        - Limits
+
+  /limits/online-access/{customer-number}/groups:
+    get:
+      summary: Get groups of online limits for specific customer
+      description: "Response contains effective groups of online limits for specific customer"
+      operationId: OnlineLimits_Groups_Get
+      parameters:
+        - $ref: '#/parameters/customer-number-param'      
+        - name: categories
+          description: List of limit categories to filter the results 
+          in: query
+          required: false
+          type: array
+          minItems: 1
+          uniqueItems: true
+          collectionFormat: csv
+          items:
+            type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/limit-group-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+        - Limits   
+    post:
+      summary: Set group of online limits for specific customer
+      description: "Sets the selected group of online limits for specific customer"
+      operationId: OnlineLimits_Groups_Set
+      parameters:
+        - $ref: '#/parameters/customer-number-param'
+        - name: cmd
+          schema:
+            $ref: '#/definitions/set-limit-group-command'
+          in: body
+          required: true
+      responses:
+        204:
+          description: No content - Limit group set
+        440:
+          description: |
+            Your request was well constructed but it could not be processed. Consider the following possible problems and look into response for more details:
+
+            | Problem | Description |
+            |-|-|
+            | [group-not-applicable]() | Group {group} is not applicable to {product} product |
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+        - Limits
+     
 
 # ****************************************************#
 # ENDPOINTS COMMON WITH OTHER APIs                    #
@@ -200,22 +340,6 @@ parameters:
     in: path
     required: true
     type: string
-  sort-order-param:
-    description: Sort order (`asc` or `desc`). Default is asc. For more information see general guidance on [sorting](common-getstarted.html#sorting)
-    in: query
-    name: sort-order
-    type: string
-    default: asc
-    enum:
-    - asc
-    - desc
-    x-asee-common: true
-  sort-by-param:
-    description: Attribute of the collection item to sort by. For more information see general guidance on [sorting](common-getstarted.html#sorting)
-    in: query
-    name: sort-by
-    type: string
-    x-asee-common: true
   include-param:
     description: List of fields to include in response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
     in: query
@@ -248,30 +372,7 @@ parameters:
     collectionFormat: csv
     items:
       type: string
-  arrangement-kinds-param:
-    description: |
-      List of arrangements kinds for which mandates are inquired
-      For a list of possible values see [arrangement-kind-param](arrangement-classifications.html#arrangement-kinds) enumeration.
-    in: query
-    name: arrangement-kinds
-    required: false
-    type: array
-    minItems: 1
-    uniqueItems: true
-    collectionFormat: csv
-    items:
-      type: string
-      enum:
-      - current-account
-      - demand-deposit
-      - term-deposit
-      - term-loan
-      - overdraft-facility
-      - credit-facility
-      - credit-card-facility
-      - card-access-arrangement
-      - electronic-acess-arrangement
-      - other-product-arrangement
+
   customers-param:
     description: List of identifiers of mandate holders for which mandates are inquired. Mandatory if `arrangements` param is not present.
     in: query
@@ -283,45 +384,28 @@ parameters:
     collectionFormat: csv
     items:
       type: string
+      
   customer-number-param:
-    description: List of identifiers of mandate holders for which mandates are inquired. Mandatory if `arrangements` param is not present.
-    in: query
+    description: Unique identifier of the customer
+    in: path
     name: customer-number
-    required: false
+    required: true
     type: string
+
+  card-number-param:
+    description: Unique and unambiguous identification of the card. Could be PAN or some form of tokenized identifer.
+    in: path
+    name: card-number
+    required: true
+    type: string   
+     
   mandate-number-param:
     description: Unique and unambiguous identification of the mandate
     in: path
     name: mandate-number
     required: true
     type: string
-  channels-param:
-    name: channels
-    type: array
-    in: query
-    description: |
-      List of channels for which mandates are inquired
-      For a list of possible values see [channels](entitlements-classifications.html#channels) enumeration.
-    minItems: 1
-    uniqueItems: true
-    collectionFormat: csv
-    items:
-      type: string
-      enum: [online, branch, call-center, any]
-  services-param:
-    in: query
-    name: services
-    required: false
-    collectionFormat: csv
-    type: array
-    description: |
-      List of bank services allowed by the mandates
-      For a list of possible values see [bank-services](entitlements-classifications.html#bank-services) classification.
-    minItems: 1
-    uniqueItems: true
-    items:
-      type: string
-      x-asee-classification: bank-services
+
 definitions:
   classification-value:
     type: object
@@ -413,115 +497,13 @@ definitions:
           code: "3"
           description: Contact may be used to provide party with reports on their account
 
-  currency:
-    description: Currency amount and code
-    required:
-      - amount
-      - code
-    example:
-      amount: 200.00
-      code: EUR
-    properties:
-      amount:
-        description: Amount
-        format: double
-        type: number
-        minimum: 0
-      code:
-        description: ISO 4217 3 letter currency code
-        type: string
-        minLength: 3
-        maxLength: 3
 
   mandate-list:
     type: array
     items:
       $ref: '#/definitions/mandate'
     example:
-      items:
-      -
-        mandate-id: "234235"
-        arrangement-number: "4293742374923"
-        arrangement-kind: current-account
-        customer-number: "979908"
-        applicable-channels:
-          items:
-            - online
-            - branch
-        allowed-services:
-          items:
-            - bank-service1
-            - bank-service2
-        effective-date: 2016-02-21T01:25:00
-        end-date: 2016-03-21T01:25:00
-        required-signatures-number: 24
-        signature-order: true
-        mandate-holders:
-          items:
-            - customer-number: "23453452"
-              customer-name: John
-              is-owner: true
-              signature-order: true
-              limits:
-                - per-transaction:
-                    amount: 200.00
-                    code: EUR
-                  period-limits:
-                    kind: amount-in-period
-                    period: P20080915T155300
-            - customer-number: "23452131"
-              customer-name: Marco
-              is-owner: false
-              signature-order: false
-              limits:
-                - per-transaction:
-                    amount: 200.00
-                    code: EUR
-                  period-limits:
-                    kind: count-in-period
-                    period: P20080915T155300
-      -
-        mandate-id: "2342355"
-        arrangement-number: "23942937492374"
-        arrangement-kind: overdraft-facility
-        customer-number: "890800"
-        applicable-channels:
-          items:
-            - call-center
-            - atm
-            - vpos
-        allowed-services:
-          items:
-            - bank-service3
-            - bank-service4
-        effective-date: 2016-02-01T01:25:00
-        end-date: 2016-10-21T01:25:00
-        required-signatures-number: 15
-        signature-order: false
-        mandate-holders:
-          items:
-            - customer-number: "23453452"
-              customer-name: Maria
-              is-owner: true
-              signature-order: true
-              limits:
-                - per-transaction:
-                    amount: 200.00
-                    code: EUR
-                  period-limits:
-                    kind: amount-in-period
-                    period: P20080915T155300
-            - customer-number: "23452131"
-              customer-name: Alexandar
-              is-owner: false
-              signature-order: false
-              limits:
-                - per-transaction:
-                    amount: 200.00
-                    code: EUR
-                  period-limits:
-                    kind: count-in-period
-                    period: P20080915T155300
+
   mandate:
     description: Entitlement of mandate holder to access services for an arrangement
     required:
@@ -612,137 +594,20 @@ definitions:
           customer-number: mipe022
           customer-name: Milena Petrovic
           limits:
-            per-transaction:
-              amount: 10000
-              code: EUR
-            period-limits:
-              - # cumulative daily amount limit
-                total-amount:
-                  amount: 10000
-                  code: EUR
-                period: P1D
-              - # monthly number of transactions limit
-                total-count: 100
-                period: P1M
-  limit-balance-list:
-    type: array
-    items:
-      $ref: '#/definitions/limit-balance'
-    example:
-      items:
-        -
-          arrangement-number: "1312314239917217"
-          arrangment-kind: card-access-arrangement
-          customer-number: nodjo001
-          limit-kind: amount-per-period
-          used-amount: 100.00
-          remaining-amount: 1234.00
-          currency: EUR
-          service: withdrawal
-          channel: atm
-          period-end: 2016-04-03
-          period: P20080915T251305
-        -
-          arrangement-number: "432577279917217"
-          arrangment-kind: term-loan
-          customer-number: sdf23432
-          limit-kind: count-in-period
-          used-amount: 100.00
-          remaining-amount: 1234.00
-          currency: EUR
-          service: withdrawal
-          channel: call-center
-          period-end: 2016-02-01T01:25:00
-          period: P20080915T155300
-
-  limit-balance:
-    description: Balance of the limit
-    required:
-      - arrangement-number
-      - customer-number
-      - service
-      - calculated
-      - period
-      - used-amount
-      - remaining-amount
-    properties:
-      arrangement-number:
-        type: string
-        description: Unique identifier of the account arrangement that is the object of the mandate
-      arrangement-kind:
-        description: |
-          Primary enumeration of arrangements according to product type
-          For a list of possible values see [arrangement-kind-param](arrangement-classifications.html#arrangement-kinds) enumeration.
-        type: string
-        enum:
-        - current-account
-        - demand-deposit
-        - term-deposit
-        - term-loan
-        - overdraft-facility
-        - credit-facility
-        - credit-card-facility
-        - card-access-arrangement
-        - electronic-acess-arrangement
-        - other-product-arrangement
-      customer-number:
-        description: "Identification of the mandate holder in bank's records"
-        type: string
-      limit-kind:
-        description: |
-          For a list of possible values see [limit-kinds](entitlements-classifications.html#limit-kinds) enumeration.
-        type: string
-        enum: [amount-in-period, count-in-period]
-      used-amount:
-        description: Amount of limit that has been already used
-        type: number
-        format: double
-      remaining-amount:
-        description: Amount of limit that is still remaining
-        type: number
-        format: double
-      currency:
-        description: ISO 4217 3 letter currency code
-        type: string
-        minLength: 3
-        maxLength: 3
-      service:
-        description: |
-          "Bank service tracked by the limit"
-          For a list of possible values see [bank-services](entitlements-classifications.html#bank-services) classification.
-        type: string
-        x-asee-classification: bank-services
-        default: any
-      channel:
-        type: string
-        description: |
-          "Channel tracked by the limit. If channel is not relevant expected value is `any`"
-          For a list of possible values see [channels](entitlements-classifications.html#channels) enumeration.
-        enum: [online, branch, call-center, atm, pos, vpos, any]
-      calculated:
-        description: Date and time when limit balance was calculated. Note that this is not the time when balance was requested, it is rather the time when last transaction affected the balance.
-        type: string
-        format: date-time
-      period-end:
-        description: Date and time when limit usage will be reset
-        type: string
-        format: date-time
-      period:
-        description: Period specified as a ISO 8601 duration. Usualy in days or months
-        type: string
-        format: ISO 8601 duration
-    example:
-      arrangement-number: "432577279917217"
-      arrangment-kind: card-access-arrangement
-      customer-number: nodjo001
-      limit-kind: amount-per-period
-      used-amount: 100.00
-      remaining-amount: 1234.00
-      currency: EUR
-      service: withdrawal
-      channel: atm
-      period-end: 2016-02-01T01:25:00
-      period: P20080915T155300
+            - # weekly withdrawal limit for Milena Petrovic
+              kind: period-limit  
+              period: P7D
+              amount: 100000
+              count: 10  
+              currency: RSD                     
+              service: withdrawal
+              channel: any
+            - # maximum amount of single withdrawal for Milena Petrovic 
+              kind: transaction-limit  
+              amount: 20000
+              currency: RSD                     
+              service: withdrawal
+              channel: any
 
   mandate-holder:
     description: Holder of the mandate
@@ -764,61 +629,251 @@ definitions:
         type: integer
         format: int32
       limits:
-        description: Authorisation granted to a mandate holder
-        $ref: '#/definitions/limits'
-
-  limits:
-    description: Authorisation granted to a mandate holder
-    properties:
-      per-transaction:
-        description: Maximum amount allowed by the mandate per each transaction
-        $ref: '#/definitions/currency'
-      period-limits:
-        description: Maximum amount or count allowed over specific period
+        description: Limits of authorization granted to a mandate holder
         type: array
-        items:
-          $ref: '#/definitions/period-limit'
+        items: 
+          $ref: '#/definitions/limit-condition'
 
-
-  period-limit:
-    description: Limit in specific period
-    discriminator: kind
-    required:
-      - kind
-      - period
+  limit-condition:
+    description: Specification od the limit details
     properties:
       kind:
-        type: string
         description: |
           For a list of possible values see [limit-kinds](entitlements-classifications.html#limit-kinds) enumeration.
-        enum: [amount-in-period, count-in-period]
+        type: string
+        enum: [transaction-limit, period-limit]
+        x-asee-enumeration: limit-kinds
       period:
-        description: Period specified as a ISO 8601 duration. Usualy in days or months
+        description: Period for which limit applies. Specified as a ISO 8601 duration. Usualy dayly or monthly, but could be more specific.
         type: string
         format: ISO 8601 duration
-
-  period-amount-limit:
-    allOf:
-    - $ref: '#/definitions/period-limit'
-    description: Maximum cumulative amount of transactions allowed over specific period
-    required:
-      - total-amount
-    properties:
-      total-amount:
-        description: Maximum cumulative amount of transactions allowed by the mandate in the period
-        $ref: '#/definitions/currency'
-
-  period-count-limit:
-    allOf:
-    - $ref: '#/definitions/period-limit'
-    description: Maximum number of transactions allowed by the mandate in the period
-    required:
-      - total-count
-    properties:
-      total-count:
-        description: Maximum number of transactions allowed by the mandate in the period
+      amount:
+        description: Monetary amount allowed in period or per transaction
+        format: double
+        type: number
+        minimum: 0
+      count:
+        description: Number of transactions allowed in the period
         type: integer
         format: int32
+        minimum: 0  
+      currency:
+        description: ISO 4217 3 letter currency code
+        type: string
+        minLength: 3
+        maxLength: 3                     
+      service:
+        description: |
+          Bank's service tracked by the limit.
+          For a list of possible values see [bank-services](entitlements-classifications.html#bank-services) classification.
+        type: string
+        x-asee-classification: bank-services
+        default: any
+      channel:
+        type: string
+        description: |
+          Channel tracked by the limit. If channel is not relevant expected value is `any`.
+          For a list of possible values see [channels](entitlements-classifications.html#channels) enumeration.
+        enum: [online, branch, call-center, atm, pos, vpos, any]
+    example:
+      kind: period-limit  
+      period: P7D
+      amount: 100000
+      count: 10  
+      currency: RSD                     
+      service: withdrawal
+      channel: atm
+ 
+
+  limit-usage:
+    description: Used balance of the limit
+    properties:
+      used-amount:
+        description: Amount of limit that has been already used
+        type: number
+        format: double
+      remaining-amount:
+        description: Amount of limit that is still remaining
+        type: number
+        format: double
+      used-count:
+        description: Number of transactions already used
+        type: integer
+        format: int32
+        minimum: 0  
+      remaining-count:
+        description: Number of transactions still remaining
+        type: integer
+        format: int32
+        minimum: 0        
+    example:
+      used-amount: 100.00
+      remaining-amount: 1234.00
+      used-count: 1
+      remaining-count: 9
+
+  limit:
+    description: Actual limit  
+    properties:
+      limit-id:
+        type: string
+        description: Unique identifier of the limit
+      limit-group:
+        type: string
+        description: Unique identifier of limit group if limit was set as a part of a group.
+      period-reset:
+        description: Date and time when limit usage will be reset
+        type: string
+        format: date-time        
+      condition:
+        $ref: '#/definitions/limit-condition'
+      usage:
+        $ref: '#/definitions/limit-usage'     
+
+  limit-group:
+    description: Predefined group of related limits that customer can pick. Customer chooses one of the predefined limit groups from the same category.
+    properties:
+      name:
+        type: string
+        description: Name of the limit group
+      description:
+        type: string
+        description: Description of the limit group    
+      category:
+        type: string
+        description: |
+          Catogories of limits such as `domestic-card-use`, `cross-border-card-use`. Only one limit group can be effective within same category.
+          For a list of possible values see [limit-categories](entitlements-classifications.html#limit-categories) classification.
+        x-asee-classification: limit-categories       
+      limits:
+        type: array
+        description: List of limits within a group
+        items:
+          $ref: '#/definitions/limit-condition'
+
+  
+  limit-setting-policy:
+    type: object
+    description: Policy for limit setting
+    properties:
+      online-limit-setting:
+        type: string
+        description: Mode of limit setting allowed by online limit system. Constrained mode requires selection of predefined limit groups.
+        enum: [constrained, unconstrained]
+      card-limit-setting:
+        type: string
+        description: Mode of limit setting allowed by card limit system. Constrained mode requires selection of predefined limit groups.
+        enum: [constrained, unconstrained]       
+    example:
+      online-limit-setting: unconstrained
+      card-limit-setting: constrained
+        
+  limit-list:
+    type: array
+    description: List of limits
+    items:
+      $ref: '#/definitions/limit'
+    example:
+      - 
+        limit-id: CL-123
+        period-reset: 2016-07-14T00:00:00
+        limit-group: domestic-2
+        conditon:
+          kind: period-limit  
+          period: P7D
+          amount: 500000
+          count: 50  
+          currency: RSD                     
+          service: withdrawal
+          channel: any
+        usage:
+          used-amount: 100000.00
+          remaining-amount: 400000.00
+          used-count: 11
+          remaining-count: 39
+      - 
+        limit-id: CL-124
+        period-reset: 2016-07-14T00:00:00
+        limit-group: domestic-2
+        conditon:
+          kind: period-limit  
+          period: P7D
+          amount: 1000
+          count: 10  
+          currency: EUR                     
+          service: payment
+          channel: any
+        usage:
+          used-amount: 179.50
+          remaining-amount: 820.50
+          used-count: 1
+          remaining-count: 9  
+
+  limit-group-list:
+    type: array
+    description: List of limit groups
+    items:
+      $ref: '#/definitions/limit-group'
+    example:
+      - 
+        name: domestic-2
+        description: Domestic limit group 2   
+        category: domestic-card-use   
+        limits:
+          - 
+            kind: period-limit  
+            period: P7D
+            amount: 500000
+            count: 50  
+            currency: RSD                     
+            service: withdrawal
+            channel: any
+          - 
+            kind: period-limit  
+            period: P7D
+            amount: 500000
+            count: 50  
+            currency: RSD                     
+            service: payment
+            channel: any
+      - 
+        name: cross-border-2
+        description: Cross border limit group 2   
+        category: cross-border-card-use   
+        limits:
+          - 
+            kind: period-limit  
+            period: P7D
+            amount: 5000
+            count: 40  
+            currency: EUR                     
+            service: withdrawal
+            channel: any
+          - 
+            kind: period-limit  
+            period: P7D
+            amount: 5000
+            count: 40  
+            currency: EUR                     
+            service: payment
+            channel: any            
+  
+  set-limit-group-command:
+    type: object
+    description: Command with parameters to set limit group
+    properties:
+      group-id: 
+        type: string
+        description: Unique identifier of selected limit group
+  set-limit-command:
+    type: object
+    description: Command with parameters to set new limit value
+    properties:
+      limit-id:
+        type: string
+        description: Unique identifier of the limit     
+      limit-value: 
+        $ref: '#/definitions/limit-condition'      
 
 responses:
   default-error-response:

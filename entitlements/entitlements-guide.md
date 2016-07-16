@@ -5,21 +5,21 @@ visibility: internal
 <span class="icon"></span> Entitlements API Guide
 ======================
 
-Entitlements API lets you check and enforce access entitlements with customer mandates and limits. Mandates are given per arrangement and can specify allowed services, applicable channels and any limits set for each mandate holder. Mandate model is aligned with ISO 20022.
+"Entitlements API lets you check and enforce access entitlements with customer mandates and limits. Mandates are given per arrangement and can specify allowed services, applicable channels and any limits set for each mandate holder. Mandate model is aligned with ISO 20022. Setting preferred limits is possible in two modes - *unconstrained* and *constrained*. Unconstrained mode lets you set any limit value within acceptable range while constrained mode makes you pick from a predefined list of limits and limit groups."
 
 > ##THIS API GUIDE IS UNDER CONSTRUCTION. COME BACK SOON.
 
 Key Resources
 -------------
 
-Entitlements API two top level collection resources: `mandates`, `limit-balances` with three specialized sub resources - `card-limits`, `online-limits`, `account-limits`
+Entitlements API four top level resources: `mandates`, `limits` with two specialized sub resources - `card-access`, `online-access` for card and online access limits
 
 Resource | Description
 ----------- |-----------
 *mandates* | Entitlements that allow mandate holders to access to services within arrangements
-*limit-balances/card-limits* | Remaining and used balance of limits set for payment cards
-*limit-balances/account-limits* | Remaining and used balance of limits set for account arrangements
-*limit-balances/online-limits* | Remaining and used balance of limits set for online access
+*limits* | Predefined limits
+*limits/card-access* | Effective limits for payment cards 
+*limits/online-access* | Effective online access limits for customers
 
 Getting started tutorial
 ---------------

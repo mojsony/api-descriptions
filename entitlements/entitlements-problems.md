@@ -28,6 +28,6 @@ Entitlements API Specific Problems
 
 Literal               |  Code | Description                        
 --------------------- | -----:| -----------------------------------
-locked-out            | 50250 | Locked out                         
-max-attempts-reached  | 50251 | Max login attempts has been reached
-authorization-expired | 50252 | Authorization expired   
+group-not-applicable  | 50250 | Group {group} is not applicable to {product} product
+invalid-service-channel-combination | 50251 | {service} service is not available via {channel} channel                         
+
