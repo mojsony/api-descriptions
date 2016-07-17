@@ -4,7 +4,7 @@ info:
   version: v1
   title: Correspondence API
   description: |
-    Correspondence API handles the automated generation of batches of pre-formatted correspondence, typically integrating customer/product specific data in correspondence templates for variable aspects of content. Channel applications can use this API to deliver alerts, reminders, advices, past due notices, announcements, campaign offers, statements and other arrangement reports. Correspondence API also offers rendering of documents in .pdf and .docx formats from predefined templates and supplied data. For self-service applications such as mobile or web, Correspondence API offers virtual mailbox for private exchange of messages between bank and customer.
+    Correspondence API handles the automated generation of batches of pre-formatted correspondence, typically integrating customer/product specific data in correspondence templates for variable aspects of content. Channel applications can use this API to deliver alerts, reminders, advices, past due notices, announcements, campaign offers, statements and other arrangement reports. Correspondence API also offers rendering of documents in .pdf and .docx formats from predefined templates and supplied data. For self-service applications such as mobile or web, Correspondence API offers virtual mailbox for private exchange of messages between bank and customer. Last, but not least, customer notifications preferences are maintained so that notifications of interest to customer are delivered over preferred channels.
   contact:
     name: Jovica Filipovic
     url: https://bankapi.net/docs/public/correspondence-getstarted.html
@@ -25,6 +25,10 @@ tags:
     name: Templates
   - description: Working with mailbox
     name: Mailbox
+  - description: Working with notification preferences
+    name: Preferences
+  - description: Working with classifications
+    name: Classifications    
 paths:
   /communications:
     get:
@@ -89,8 +93,8 @@ paths:
           schema:
             $ref: '#/definitions/update-delivery-statuses-command'
       responses:
-        '200':
-          description: Communication status updated
+        '204':
+          description: No content - Communication status updated
         default:
           $ref: '#/responses/default-error-response'
       x-asee-tags: []
@@ -168,7 +172,7 @@ paths:
         - Sortable
         - Shapeable
   /me/messages/{message-id}:
-    post:
+    get:
       summary: Get specific message
       tags:
         - Mailbox
@@ -213,8 +217,8 @@ paths:
           schema:
             $ref: '#/definitions/mark-as-read-command'
       responses:
-        '200':
-          description: OK
+        '204':
+          description: No content - Marked as read
         default:
           $ref: '#/responses/default-error-response'
   /me/messages/archive:
@@ -231,11 +235,98 @@ paths:
           schema:
             $ref: '#/definitions/archive-messages-command'
       responses:
-        '200':
-          description: OK
+        '204':
+          description: No content - Archived
         default:
           $ref: '#/responses/default-error-response'
+
+  /me/notification-preferences:
+    get:
+      summary: Get notification preferences for authenticated user
+      description: Response contains notifications preferences with tresholds and channel preferences
+      tags: [Preferences]
+      operationId: NotificationPreferences_Get
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/preference-list'          
+        default:
+          $ref: '#/responses/default-error-response'      
+    post:
+      summary: Change notification preferences for authenticated user
+      description: Sets notification preference for user. Preference for certain notification may apply to specific account. Only changed preferences should be supplied within a command.
+      tags: [Preferences]
+      operationId: NotificationPreferences_Set
+      parameters:
+        - name: cmd
+          in: body
+          description: Set notification preferences command
+          required: true
+          schema:
+            $ref: '#/definitions/set-preferences-command'      
+      responses:
+        '204':
+          description: No content - preferences set
+        default:
+          $ref: '#/responses/default-error-response'  
+
+  /notification-groups:
+    get:
+      summary: List predefined notification groups
+      description: Response contains list of predefined notification groups with default settings for channels, treshold and freequency
+      tags: [Preferences]
+      operationId: NotificationGroups_Get
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/notification-group-list'          
+        default:
+          $ref: '#/responses/default-error-response'   
+
+# ****************************************************#
+# ENDPOINTS COMMON WITH OTHER APIs                    #
+# ****************************************************#
+
+  /classifications:
+    get:
+      summary: List all classification schemas used by the API
+      description: Some fields and parameters have been restricted to a list of allowed lookup values maintained by the bank. This method lists all schemas used in this API.
+      operationId: "Classifications_GetList"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/classification-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+        - Classifications
+  /classifications/{schema-id}:
+    get:
+      summary: List values allowed by given classification schema.
+      description: Returns all classification values for chosen classification.
+      operationId: Classifications_Get
+      parameters:
+        - $ref: '#/parameters/schema-id-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/classification'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+        - Classifications
+        
 parameters:
+  schema-id-param:
+    name: schema-id
+    description: Identifier of classification schema
+    in: path
+    required: true
+    type: string
   from-time-param:
     name: from-time
     in: query
@@ -255,7 +346,7 @@ parameters:
     in: query
     description: |
       Contact medium designated for the delivery of the communication
-      For a list of possible values see [contact-medium](correspondence-classifications.html#contact-medium) enumeration.
+      For a list of allowed values see [contact-medium](correspondence-classifications.html#contact-medium) enumeration.
     type: string
     required: true
     enum:
@@ -263,6 +354,7 @@ parameters:
       - email
       - virtual-inbox
       - sms
+    x-asee-enum: contact-medium
   include-param:
     description: List of fields to include in response. For more information see general guidance on [response shaping](common-getstarted.html#shaping)
     in: query
@@ -370,6 +462,130 @@ parameters:
     required: true
     type: string
 definitions:
+
+# ****************************************************#
+# DEFINITIONS OF MODELS COMMON WITH OTHER APIs        #
+# ****************************************************#
+
+  classification-value:
+    type: object
+    description: Classification value
+    properties:
+      literal:
+        description: Literal that uniquely identifies classification value
+        type: string
+      code:
+        description: Optional numerical code of classification value
+        type: string
+      description:
+        description: Description of classification value
+        type: string
+      parent-literal:
+        description: Optional literal of parent classification value if schema is hierarchical
+        type: string
+    example:
+      literal: billing
+      code: 2
+      description: Contact may be used to provide party with details of their liabilities to the bank
+      
+  classification-list:
+    description: List of classification schemas
+    type: object
+    properties:
+      items:
+        description: List of classification schemas
+        items:
+          $ref: "#/definitions/classification-info"
+        type: array
+    example:
+      -
+        schema-id: filing-purpose
+        name: Filing Purpose
+        description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture
+      -
+        schema-id: folder-purpose
+        name: Folder Purpose
+        description: List of possible uses of a folder in business context.
+        
+  classification-info:
+    description: Basic information on classification schema
+    properties:
+      schema-id:
+        type: string
+        description: Unique literal that identifies the classification schema. Always in `lowercase-dash` convention.
+      name:
+        type: string
+        description: User friendly name of classification
+      description:
+        type: string
+        description: Description of a classification
+    example:
+      schema-id: filing-purpose
+      name: Filing Purpose
+      description: List of possible uses of document in business context. Commonly used filing purposes are document, customer-picture
+      
+  classification:
+    type: object
+    description: Classification schema details
+    properties:
+      schema-id:
+        type: string
+        description: Unique literal that identifies the classification schema. Always in `lowercase-dash` convention.
+      name:
+        type: string
+        description: User friendly name of classification
+      description:
+        type: string
+        description: Description of a classification
+      values:
+        description: List of allowed classification values
+        type: array
+        items:
+          $ref: "#/definitions/classification-value"
+    example:
+      schema-id: contact-purpose
+      name: Contact Purpose
+      description: List of possible uses of contact in business context. Commonly used filing purposes are billing, marketing
+      values:
+        - literal: billing
+          code: 1
+          description: Contact may be used to provide party with details of their liabilities to the bank
+        - literal: marketing
+          code: 2
+          description: Contact may be used to provide party with details of offers
+        - literal: reporting
+          code: 3
+          description: Contact may be used to provide party with reports on their account
+  
+  paged-list:
+    description: List with support for paging and sorting.
+    properties:
+      total-count:
+        description: Total number of items in collection.
+        type: integer
+      page-size:
+        description: Size of the page.
+        type: integer
+      page:
+        description: Index of current page.
+        type: integer
+      total-pages:
+        description: Total number of pages of set size.
+        type: integer
+      sort-order:
+        description: Sort order (`asc` or `desc`). Default is asc.
+        type: string
+        enum:
+        - asc
+        - desc
+      sort-by:
+        description: Attribute of the collection item to sort by.
+        type: string          
+
+# ****************************************************#
+# DEFINITIONS SPECIFIC TO CORRESPONDENCE API          #
+# ****************************************************#
+
   communication-list:
     description: List of communications.
     allOf:
@@ -901,30 +1117,179 @@ definitions:
       - format-type
       - template
     type: object
-  paged-list:
-    description: List with support for paging and sorting.
+  
+  set-preferences-command:
+    type: object
+    description: Command with parameters to set notification preferences
     properties:
-      total-count:
-        description: Total number of items in collection.
-        type: integer
-      page-size:
-        description: Size of the page.
-        type: integer
-      page:
-        description: Index of current page.
-        type: integer
-      total-pages:
-        description: Total number of pages of set size.
-        type: integer
-      sort-order:
-        description: Sort order (`asc` or `desc`). Default is asc.
+      preferences:
+        type: array
+        description: List of notification preferences that are being changed
+        items:
+          $ref: '#/definitions/preference'
+    example:
+      preferences:
+        - 
+          customer-number: nodjo-001
+          notification-group: account-credit          
+          treshold: 100
+          channels:
+            - 
+              contact-medium: sms
+              is-enabled: false  
+            - 
+              contact-medium: email
+              is-enabled: true  
+            - 
+              contact-medium: push
+              is-enabled: true  
+        - 
+          customer-number: nodjo-001
+          arrangement-number: '001200300000121'
+          notification-group: account-balance          
+          frequency: P7D
+          channels:
+            - 
+              contact-medium: sms
+              is-enabled: false  
+            - 
+              contact-medium: email
+              is-enabled: true  
+            - 
+              contact-medium: push
+              is-enabled: true                 
+
+
+  notification-group:
+    type: object
+    properties:
+      group-name:
+        description: Unique identifier notification group
         type: string
-        enum:
-        - asc
-        - desc
-      sort-by:
-        description: Attribute of the collection item to sort by.
+      default-treshold:
+        description: Default treshold at which events trigger notifications in this group
+        type: integer
+      default-frequency:
+        description: Frequency at which notifications are consolidated and sent. Usualy daily, weekly or monthly, but could be more specific.
         type: string
+        format: ISO 8601 duration
+      channels:
+        type: array
+        description: List of channels that are enabled or disabled for specific notification group
+        items:
+          $ref: '#/definitions/channel-switch'        
+
+  notification-group-list:
+    type: array
+    items:
+      $ref: '#/definitions/notification-group'
+    example:
+      - 
+        group-name: account-credit
+        default-treshold: 100
+        channels:
+          - 
+            contact-medium: sms
+            is-enabled: false  
+          - 
+            contact-medium: email
+            is-enabled: true  
+          - 
+            contact-medium: push
+            is-enabled: true  
+      - 
+        group-name: account-balance
+        default-treshold: 0
+        default-frequency: P7D
+        channels:
+          - 
+            contact-medium: sms
+            is-enabled: false  
+          - 
+            contact-medium: email
+            is-enabled: true  
+          - 
+            contact-medium: push
+            is-enabled: true              
+
+
+  preference-list:
+    type: array
+    items:
+      $ref: '#/definitions/preference'
+    example:
+      - 
+        customer-number: nodjo-001
+        notification-group: account-credit          
+        treshold: 100
+        channels:
+          - 
+            contact-medium: sms
+            is-enabled: false  
+          - 
+            contact-medium: email
+            is-enabled: true  
+          - 
+            contact-medium: push
+            is-enabled: true  
+      - 
+        customer-number: nodjo-001
+        arrangement-number: '001200300000121'
+        notification-group: account-balance          
+        frequency: P7D
+        channels:
+          - 
+            contact-medium: sms
+            is-enabled: false  
+          - 
+            contact-medium: email
+            is-enabled: true  
+          - 
+            contact-medium: push
+            is-enabled: true             
+
+  preference:
+    type: object
+    description: Notification preference set for specific customer, possibly for specific arrengement
+    properties:
+      customer-number:
+        description: Unique identifier of the customer
+        type: string
+      arrangement-number:
+        description: Unique identifier of the account arrangement. Used if preference is targetting specific account. If empty or not present it is interpreted that preference applies to all relevant accounts.  
+        type: string
+      notification-group:
+        description: Unique identifier notification group
+        type: string
+      treshold:             
+        description: Treshold at which events trigger notifications in this group
+        type: integer
+      frequency:
+        description: Frequency at which periodic notifications are generated. Usualy daily, weekly or monthly for periodic notifications. If empty or not present instant notifications are asummed.
+        type: string
+        format: ISO 8601 duration        
+      channels:
+        type: array
+        description: List of channels that are enabled or disabled for specific notification group
+        items:
+          $ref: '#/definitions/channel-switch'
+      
+  channel-switch:
+    type: object
+    description: Indicates if specific channel contact medium is enabled
+    properties:
+      contact-medium:
+        description: |
+          Contact medium used to deliver notifications.
+          For a list of allowed values see [contact-medium](correspondence-classifications.html#contact-medium) enumeration.              
+        type: string
+        enum: [smartphone-push, email, virtual-inbox, sms]              
+        x-asee-enum: contact-medium
+      is-enabled:
+        description: Indicates if contact medium is enabled for notification group
+        type: boolean   
+
+
 responses:
   default-error-response:
-    description: 'Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [error handling]()'
+    description: 'Besides specific status codes above, other standard http [status codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) can be returned for each request. To learn more see general guidance on [common-getstarted.html#error handling]()'
