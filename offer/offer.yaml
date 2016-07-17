@@ -2144,6 +2144,9 @@ definitions:
       company-id-number:
         description: Company registration number
         type: string
+      employer-name:
+        description: Name of the employer
+        type: string        
       employment-start-date:
         description: Employment start date.
         format: date
