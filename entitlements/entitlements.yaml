@@ -3,7 +3,7 @@ x-asee-visibility: public
 host: bankapi.net
 basePath: /v1/entitlements
 info:
-  description: "Entitlements API lets you check and enforce access entitlements with customer mandates and limits. Mandates are given per arrangement and can specify allowed services, applicable channels and any limits set for each mandate holder. Mandate model is aligned with ISO 20022. Setting preferred limits is possible in two modes - *unconstrained* and *constrained*. Unconstrained mode lets you set any limit value within acceptable range while constrained mode makes you pick from a predefined list of limits and limit groups."
+  description: "Entitlements API lets you check and enforce access entitlements with customer mandates, limits and access switches. Mandates are given for account arrangements and can specify allowed services, applicable channels and any limits set for each mandate holder. Mandate model is aligned with ISO 20022. Setting limits for cards access and online access is possible in two modes - *unconstrained* and *constrained*. Unconstrained mode lets you set any limit value within acceptable range while constrained mode makes you pick from a predefined list of limits and limit groups. Access switches enable quick *on/off* control of channels used for card and online access"
   title: Entitlements API
   version: v1
   contact:
@@ -11,10 +11,14 @@ info:
     url: https://bankapi.net/docs/public/entitlements-getstarted.html
     email: branko.serbula@asseco-see.rs
 tags:
-- name: Limits
-  description: Working with limits 
 - name: Mandates
-  description: Working with mandates  
+  description: Working with mandate
+- name: Limits
+  description: Working with limits  
+- name: Card access
+  description: Working with card access entitlements 
+- name: Online access
+  description: Working with online access entitlements   
 - name: Classifications
   description: Working with classifications
 consumes:
@@ -104,7 +108,7 @@ paths:
         - Limits   
 
 
-  /limits/card-access/{card-number}:
+  /card-access/{card-number}/limits:
     get:
       summary: Get limits for specific card
       description: "Response contains effective limits and their usage for specific card"
@@ -119,7 +123,7 @@ paths:
         default:
           $ref: '#/responses/default-error-response'
       tags:
-        - Limits
+        - Card access
     post:
       summary: Set card limit
       description: "Sets new value of card limit"
@@ -144,13 +148,13 @@ paths:
         default:
           $ref: '#/responses/default-error-response'
       tags:
-        - Limits
+        - Card access
 
-  /limits/card-access/{card-number}/groups:
+  /card-access/{card-number}/limit-groups:
     get:
       summary: Get groups of card limits for specific card
       description: Response contains list of effective limit groups for specific card
-      operationId: CardLimits_Groups_Get     
+      operationId: CardLimitGroups_Get     
       parameters:
         - $ref: '#/parameters/card-number-param'
         - name: categories
@@ -171,21 +175,21 @@ paths:
         default:
           $ref: '#/responses/default-error-response'
       tags:
-        - Limits   
+        - Card access   
     post:
-      summary: Set group of limits for specific card
-      description: "Sets the selected group of cars limits for specific card"
-      operationId: CardLimits_Groups_Set
+      summary: Activate group of limits for specific card
+      description: "Activate the selected group of cars limits for specific card"
+      operationId: CardLimitGroups_Activate
       parameters:
         - $ref: '#/parameters/card-number-param'
         - name: cmd
           schema:
-            $ref: '#/definitions/set-limit-group-command'
+            $ref: '#/definitions/activate-limit-group-command'
           in: body
           required: true
       responses:
         204:
-          description: No content - Limit group set
+          description: No content - Limit group activated
         440:
           description: |
             Your request was well constructed but it could not be processed. Consider the following possible problems and look into response for more details:
@@ -196,9 +200,44 @@ paths:
         default:
           $ref: '#/responses/default-error-response'
       tags:
-        - Limits        
+        - Card access        
 
-  /limits/online-access/{customer-number}:
+  /card-access/{card-number}/switches:
+    get:
+      summary: Get state of card access switches for specific card
+      description: "Response contains state of card access switches (eg. use-atm, use-pos, use-vpos) for specific card"
+      operationId: CardSwitches_Get     
+      parameters:
+        - $ref: '#/parameters/card-number-param'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/switch-list'
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+        - Limits    
+    post:
+      summary: Set the state of specific card access switch
+      description: "Sets the state of card access switch for specific card"
+      operationId: CardSwitches_Set
+      parameters:
+        - $ref: '#/parameters/card-number-param'
+        - name: cmd
+          schema:
+            $ref: '#/definitions/set-access-switch-command'
+          in: body
+          required: true
+      responses:
+        204:
+          description: No content - Card access switch set
+        default:
+          $ref: '#/responses/default-error-response'
+      tags:
+        - Card access    
+
+  /online-access/{customer-number}/limits:
     get:
       summary: Get online limits for specific customer
       description: "Response contains effective limits and their usage for online channels"
@@ -213,11 +252,11 @@ paths:
         default:
           $ref: '#/responses/default-error-response'
       tags:
-        - Limits
+        - Online access
     post:
       summary: Set online limit
       description: "Sets new value of online limit"
-      operationId: OnlineLimits_SetLimit
+      operationId: OnlineLimits_Set
       parameters:
         - $ref: '#/parameters/customer-number-param'
         - name: cmd
@@ -227,7 +266,7 @@ paths:
           required: true
       responses:
         204:
-          description: No content - Limit set
+          description: No content - Online limit set
         440:
           description: |
             Your request was well constructed but it could not be processed. Consider the following possible problems and look into response for more details:
@@ -238,13 +277,13 @@ paths:
         default:
           $ref: '#/responses/default-error-response'
       tags:
-        - Limits
+        - Online access
 
-  /limits/online-access/{customer-number}/groups:
+  /online-access/{customer-number}/limit-groups:
     get:
       summary: Get groups of online limits for specific customer
       description: "Response contains effective groups of online limits for specific customer"
-      operationId: OnlineLimits_Groups_Get
+      operationId: OnlineLimitGroups_GetList
       parameters:
         - $ref: '#/parameters/customer-number-param'      
         - name: categories
@@ -265,21 +304,21 @@ paths:
         default:
           $ref: '#/responses/default-error-response'
       tags:
-        - Limits   
+        - Online access   
     post:
-      summary: Set group of online limits for specific customer
-      description: "Sets the selected group of online limits for specific customer"
-      operationId: OnlineLimits_Groups_Set
+      summary: Activate predefined group of online limits for specific customer
+      description: "Activates the selected group of online limits for specific customer"
+      operationId: OnlineLimitGroups_Activate
       parameters:
         - $ref: '#/parameters/customer-number-param'
         - name: cmd
           schema:
-            $ref: '#/definitions/set-limit-group-command'
+            $ref: '#/definitions/activate-limit-group-command'
           in: body
           required: true
       responses:
         204:
-          description: No content - Limit group set
+          description: No content - Online limit group activated
         440:
           description: |
             Your request was well constructed but it could not be processed. Consider the following possible problems and look into response for more details:
@@ -290,7 +329,7 @@ paths:
         default:
           $ref: '#/responses/default-error-response'
       tags:
-        - Limits
+        - Online access
      
 
 # ****************************************************#
@@ -675,6 +714,7 @@ definitions:
           Channel tracked by the limit. If channel is not relevant expected value is `any`.
           For a list of possible values see [channels](entitlements-classifications.html#channels) enumeration.
         enum: [online, branch, call-center, atm, pos, vpos, any]
+        x-asee-enumeration: channels
     example:
       kind: period-limit  
       period: P7D
@@ -858,13 +898,14 @@ definitions:
             service: payment
             channel: any            
   
-  set-limit-group-command:
+  activate-limit-group-command:
     type: object
-    description: Command with parameters to set limit group
+    description: Command with parameters to activate limit group
     properties:
       group-id: 
         type: string
         description: Unique identifier of selected limit group
+        
   set-limit-command:
     type: object
     description: Command with parameters to set new limit value
@@ -873,7 +914,43 @@ definitions:
         type: string
         description: Unique identifier of the limit     
       limit-value: 
-        $ref: '#/definitions/limit-condition'      
+        $ref: '#/definitions/limit-condition'
+  
+  set-access-switch-command:
+    type: object
+    description: Command with parameters to set access switch
+    properties:
+      switch-kind:
+        type: string
+        description: Kind of access switch
+        enum: [enable-atm, enable-pos, enable-vpos]
+      switch-state:
+        type: string
+        description: State of access switch
+        enum: [on, off]      
+  
+  access-switch:
+    type: object
+    description: Access switch
+    properties:
+      switch-kind:
+        type: string
+        description: |
+          Kind of access switch.
+          For description of allowed values see [channels](entitlements-classifications.html#switch-kinds) enumeration.
+        enum: [enable-atm, enable-pos, enable-vpos]
+        x-asee-enumeration: switch-kinds
+      switch-state:
+        type: string
+        description: State of access switch
+        enum: [on, off]
+        x-asee-enumeration: channels        
+  
+  switch-list:
+    type: array
+    items:
+      $ref: '#/definitions/access-switch'
+    
 
 responses:
   default-error-response:

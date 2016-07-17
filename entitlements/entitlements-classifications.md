@@ -11,16 +11,16 @@ List of bank services allowed by mandates and tracked by limits.  These are grou
 
 Literal       | Code  | Description
 --------------|-------|------------
-any           | 00001 | Any
-transfers     | 00002 | Transfers
-exchanges     | 00003 | Exchanges
-mandates      | 00004 | Mandates
-maintenance   | 00005 | Maintenance
-balances      | 00006 | Balances
-statements    | 00007 | Statements
-payments      | 00008 | Payments
-withdrawals   | 00009 | Withdrawals
-turnover-inq  | 00010 | Turnover Inquiries
+`any`           | 00001 | Any
+`transfers`     | 00002 | Transfers
+`exchanges`     | 00003 | Exchanges
+`mandates`      | 00004 | Mandates
+`maintenance`   | 00005 | Maintenance
+`balances`      | 00006 | Balances
+`statements`    | 00007 | Statements
+`payments`      | 00008 | Payments
+`withdrawals`   | 00009 | Withdrawals
+`turnover-inq`  | 00010 | Turnover Inquiries
 ...           | ...   | ...
 
 Limit categories
@@ -31,8 +31,8 @@ List of limit categories used for limit groups
 
 Literal       | Code  | Description
 --------------|-------|------------
-domestic-card-use     | 00001 | Use of payment card within a country of issue
-cross-border-card-use    | 00002 | Use of payment card abroad
+`domestic-card-use`     | 00001 | Use of payment card within a country of issue
+`cross-border-card-use`    | 00002 | Use of payment card abroad
 ...           | ...   | ...
 
 
@@ -61,5 +61,15 @@ Limit Kinds
 
 Literal          | Description
 -----------------|------------
-transaction-limit | Limit for a single transaction
-period-limit  | Limit for multiple transactions in a period od time
+`transaction-limit` | Limit for a single transaction
+`period-limit`  | Limit for multiple transactions in a period od time
+
+
+Switch Kinds
+----
+
+Literal          | Description
+-----------------|------------
+`use-atm` | Enables or disables use of card on ATMs
+`use-pos`  | Enables or disables use of card on PoS terminals
+`use-vpos`  | Enables or disables use of card on virtual PoS terminals over internet
