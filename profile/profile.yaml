@@ -379,6 +379,10 @@ definitions:
         type: number
         format: double
         description: Minimum repayment given next monthly installment and any overdue payments
+      total-repaid-amount:
+        type: number
+        format: double
+        description: Total sum of all full or partial repayments      
       next-installment-date:
         type: string
         format: date
