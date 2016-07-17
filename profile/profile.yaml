@@ -415,6 +415,12 @@ definitions:
         type: string
         format: date
         description: Date when first disbursement was made to the customer from the arrangement
+      uncleared-checks:
+        description: Number of issued checks that are still in circullation and have not yet cleared
+        type: integer
+        minimum: 0
+        format: int32
+
     example:
       arrangement-number: "002010001010112"
       kind: current-account
