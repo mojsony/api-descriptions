@@ -114,6 +114,7 @@ paths:
   /applications:
     get:
       summary: List product applications for customer
+      description: Response contains detailed information on each of the applications
       tags:
         - Applications
       x-asee-tags:
