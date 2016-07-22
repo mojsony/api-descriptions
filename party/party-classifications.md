@@ -346,9 +346,7 @@ Literal   | Description
 ------------|------------------------
 postal-address | Postal Address
 phone-number | Phone Number
-email-address | Email Address
-facebook-account | Facebook Account
-web-url | Web URL
+electronic-address | Electronic Address
 
 Identification Document Kinds
 ----
