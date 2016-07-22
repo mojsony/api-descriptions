@@ -905,7 +905,7 @@ definitions:
           Kind of structured address. Allowed values are `postal-address`, `phone-number` and `email-address`
           For a list of possible values see [address-kinds](party-classifications.html#address-kinds) enumeration.
         type: string
-        enum: [postal-address, phone-number, email-address, facebook-account, web-url]
+        enum: [postal-address, phone-number, electronic-address]
       formatted:
         description: Formatted address text
         type: string
@@ -919,6 +919,9 @@ definitions:
     allOf:
       - $ref: "#/definitions/address"
     properties:
+      street-code:
+        description: Street code if codebook is used for streets
+        type: string
       street:
         description: Street name
         type: string
@@ -927,6 +930,9 @@ definitions:
         type: string
       postal-code:
         description: Postal code
+        type: string
+      locality-code:
+        description: Populated place code if codebook is used
         type: string
       locality:
         description: Populated place such as city, town or village
@@ -1030,6 +1036,9 @@ definitions:
           For a list of possible values see [identification-document-statuses](party-classifications.html#identification-document-statuses) enumeration.
         type: string
         enum: [active, annulled, expired]
+      place-of-issue-code:
+        description: Place of issue code if codebook is used for places
+        type: string
       place-of-issue:
         description: Reference to the place where document is issued
         maxLength: 40
@@ -1103,6 +1112,9 @@ definitions:
 
       id-document:
         $ref: '#/definitions/identification-document'
+      birth-place-code:
+        description: birth place code if codebook is used for places
+        type: string
       birth-place:
         description: Name of the populated place where individual was born
         type: string
@@ -1522,3 +1534,4 @@ parameters:
       type: string
     collectionFormat: csv
     x-asee-common: true
+
