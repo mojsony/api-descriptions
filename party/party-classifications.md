@@ -345,7 +345,7 @@ Address Kinds
 Literal   | Description
 ------------|------------------------
 postal-address | Postal Address
-phone-number | Phone Number
+telecommunication-number | Telecommunication Number
 electronic-address | Electronic Address
 
 Identification Document Kinds
